@@ -73,6 +73,34 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
 };
 
+class QtIntEditFactoryPrivate;
+
+class QT_QTPROPERTYBROWSER_EXPORT QtIntEditFactory : public QtAbstractEditorFactory<QtIntPropertyManager>
+{
+    Q_OBJECT
+public:
+    QtIntEditFactory(QObject *parent = 0);
+    ~QtIntEditFactory();
+protected:
+    void connectPropertyManager(QtIntPropertyManager *manager);
+    QWidget *createEditor(QtIntPropertyManager *manager, QtProperty *property,
+                          QWidget *parent);
+    QWidget *createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property, QWidget *parent, int attribute);
+    void disconnectPropertyManager(QtIntPropertyManager *manager);
+private:
+    QtIntEditFactoryPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QtIntEditFactory)
+    Q_DISABLE_COPY(QtIntEditFactory)
+    Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, int))
+    Q_PRIVATE_SLOT(d_func(), void slotRangeChanged(QtProperty *, double, double))
+    Q_PRIVATE_SLOT(d_func(), void slotRangeChanged(QtProperty *, int, int))
+    Q_PRIVATE_SLOT(d_func(), void slotSingleStepChanged(QtProperty *, int))
+    Q_PRIVATE_SLOT(d_func(), void slotPrecisionChanged(QtProperty *, int))
+    Q_PRIVATE_SLOT(d_func(), void slotReadOnlyChanged(QtProperty *, bool))
+    Q_PRIVATE_SLOT(d_func(), void slotSetValue(int))
+    Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
+};
+
 class QtSliderFactoryPrivate;
 
 class QT_QTPROPERTYBROWSER_EXPORT QtSliderFactory : public QtAbstractEditorFactory<QtIntPropertyManager>
@@ -164,7 +192,34 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, double))
     Q_PRIVATE_SLOT(d_func(), void slotRangeChanged(QtProperty *, double, double))
     Q_PRIVATE_SLOT(d_func(), void slotSingleStepChanged(QtProperty *, double))
-    Q_PRIVATE_SLOT(d_func(), void slotDecimalsChanged(QtProperty *, int))
+    Q_PRIVATE_SLOT(d_func(), void slotPrecisionChanged(QtProperty *, int))
+    Q_PRIVATE_SLOT(d_func(), void slotReadOnlyChanged(QtProperty *, bool))
+    Q_PRIVATE_SLOT(d_func(), void slotSetValue(double))
+    Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
+};
+
+class QtDoubleEditFactoryPrivate;
+
+class QT_QTPROPERTYBROWSER_EXPORT QtDoubleEditFactory : public QtAbstractEditorFactory<QtDoublePropertyManager>
+{
+    Q_OBJECT
+public:
+    QtDoubleEditFactory(QObject *parent = 0);
+    ~QtDoubleEditFactory();
+protected:
+    void connectPropertyManager(QtDoublePropertyManager *manager);
+    QWidget *createEditor(QtDoublePropertyManager *manager, QtProperty *property,
+                          QWidget *parent);
+    QWidget *createAttributeEditor(QtDoublePropertyManager *manager, QtProperty *property, QWidget *parent, int attribute);
+    void disconnectPropertyManager(QtDoublePropertyManager *manager);
+private:
+    QtDoubleEditFactoryPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QtDoubleEditFactory)
+    Q_DISABLE_COPY(QtDoubleEditFactory)
+    Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, double))
+    Q_PRIVATE_SLOT(d_func(), void slotRangeChanged(QtProperty *, double, double))
+    Q_PRIVATE_SLOT(d_func(), void slotSingleStepChanged(QtProperty *, double))
+    Q_PRIVATE_SLOT(d_func(), void slotPrecisionChanged(QtProperty *, int))
     Q_PRIVATE_SLOT(d_func(), void slotReadOnlyChanged(QtProperty *, bool))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(double))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))

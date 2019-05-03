@@ -111,6 +111,11 @@ Q_SIGNALS:
     void readOnlyChanged(QtProperty *property, bool readOnly);
 protected:
     QString valueText(const QtProperty *property) const;
+    QString minimumText(const QtProperty *property) const;
+    QString maximumText(const QtProperty *property) const;
+    QString unitText(const QtProperty *property) const;
+    QString formatText(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:
@@ -195,6 +200,11 @@ Q_SIGNALS:
     void readOnlyChanged(QtProperty *property, bool readOnly);
 protected:
     QString valueText(const QtProperty *property) const;
+    QString minimumText(const QtProperty *property) const;
+    QString maximumText(const QtProperty *property) const;
+    QString unitText(const QtProperty *property) const;
+    QString formatText(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:

@@ -891,7 +891,86 @@ QString QtIntPropertyManager::valueText(const QtProperty *property) const
     const QtIntPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
-    return QString::number(it.value().val);
+//    return QString::number(it.value().val);
+    QtIntPropertyManagerPrivate::Data  data = it.value();
+    return QIntEdit::num2str(data.val, data.scale, data.format, data.precision);
+}
+
+QString QtIntPropertyManager::minimumText(const QtProperty *property) const
+{
+    const QtIntPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+    return QString();
+
+    QtIntPropertyManagerPrivate::Data  data = it.value();
+    return QIntEdit::num2str(data.minVal, data.scale,data.format, data.precision);
+}
+
+/*!
+ \reimp
+ */
+QString QtIntPropertyManager::maximumText(const QtProperty *property) const
+{
+    const QtIntPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+    return QString();
+
+    QtIntPropertyManagerPrivate::Data  data = it.value();
+    return QIntEdit::num2str(data.maxVal, data.scale, data.format, data.precision);
+}
+
+/*!
+ \reimp
+ */
+QString QtIntPropertyManager::unitText(const QtProperty *property) const
+{
+//    if (!attributesEditable())
+//    return QString();
+    const QtIntPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+    return QString();
+
+    switch (it.value().format) {
+        case Format::LOG_DEG:
+            return QString("dB") + ScaleMap()[it.value().scale] + it.value().unit;
+        case Format::RE:
+        case Format::RE_IM:
+        case Format::LIN_DEG:
+        default:
+            return it.value().scale + it.value().unit;
+    }
+}
+
+/*!
+ \reimp
+ */
+QString QtIntPropertyManager::formatText(const QtProperty *property) const
+{
+//    if (!attributesEditable())
+//    return QString();
+    const QtIntPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+    return QString();
+
+    switch (it.value().format) {
+        case Format::RE:
+            return QString("Re");
+        case Format::RE_IM:
+            return QString("Re+Imj");
+        case Format::LOG_DEG:
+            return QString("Log") + QString(QChar(0x2220)) + QString("Deg");
+        case Format::LIN_DEG:
+        default:
+            return QString("Lin") + QString(QChar(0x2220)) + QString("Deg");
+    }
+}
+
+/*!
+ \reimp
+ */
+QIcon QtIntPropertyManager::checkIcon(const QtProperty *property) const
+{
+    return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
 
 /*!
@@ -1417,7 +1496,89 @@ QString QtDoublePropertyManager::valueText(const QtProperty *property) const
     const QtDoublePropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
-    return QLocale::system().toString(it.value().val, 'f', it.value().precision);
+//    return QLocale::system().toString(it.value().val, 'f', it.value().precision);
+    QtDoublePropertyManagerPrivate::Data  data = it.value();
+    return QDoubleEdit::num2str(data.val, data.scale, data.format, data.precision);
+}
+
+/*!
+ \reimp
+ */
+QString QtDoublePropertyManager::minimumText(const QtProperty *property) const
+{
+    const QtDoublePropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+    return QString();
+
+    QtDoublePropertyManagerPrivate::Data  data = it.value();
+    return QDoubleEdit::num2str(data.minVal, data.scale, data.format, data.precision);
+}
+
+/*!
+ \reimp
+ */
+QString QtDoublePropertyManager::maximumText(const QtProperty *property) const
+{
+    const QtDoublePropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+    return QString();
+
+    QtDoublePropertyManagerPrivate::Data  data = it.value();
+    return QDoubleEdit::num2str(data.maxVal, data.scale, data.format, data.precision);
+}
+
+/*!
+ \reimp
+ */
+QString QtDoublePropertyManager::unitText(const QtProperty *property) const
+{
+//    if (!attributesEditable())
+//    return QString();
+    const QtDoublePropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+    return QString();
+
+    switch (it.value().format) {
+        case Format::LOG_DEG:
+            return QString("dB") + ScaleMap()[it.value().scale] + it.value().unit;
+        case Format::RE:
+        case Format::RE_IM:
+        case Format::LIN_DEG:
+        default:
+            return it.value().scale + it.value().unit;
+    }
+}
+
+/*!
+ \reimp
+ */
+QString QtDoublePropertyManager::formatText(const QtProperty *property) const
+{
+//    if (!attributesEditable())
+//    return QString();
+    const QtDoublePropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+    return QString();
+
+    switch (it.value().format) {
+        case Format::RE:
+            return QString("Re");
+        case Format::RE_IM:
+            return QString("Re+Imj");
+        case Format::LOG_DEG:
+            return QString("Log") + QString(QChar(0x2220)) + QString("Deg");
+        case Format::LIN_DEG:
+        default:
+            return QString("Lin") + QString(QChar(0x2220)) + QString("Deg");
+    }
+}
+
+/*!
+ \reimp
+ */
+QIcon QtDoublePropertyManager::checkIcon(const QtProperty *property) const
+{
+    return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
 
 /*!

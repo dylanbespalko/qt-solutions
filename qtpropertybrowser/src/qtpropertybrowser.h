@@ -96,6 +96,11 @@ public:
     QIcon checkIcon() const;
     QString valueText() const;
     QString displayText() const;
+    QString unitText() const;
+    QString pkAvgText() const;
+    QString formatText() const;
+    QString minimumText() const;
+    QString maximumText() const;
 
     void setLabel(const QString &text);
     void setToolTip(const QString &text);
@@ -144,6 +149,11 @@ protected:
     virtual QIcon checkIcon(const QtProperty *property) const {Q_UNUSED(property); return QIcon();}
     virtual QString valueText(const QtProperty *property) const;
     virtual QString displayText(const QtProperty *property) const;
+    virtual QString unitText(const QtProperty *property) const{Q_UNUSED(property); return QString();}
+    virtual QString pkAvgText(const QtProperty *property) const{Q_UNUSED(property); return QString();}
+    virtual QString formatText(const QtProperty *property) const{Q_UNUSED(property); return QString();}
+    virtual QString minimumText(const QtProperty *property) const{Q_UNUSED(property); return QString();}
+    virtual QString maximumText(const QtProperty *property) const{Q_UNUSED(property); return QString();}
     virtual EchoMode echoMode(const QtProperty *) const;
     virtual QBrush foreground(const QtProperty *property) const{return QBrush(QColor(Qt::black),Qt::SolidPattern);}
     virtual void initializeProperty(QtProperty *property) = 0;

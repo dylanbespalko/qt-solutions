@@ -362,6 +362,71 @@ QString QtProperty::displayText() const
 }
 
 /*!
+ Returns a string representing the current unit of this property.
+
+ If the given property type can not generate such a string, this
+ function returns an empty string.
+
+ \sa QtAbstractPropertyManager::unitText()
+ */
+QString QtProperty::unitText() const
+{
+    return d_ptr->m_manager->unitText(this);
+}
+
+/*!
+ Returns a string representing the current pkAvg of this property.
+
+ If the given property type can not generate such a string, this
+ function returns an empty string.
+
+ \sa QtAbstractPropertyManager::pkAvgText()
+ */
+QString QtProperty::pkAvgText() const
+{
+    return d_ptr->m_manager->pkAvgText(this);
+}
+
+/*!
+ Returns a string representing the current format of this property.
+
+ If the given property type can not generate such a string, this
+ function returns an empty string.
+
+ \sa QtAbstractPropertyManager::formatText()
+ */
+QString QtProperty::formatText() const
+{
+    return d_ptr->m_manager->formatText(this);
+}
+
+/*!
+ Returns a string representing the current minimum of this property.
+
+ If the given property type can not generate such a string, this
+ function returns an empty string.
+
+ \sa QtAbstractPropertyManager::minimumText()
+ */
+QString QtProperty::minimumText() const
+{
+    return d_ptr->m_manager->minimumText(this);
+}
+
+/*!
+ Returns a string representing the current maximum of this property.
+
+ If the given property type can not generate such a string, this
+ function returns an empty string.
+
+ \sa QtAbstractPropertyManager::maximumText()
+ */
+QString QtProperty::maximumText() const
+{
+    return d_ptr->m_manager->maximumText(this);
+}
+
+/*!
  Sets the property's label to the given \a text.
 
  \sa label()
