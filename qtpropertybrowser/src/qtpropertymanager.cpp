@@ -67,6 +67,35 @@
 QT_BEGIN_NAMESPACE
 #endif
 
+//     Return an icon containing a check box indicator
+static QIcon drawCheckBox(bool value)
+{
+    QStyleOptionButton opt;
+    opt.state |= value ? QStyle::State_On : QStyle::State_Off;
+    opt.state |= QStyle::State_Enabled;
+    const QStyle *style = QApplication::style();
+    // Figure out size of an indicator and make sure it is not scaled down in a list view item
+    // by making the pixmap as big as a list view icon and centering the indicator in it.
+    // (if it is smaller, it can't be helped)
+    const int indicatorWidth = style->pixelMetric(QStyle::PM_IndicatorWidth, &opt);
+    const int indicatorHeight = style->pixelMetric(QStyle::PM_IndicatorHeight, &opt);
+    const int listViewIconSize = indicatorWidth;
+    const int pixmapWidth = indicatorWidth;
+    const int pixmapHeight = qMax(indicatorHeight, listViewIconSize);
+
+    opt.rect = QRect(0, 0, indicatorWidth, indicatorHeight);
+    QPixmap pixmap = QPixmap(pixmapWidth, pixmapHeight);
+    pixmap.fill(Qt::transparent);
+    {
+        // Center?
+        const int xoff = (pixmapWidth  > indicatorWidth)  ? (pixmapWidth  - indicatorWidth)  / 2 : 0;
+        const int yoff = (pixmapHeight > indicatorHeight) ? (pixmapHeight - indicatorHeight) / 2 : 0;
+        QPainter painter(&pixmap);
+        painter.translate(xoff, yoff);
+        style->drawPrimitive(QStyle::PE_IndicatorCheckBox, &opt, &painter);
+    }
+    return QIcon(pixmap);
+}
 template <class PrivateData, class Value>
 static void setSimpleMinimumData(PrivateData *data, const Value &minVal)
 {
@@ -561,6 +590,21 @@ void QtMetaEnumProvider::localeToIndex(QLocale::Language language, QLocale::Coun
 
 Q_GLOBAL_STATIC(QtMetaEnumProvider, metaEnumProvider)
 
+
+static QMap<Scale, char> ScaleMap(){
+    QMap<Scale, char> map;
+    map.insert(Scale::p, 'p');
+    map.insert(Scale::n, 'n');
+    map.insert(Scale::u, 'u');
+    map.insert(Scale::m, 'm');
+    map.insert(Scale::_, ' ');
+    map.insert(Scale::K, 'K');
+    map.insert(Scale::M, 'M');
+    map.insert(Scale::G, 'G');
+    map.insert(Scale::T, 'T');
+}
+
+
 // QtGroupPropertyManager
 
 /*!
@@ -625,11 +669,18 @@ public:
 
     struct Data
     {
-        Data() : val(0), minVal(-INT_MAX), maxVal(INT_MAX), singleStep(1), readOnly(false) {}
+        Data()
+            : val(0), minVal(-INT_MAX), maxVal(INT_MAX), singleStep(1), precision(2), scale(Scale::_), unit(QString()),
+              format(Format::LIN_DEG), foreground(QBrush(Qt::black, Qt::SolidPattern)), readOnly(false) {}
         int val;
         int minVal;
         int maxVal;
         int singleStep;
+        int precision;
+        Scale scale;
+        QString unit;
+        Format format;
+        QBrush foreground;
         bool readOnly;
         int minimumValue() const { return minVal; }
         int maximumValue() const { return maxVal; }
@@ -755,6 +806,69 @@ int QtIntPropertyManager::maximum(const QtProperty *property) const
 int QtIntPropertyManager::singleStep(const QtProperty *property) const
 {
     return getData<int>(d_ptr->m_values, &QtIntPropertyManagerPrivate::Data::singleStep, property, 0);
+}
+
+/*!
+ Returns the given \a property's precision, in decimals.
+
+ \sa setPrecision()
+ */
+int QtIntPropertyManager::precision(const QtProperty *property) const
+{
+    return getData<int>(d_ptr->m_values, &QtIntPropertyManagerPrivate::Data::precision, property, 0);
+}
+
+/*!
+ Returns the given \a property's scale, as a char.
+
+ \sa setScale()
+ */
+Scale QtIntPropertyManager::scale(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtIntPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return Scale::_;
+    return it.value().scale;
+}
+
+/*!
+ Returns the given \a property's unit, as a QString.
+
+ \sa setUnit()
+ */
+QString QtIntPropertyManager::unit(const QtProperty *property) const
+{
+    return getData<QString>(d_ptr->m_values, &QtIntPropertyManagerPrivate::Data::unit, property, "");
+}
+
+/*!
+ Returns the given \a property's format setting, as a Format.
+
+ \sa setFormat()
+ */
+Format QtIntPropertyManager::format(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtIntPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return Format::LIN_DEG;
+    return it.value().format;
+}
+
+
+/*!
+ Returns the given \a property's foreground brush.
+
+ The foreground brush consists of the color and style of the text
+
+ \sa setForeground()
+ */
+QBrush QtIntPropertyManager::foreground(const QtProperty *property) const
+{
+    return getData<QBrush>(d_ptr->m_values, &QtIntPropertyManagerPrivate::Data::foreground, property, QBrush(Qt::black, Qt::SolidPattern));
 }
 
 /*!
@@ -889,6 +1003,117 @@ void QtIntPropertyManager::setSingleStep(QtProperty *property, int step)
 }
 
 /*!
+ \fn void QtIntPropertyManager::setPrecision(QtProperty *property, int prec)
+
+ Sets the precision of the given \a property to \a prec.
+
+ The valid decimal range is 0-13. The default is 2.
+
+ \sa precision()
+ */
+void QtIntPropertyManager::setPrecision(QtProperty *property, int prec)
+{
+    const QtIntPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+    return;
+
+    QtIntPropertyManagerPrivate::Data data = it.value();
+
+    if (prec > 13)
+    prec = 13;
+    else if (prec < 0)
+    prec = 0;
+
+    if (data.precision == prec)
+    return;
+
+    data.precision = prec;
+
+    it.value() = data;
+
+    emit precisionChanged(property, data.precision);
+}
+
+/*!
+ \fn void QtIntPropertyManager::setScale(QtProperty *property, Scale scale)
+
+ Sets the scale of the given \a property to \a scale.
+
+ \sa scale(), scaleChanged()
+ */
+void QtIntPropertyManager::setScale(QtProperty *property, Scale scale)
+{
+    const QtIntPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+    return;
+
+    QtIntPropertyManagerPrivate::Data data = it.value();
+
+    if (data.scale == scale)
+    return;
+
+    data.scale = scale;
+
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit scaleChanged(property, data.scale);
+}
+
+/*!
+ \fn void QtIntPropertyManager::setUnit(QtProperty *property, QString unit)
+
+ Sets the unit of the given \a property to \a unit.
+
+ \sa unit(), unitChanged()
+ */
+void QtIntPropertyManager::setUnit(QtProperty *property, const QString& unit)
+{
+    const QtIntPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+    return;
+
+    QtIntPropertyManagerPrivate::Data data = it.value();
+
+    if (data.unit == unit)
+    return;
+
+    data.unit = unit;
+
+    it.value() = data;
+
+
+    emit propertyChanged(property);
+    emit unitChanged(property, data.unit);
+}
+
+/*!
+ \fn void QtIntPropertyManager::setFormat(QtProperty *property, Format format_)
+
+ Sets the format of the given \a property to \a format_.
+
+ \sa format(), formatChanged()
+ */
+void QtIntPropertyManager::setFormat(QtProperty *property, Format format_)
+{
+    const QtIntPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+    return;
+
+    QtIntPropertyManagerPrivate::Data data = it.value();
+
+    if (data.format == format_)
+    return;
+
+    data.format = format_;
+
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit formatChanged(property, data.format);
+}
+
+/*!
     Sets read-only status of the property.
 
     \sa QtIntPropertyManager::setReadOnly
@@ -937,12 +1162,21 @@ public:
 
     struct Data
     {
-        Data() : val(0), minVal(-INT_MAX), maxVal(INT_MAX), singleStep(1), decimals(2), readOnly(false) {}
+        Data()
+            : val(0), absTol(std::numeric_limits<double>::epsilon()), relTol(std::numeric_limits<double>::epsilon()), minVal(-INT_MAX), maxVal(INT_MAX),
+            singleStep(1), precision(2), scale(Scale::_), unit(QString()),
+            format(Format::LIN_DEG), foreground(QBrush(Qt::black, Qt::SolidPattern)), readOnly(false) {}
         double val;
+        double absTol;
+        double relTol;
         double minVal;
         double maxVal;
         double singleStep;
-        int decimals;
+        int precision;
+        Scale scale;
+        QString unit;
+        Format format;
+        QBrush foreground;
         bool readOnly;
         double minimumValue() const { return minVal; }
         double maximumValue() const { return maxVal; }
@@ -998,13 +1232,13 @@ public:
 */
 
 /*!
-    \fn void QtDoublePropertyManager::decimalsChanged(QtProperty *property, int prec)
+    \fn void QtDoublePropertyManager::precisionChanged(QtProperty *property, int prec)
 
     This signal is emitted whenever a property created by this manager
     changes its precision of value, passing a pointer to the
     \a property and the new \a prec value
 
-    \sa setDecimals()
+    \sa setPrecision()
 */
 
 /*!
@@ -1050,6 +1284,26 @@ double QtDoublePropertyManager::value(const QtProperty *property) const
 }
 
 /*!
+ Returns the given \a property's absTol value.
+
+ \sa relTol()
+ */
+double QtDoublePropertyManager::absTol(const QtProperty *property) const
+{
+    return getData<double>(d_ptr->m_values, &QtDoublePropertyManagerPrivate::Data::absTol, property, std::numeric_limits<double>::epsilon());
+}
+
+/*!
+ Returns the given \a property's relTol value.
+
+ \sa absTol()
+ */
+double QtDoublePropertyManager::relTol(const QtProperty *property) const
+{
+    return getData<double>(d_ptr->m_values, &QtDoublePropertyManagerPrivate::Data::relTol, property, std::numeric_limits<double>::epsilon());
+}
+
+/*!
     Returns the given \a property's minimum value.
 
     \sa maximum(), setRange()
@@ -1084,11 +1338,51 @@ double QtDoublePropertyManager::singleStep(const QtProperty *property) const
 /*!
     Returns the given \a property's precision, in decimals.
 
-    \sa setDecimals()
+    \sa setPrecision()
 */
-int QtDoublePropertyManager::decimals(const QtProperty *property) const
+int QtDoublePropertyManager::precision(const QtProperty *property) const
 {
-    return getData<int>(d_ptr->m_values, &QtDoublePropertyManagerPrivate::Data::decimals, property, 0);
+    return getData<int>(d_ptr->m_values, &QtDoublePropertyManagerPrivate::Data::precision, property, 2);
+}
+
+/*!
+ Returns the given \a property's scale, as a char.
+
+ \sa setScale()
+ */
+Scale QtDoublePropertyManager::scale(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtDoublePropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return Scale::_;
+    return it.value().scale;
+}
+
+/*!
+ Returns the given \a property's unit, as a QString.
+
+ \sa setUnit()
+ */
+QString QtDoublePropertyManager::unit(const QtProperty *property) const
+{
+    return getData<QString>(d_ptr->m_values, &QtDoublePropertyManagerPrivate::Data::unit, property, "");
+}
+
+/*!
+ Returns the given \a property's format setting, as a Format.
+
+ \sa setFormat()
+ */
+Format QtDoublePropertyManager::format(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtDoublePropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return Format::LIN_DEG;
+    return it.value().format;
 }
 
 /*!
@@ -1104,6 +1398,18 @@ bool QtDoublePropertyManager::isReadOnly(const QtProperty *property) const
 }
 
 /*!
+ Returns the given \a property's foreground brush.
+
+ The foreground brush consists of the color and style of the text
+
+ \sa setForeground()
+ */
+QBrush QtDoublePropertyManager::foreground(const QtProperty *property) const
+{
+    return getData<QBrush>(d_ptr->m_values, &QtDoublePropertyManagerPrivate::Data::foreground, property, QBrush(Qt::black, Qt::SolidPattern));
+}
+
+/*!
     \reimp
 */
 QString QtDoublePropertyManager::valueText(const QtProperty *property) const
@@ -1111,7 +1417,7 @@ QString QtDoublePropertyManager::valueText(const QtProperty *property) const
     const QtDoublePropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
-    return QLocale::system().toString(it.value().val, 'f', it.value().decimals);
+    return QLocale::system().toString(it.value().val, 'f', it.value().precision);
 }
 
 /*!
@@ -1132,6 +1438,50 @@ void QtDoublePropertyManager::setValue(QtProperty *property, double val)
                 &QtDoublePropertyManager::propertyChanged,
                 &QtDoublePropertyManager::valueChanged,
                 property, val, setSubPropertyValue);
+}
+
+/*!
+ Sets the absolute tollerance value for the given \a property to \a absTol.
+
+ \sa relTol(), setAbsTol(), setRelTol()
+ */
+void QtDoublePropertyManager::setAbsTol(QtProperty *property, double absTol)
+{
+    typedef QMap<const QtProperty *, QtDoublePropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::iterator PropertyToDataIterator;
+    const PropertyToDataIterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+    return;
+
+    QtDoublePropertyManagerPrivate::Data &data = it.value();
+
+    data.absTol = absTol;
+
+    it.value() = data;
+
+    emit propertyChanged(property);
+}
+
+/*!
+ Sets the relative tollerance value for the given \a property to \a relTol.
+
+ \sa absTol(), setRelTol(), setAbsTol()
+ */
+void QtDoublePropertyManager::setRelTol(QtProperty *property, double relTol)
+{
+    typedef QMap<const QtProperty *, QtDoublePropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::iterator PropertyToDataIterator;
+    const PropertyToDataIterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+    return;
+
+    QtDoublePropertyManagerPrivate::Data &data = it.value();
+
+    data.relTol = relTol;
+
+    it.value() = data;
+
+    emit propertyChanged(property);
 }
 
 /*!
@@ -1186,15 +1536,15 @@ void QtDoublePropertyManager::setReadOnly(QtProperty *property, bool readOnly)
 }
 
 /*!
-    \fn void QtDoublePropertyManager::setDecimals(QtProperty *property, int prec)
+    \fn void QtDoublePropertyManager::setPrecision(QtProperty *property, int prec)
 
     Sets the precision of the given \a property to \a prec.
 
     The valid decimal range is 0-13. The default is 2.
 
-    \sa decimals()
+    \sa precision()
 */
-void QtDoublePropertyManager::setDecimals(QtProperty *property, int prec)
+void QtDoublePropertyManager::setPrecision(QtProperty *property, int prec)
 {
     const QtDoublePropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
@@ -1207,14 +1557,14 @@ void QtDoublePropertyManager::setDecimals(QtProperty *property, int prec)
     else if (prec < 0)
         prec = 0;
 
-    if (data.decimals == prec)
+    if (data.precision == prec)
         return;
 
-    data.decimals = prec;
+    data.precision = prec;
 
     it.value() = data;
 
-    emit decimalsChanged(property, data.decimals);
+    emit precisionChanged(property, data.precision);
 }
 
 /*!
@@ -1275,6 +1625,85 @@ void QtDoublePropertyManager::setRange(QtProperty *property, double minVal, doub
                 &QtDoublePropertyManager::valueChanged,
                 &QtDoublePropertyManager::rangeChanged,
                 property, minVal, maxVal, setSubPropertyRange);
+}
+
+/*!
+ \fn void QtDoublePropertyManager::setScale(QtProperty *property, Scale scale)
+
+ Sets the scale of the given \a property to \a scale.
+
+ \sa scale(), scaleChanged()
+ */
+void QtDoublePropertyManager::setScale(QtProperty *property, Scale scale)
+{
+    const QtDoublePropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+    return;
+
+    QtDoublePropertyManagerPrivate::Data data = it.value();
+
+    if (data.scale == scale)
+    return;
+
+    data.scale = scale;
+
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit scaleChanged(property, data.scale);
+}
+
+/*!
+ \fn void QtDoublePropertyManager::setUnit(QtProperty *property, QString unit)
+
+ Sets the unit of the given \a property to \a unit.
+
+ \sa unit(), unitChanged()
+ */
+void QtDoublePropertyManager::setUnit(QtProperty *property, const QString& unit)
+{
+    const QtDoublePropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+    return;
+
+    QtDoublePropertyManagerPrivate::Data data = it.value();
+
+    if (data.unit == unit)
+    return;
+
+    data.unit = unit;
+
+    it.value() = data;
+
+
+    emit propertyChanged(property);
+    emit unitChanged(property, data.unit);
+}
+
+/*!
+ \fn void QtDoublePropertyManager::setFormat(QtProperty *property, Format format_)
+
+ Sets the format of the given \a property to \a format_.
+
+ \sa format(), formatChanged()
+ */
+void QtDoublePropertyManager::setFormat(QtProperty *property, Format format_)
+{
+    const QtDoublePropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+    return;
+
+    QtDoublePropertyManagerPrivate::Data data = it.value();
+
+    if (data.format == format_)
+    return;
+
+    data.format = format_;
+
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit formatChanged(property, data.format);
 }
 
 /*!
@@ -1564,35 +1993,6 @@ void QtStringPropertyManager::uninitializeProperty(QtProperty *property)
 
 // QtBoolPropertyManager
 //     Return an icon containing a check box indicator
-static QIcon drawCheckBox(bool value)
-{
-    QStyleOptionButton opt;
-    opt.state |= value ? QStyle::State_On : QStyle::State_Off;
-    opt.state |= QStyle::State_Enabled;
-    const QStyle *style = QApplication::style();
-    // Figure out size of an indicator and make sure it is not scaled down in a list view item
-    // by making the pixmap as big as a list view icon and centering the indicator in it.
-    // (if it is smaller, it can't be helped)
-    const int indicatorWidth = style->pixelMetric(QStyle::PM_IndicatorWidth, &opt);
-    const int indicatorHeight = style->pixelMetric(QStyle::PM_IndicatorHeight, &opt);
-    const int listViewIconSize = indicatorWidth;
-    const int pixmapWidth = indicatorWidth;
-    const int pixmapHeight = qMax(indicatorHeight, listViewIconSize);
-
-    opt.rect = QRect(0, 0, indicatorWidth, indicatorHeight);
-    QPixmap pixmap = QPixmap(pixmapWidth, pixmapHeight);
-    pixmap.fill(Qt::transparent);
-    {
-        // Center?
-        const int xoff = (pixmapWidth  > indicatorWidth)  ? (pixmapWidth  - indicatorWidth)  / 2 : 0;
-        const int yoff = (pixmapHeight > indicatorHeight) ? (pixmapHeight - indicatorHeight) / 2 : 0;
-        QPainter painter(&pixmap);
-        painter.translate(xoff, yoff);
-        style->drawPrimitive(QStyle::PE_IndicatorCheckBox, &opt, &painter);
-    }
-    return QIcon(pixmap);
-}
-
 class QtBoolPropertyManagerPrivate
 {
     QtBoolPropertyManager *q_ptr;
@@ -1708,6 +2108,14 @@ QIcon QtBoolPropertyManager::valueIcon(const QtProperty *property) const
         return QIcon();
 
     return it.value().val ? d_ptr->m_checkedIcon : d_ptr->m_uncheckedIcon;
+}
+
+/*!
+ \reimp
+ */
+QIcon QtBoolPropertyManager::checkIcon(const QtProperty *property) const
+{
+    return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
 
 /*!
@@ -3133,8 +3541,8 @@ void QtPointFPropertyManager::setDecimals(QtProperty *property, int prec)
         return;
 
     data.decimals = prec;
-    d_ptr->m_doublePropertyManager->setDecimals(d_ptr->m_propertyToX[property], prec);
-    d_ptr->m_doublePropertyManager->setDecimals(d_ptr->m_propertyToY[property], prec);
+    d_ptr->m_doublePropertyManager->setPrecision(d_ptr->m_propertyToX[property], prec);
+    d_ptr->m_doublePropertyManager->setPrecision(d_ptr->m_propertyToY[property], prec);
 
     it.value() = data;
 
@@ -3150,7 +3558,7 @@ void QtPointFPropertyManager::initializeProperty(QtProperty *property)
 
     QtProperty *xProp = d_ptr->m_doublePropertyManager->addProperty();
     xProp->setPropertyName(tr("X"));
-    d_ptr->m_doublePropertyManager->setDecimals(xProp, decimals(property));
+    d_ptr->m_doublePropertyManager->setPrecision(xProp, decimals(property));
     d_ptr->m_doublePropertyManager->setValue(xProp, 0);
     d_ptr->m_propertyToX[property] = xProp;
     d_ptr->m_xToProperty[xProp] = property;
@@ -3158,7 +3566,7 @@ void QtPointFPropertyManager::initializeProperty(QtProperty *property)
 
     QtProperty *yProp = d_ptr->m_doublePropertyManager->addProperty();
     yProp->setPropertyName(tr("Y"));
-    d_ptr->m_doublePropertyManager->setDecimals(yProp, decimals(property));
+    d_ptr->m_doublePropertyManager->setPrecision(yProp, decimals(property));
     d_ptr->m_doublePropertyManager->setValue(yProp, 0);
     d_ptr->m_propertyToY[property] = yProp;
     d_ptr->m_yToProperty[yProp] = property;
@@ -3810,8 +4218,8 @@ void QtSizeFPropertyManager::setDecimals(QtProperty *property, int prec)
         return;
 
     data.decimals = prec;
-    d_ptr->m_doublePropertyManager->setDecimals(d_ptr->m_propertyToW[property], prec);
-    d_ptr->m_doublePropertyManager->setDecimals(d_ptr->m_propertyToH[property], prec);
+    d_ptr->m_doublePropertyManager->setPrecision(d_ptr->m_propertyToW[property], prec);
+    d_ptr->m_doublePropertyManager->setPrecision(d_ptr->m_propertyToH[property], prec);
 
     it.value() = data;
 
@@ -3892,7 +4300,7 @@ void QtSizeFPropertyManager::initializeProperty(QtProperty *property)
 
     QtProperty *wProp = d_ptr->m_doublePropertyManager->addProperty();
     wProp->setPropertyName(tr("Width"));
-    d_ptr->m_doublePropertyManager->setDecimals(wProp, decimals(property));
+    d_ptr->m_doublePropertyManager->setPrecision(wProp, decimals(property));
     d_ptr->m_doublePropertyManager->setValue(wProp, 0);
     d_ptr->m_doublePropertyManager->setMinimum(wProp, 0);
     d_ptr->m_propertyToW[property] = wProp;
@@ -3901,7 +4309,7 @@ void QtSizeFPropertyManager::initializeProperty(QtProperty *property)
 
     QtProperty *hProp = d_ptr->m_doublePropertyManager->addProperty();
     hProp->setPropertyName(tr("Height"));
-    d_ptr->m_doublePropertyManager->setDecimals(hProp, decimals(property));
+    d_ptr->m_doublePropertyManager->setPrecision(hProp, decimals(property));
     d_ptr->m_doublePropertyManager->setValue(hProp, 0);
     d_ptr->m_doublePropertyManager->setMinimum(hProp, 0);
     d_ptr->m_propertyToH[property] = hProp;
@@ -4721,10 +5129,10 @@ void QtRectFPropertyManager::setDecimals(QtProperty *property, int prec)
         return;
 
     data.decimals = prec;
-    d_ptr->m_doublePropertyManager->setDecimals(d_ptr->m_propertyToX[property], prec);
-    d_ptr->m_doublePropertyManager->setDecimals(d_ptr->m_propertyToY[property], prec);
-    d_ptr->m_doublePropertyManager->setDecimals(d_ptr->m_propertyToW[property], prec);
-    d_ptr->m_doublePropertyManager->setDecimals(d_ptr->m_propertyToH[property], prec);
+    d_ptr->m_doublePropertyManager->setPrecision(d_ptr->m_propertyToX[property], prec);
+    d_ptr->m_doublePropertyManager->setPrecision(d_ptr->m_propertyToY[property], prec);
+    d_ptr->m_doublePropertyManager->setPrecision(d_ptr->m_propertyToW[property], prec);
+    d_ptr->m_doublePropertyManager->setPrecision(d_ptr->m_propertyToH[property], prec);
 
     it.value() = data;
 
@@ -4740,7 +5148,7 @@ void QtRectFPropertyManager::initializeProperty(QtProperty *property)
 
     QtProperty *xProp = d_ptr->m_doublePropertyManager->addProperty();
     xProp->setPropertyName(tr("X"));
-    d_ptr->m_doublePropertyManager->setDecimals(xProp, decimals(property));
+    d_ptr->m_doublePropertyManager->setPrecision(xProp, decimals(property));
     d_ptr->m_doublePropertyManager->setValue(xProp, 0);
     d_ptr->m_propertyToX[property] = xProp;
     d_ptr->m_xToProperty[xProp] = property;
@@ -4748,7 +5156,7 @@ void QtRectFPropertyManager::initializeProperty(QtProperty *property)
 
     QtProperty *yProp = d_ptr->m_doublePropertyManager->addProperty();
     yProp->setPropertyName(tr("Y"));
-    d_ptr->m_doublePropertyManager->setDecimals(yProp, decimals(property));
+    d_ptr->m_doublePropertyManager->setPrecision(yProp, decimals(property));
     d_ptr->m_doublePropertyManager->setValue(yProp, 0);
     d_ptr->m_propertyToY[property] = yProp;
     d_ptr->m_yToProperty[yProp] = property;
@@ -4756,7 +5164,7 @@ void QtRectFPropertyManager::initializeProperty(QtProperty *property)
 
     QtProperty *wProp = d_ptr->m_doublePropertyManager->addProperty();
     wProp->setPropertyName(tr("Width"));
-    d_ptr->m_doublePropertyManager->setDecimals(wProp, decimals(property));
+    d_ptr->m_doublePropertyManager->setPrecision(wProp, decimals(property));
     d_ptr->m_doublePropertyManager->setValue(wProp, 0);
     d_ptr->m_doublePropertyManager->setMinimum(wProp, 0);
     d_ptr->m_propertyToW[property] = wProp;
@@ -4765,7 +5173,7 @@ void QtRectFPropertyManager::initializeProperty(QtProperty *property)
 
     QtProperty *hProp = d_ptr->m_doublePropertyManager->addProperty();
     hProp->setPropertyName(tr("Height"));
-    d_ptr->m_doublePropertyManager->setDecimals(hProp, decimals(property));
+    d_ptr->m_doublePropertyManager->setPrecision(hProp, decimals(property));
     d_ptr->m_doublePropertyManager->setValue(hProp, 0);
     d_ptr->m_doublePropertyManager->setMinimum(hProp, 0);
     d_ptr->m_propertyToH[property] = hProp;

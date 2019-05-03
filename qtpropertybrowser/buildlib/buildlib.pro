@@ -1,13 +1,20 @@
+win32: SRC_DIR = $$system(echo %SRC_DIR%)
+unix: SRC_DIR = $$system(echo $SRC_DIR)
+include($$SRC_DIR/sknrf/root.pri)
+
+######## Before Script #########
+win32: message($$system(before.bat))
+unix: message($$system(sh before.sh))
+
 TEMPLATE=lib
 CONFIG += qt dll qtpropertybrowser-buildlib
-mac:CONFIG += absolute_library_soname
-win32|mac:!wince*:!win32-msvc:!macx-xcode:CONFIG += debug_and_release build_all
+CONFIG += shared
 include(../src/qtpropertybrowser.pri)
+CONFIG += release
 TARGET = $$QTPROPERTYBROWSER_LIBNAME
-DESTDIR = $$QTPROPERTYBROWSER_LIBDIR
-win32 {
-    DLLDESTDIR = $$[QT_INSTALL_BINS]
-    QMAKE_DISTCLEAN += $$[QT_INSTALL_BINS]\\$${QTPROPERTYBROWSER_LIBNAME}.dll
-}
-target.path = $$DESTDIR
+
+######## After Script #########
+target.path = $$SRC_DIR/sknrf/build
+win32: target.extra = after.bat
+unix: target.extra = sh after.sh
 INSTALLS += target

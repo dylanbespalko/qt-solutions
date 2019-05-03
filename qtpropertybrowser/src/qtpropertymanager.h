@@ -44,6 +44,7 @@
 
 #include "qtpropertybrowser.h"
 #include <QLineEdit>
+#include "qcomplexedit.h"
 
 #if QT_VERSION >= 0x040400
 QT_BEGIN_NAMESPACE
@@ -81,7 +82,12 @@ public:
     int minimum(const QtProperty *property) const;
     int maximum(const QtProperty *property) const;
     int singleStep(const QtProperty *property) const;
+    int precision(const QtProperty *property) const;
+    Scale scale(const QtProperty *property) const;
+    QString unit(const QtProperty *property) const;
+    Format format(const QtProperty *property) const;
     bool isReadOnly(const QtProperty *property) const;
+    QBrush foreground(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, int val);
@@ -89,11 +95,19 @@ public Q_SLOTS:
     void setMaximum(QtProperty *property, int maxVal);
     void setRange(QtProperty *property, int minVal, int maxVal);
     void setSingleStep(QtProperty *property, int step);
+    void setPrecision(QtProperty *property, int prec);
+    void setScale(QtProperty *property, Scale scale_);
+    void setUnit(QtProperty *property, const QString& unit);
+    void setFormat(QtProperty *property,Format format_);
     void setReadOnly(QtProperty *property, bool readOnly);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, int val);
     void rangeChanged(QtProperty *property, int minVal, int maxVal);
     void singleStepChanged(QtProperty *property, int step);
+    void precisionChanged(QtProperty *property, int prec);
+    void scaleChanged(QtProperty *property, Scale scale);
+    void unitChanged(QtProperty *property, const QString& unit);
+    void formatChanged(QtProperty *property, Format format_);
     void readOnlyChanged(QtProperty *property, bool readOnly);
 protected:
     QString valueText(const QtProperty *property) const;
@@ -126,6 +140,7 @@ Q_SIGNALS:
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon valueIcon(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:
@@ -144,25 +159,39 @@ public:
     ~QtDoublePropertyManager();
 
     double value(const QtProperty *property) const;
+    double absTol(const QtProperty *property) const;
+    double relTol(const QtProperty *property) const;
     double minimum(const QtProperty *property) const;
     double maximum(const QtProperty *property) const;
     double singleStep(const QtProperty *property) const;
-    int decimals(const QtProperty *property) const;
+    int precision(const QtProperty *property) const;
+    Scale scale(const QtProperty *property) const;
+    QString unit(const QtProperty *property) const;
+    Format format(const QtProperty *property) const;
     bool isReadOnly(const QtProperty *property) const;
+    QBrush foreground(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, double val);
+    void setAbsTol(QtProperty *property, double absTol);
+    void setRelTol(QtProperty *property, double relTol);
     void setMinimum(QtProperty *property, double minVal);
     void setMaximum(QtProperty *property, double maxVal);
     void setRange(QtProperty *property, double minVal, double maxVal);
     void setSingleStep(QtProperty *property, double step);
-    void setDecimals(QtProperty *property, int prec);
+    void setPrecision(QtProperty *property, int prec);
+    void setScale(QtProperty *property, Scale scale_);
+    void setUnit(QtProperty *property, const QString& unit);
+    void setFormat(QtProperty *property, Format format_);
     void setReadOnly(QtProperty *property, bool readOnly);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, double val);
     void rangeChanged(QtProperty *property, double minVal, double maxVal);
     void singleStepChanged(QtProperty *property, double step);
-    void decimalsChanged(QtProperty *property, int prec);
+    void precisionChanged(QtProperty *property, int prec);
+    void scaleChanged(QtProperty *property, Scale scale);
+    void unitChanged(QtProperty *property, const QString& unit);
+    void formatChanged(QtProperty *property, Format format_);
     void readOnlyChanged(QtProperty *property, bool readOnly);
 protected:
     QString valueText(const QtProperty *property) const;

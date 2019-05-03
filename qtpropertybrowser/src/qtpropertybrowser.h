@@ -45,6 +45,7 @@
 #include <QWidget>
 #include <QSet>
 #include <QLineEdit>
+#include <QIcon>
 
 #if QT_VERSION >= 0x040400
 QT_BEGIN_NAMESPACE
@@ -80,24 +81,30 @@ public:
 
     QtAbstractPropertyManager *propertyManager() const;
 
+    QString label() const;
     QString toolTip() const;
     QString statusTip() const;
     QString whatsThis() const;
     QString propertyName() const;
+    QBrush foreground() const;
     bool isEnabled() const;
     bool isModified() const;
+    bool check() const;
 
     bool hasValue() const;
     QIcon valueIcon() const;
+    QIcon checkIcon() const;
     QString valueText() const;
     QString displayText() const;
 
+    void setLabel(const QString &text);
     void setToolTip(const QString &text);
     void setStatusTip(const QString &text);
     void setWhatsThis(const QString &text);
     void setPropertyName(const QString &text);
     void setEnabled(bool enable);
     void setModified(bool modified);
+    void setCheck(bool check);
 
     void addSubProperty(QtProperty *property);
     void insertSubProperty(QtProperty *property, QtProperty *afterProperty);
@@ -134,9 +141,11 @@ Q_SIGNALS:
 protected:
     virtual bool hasValue(const QtProperty *property) const;
     virtual QIcon valueIcon(const QtProperty *property) const;
+    virtual QIcon checkIcon(const QtProperty *property) const {Q_UNUSED(property); return QIcon();}
     virtual QString valueText(const QtProperty *property) const;
     virtual QString displayText(const QtProperty *property) const;
     virtual EchoMode echoMode(const QtProperty *) const;
+    virtual QBrush foreground(const QtProperty *property) const{return QBrush(QColor(Qt::black),Qt::SolidPattern);}
     virtual void initializeProperty(QtProperty *property) = 0;
     virtual void uninitializeProperty(QtProperty *property);
     virtual QtProperty *createProperty();

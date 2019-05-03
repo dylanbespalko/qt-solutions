@@ -1514,7 +1514,7 @@ QVariant QtVariantPropertyManager::attributeValue(const QtProperty *property, co
         if (attribute == d_ptr->m_singleStepAttribute)
             return doubleManager->singleStep(internProp);
         if (attribute == d_ptr->m_decimalsAttribute)
-            return doubleManager->decimals(internProp);
+            return doubleManager->precision(internProp);
         if (attribute == d_ptr->m_readOnlyAttribute)
             return doubleManager->isReadOnly(internProp);
         return QVariant();
@@ -1769,7 +1769,7 @@ void QtVariantPropertyManager::setAttribute(QtProperty *property,
         if (attribute == d_ptr->m_singleStepAttribute)
             doubleManager->setSingleStep(internProp, qVariantValue<double>(value));
         if (attribute == d_ptr->m_decimalsAttribute)
-            doubleManager->setDecimals(internProp, qVariantValue<int>(value));
+            doubleManager->setPrecision(internProp, qVariantValue<int>(value));
         if (attribute == d_ptr->m_readOnlyAttribute)
             doubleManager->setReadOnly(internProp, qVariantValue<bool>(value));
         return;

@@ -44,6 +44,7 @@
 #include <QMap>
 #include <QIcon>
 #include <QLineEdit>
+#include <QtCore/QtCore>
 
 #if defined(Q_CC_MSVC)
 #    pragma warning(disable: 4786) /* MS VS 6: truncating debug info after 255 characters */
@@ -57,20 +58,24 @@ class QtPropertyPrivate
 {
 public:
     QtPropertyPrivate(QtAbstractPropertyManager *manager)
-        : m_enabled(true),
+        : m_label(""),
+          m_enabled(true),
           m_modified(false),
+          m_check(false),
           m_manager(manager) {}
     QtProperty *q_ptr;
 
     QSet<QtProperty *> m_parentItems;
     QList<QtProperty *> m_subItems;
 
+    QString m_label;
     QString m_toolTip;
     QString m_statusTip;
     QString m_whatsThis;
     QString m_name;
     bool m_enabled;
     bool m_modified;
+    bool m_check;
 
     QtAbstractPropertyManager * const m_manager;
 };
@@ -205,6 +210,16 @@ QtAbstractPropertyManager *QtProperty::propertyManager() const
 }
 
 /*!
+ Returns the property's  label.
+
+ \sa setLabel()
+ */
+QString QtProperty::label() const
+{
+    return d_ptr->m_label;
+}
+
+/*!
     Returns the property's  tool tip.
 
     \sa setToolTip()
@@ -245,6 +260,16 @@ QString QtProperty::propertyName() const
 }
 
 /*!
+ Returns the property's forground brush.
+
+ \sa setForeground()
+ */
+QBrush QtProperty::foreground() const
+{
+    return d_ptr->m_manager->foreground(this);
+}
+
+/*!
     Returns whether the property is enabled.
 
     \sa setEnabled()
@@ -262,6 +287,16 @@ bool QtProperty::isEnabled() const
 bool QtProperty::isModified() const
 {
     return d_ptr->m_modified;
+}
+
+/*!
+ Returns whether the property is checked.
+
+ \sa setCheck()
+ */
+bool QtProperty::check() const
+{
+    return d_ptr->m_check;
 }
 
 /*!
@@ -288,6 +323,19 @@ QIcon QtProperty::valueIcon() const
 }
 
 /*!
+ Returns an icon representing the check state of this property.
+
+ If the given property type can not generate such an icon, this
+ function returns an invalid icon.
+
+ \sa QtAbstractPropertyManager::checkIcon()
+ */
+QIcon QtProperty::checkIcon() const
+{
+    return d_ptr->m_manager->checkIcon(this);
+}
+
+/*!
     Returns a string representing the current state of this property.
 
     If the given property type can not generate such a string, this
@@ -311,6 +359,20 @@ QString QtProperty::valueText() const
 QString QtProperty::displayText() const
 {
     return d_ptr->m_manager->displayText(this);
+}
+
+/*!
+ Sets the property's label to the given \a text.
+
+ \sa label()
+ */
+void QtProperty::setLabel(const QString &text)
+{
+    if (d_ptr->m_label == text)
+        return;
+
+    d_ptr->m_label = text;
+    propertyChanged();
 }
 
 /*!
@@ -396,6 +458,20 @@ void QtProperty::setModified(bool modified)
         return;
 
     d_ptr->m_modified = modified;
+    propertyChanged();
+}
+
+/*!
+ Sets the property's check state according to the passed \a check value.
+
+ \sa check()
+ */
+void QtProperty::setCheck(bool check)
+{
+    if (d_ptr->m_check == check)
+        return;
+
+    d_ptr->m_check = check;
     propertyChanged();
 }
 
@@ -1939,6 +2015,7 @@ QWidget *QtAbstractPropertyBrowser::createEditor(QtProperty *property,
 
     if (!factory)
         return 0;
+
     return factory->createEditor(property, parent);
 }
 
