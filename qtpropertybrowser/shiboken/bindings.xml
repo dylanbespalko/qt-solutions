@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<typesystem package="qtpropertybrowser">
+    <load-typesystem name="typesystem_core.xml" generate="no"/>
+    <load-typesystem name="typesystem_gui.xml" generate="no"/>
+    <load-typesystem name="typesystem_widgets_common.xml" generate="no"/>
+    
+    <rejection class="*" argument-type="const QDate&amp;"/>
+    <rejection class="*" argument-type="const QDateTime&amp;"/>
+    <rejection class="*" argument-type="const QTime&amp;"/>
+
+    <enum-type name="Scale"/>
+    <enum-type name="PkAvg"/>
+    <enum-type name="Format"/>
+    <enum-type name="Domain"/>
+    
+    <!--    Complex Conversion
+    <primitive-type name="QComplex" target-lang-api-name="PyComplex">
+        <include file-name="complex" location="global"/>
+        <conversion-rule>
+            <native-to-target>
+                return PyComplex_FromDoubles(%in.real(), %in.imag());
+            </native-to-target>
+            <target-to-native>
+                <add-conversion type="PyComplex">
+                    double real = PyComplex_RealAsDouble(%in);
+                    double imag = PyComplex_ImagAsDouble(%in);
+                    %out = %OUTTYPE(real, imag);
+                </add-conversion>
+            </target-to-native>
+        </conversion-rule>
+    </primitive-type> -->
+
+    <!--    Qt Properties-->
+    <object-type name="QtProperty"/>
+    <object-type name="QtVariantProperty"/>
+    
+    <!--    Qt Property Managers-->
+    <object-type name="QtAbstractPropertyManager" default-superclass="QObject"/>
+    <object-type name="QtBoolPropertyManager" default-superclass="QtAbstractPropertyManager"/>
+    <object-type name="QtFlagPropertyManager"/>
+    <object-type name="QtEnumPropertyManager"/>
+    <object-type name="QtIntPropertyManager"/>
+    <object-type name="QtDoublePropertyManager"/>
+    <!--    <object-type name="QtComplexPropertyManager"/> -->
+    <!--    <object-type name="QtComplexArrayPropertyManager"/> -->
+    <object-type name="QtDatePropertyManager"/>
+    <object-type name="QtDateTimePropertyManager"/>
+    <object-type name="QtTimePropertyManager"/>
+    <object-type name="QtCharPropertyManager"/>
+    <object-type name="QtStringPropertyManager"/>
+    <!--    <object-type name="QtFilePathManager"/> -->
+    <object-type name="QtLocalePropertyManager"/>
+    <object-type name="QtPointPropertyManager"/>
+    <object-type name="QtPointFPropertyManager"/>
+    <object-type name="QtRectPropertyManager"/>
+    <object-type name="QtRectFPropertyManager"/>
+    <object-type name="QtSizePropertyManager"/>
+    <object-type name="QtSizeFPropertyManager"/>
+    <object-type name="QtCursorPropertyManager"/>
+    <object-type name="QtColorPropertyManager"/>
+    <object-type name="QtFontPropertyManager"/>
+    <object-type name="QtKeySequencePropertyManager"/>
+    <object-type name="QtSizePolicyPropertyManager"/>
+    <object-type name="QtVariantPropertyManager"/>
+    <object-type name="QtGroupPropertyManager"/>
+    
+    <!--    Qt Editor Factories-->
+    <object-type name="QtAbstractEditorFactoryBase"/>
+<!--    <object-type name="QtAbstractEditorFactory"/>-->
+    <object-type name="QtCheckBoxFactory"/>
+    <object-type name="QtEnumEditorFactory"/>
+    <object-type name="QtSpinBoxFactory"/>
+    <!--    <object-type name="QtIntEditFactory"/> -->
+    <object-type name="QtDoubleSpinBoxFactory"/>
+    <object-type name="QtScrollBarFactory"/>
+    <object-type name="QtSliderFactory"/>
+    <!--    <object-type name="QtDoubleEditFactory"/> -->
+    <!--    <object-type name="QtComplexEditFactory"/> -->
+    <!--    <object-type name="QtArrayEditFactory"/> -->
+    <!--    <object-type name="QtEquationEditFactory"/> -->
+    <object-type name="QtDateEditFactory"/>
+    <object-type name="QtDateTimeEditFactory"/>
+    <object-type name="QtTimeEditFactory"/>
+    <object-type name="QtLineEditFactory"/>
+    <!--    <object-type name="QtFileEditorFactory"/> -->
+    <object-type name="QtCursorEditorFactory"/>
+    <object-type name="QtColorEditorFactory"/>
+    <object-type name="QtFontEditorFactory"/>
+    <object-type name="QtKeySequenceEditorFactory"/>
+    <object-type name="QtVariantEditorFactory"/>
+    
+    <!--    Qt Property Browsers-->
+    <object-type name="QtBrowserItem"/>
+    <object-type name="QtAbstractPropertyBrowser">
+        <inject-code class="native" position="beginning" file="./glue/qtpropertybrowser.cpp" snippet="qtabstractpropertybrowser-setFactoryForManager"/>
+        <add-function signature="setFactoryForManager( PyObject*, PyObject* )" return-type="void">
+            <inject-code class="target" position="beginning">
+                setFactoryForManager_glue( %CPPSELF, %PYARG_1, %PYARG_2 );
+            </inject-code>
+        </add-function>
+    </object-type>
+    <object-type name="QtTreePropertyBrowser"
+        default-superclass="QtAbstractPropertyBrowser">
+        <enum-type name="ResizeMode"/>
+        <!--    <enum-type name="AttributeType"/> -->
+    </object-type>
+    <object-type name="QtGroupBoxPropertyBrowser"
+        default-superclass="QtAbstractPropertyBrowser">
+        <!--    <enum-type name="AttributeType"/> -->
+    </object-type>
+    <object-type name="QtButtonPropertyBrowser"
+        default-superclass="QtAbstractPropertyBrowser">
+        <!--    <enum-type name="AttributeType"/> -->
+    </object-type>
+</typesystem>

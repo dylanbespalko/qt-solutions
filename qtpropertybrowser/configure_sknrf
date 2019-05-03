@@ -1,0 +1,21 @@
+sh configure
+make distclean
+mv common.pri common.pri_old
+mv common.pri_new common.pri 
+cd buildlib
+rm moc_*
+rm *.moc
+mv buildlib.pro buildlib.pro_old
+mv buildlib.pro_new buildlib.pro
+make clean
+qmake
+make clean
+make
+make install
+cd ..
+make clean
+qmake
+make clean
+make
+make install
+
