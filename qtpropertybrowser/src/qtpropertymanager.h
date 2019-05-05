@@ -486,15 +486,18 @@ public:
     QSize value(const QtProperty *property) const;
     QSize minimum(const QtProperty *property) const;
     QSize maximum(const QtProperty *property) const;
+    bool isReadOnly(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, const QSize &val);
     void setMinimum(QtProperty *property, const QSize &minVal);
     void setMaximum(QtProperty *property, const QSize &maxVal);
     void setRange(QtProperty *property, const QSize &minVal, const QSize &maxVal);
+    void setReadOnly(QtProperty *property, bool readOnly);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QSize &val);
     void rangeChanged(QtProperty *property, const QSize &minVal, const QSize &maxVal);
+    void readOnlyChanged(QtProperty *property, bool readOnly);
 protected:
     QString valueText(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
@@ -522,6 +525,7 @@ public:
     QSizeF minimum(const QtProperty *property) const;
     QSizeF maximum(const QtProperty *property) const;
     int decimals(const QtProperty *property) const;
+    bool isReadOnly(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, const QSizeF &val);
@@ -529,10 +533,12 @@ public Q_SLOTS:
     void setMaximum(QtProperty *property, const QSizeF &maxVal);
     void setRange(QtProperty *property, const QSizeF &minVal, const QSizeF &maxVal);
     void setDecimals(QtProperty *property, int prec);
+    void setReadOnly(QtProperty *property, bool readOnly);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QSizeF &val);
     void rangeChanged(QtProperty *property, const QSizeF &minVal, const QSizeF &maxVal);
     void decimalsChanged(QtProperty *property, int prec);
+    void readOnlyChanged(QtProperty *property, bool readOnly);
 protected:
     QString valueText(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);

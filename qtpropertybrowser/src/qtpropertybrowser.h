@@ -134,6 +134,7 @@ public:
 
     QSet<QtProperty *> properties() const;
     void clear() const;
+    virtual bool isReadOnly(const QtProperty *) const{return false;}
 
     QtProperty *addProperty(const QString &name = QString());
 Q_SIGNALS:

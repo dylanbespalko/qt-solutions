@@ -128,9 +128,13 @@ static void setSizeMinimumData(PrivateData *data, const Value &newMinVal)
         data->maxVal.setHeight(data->minVal.height());
 
     if (data->val.width() < data->minVal.width())
+    {
         data->val.setWidth(data->minVal.width());
+    }
     if (data->val.height() < data->minVal.height())
+    {
         data->val.setHeight(data->minVal.height());
+    }
 }
 
 template <class PrivateData, class Value>
@@ -143,9 +147,13 @@ static void setSizeMaximumData(PrivateData *data, const Value &newMaxVal)
         data->minVal.setHeight(data->maxVal.height());
 
     if (data->val.width() > data->maxVal.width())
+    {
         data->val.setWidth(data->maxVal.width());
+    }
     if (data->val.height() > data->maxVal.height())
+    {
         data->val.setHeight(data->maxVal.height());
+    }
 }
 
 template <class SizeValue>
@@ -165,7 +173,6 @@ static SizeValue qBoundSize(const SizeValue &minVal, const SizeValue &val, const
     return croppedVal;
 }
 
-// Match the exact signature of qBound for VS 6.
 QSize qBound(QSize minVal, QSize val, QSize maxVal)
 {
     return qBoundSize(minVal, val, maxVal);
@@ -174,6 +181,44 @@ QSize qBound(QSize minVal, QSize val, QSize maxVal)
 QSizeF qBound(QSizeF minVal, QSizeF val, QSizeF maxVal)
 {
     return qBoundSize(minVal, val, maxVal);
+}
+
+template <class Value>
+QColor qSoftBound(Value minVal, Value val, Value maxVal)
+{
+    QColor color = QColor(Qt::black);
+    if (val <= minVal)
+        color = QColor(Qt::blue);
+    if (val >= maxVal)
+        color = QColor(Qt::red);
+    return color;
+}
+
+template <class SizeValue>
+QColor qSoftBoundSize(SizeValue minVal, SizeValue val, SizeValue maxVal)
+{
+    QColor color = QColor(Qt::black);
+    /*SizeValue croppedVal = val;
+    if (minVal.width() >= val.width())
+        color = QColor(Qt::red);
+    else if (maxVal.width() <= val.width())
+        color = QColor(Qt::red);
+
+    if (minVal.height() >= val.height())
+        color = QColor(Qt::red);
+    else if (maxVal.height() <= val.height())
+        color = QColor(Qt::red);*/
+    return color;
+}
+
+QColor qSoftBound(QSize minVal, QSize val, QSize maxVal)
+{
+    return qSoftBoundSize(minVal, val, maxVal);
+}
+
+QColor qSoftBound(QSizeF minVal, QSizeF val, QSizeF maxVal)
+{
+    return qSoftBoundSize(minVal, val, maxVal);
 }
 
 namespace {
@@ -293,8 +338,10 @@ static void setValueInRange(PropertyManager *manager, PropertyManagerPrivate *ma
         return;
 
     const Value oldVal = data.val;
-
-    data.val = qBound(data.minVal, val, data.maxVal);
+    data.foreground = qSoftBound(data.minVal, val, data.maxVal);
+    data.val = val;
+    if (!manager->isReadOnly(property))
+        data.val = qBound(data.minVal, val, data.maxVal);
 
     if (data.val == oldVal)
         return;
@@ -671,7 +718,8 @@ public:
     {
         Data()
             : val(0), minVal(-INT_MAX), maxVal(INT_MAX), singleStep(1), precision(2), scale(Scale::_), unit(QString()),
-              format(Format::LIN_DEG), foreground(QBrush(Qt::black, Qt::SolidPattern)), readOnly(false) {}
+              format(Format::LIN_DEG), readOnly(false),
+              foreground(QBrush(Qt::black, Qt::SolidPattern)){}
         int val;
         int minVal;
         int maxVal;
@@ -680,8 +728,8 @@ public:
         Scale scale;
         QString unit;
         Format format;
-        QBrush foreground;
         bool readOnly;
+        QBrush foreground;
         int minimumValue() const { return minVal; }
         int maximumValue() const { return maxVal; }
         void setMinimumValue(int newMinVal) { setSimpleMinimumData(this, newMinVal); }
@@ -858,6 +906,17 @@ Format QtIntPropertyManager::format(const QtProperty *property) const
     return it.value().format;
 }
 
+/*!
+    Returns read-only status of the property.
+
+    When property is read-only it's value can be selected and copied from editor but not modified.
+
+    \sa QtIntPropertyManager::setReadOnly
+*/
+bool QtIntPropertyManager::isReadOnly(const QtProperty *property) const
+{
+    return getData<bool>(d_ptr->m_values, &QtIntPropertyManagerPrivate::Data::readOnly, property, false);
+}
 
 /*!
  Returns the given \a property's foreground brush.
@@ -871,17 +930,6 @@ QBrush QtIntPropertyManager::foreground(const QtProperty *property) const
     return getData<QBrush>(d_ptr->m_values, &QtIntPropertyManagerPrivate::Data::foreground, property, QBrush(Qt::black, Qt::SolidPattern));
 }
 
-/*!
-    Returns read-only status of the property.
-
-    When property is read-only it's value can be selected and copied from editor but not modified.
-
-    \sa QtIntPropertyManager::setReadOnly
-*/
-bool QtIntPropertyManager::isReadOnly(const QtProperty *property) const
-{
-    return getData<bool>(d_ptr->m_values, &QtIntPropertyManagerPrivate::Data::readOnly, property, false);
-}
 
 /*!
     \reimp
@@ -1244,7 +1292,8 @@ public:
         Data()
             : val(0), absTol(std::numeric_limits<double>::epsilon()), relTol(std::numeric_limits<double>::epsilon()), minVal(-INT_MAX), maxVal(INT_MAX),
             singleStep(1), precision(2), scale(Scale::_), unit(QString()),
-            format(Format::LIN_DEG), foreground(QBrush(Qt::black, Qt::SolidPattern)), readOnly(false) {}
+            format(Format::LIN_DEG), readOnly(false),
+            foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         double val;
         double absTol;
         double relTol;
@@ -1255,8 +1304,8 @@ public:
         Scale scale;
         QString unit;
         Format format;
-        QBrush foreground;
         bool readOnly;
+        QBrush foreground;
         double minimumValue() const { return minVal; }
         double maximumValue() const { return maxVal; }
         void setMinimumValue(double newMinVal) { setSimpleMinimumData(this, newMinVal); }
@@ -1894,13 +1943,13 @@ public:
     struct Data
     {
         Data() : regExp(QString(QLatin1Char('*')),  Qt::CaseSensitive, QRegExp::Wildcard),
-            echoMode(QLineEdit::Normal), readOnly(false)
-        {
-        }
+            echoMode(QLineEdit::Normal), readOnly(false),
+            foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QString val;
         QRegExp regExp;
         int echoMode;
         bool readOnly;
+        QBrush foreground;
     };
 
     typedef QMap<const QtProperty *, Data> PropertyValueMap;
@@ -2163,9 +2212,11 @@ public:
 
     struct Data
     {
-        Data() : val(false), textVisible(true) {}
+        Data() : val(false), textVisible(true),
+            foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         bool val;
         bool textVisible;
+        QBrush foreground;
     };
 
     typedef QMap<const QtProperty *, Data> PropertyValueMap;
@@ -2349,10 +2400,12 @@ public:
     struct Data
     {
         Data() : val(QDate::currentDate()), minVal(QDate(1752, 9, 14)),
-                maxVal(QDate(7999, 12, 31)) {}
+                maxVal(QDate(7999, 12, 31)),
+                foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QDate val;
         QDate minVal;
         QDate maxVal;
+        QBrush foreground;
         QDate minimumValue() const { return minVal; }
         QDate maximumValue() const { return maxVal; }
         void setMinimumValue(const QDate &newMinVal) { setSimpleMinimumData(this, newMinVal); }
@@ -3490,9 +3543,11 @@ public:
 
     struct Data
     {
-        Data() : decimals(2) {}
+        Data() : decimals(2),
+            foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QPointF val;
         int decimals;
+        QBrush foreground;
     };
 
     void slotDoubleChanged(QtProperty *property, double value);
@@ -3772,10 +3827,14 @@ public:
 
     struct Data
     {
-        Data() : val(QSize(0, 0)), minVal(QSize(0, 0)), maxVal(QSize(INT_MAX, INT_MAX)) {}
+        Data() : val(QSize(0, 0)), minVal(QSize(0, 0)), maxVal(QSize(INT_MAX, INT_MAX)),
+            readOnly(false),
+            foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QSize val;
         QSize minVal;
         QSize maxVal;
+        bool readOnly;
+        QBrush foreground;
         QSize minimumValue() const { return minVal; }
         QSize maximumValue() const { return maxVal; }
         void setMinimumValue(const QSize &newMinVal) { setSizeMinimumData(this, newMinVal); }
@@ -3958,6 +4017,18 @@ QSize QtSizePropertyManager::maximum(const QtProperty *property) const
 }
 
 /*!
+    Returns read-only status of the property.
+
+    When property is read-only it's value can be selected and copied from editor but not modified.
+
+    \sa QtSizePropertyManager::setReadOnly
+*/
+bool QtSizePropertyManager::isReadOnly(const QtProperty *property) const
+{
+    return getData<bool>(d_ptr->m_values, &QtSizePropertyManagerPrivate::Data::readOnly, property, false);
+}
+
+/*!
     \reimp
 */
 QString QtSizePropertyManager::valueText(const QtProperty *property) const
@@ -4055,6 +4126,29 @@ void QtSizePropertyManager::setRange(QtProperty *property, const QSize &minVal, 
 }
 
 /*!
+    Sets read-only status of the property.
+
+    \sa QtSizePropertyManager::setReadOnly
+*/
+void QtSizePropertyManager::setReadOnly(QtProperty *property, bool readOnly)
+{
+    const QtSizePropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtSizePropertyManagerPrivate::Data data = it.value();
+
+    if (data.readOnly == readOnly)
+        return;
+
+    data.readOnly = readOnly;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit readOnlyChanged(property, data.readOnly);
+}
+
+/*!
     \reimp
 */
 void QtSizePropertyManager::initializeProperty(QtProperty *property)
@@ -4116,11 +4210,15 @@ public:
 
     struct Data
     {
-        Data() : val(QSizeF(0, 0)), minVal(QSizeF(0, 0)), maxVal(QSizeF(INT_MAX, INT_MAX)), decimals(2) {}
+        Data() : val(QSizeF(0, 0)), minVal(QSizeF(0, 0)), maxVal(QSizeF(INT_MAX, INT_MAX)), decimals(2),
+            readOnly(false),
+            foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QSizeF val;
         QSizeF minVal;
         QSizeF maxVal;
         int decimals;
+        bool readOnly;
+        QBrush foreground;
         QSizeF minimumValue() const { return minVal; }
         QSizeF maximumValue() const { return maxVal; }
         void setMinimumValue(const QSizeF &newMinVal) { setSizeMinimumData(this, newMinVal); }
@@ -4321,6 +4419,18 @@ QSizeF QtSizeFPropertyManager::maximum(const QtProperty *property) const
 }
 
 /*!
+    Returns read-only status of the property.
+
+    When property is read-only it's value can be selected and copied from editor but not modified.
+
+    \sa QtSizeFPropertyManager::setReadOnly
+*/
+bool QtSizeFPropertyManager::isReadOnly(const QtProperty *property) const
+{
+    return getData<bool>(d_ptr->m_values, &QtSizeFPropertyManagerPrivate::Data::readOnly, property, false);
+}
+
+/*!
     \reimp
 */
 QString QtSizeFPropertyManager::valueText(const QtProperty *property) const
@@ -4479,6 +4589,29 @@ void QtSizeFPropertyManager::initializeProperty(QtProperty *property)
 }
 
 /*!
+    Sets read-only status of the property.
+
+    \sa QtSizeFPropertyManager::setReadOnly
+*/
+void QtSizeFPropertyManager::setReadOnly(QtProperty *property, bool readOnly)
+{
+    const QtSizeFPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtSizeFPropertyManagerPrivate::Data data = it.value();
+
+    if (data.readOnly == readOnly)
+        return;
+
+    data.readOnly = readOnly;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit readOnlyChanged(property, data.readOnly);
+}
+
+/*!
     \reimp
 */
 void QtSizeFPropertyManager::uninitializeProperty(QtProperty *property)
@@ -4514,8 +4647,10 @@ public:
 
     struct Data
     {
-        Data() : val(0, 0, 0, 0) {}
+        Data() : val(0, 0, 0, 0),
+            foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QRect val;
+        QBrush foreground;
         QRect constraint;
     };
 
@@ -4922,10 +5057,12 @@ public:
 
     struct Data
     {
-        Data() : val(0, 0, 0, 0), decimals(2) {}
+        Data() : val(0, 0, 0, 0), decimals(2),
+            foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QRectF val;
         QRectF constraint;
         int decimals;
+        QBrush foreground;
     };
 
     typedef QMap<const QtProperty *, Data> PropertyValueMap;
@@ -5388,8 +5525,10 @@ public:
 
     struct Data
     {
-        Data() : val(-1) {}
+        Data() : val(-1),
+            foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         int val;
+        QBrush foreground;
         QStringList enumNames;
         QMap<int, QIcon> enumIcons;
     };
@@ -5660,8 +5799,10 @@ public:
 
     struct Data
     {
-        Data() : val(-1) {}
+        Data() : val(-1),
+            foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         int val;
+        QBrush foreground;
         QStringList flagNames;
     };
 
