@@ -164,7 +164,7 @@ void QtPropertyEditorView::drawRow(QPainter *painter, const QStyleOptionViewItem
             opt.palette.setColor(QPalette::AlternateBase, c.lighter(112));
         }
     }
-    QColor warningColor = indexToItem(index)->foreground(1).color();
+    QColor warningColor = indexToItem(index)->foreground(0).color();
     if (warningColor != Qt::black)
         opt.palette.setBrush(QPalette::HighlightedText, warningColor);
 
@@ -632,7 +632,6 @@ void QtTreePropertyBrowserPrivate::updateItem(QTreeWidgetItem *item)
         item->setIcon(1, property->valueIcon());
         property->displayText().isEmpty() ? item->setText(1, property->valueText()) : item->setText(1, property->displayText());
         item->setForeground(0, property->foreground());
-        item->setForeground(1, property->foreground());
     } else if (markPropertiesWithoutValue() && !m_treeWidget->rootIsDecorated()) {
         expandIcon = m_expandIcon;
     }

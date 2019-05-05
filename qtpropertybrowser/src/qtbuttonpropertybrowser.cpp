@@ -477,6 +477,9 @@ void QtButtonPropertyBrowserPrivate::updateItem(WidgetItem *item)
         item->label->setStatusTip(property->statusTip());
         item->label->setWhatsThis(property->whatsThis());
         item->label->setEnabled(property->isEnabled());
+        QPalette palette = item->label->palette();
+        palette.setColor(QPalette::Foreground, property->foreground().color());
+        item->label->setPalette(palette);
     }
     if (item->widgetLabel) {
         QFont font = item->widgetLabel->font();
