@@ -60,6 +60,7 @@ protected:
     void connectPropertyManager(QtIntPropertyManager *manager);
     QWidget *createEditor(QtIntPropertyManager *manager, QtProperty *property,
                 QWidget *parent);
+    QWidget *createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property, QWidget *parent, int attribute);
     void disconnectPropertyManager(QtIntPropertyManager *manager);
 private:
     QtSpinBoxFactoryPrivate *d_ptr;
@@ -71,6 +72,10 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotReadOnlyChanged(QtProperty *, bool))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(int))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotComboBoxAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotLineEditAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckBoxAttributeEditorDestroyed(QObject *))
 };
 
 class QtIntEditFactoryPrivate;
@@ -98,7 +103,17 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotPrecisionChanged(QtProperty *, int))
     Q_PRIVATE_SLOT(d_func(), void slotReadOnlyChanged(QtProperty *, bool))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(int))
+    Q_PRIVATE_SLOT(d_func(), void slotSetScale(int))
+    Q_PRIVATE_SLOT(d_func(), void slotSetFormat(int))
+    Q_PRIVATE_SLOT(d_func(), void slotSetMinimum(int))
+    Q_PRIVATE_SLOT(d_func(), void slotSetMaximum(int))
+    Q_PRIVATE_SLOT(d_func(), void slotSetMinimum(double))
+    Q_PRIVATE_SLOT(d_func(), void slotSetMaximum(double))
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotComboBoxAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotLineEditAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckBoxAttributeEditorDestroyed(QObject *))
 };
 
 class QtSliderFactoryPrivate;
@@ -113,6 +128,7 @@ protected:
     void connectPropertyManager(QtIntPropertyManager *manager);
     QWidget *createEditor(QtIntPropertyManager *manager, QtProperty *property,
                 QWidget *parent);
+    QWidget *createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property, QWidget *parent, int attribute);
     void disconnectPropertyManager(QtIntPropertyManager *manager);
 private:
     QtSliderFactoryPrivate *d_ptr;
@@ -123,6 +139,10 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotSingleStepChanged(QtProperty *, int))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(int))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotComboBoxAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotLineEditAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckBoxAttributeEditorDestroyed(QObject *))
 };
 
 class QtScrollBarFactoryPrivate;
@@ -137,6 +157,7 @@ protected:
     void connectPropertyManager(QtIntPropertyManager *manager);
     QWidget *createEditor(QtIntPropertyManager *manager, QtProperty *property,
                 QWidget *parent);
+    QWidget *createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property, QWidget *parent, int attribute);
     void disconnectPropertyManager(QtIntPropertyManager *manager);
 private:
     QtScrollBarFactoryPrivate *d_ptr;
@@ -147,6 +168,10 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotSingleStepChanged(QtProperty *, int))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(int))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotComboBoxAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotLineEditAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckBoxAttributeEditorDestroyed(QObject *))
 };
 
 class QtCheckBoxFactoryPrivate;
@@ -161,6 +186,7 @@ protected:
     void connectPropertyManager(QtBoolPropertyManager *manager);
     QWidget *createEditor(QtBoolPropertyManager *manager, QtProperty *property,
                 QWidget *parent);
+    QWidget *createAttributeEditor(QtBoolPropertyManager *manager, QtProperty *property, QWidget *parent, int attribute);
     void disconnectPropertyManager(QtBoolPropertyManager *manager);
 private:
     QtCheckBoxFactoryPrivate *d_ptr;
@@ -170,6 +196,10 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotTextVisibleChanged(QtProperty *, bool))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(bool))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotComboBoxAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotLineEditAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckBoxAttributeEditorDestroyed(QObject *))
 };
 
 class QtDoubleSpinBoxFactoryPrivate;
@@ -184,6 +214,7 @@ protected:
     void connectPropertyManager(QtDoublePropertyManager *manager);
     QWidget *createEditor(QtDoublePropertyManager *manager, QtProperty *property,
                 QWidget *parent);
+    QWidget *createAttributeEditor(QtDoublePropertyManager *manager, QtProperty *property, QWidget *parent, int attribute);
     void disconnectPropertyManager(QtDoublePropertyManager *manager);
 private:
     QtDoubleSpinBoxFactoryPrivate *d_ptr;
@@ -196,6 +227,10 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotReadOnlyChanged(QtProperty *, bool))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(double))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotComboBoxAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotLineEditAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckBoxAttributeEditorDestroyed(QObject *))
 };
 
 class QtDoubleEditFactoryPrivate;
@@ -222,7 +257,15 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotPrecisionChanged(QtProperty *, int))
     Q_PRIVATE_SLOT(d_func(), void slotReadOnlyChanged(QtProperty *, bool))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(double))
+    Q_PRIVATE_SLOT(d_func(), void slotSetScale(int))
+    Q_PRIVATE_SLOT(d_func(), void slotSetFormat(int))
+    Q_PRIVATE_SLOT(d_func(), void slotSetMinimum(double))
+    Q_PRIVATE_SLOT(d_func(), void slotSetMaximum(double))
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotComboBoxAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotLineEditAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckBoxAttributeEditorDestroyed(QObject *))
 };
 
 class QtLineEditFactoryPrivate;

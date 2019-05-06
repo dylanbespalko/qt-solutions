@@ -131,12 +131,15 @@ public:
 
     explicit QtAbstractPropertyManager(QObject *parent = 0);
     ~QtAbstractPropertyManager();
+    void connect_signals() const{}
+    void disconnect_signals() const{}
 
     QSet<QtProperty *> properties() const;
     void clear() const;
     virtual bool isReadOnly(const QtProperty *) const{return false;}
-
     QtProperty *addProperty(const QString &name = QString());
+    bool attributesEditable() const;
+    void setAttributesEditable(bool enable);
 Q_SIGNALS:
 
     void propertyInserted(QtProperty *property,
@@ -149,7 +152,7 @@ protected:
     virtual QIcon valueIcon(const QtProperty *property) const;
     virtual QIcon checkIcon(const QtProperty *property) const {Q_UNUSED(property); return QIcon();}
     virtual QString valueText(const QtProperty *property) const;
-    virtual QString displayText(const QtProperty *property) const;
+    virtual QString displayText(const QtProperty *property) const{Q_UNUSED(property); return QString();}
     virtual QString unitText(const QtProperty *property) const{Q_UNUSED(property); return QString();}
     virtual QString pkAvgText(const QtProperty *property) const{Q_UNUSED(property); return QString();}
     virtual QString formatText(const QtProperty *property) const{Q_UNUSED(property); return QString();}
@@ -172,6 +175,7 @@ class QT_QTPROPERTYBROWSER_EXPORT QtAbstractEditorFactoryBase : public QObject
     Q_OBJECT
 public:
     virtual QWidget *createEditor(QtProperty *property, QWidget *parent) = 0;
+    virtual QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, int atttribute) = 0;
 protected:
     explicit QtAbstractEditorFactoryBase(QObject *parent = 0)
         : QObject(parent) {}
@@ -195,6 +199,17 @@ public:
             PropertyManager *manager = it.next();
             if (manager == property->propertyManager()) {
                 return createEditor(manager, property, parent);
+            }
+        }
+        return 0;
+    }
+    QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, int attribute)
+    {
+        QSetIterator<PropertyManager *> it(m_managers);
+        while (it.hasNext()) {
+            PropertyManager *manager = it.next();
+            if (manager == property->propertyManager()) {
+                return createAttributeEditor(manager, property, parent, attribute);
             }
         }
         return 0;
@@ -237,6 +252,8 @@ protected:
     virtual void connectPropertyManager(PropertyManager *manager) = 0;
     virtual QWidget *createEditor(PropertyManager *manager, QtProperty *property,
                 QWidget *parent) = 0;
+    virtual QWidget *createAttributeEditor(PropertyManager *manager, QtProperty *property,QWidget *parent, int attribute)
+    {Q_UNUSED(manager);Q_UNUSED(property);Q_UNUSED(parent);Q_UNUSED(attribute);return 0;};
     virtual void disconnectPropertyManager(PropertyManager *manager) = 0;
     void managerDestroyed(QObject *manager)
     {
@@ -341,6 +358,7 @@ protected:
     virtual void itemChanged(QtBrowserItem *item) = 0;
 
     virtual QWidget *createEditor(QtProperty *property, QWidget *parent);
+    virtual QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, int);
 private:
 
     bool addFactory(QtAbstractPropertyManager *abstractManager,

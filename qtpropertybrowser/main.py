@@ -19,15 +19,14 @@ from qtpropertybrowser import QtSizePropertyManager, QtSizeFPropertyManager
 from qtpropertybrowser import QtRectPropertyManager, QtRectFPropertyManager
 from qtpropertybrowser import QtCursorPropertyManager, QtColorPropertyManager, QtFontPropertyManager, QtKeySequencePropertyManager
 from qtpropertybrowser import QtSizePolicyPropertyManager
-from qtpropertybrowser import QtCheckBoxFactory, QtEnumEditorFactory  #, QtIntEditFactory
+from qtpropertybrowser import QtCheckBoxFactory, QtEnumEditorFactory, QtIntEditFactory, QtSpinBoxFactory
 from qtpropertybrowser import QtLineEditFactory
 #from qtpropertybrowser import QtFileEditorFactory
-from qtpropertybrowser import QtSpinBoxFactory, QtDoubleSpinBoxFactory
-#from qtpropertybrowser import QtDoubleEditFactory, QtComplexEditFactory, QtArrayEditFactory
+from qtpropertybrowser import QtDoubleEditFactory, QtDoubleSpinBoxFactory  #, QtComplexEditFactory, QtArrayEditFactory
 from qtpropertybrowser import QtDateEditFactory, QtDateTimeEditFactory, QtTimeEditFactory
 from qtpropertybrowser import QtCursorEditorFactory, QtColorEditorFactory, QtFontEditorFactory
 from qtpropertybrowser import QtKeySequenceEditorFactory
-from qtpropertybrowser import PkAvg, Format
+from qtpropertybrowser import PkAvg, Scale, Format, Domain
 
 
 @unique
@@ -95,8 +94,10 @@ if __name__ == "__main__":
         factory_map = {'bool': QtCheckBoxFactory(),
                        'enum': QtEnumEditorFactory(),
                        'flag': False,
-                       'int': QtSpinBoxFactory(),
-                       'float': QtDoubleSpinBoxFactory(),
+                       'int': QtIntEditFactory(),
+                       'int2': QtSpinBoxFactory(),
+                       'float': QtDoubleEditFactory(),
+                       'float2': QtDoubleSpinBoxFactory(),
                        #'complex': QtComplexEditFactory(),
                        #'array': QtArrayEditFactory(),
                        'str': QtLineEditFactory(),
@@ -136,6 +137,8 @@ if __name__ == "__main__":
         manager_map['int'].valueChanged.connect(set_value)
         property_ = manager_map['int'].addProperty("int_read")
         property_.propertyManager().setReadOnly(property_, True)
+        property_.propertyManager().setScale(property_, Scale.T)
+        property_.propertyManager().setUnit(property_, "V")
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
         property_.propertyManager().setValue(property_, 3)

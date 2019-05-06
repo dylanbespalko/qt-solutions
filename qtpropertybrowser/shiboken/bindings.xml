@@ -70,11 +70,11 @@
     <object-type name="QtCheckBoxFactory"/>
     <object-type name="QtEnumEditorFactory"/>
     <object-type name="QtSpinBoxFactory"/>
-    <!--    <object-type name="QtIntEditFactory"/> -->
+    <object-type name="QtIntEditFactory"/>
     <object-type name="QtDoubleSpinBoxFactory"/>
     <object-type name="QtScrollBarFactory"/>
     <object-type name="QtSliderFactory"/>
-    <!--    <object-type name="QtDoubleEditFactory"/> -->
+    <object-type name="QtDoubleEditFactory"/>
     <!--    <object-type name="QtComplexEditFactory"/> -->
     <!--    <object-type name="QtArrayEditFactory"/> -->
     <!--    <object-type name="QtEquationEditFactory"/> -->
@@ -106,10 +106,8 @@
     </object-type>
     <object-type name="QtGroupBoxPropertyBrowser"
         default-superclass="QtAbstractPropertyBrowser">
-        <!--    <enum-type name="AttributeType"/> -->
     </object-type>
     <object-type name="QtButtonPropertyBrowser"
         default-superclass="QtAbstractPropertyBrowser">
-        <!--    <enum-type name="AttributeType"/> -->
     </object-type>
 </typesystem>

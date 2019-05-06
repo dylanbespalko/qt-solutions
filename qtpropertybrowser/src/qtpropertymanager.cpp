@@ -930,7 +930,6 @@ QBrush QtIntPropertyManager::foreground(const QtProperty *property) const
     return getData<QBrush>(d_ptr->m_values, &QtIntPropertyManagerPrivate::Data::foreground, property, QBrush(Qt::black, Qt::SolidPattern));
 }
 
-
 /*!
     \reimp
 */

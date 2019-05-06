@@ -47,9 +47,9 @@ HEADERS += \
     qtpropertybrowser/qtabstracteditorfactorybase_wrapper.h \
     qtpropertybrowser/qtcheckboxfactory_wrapper.h \
     qtpropertybrowser/qtspinboxfactory_wrapper.h \
-    #qtpropertybrowser/qtinteditfactory_wrapper.h \
+    qtpropertybrowser/qtinteditfactory_wrapper.h \
     qtpropertybrowser/qtdoublespinboxfactory_wrapper.h \
-    #qtpropertybrowser/qtdoubleeditfactory_wrapper.h \
+    qtpropertybrowser/qtdoubleeditfactory_wrapper.h \
     #qtpropertybrowser/qtarrayeditfactory_wrapper.h \
     #qtpropertybrowser/qtequationeditfactory_wrapper.h \
     qtpropertybrowser/qtscrollbarfactory_wrapper.h \
@@ -108,11 +108,11 @@ SOURCES += \
     qtpropertybrowser/qtcheckboxfactory_wrapper.cpp \
     qtpropertybrowser/qtenumeditorfactory_wrapper.cpp \
     qtpropertybrowser/qtspinboxfactory_wrapper.cpp \
-    #qtpropertybrowser/qtinteditfactory_wrapper.cpp \
+    qtpropertybrowser/qtinteditfactory_wrapper.cpp \
     qtpropertybrowser/qtdoublespinboxfactory_wrapper.cpp \
     qtpropertybrowser/qtscrollbarfactory_wrapper.cpp \
     qtpropertybrowser/qtsliderfactory_wrapper.cpp \
-    #qtpropertybrowser/qtdoubleeditfactory_wrapper.cpp \
+    qtpropertybrowser/qtdoubleeditfactory_wrapper.cpp \
     #qtpropertybrowser/qtcomplexeditfactory_wrapper.cpp \
     #qtpropertybrowser/qtarrayeditfactory_wrapper.cpp \
     #qtpropertybrowser/qtequationeditfactory_wrapper.cpp \

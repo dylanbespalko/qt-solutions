@@ -72,6 +72,8 @@ public:
     void propertyChanged(QtBrowserItem *index);
     QWidget *createEditor(QtProperty *property, QWidget *parent) const
         { return q_ptr->createEditor(property, parent); }
+    QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, QtAbstractPropertyBrowser::AttributeType attribute) const
+    { return q_ptr->createAttributeEditor(property, parent,attribute); }
     QtProperty *indexToProperty(const QModelIndex &index) const;
     QTreeWidgetItem *indexToItem(const QModelIndex &index) const;
     QtBrowserItem *indexToBrowserItem(const QModelIndex &index) const;
@@ -190,7 +192,7 @@ void QtPropertyEditorView::keyPressEvent(QKeyEvent *event)
                     event->accept();
                     // If the current position is at column 0, move to 1.
                     QModelIndex index = currentIndex();
-                    if (index.column() == 0) {
+                    if (index.column() != 1) {
                         index = index.sibling(index.row(), 1);
                         setCurrentIndex(index);
                     }
@@ -208,12 +210,13 @@ void QtPropertyEditorView::mousePressEvent(QMouseEvent *event)
 {
     QTreeWidget::mousePressEvent(event);
     QTreeWidgetItem *item = itemAt(event->pos());
+    int col = currentColumn();
 
     if (item) {
         if ((item != m_editorPrivate->editedItem()) && (event->button() == Qt::LeftButton)
-                && (header()->logicalIndexAt(event->pos().x()) == 1)
+                && (header()->logicalIndexAt(event->pos().x()) > 0)
                 && ((item->flags() & (Qt::ItemIsEditable | Qt::ItemIsEnabled)) == (Qt::ItemIsEditable | Qt::ItemIsEnabled))) {
-            editItem(item, 1);
+            editItem(item, col);
         } else if (!m_editorPrivate->hasValue(item) && m_editorPrivate->markPropertiesWithoutValue() && !rootIsDecorated()) {
             if (event->pos().x() + header()->offset() < 20)
                 item->setExpanded(!item->isExpanded());
@@ -306,6 +309,7 @@ void QtPropertyEditorDelegate::slotEditorDestroyed(QObject *object)
         if (m_editedWidget == w) {
             m_editedWidget = 0;
             m_editedItem = 0;
+            m_editedColumn = -1;
         }
     }
 }
@@ -336,6 +340,25 @@ QWidget *QtPropertyEditorDelegate::createEditor(QWidget *parent,
             return editor;
         }
     }
+    else if (index.column() >= 2 && m_editorPrivate){
+        QtProperty *property = m_editorPrivate->indexToProperty(index);
+        QTreeWidgetItem *item = m_editorPrivate->indexToItem(index);
+        if (property && item && (item->flags() & Qt::ItemIsEnabled)) {
+            QWidget *editor = m_editorPrivate->createAttributeEditor(property, parent,m_editorPrivate->columnToAttribute(index.column()));
+            if (editor) {
+                editor->setAutoFillBackground(true);
+                editor->installEventFilter(const_cast<QtPropertyEditorDelegate *>(this));
+                connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotEditorDestroyed(QObject *)));
+                m_propertyToEditor[property] = editor;
+                m_editorToProperty[editor] = property;
+                m_editedItem = item;
+                m_editedWidget = editor;
+            }
+            return editor;
+        }
+    }
+    m_editedColumn = index.column();
+    return 0;
 }
 
 void QtPropertyEditorDelegate::updateEditorGeometry(QWidget *editor,
@@ -374,7 +397,7 @@ void QtPropertyEditorDelegate::paint(QPainter *painter, const QStyleOptionViewIt
     if (c.isValid())
         painter->fillRect(option.rect, c);
     opt.state &= ~QStyle::State_HasFocus;
-    if (index.column() == 1) {
+    if (index.column() == m_editedColumn) {
         QTreeWidgetItem *item = m_editorPrivate->indexToItem(index);
         if (m_editedItem && m_editedItem == item)
             m_disablePainting = true;
@@ -479,7 +502,6 @@ void QtTreePropertyBrowserPrivate::init(QWidget *parent)
 
     layout->addWidget(m_treeWidget);
     parent->setFocusProxy(m_treeWidget);
-    m_attributes = QList<QtAbstractPropertyBrowser::AttributeType>();
 
     m_treeWidget->setColumnCount(2);
     QStringList labels;
@@ -498,6 +520,7 @@ void QtTreePropertyBrowserPrivate::init(QWidget *parent)
 
     m_expandIcon = drawIndicatorIcon(q_ptr->palette(), q_ptr->style());
 
+    m_attributes = QList<QtAbstractPropertyBrowser::AttributeType>();
     QList<QtAbstractPropertyBrowser::AttributeType> attributes;
     attributes << QtAbstractPropertyBrowser::Empty << QtAbstractPropertyBrowser::Empty << QtAbstractPropertyBrowser::Empty;
     q_ptr->setAttributes(attributes);
@@ -722,7 +745,7 @@ void QtTreePropertyBrowserPrivate::updateItem(QTreeWidgetItem *item)
         item->setToolTip(1, toolTip);
         item->setIcon(1, property->valueIcon());
         property->displayText().isEmpty() ? item->setText(1, property->valueText()) : item->setText(1, property->displayText());
-        item->setForeground(1, property->foreground());
+        item->setForeground(0, property->foreground());
     } else if (markPropertiesWithoutValue() && !m_treeWidget->rootIsDecorated()) {
         expandIcon = m_expandIcon;
     }

@@ -93,6 +93,7 @@ public:
                 QtProperty *afterProperty) const;
 
     QSet<QtProperty *> m_properties;
+    bool attributesEditable;
 };
 
 /*!
@@ -834,6 +835,16 @@ QSet<QtProperty *> QtAbstractPropertyManager::properties() const
 }
 
 /*!
+ Returns the attributeEditable Flag that determines if property attributes can be edited from the PropertyBrowser.
+
+ \sa attributeEditable()
+ */
+bool QtAbstractPropertyManager::attributesEditable() const
+{
+    return d_ptr->attributesEditable;
+}
+
+/*!
     Returns whether the given \a property has a value.
 
     The default implementation of this function returns true.
@@ -877,21 +888,6 @@ QString QtAbstractPropertyManager::valueText(const QtProperty *property) const
 }
 
 /*!
-    Returns a string representing the current state of the given \a
-    property.
-
-    The default implementation of this function returns an empty
-    string.
-
-    \sa QtProperty::valueText()
-*/
-QString QtAbstractPropertyManager::displayText(const QtProperty *property) const
-{
-    Q_UNUSED(property)
-    return QString();
-}
-
-/*!
     Returns the echo mode representing the current state of the given \a
     property.
 
@@ -922,6 +918,16 @@ QtProperty *QtAbstractPropertyManager::addProperty(const QString &name)
         initializeProperty(property);
     }
     return property;
+}
+
+/*!
+ Set the attributeEditable Flag that determines if property attributes can be edited from the PropertyBrowser.
+
+ \sa attributeEditable()
+ */
+void QtAbstractPropertyManager::setAttributesEditable(bool enable)
+{
+    d_ptr->attributesEditable = enable;
 }
 
 /*!
@@ -1027,6 +1033,20 @@ void QtAbstractPropertyManager::uninitializeProperty(QtProperty *property)
 
     \sa QtAbstractEditorFactory::createEditor()
 */
+
+/*!
+ \fn virtual QWidget *QtAbstractEditorFactoryBase::createAttributeEditor(QtProperty *property,
+ QWidget *parent, AttributeType attribute) = 0
+
+ Creates an attribute editing widget (with the given \a parent) for the given
+ \a property.
+
+ This function is reimplemented in QtAbstractEditorFactory template class
+ which also provides a pure virtual convenience overload of this
+ function enabling access to the property's manager.
+
+ \sa QtAbstractEditorFactory::createAttributeEditor()
+ */
 
 /*!
     \fn QtAbstractEditorFactoryBase::QtAbstractEditorFactoryBase(QObject *parent = 0)
@@ -1139,6 +1159,13 @@ void QtAbstractPropertyManager::uninitializeProperty(QtProperty *property)
 */
 
 /*!
+ \fn QWidget *QtAbstractEditorFactory::createAttributeEditor(QtProperty *property, QWidget *parent)
+
+ Creates an attribute editing widget (with the given \a parent) for the given
+ \a property.
+ */
+
+/*!
     \fn void QtAbstractEditorFactory::addPropertyManager(PropertyManager *manager)
 
     Adds the given \a manager to this factory's set of managers,
@@ -1197,6 +1224,26 @@ void QtAbstractPropertyManager::uninitializeProperty(QtProperty *property)
 
     \sa connectPropertyManager()
 */
+
+/*!
+ \fn virtual QWidget *QtAbstractEditorFactory::createAttributeEditor(PropertyManager *manager, QtProperty *property,
+ QWidget *parent) = 0
+
+ Creates an attribute editing widget with the given \a parent for the
+ specified \a property created by the given \a manager. The
+ PropertyManager type is a template argument class, and represents
+ the chosen QtAbstractPropertyManager subclass.
+
+ This function must be implemented in derived classes: It is
+ recommended to store a pointer to the widget and map it to the
+ given \a property, since the widget must be updated whenever the
+ associated property's data changes. This is typically done in
+ custom slots responding to the signals emitted by the property's
+ manager, e.g. QtComplexPropertyManager::formatChanged() and
+ QtComplexPropertyManager::scaleChanged().
+
+ \sa connectPropertyManager()
+ */
 
 /*!
     \fn virtual void QtAbstractEditorFactory::disconnectPropertyManager(PropertyManager *manager) = 0
@@ -2082,6 +2129,40 @@ QWidget *QtAbstractPropertyBrowser::createEditor(QtProperty *property,
         return 0;
 
     return factory->createEditor(property, parent);
+}
+
+/*!
+ Creates an attribute editing widget (with the given \a parent) for the given
+ \a property attribute according to the previously established associations
+ between property managers and editor factories.
+
+ If the property is created by a property manager which was not
+ associated with any of the existing factories in \e this property
+ editor, the function returns 0.
+
+ To make a property editable in the property browser, the
+ createEditor() function must be called to provide the
+ property with a suitable editing widget.
+
+ Reimplement this function to provide additional decoration for the
+ editing widgets created by the installed factories.
+
+ \sa setFactoryForManager()
+ */
+QWidget *QtAbstractPropertyBrowser::createAttributeEditor(QtProperty *property,
+                                                 QWidget *parent, int attribute)
+{
+    QtAbstractEditorFactoryBase *factory = 0;
+    QtAbstractPropertyManager *manager = property->propertyManager();
+
+    if (m_viewToManagerToFactory()->contains(this) &&
+        (*m_viewToManagerToFactory())[this].contains(manager)) {
+        factory = (*m_viewToManagerToFactory())[this][manager];
+    }
+
+    if (!factory)
+        return 0;
+    return factory->createAttributeEditor(property, parent, int(attribute));
 }
 
 bool QtAbstractPropertyBrowser::addFactory(QtAbstractPropertyManager *abstractManager,
