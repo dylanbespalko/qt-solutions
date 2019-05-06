@@ -75,7 +75,7 @@ public:
     QtProperty *indexToProperty(const QModelIndex &index) const;
     QTreeWidgetItem *indexToItem(const QModelIndex &index) const;
     QtBrowserItem *indexToBrowserItem(const QModelIndex &index) const;
-    QtTreePropertyBrowser::AttributeType columnToAttribute(const int col) const;
+    QtAbstractPropertyBrowser::AttributeType columnToAttribute(const int col) const;
     bool lastColumn(int column) const;
     void disableItem(QTreeWidgetItem *item) const;
     void enableItem(QTreeWidgetItem *item) const;
@@ -107,7 +107,7 @@ private:
     QMap<QtBrowserItem *, QColor> m_indexToBackgroundColor;
 
     QtPropertyEditorView *m_treeWidget;
-    QList<QtTreePropertyBrowser::AttributeType> m_attributes;
+    QList<QtAbstractPropertyBrowser::AttributeType> m_attributes;
 
     bool m_headerVisible;
     QtTreePropertyBrowser::ResizeMode m_resizeMode;
@@ -479,7 +479,7 @@ void QtTreePropertyBrowserPrivate::init(QWidget *parent)
 
     layout->addWidget(m_treeWidget);
     parent->setFocusProxy(m_treeWidget);
-    m_attributes = QList<QtTreePropertyBrowser::AttributeType>();
+    m_attributes = QList<QtAbstractPropertyBrowser::AttributeType>();
 
     m_treeWidget->setColumnCount(2);
     QStringList labels;
@@ -498,8 +498,8 @@ void QtTreePropertyBrowserPrivate::init(QWidget *parent)
 
     m_expandIcon = drawIndicatorIcon(q_ptr->palette(), q_ptr->style());
 
-    QList<QtTreePropertyBrowser::AttributeType> attributes;
-    attributes << QtTreePropertyBrowser::Empty << QtTreePropertyBrowser::Empty << QtTreePropertyBrowser::Empty;
+    QList<QtAbstractPropertyBrowser::AttributeType> attributes;
+    attributes << QtAbstractPropertyBrowser::Empty << QtAbstractPropertyBrowser::Empty << QtAbstractPropertyBrowser::Empty;
     q_ptr->setAttributes(attributes);
 
     QObject::connect(m_treeWidget, SIGNAL(collapsed(const QModelIndex &)), q_ptr, SLOT(slotCollapsed(const QModelIndex &)));
@@ -618,7 +618,7 @@ QTreeWidgetItem *QtTreePropertyBrowserPrivate::indexToItem(const QModelIndex &in
     return m_treeWidget->indexToItem(index);
 }
 
-QtTreePropertyBrowser::AttributeType QtTreePropertyBrowserPrivate::columnToAttribute(const int col) const
+QtAbstractPropertyBrowser::AttributeType QtTreePropertyBrowserPrivate::columnToAttribute(const int col) const
 {
     return m_attributes.at(col-2);
 }
@@ -1198,7 +1198,7 @@ bool QtTreePropertyBrowser::propertiesWithoutValueMarked() const
  \sa attribute1()
  */
 
-void QtTreePropertyBrowser::setAttributes(const QList<QtTreePropertyBrowser::AttributeType> &attributeList)
+void QtTreePropertyBrowser::setAttributes(const QList<QtAbstractPropertyBrowser::AttributeType> &attributeList)
 {
     if (d_ptr->m_attributes == attributeList)
         return;
@@ -1213,7 +1213,7 @@ void QtTreePropertyBrowser::setAttributes(const QList<QtTreePropertyBrowser::Att
     }
 }
 
-QList<QtTreePropertyBrowser::AttributeType> QtTreePropertyBrowser::attributes() const
+QList<QtAbstractPropertyBrowser::AttributeType> QtTreePropertyBrowser::attributes() const
 {
     return d_ptr->m_attributes;
 }
@@ -1226,14 +1226,14 @@ QList<QtTreePropertyBrowser::AttributeType> QtTreePropertyBrowser::attributes() 
 
  \sa attribute1()
  */
-void QtTreePropertyBrowser::setAttribute1(AttributeType attribute)
+void QtTreePropertyBrowser::setAttribute1(QtAbstractPropertyBrowser::AttributeType attribute)
 {
     QList<QtTreePropertyBrowser::AttributeType> &attributeList = d_ptr->m_attributes;
     attributeList[0] = attribute;
     setAttributes(attributeList);
 }
 
-QtTreePropertyBrowser::AttributeType QtTreePropertyBrowser::attribute1() const
+QtAbstractPropertyBrowser::AttributeType QtTreePropertyBrowser::attribute1() const
 {
     return d_ptr->m_attributes[0];
 }
@@ -1246,9 +1246,9 @@ QtTreePropertyBrowser::AttributeType QtTreePropertyBrowser::attribute1() const
 
  \sa attribute2()
  */
-void QtTreePropertyBrowser::setAttribute2(AttributeType attribute)
+void QtTreePropertyBrowser::setAttribute2(QtAbstractPropertyBrowser::AttributeType attribute)
 {
-    QList<QtTreePropertyBrowser::AttributeType> &attributeList = d_ptr->m_attributes;
+    QList<QtAbstractPropertyBrowser::AttributeType> &attributeList = d_ptr->m_attributes;
     attributeList[1] = attribute;
     setAttributes(attributeList);
 }
@@ -1266,14 +1266,14 @@ QtTreePropertyBrowser::AttributeType QtTreePropertyBrowser::attribute2() const
 
  \sa attribute3()
  */
-void QtTreePropertyBrowser::setAttribute3(AttributeType attribute)
+void QtTreePropertyBrowser::setAttribute3(QtAbstractPropertyBrowser::AttributeType attribute)
 {
-    QList<QtTreePropertyBrowser::AttributeType> &attributeList = d_ptr->m_attributes;
+    QList<QtAbstractPropertyBrowser::AttributeType> &attributeList = d_ptr->m_attributes;
     attributeList[2] = attribute;
     setAttributes(attributeList);
 }
 
-QtTreePropertyBrowser::AttributeType QtTreePropertyBrowser::attribute3() const
+QtAbstractPropertyBrowser::AttributeType QtTreePropertyBrowser::attribute3() const
 {
     return d_ptr->m_attributes[2];
 }

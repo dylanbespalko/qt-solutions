@@ -92,6 +92,7 @@
     <!--    Qt Property Browsers-->
     <object-type name="QtBrowserItem"/>
     <object-type name="QtAbstractPropertyBrowser">
+        <enum-type name="AttributeType"/>
         <inject-code class="native" position="beginning" file="./glue/qtpropertybrowser.cpp" snippet="qtabstractpropertybrowser-setFactoryForManager"/>
         <add-function signature="setFactoryForManager( PyObject*, PyObject* )" return-type="void">
             <inject-code class="target" position="beginning">
@@ -102,7 +103,6 @@
     <object-type name="QtTreePropertyBrowser"
         default-superclass="QtAbstractPropertyBrowser">
         <enum-type name="ResizeMode"/>
-        <enum-type name="AttributeType"/>
     </object-type>
     <object-type name="QtGroupBoxPropertyBrowser"
         default-superclass="QtAbstractPropertyBrowser">

@@ -288,8 +288,18 @@ class QtAbstractPropertyBrowserPrivate;
 class QT_QTPROPERTYBROWSER_EXPORT QtAbstractPropertyBrowser : public QWidget
 {
     Q_OBJECT
+    Q_ENUMS(AttributeType)
 public:
-
+    enum AttributeType
+    {
+        Empty,
+        Unit,
+        PkAvg,
+        Format,
+        Minimum,
+        Maximum,
+        Check
+    };
     explicit QtAbstractPropertyBrowser(QWidget *parent = 0);
     ~QtAbstractPropertyBrowser();
 

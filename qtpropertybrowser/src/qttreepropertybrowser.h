@@ -55,7 +55,6 @@ class QT_QTPROPERTYBROWSER_EXPORT QtTreePropertyBrowser : public QtAbstractPrope
 {
     Q_OBJECT
     Q_ENUMS(ResizeMode)
-    Q_ENUMS(AttributeType)
     Q_PROPERTY(int indentation READ indentation WRITE setIndentation)
     Q_PROPERTY(bool rootIsDecorated READ rootIsDecorated WRITE setRootIsDecorated)
     Q_PROPERTY(bool alternatingRowColors READ alternatingRowColors WRITE setAlternatingRowColors)
@@ -74,16 +73,6 @@ public:
         Stretch,
         Fixed,
         ResizeToContents
-    };
-    enum AttributeType
-    {
-        Empty,
-        Unit,
-        PkAvg,
-        Format,
-        Minimum,
-        Maximum,
-        Check
     };
 
     QtTreePropertyBrowser(QWidget *parent = 0);
@@ -124,14 +113,14 @@ public:
     void setPropertiesWithoutValueMarked(bool mark);
     bool propertiesWithoutValueMarked() const;
 
-    QList<QtTreePropertyBrowser::AttributeType> attributes() const;
-    void setAttributes(const QList<QtTreePropertyBrowser::AttributeType> &attributeList);
-    AttributeType attribute1() const;
-    void setAttribute1(AttributeType attribute);
-    AttributeType attribute2() const;
-    void setAttribute2(AttributeType attribute);
-    AttributeType attribute3() const;
-    void setAttribute3(AttributeType attribute);
+    QList<QtAbstractPropertyBrowser::AttributeType> attributes() const;
+    void setAttributes(const QList<QtAbstractPropertyBrowser::AttributeType> &attributeList);
+    QtAbstractPropertyBrowser::AttributeType attribute1() const;
+    void setAttribute1(QtAbstractPropertyBrowser::AttributeType attribute);
+    QtAbstractPropertyBrowser::AttributeType attribute2() const;
+    void setAttribute2(QtAbstractPropertyBrowser::AttributeType attribute);
+    QtAbstractPropertyBrowser::AttributeType attribute3() const;
+    void setAttribute3(QtAbstractPropertyBrowser::AttributeType attribute);
 
     void editItem(QtBrowserItem *item);
 
