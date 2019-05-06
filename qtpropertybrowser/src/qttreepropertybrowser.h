@@ -55,6 +55,7 @@ class QT_QTPROPERTYBROWSER_EXPORT QtTreePropertyBrowser : public QtAbstractPrope
 {
     Q_OBJECT
     Q_ENUMS(ResizeMode)
+    Q_ENUMS(AttributeType)
     Q_PROPERTY(int indentation READ indentation WRITE setIndentation)
     Q_PROPERTY(bool rootIsDecorated READ rootIsDecorated WRITE setRootIsDecorated)
     Q_PROPERTY(bool alternatingRowColors READ alternatingRowColors WRITE setAlternatingRowColors)
@@ -62,6 +63,9 @@ class QT_QTPROPERTYBROWSER_EXPORT QtTreePropertyBrowser : public QtAbstractPrope
     Q_PROPERTY(ResizeMode resizeMode READ resizeMode WRITE setResizeMode)
     Q_PROPERTY(int splitterPosition READ splitterPosition WRITE setSplitterPosition)
     Q_PROPERTY(bool propertiesWithoutValueMarked READ propertiesWithoutValueMarked WRITE setPropertiesWithoutValueMarked)
+    Q_PROPERTY(AttributeType attribute1 READ attribute1 WRITE setAttribute1)
+    Q_PROPERTY(AttributeType attribute2 READ attribute2 WRITE setAttribute2)
+    Q_PROPERTY(AttributeType attribute3 READ attribute3 WRITE setAttribute3)
 public:
 
     enum ResizeMode
@@ -70,6 +74,16 @@ public:
         Stretch,
         Fixed,
         ResizeToContents
+    };
+    enum AttributeType
+    {
+        Empty,
+        Unit,
+        PkAvg,
+        Format,
+        Minimum,
+        Maximum,
+        Check
     };
 
     QtTreePropertyBrowser(QWidget *parent = 0);
@@ -86,9 +100,13 @@ public:
 
     bool isHeaderVisible() const;
     void setHeaderVisible(bool visible);
+    void setHeaderLabels(QStringList &labels);
 
     ResizeMode resizeMode() const;
     void setResizeMode(ResizeMode mode);
+
+    int sectionSize(int logicalIndex) const;
+    void resizeSection(int logicalIndex, int size);
 
     int splitterPosition() const;
     void setSplitterPosition(int position);
@@ -105,6 +123,15 @@ public:
 
     void setPropertiesWithoutValueMarked(bool mark);
     bool propertiesWithoutValueMarked() const;
+
+    QList<QtTreePropertyBrowser::AttributeType> attributes() const;
+    void setAttributes(const QList<QtTreePropertyBrowser::AttributeType> &attributeList);
+    AttributeType attribute1() const;
+    void setAttribute1(AttributeType attribute);
+    AttributeType attribute2() const;
+    void setAttribute2(AttributeType attribute);
+    AttributeType attribute3() const;
+    void setAttribute3(AttributeType attribute);
 
     void editItem(QtBrowserItem *item);
 

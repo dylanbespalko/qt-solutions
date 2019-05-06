@@ -60,6 +60,7 @@ if __name__ == "__main__":
     for count in range(1):
         tree_scroll_area = QScrollArea()
         tree_browser = QtTreePropertyBrowser()
+        tree_browser.setAttributes([QtTreePropertyBrowser.AttributeType.PkAvg, QtTreePropertyBrowser.AttributeType.Unit, QtTreePropertyBrowser.AttributeType.Format])
         box_scroll_area = QScrollArea()
         box_browser = QtGroupBoxPropertyBrowser()
         button_scroll_area = QScrollArea()

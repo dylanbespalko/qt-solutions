@@ -102,7 +102,7 @@
     <object-type name="QtTreePropertyBrowser"
         default-superclass="QtAbstractPropertyBrowser">
         <enum-type name="ResizeMode"/>
-        <!--    <enum-type name="AttributeType"/> -->
+        <enum-type name="AttributeType"/>
     </object-type>
     <object-type name="QtGroupBoxPropertyBrowser"
         default-superclass="QtAbstractPropertyBrowser">
