@@ -61,6 +61,7 @@
 #include <QStyleOption>
 #include <QPainter>
 #include <QMap>
+#include <iostream>
 
 #if defined(Q_CC_MSVC)
 #    pragma warning(disable: 4786) /* MS VS 6: truncating debug info after 255 characters */
@@ -196,6 +197,8 @@ void EditorFactoryPrivate<Editor>::initializeCheckBoxAttributeEditor(QtProperty 
         it = m_createdCheckBoxAttributeEditors.insert(property, CheckBoxAttributeEditorList());
     it.value().append(editor);
     m_checkBoxAttributeEditorToProperty.insert(editor, property);
+    editor->setChecked(property->check());
+    editor->setTextVisible(false);
 }
 
 template <class Editor>
@@ -463,25 +466,28 @@ QWidget *QtSpinBoxFactory::createEditor(QtIntPropertyManager *manager, QtPropert
 
  Reimplemented from the QtAbstractEditorFactory class.
  */
-QWidget *QtSpinBoxFactory::createAttributeEditor(QtIntPropertyManager *manager,
-                                                   QtProperty *property, QWidget *parent, int attribute)
+QWidget *QtSpinBoxFactory::createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property,
+                                                 QWidget *parent, Attribute attribute)
 {
-    if (attribute == 6)  // Check
-    {
-        if (!manager->attributesEditable())
-            return NULL;
-        QtBoolEdit *editor6 = d_ptr->createCheckBoxAttributeEditor(property, parent);
+    QWidget *editor = NULL;
+    if (!manager->attributesEditable())
+        return editor;
+    switch (attribute) {
+        case Attribute::NONE:
+        case Attribute::UNIT:
+        case Attribute::PKAVG:
+        case Attribute::FORMAT:
+        case Attribute::MINIMUM:
+        case Attribute::MAXIMUM:
+            break;
+        case Attribute::CHECK:
+            QtBoolEdit *editor = d_ptr->createCheckBoxAttributeEditor(property, parent);
+            connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
+            connect(editor, SIGNAL(destroyed(QObject *)),
+                    this, SLOT(slotCheckBoxAttributeEditorDestroyed(QObject *)));
 
-        editor6->setChecked(property->check());
-        editor6->setTextVisible(false);
-
-        connect(editor6, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
-        connect(editor6, SIGNAL(destroyed(QObject *)),
-                this, SLOT(slotCheckBoxAttributeEditorDestroyed(QObject *)));
-        return editor6;
     }
-    return NULL;
-
+    return editor;
 }
 /*!
     \internal
@@ -778,8 +784,7 @@ void QtIntEditFactory::connectPropertyManager(QtIntPropertyManager *manager)
 
  Reimplemented from the QtAbstractEditorFactory class.
  */
-QWidget *QtIntEditFactory::createEditor(QtIntPropertyManager *manager,
-                                            QtProperty *property, QWidget *parent)
+QWidget *QtIntEditFactory::createEditor(QtIntPropertyManager *manager, QtProperty *property, QWidget *parent)
 {
     QIntEdit *editor = d_ptr->createEditor(property, parent);
     //editor->setSingleStep(manager->singleStep(property));
@@ -802,10 +807,10 @@ QWidget *QtIntEditFactory::createEditor(QtIntPropertyManager *manager,
 
  Reimplemented from the QtAbstractEditorFactory class.
  */
-QWidget *QtIntEditFactory::createAttributeEditor(QtIntPropertyManager *manager,
-                                                     QtProperty *property, QWidget *parent, int attribute)
+QWidget *QtIntEditFactory::createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property,
+                                                 QWidget *parent, Attribute attribute)
 {
-    if (attribute == 1)  // Unit
+    if (attribute == Attribute::UNIT)
     {
         if (!manager->attributesEditable())
         return NULL;
@@ -835,11 +840,11 @@ QWidget *QtIntEditFactory::createAttributeEditor(QtIntPropertyManager *manager,
                 this, SLOT(slotComboBoxAttributeEditorDestroyed(QObject *)));
         return editor1;
     }
-    else if (attribute == 2)  // PkAvg
+    else if (attribute == Attribute::PKAVG)
     {
         //Do Nothing
     }
-    else if (attribute == 3)  // Format
+    else if (attribute == Attribute::FORMAT)
     {
         if (!manager->attributesEditable())
         return NULL;
@@ -858,7 +863,7 @@ QWidget *QtIntEditFactory::createAttributeEditor(QtIntPropertyManager *manager,
                 this, SLOT(slotComboBoxAttributeEditorDestroyed(QObject *)));
         return editor3;
     }
-    else if (attribute == 4)  // Minimum
+    else if (attribute == Attribute::MINIMUM)
     {
         QDoubleEdit *editor4 = d_ptr->createLineEditAttributeEditor(property, parent);
 
@@ -874,7 +879,7 @@ QWidget *QtIntEditFactory::createAttributeEditor(QtIntPropertyManager *manager,
                 this, SLOT(slotLineEditAttributeEditorDestroyed(QObject *)));
         return editor4;
     }
-    else if (attribute == 5)  // Maximum
+    else if (attribute == Attribute::MAXIMUM)
     {
         QDoubleEdit *editor5 = d_ptr->createLineEditAttributeEditor(property, parent);
 
@@ -890,7 +895,7 @@ QWidget *QtIntEditFactory::createAttributeEditor(QtIntPropertyManager *manager,
                 this, SLOT(slotLineEditAttributeEditorDestroyed(QObject *)));
         return editor5;
     }
-    else if (attribute == 6)  // Check
+    else if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable())
         return NULL;
@@ -1086,10 +1091,10 @@ QWidget *QtSliderFactory::createEditor(QtIntPropertyManager *manager, QtProperty
 
  Reimplemented from the QtAbstractEditorFactory class.
  */
-QWidget *QtSliderFactory::createAttributeEditor(QtIntPropertyManager *manager,
-                                                   QtProperty *property, QWidget *parent, int attribute)
+QWidget *QtSliderFactory::createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property,
+                                                QWidget *parent, Attribute attribute)
 {
-    if (attribute == 6)  // Check
+    if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable())
             return NULL;
@@ -1281,10 +1286,10 @@ QWidget *QtScrollBarFactory::createEditor(QtIntPropertyManager *manager, QtPrope
 
  Reimplemented from the QtAbstractEditorFactory class.
  */
-QWidget *QtScrollBarFactory::createAttributeEditor(QtIntPropertyManager *manager,
-                                                   QtProperty *property, QWidget *parent, int attribute)
+QWidget *QtScrollBarFactory::createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property,
+                                                   QWidget *parent, Attribute attribute)
 {
-    if (attribute == 6)  // Check
+    if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable())
             return NULL;
@@ -1457,10 +1462,10 @@ QWidget *QtCheckBoxFactory::createEditor(QtBoolPropertyManager *manager, QtPrope
 
  Reimplemented from the QtAbstractEditorFactory class.
  */
-QWidget *QtCheckBoxFactory::createAttributeEditor(QtBoolPropertyManager *manager,
-                                                   QtProperty *property, QWidget *parent, int attribute)
+QWidget *QtCheckBoxFactory::createAttributeEditor(QtBoolPropertyManager *manager, QtProperty *property,
+                                                  QWidget *parent, Attribute attribute)
 {
-    if (attribute == 6)  // Check
+    if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable())
             return NULL;
@@ -1706,10 +1711,10 @@ QWidget *QtDoubleSpinBoxFactory::createEditor(QtDoublePropertyManager *manager,
 
  Reimplemented from the QtAbstractEditorFactory class.
  */
-QWidget *QtDoubleSpinBoxFactory::createAttributeEditor(QtDoublePropertyManager *manager,
-                                                   QtProperty *property, QWidget *parent, int attribute)
+QWidget *QtDoubleSpinBoxFactory::createAttributeEditor(QtDoublePropertyManager *manager, QtProperty *property,
+                                                       QWidget *parent, Attribute attribute)
 {
-    if (attribute == 6)  // Check
+    if (attribute == Attribute::CHECK )
     {
         if (!manager->attributesEditable())
             return NULL;
@@ -2029,10 +2034,11 @@ QWidget *QtDoubleEditFactory::createEditor(QtDoublePropertyManager *manager,
 
  Reimplemented from the QtAbstractEditorFactory class.
  */
-QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *manager,
-                                                 QtProperty *property, QWidget *parent, int attribute)
+QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *manager, QtProperty *property,
+                                                    QWidget *parent, Attribute attribute)
 {
-    if (attribute == 1)  // Unit
+    std::cout<<"Create the Attribute" << attribute << std::endl;
+    if (attribute == Attribute::UNIT)
     {
         if (!manager->attributesEditable())
         return NULL;
@@ -2042,11 +2048,11 @@ QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *man
         char currentScale = manager->scale(property);
         QString unit = manager->unit(property);
         int currentIndex = 0;
-        QComboBox *editor1 = d_ptr->createComboBoxAttributeEditor(property, parent);
+        QComboBox *editor = d_ptr->createComboBoxAttributeEditor(property, parent);
 
-        editor1->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
-        editor1->setMinimumContentsLength(1);
-        editor1->view()->setTextElideMode(Qt::ElideRight);
+        editor->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
+        editor->setMinimumContentsLength(1);
+        editor->view()->setTextElideMode(Qt::ElideRight);
         scaleNames << 'T' << 'G' << 'M'<< 'k' << ' ' << 'm' << 'u' << 'n' << 'p';
         manager->format(property) == LOG_DEG? prefix = "dB" : "";
         for (unsigned short index = 0; index < scaleNames.size(); index++) {
@@ -2054,19 +2060,19 @@ QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *man
             if (scaleNames[index] == currentScale)
             currentIndex = index;
         }
-        editor1->addItems(enumNames);
-        editor1->setCurrentIndex(currentIndex);
+        editor->addItems(enumNames);
+        editor->setCurrentIndex(currentIndex);
 
-        connect(editor1, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetScale(int)));
-        connect(editor1, SIGNAL(destroyed(QObject *)),
+        connect(editor, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetScale(int)));
+        connect(editor, SIGNAL(destroyed(QObject *)),
                 this, SLOT(slotComboBoxAttributeEditorDestroyed(QObject *)));
-        return editor1;
+        return editor;
     }
-    else if (attribute == 2)  // PkAvg
+    else if (attribute == Attribute::PKAVG)
     {
         //Do Nothing
     }
-    else if (attribute == 3)  // Format
+    else if (attribute == Attribute::FORMAT)
     {
         if (!manager->attributesEditable())
         return NULL;
@@ -2085,7 +2091,7 @@ QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *man
                 this, SLOT(slotComboBoxAttributeEditorDestroyed(QObject *)));
         return editor3;
     }
-    else if (attribute == 4)  // Minimum
+    else if (attribute == Attribute::MINIMUM)
     {
         QDoubleEdit *editor4 = d_ptr->createLineEditAttributeEditor(property, parent);
 
@@ -2101,7 +2107,7 @@ QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *man
                 this, SLOT(slotLineEditAttributeEditorDestroyed(QObject *)));
         return editor4;
     }
-    else if (attribute == 5)  // Maximum
+    else if (attribute == Attribute::MAXIMUM)
     {
         QDoubleEdit *editor5 = d_ptr->createLineEditAttributeEditor(property, parent);
 
@@ -2117,7 +2123,7 @@ QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *man
                 this, SLOT(slotLineEditAttributeEditorDestroyed(QObject *)));
         return editor5;
     }
-    else if (attribute == 6)  // Check
+    else if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable())
         return NULL;

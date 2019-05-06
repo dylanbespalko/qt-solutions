@@ -42,6 +42,7 @@
 #ifndef QTEDITORFACTORY_H
 #define QTEDITORFACTORY_H
 
+#include "qtpropertybrowser.h"
 #include "qtpropertymanager.h"
 
 #if QT_VERSION >= 0x040400
@@ -60,7 +61,8 @@ protected:
     void connectPropertyManager(QtIntPropertyManager *manager);
     QWidget *createEditor(QtIntPropertyManager *manager, QtProperty *property,
                 QWidget *parent);
-    QWidget *createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property, QWidget *parent, int attribute);
+    QWidget *createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property,
+                                   QWidget *parent, Attribute attribute);
     void disconnectPropertyManager(QtIntPropertyManager *manager);
 private:
     QtSpinBoxFactoryPrivate *d_ptr;
@@ -90,7 +92,8 @@ protected:
     void connectPropertyManager(QtIntPropertyManager *manager);
     QWidget *createEditor(QtIntPropertyManager *manager, QtProperty *property,
                           QWidget *parent);
-    QWidget *createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property, QWidget *parent, int attribute);
+    QWidget *createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property,
+                                   QWidget *parent, Attribute attribute);
     void disconnectPropertyManager(QtIntPropertyManager *manager);
 private:
     QtIntEditFactoryPrivate *d_ptr;
@@ -128,7 +131,8 @@ protected:
     void connectPropertyManager(QtIntPropertyManager *manager);
     QWidget *createEditor(QtIntPropertyManager *manager, QtProperty *property,
                 QWidget *parent);
-    QWidget *createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property, QWidget *parent, int attribute);
+    QWidget *createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property,
+                                   QWidget *parent, Attribute attribute);
     void disconnectPropertyManager(QtIntPropertyManager *manager);
 private:
     QtSliderFactoryPrivate *d_ptr;
@@ -157,7 +161,8 @@ protected:
     void connectPropertyManager(QtIntPropertyManager *manager);
     QWidget *createEditor(QtIntPropertyManager *manager, QtProperty *property,
                 QWidget *parent);
-    QWidget *createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property, QWidget *parent, int attribute);
+    QWidget *createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property,
+                                   QWidget *parent, Attribute attribute);
     void disconnectPropertyManager(QtIntPropertyManager *manager);
 private:
     QtScrollBarFactoryPrivate *d_ptr;
@@ -186,7 +191,8 @@ protected:
     void connectPropertyManager(QtBoolPropertyManager *manager);
     QWidget *createEditor(QtBoolPropertyManager *manager, QtProperty *property,
                 QWidget *parent);
-    QWidget *createAttributeEditor(QtBoolPropertyManager *manager, QtProperty *property, QWidget *parent, int attribute);
+    QWidget *createAttributeEditor(QtBoolPropertyManager *manager, QtProperty *property,
+                                   QWidget *parent, Attribute attribute);
     void disconnectPropertyManager(QtBoolPropertyManager *manager);
 private:
     QtCheckBoxFactoryPrivate *d_ptr;
@@ -214,7 +220,8 @@ protected:
     void connectPropertyManager(QtDoublePropertyManager *manager);
     QWidget *createEditor(QtDoublePropertyManager *manager, QtProperty *property,
                 QWidget *parent);
-    QWidget *createAttributeEditor(QtDoublePropertyManager *manager, QtProperty *property, QWidget *parent, int attribute);
+    QWidget *createAttributeEditor(QtDoublePropertyManager *manager, QtProperty *property,
+                                   QWidget *parent, Attribute attribute);
     void disconnectPropertyManager(QtDoublePropertyManager *manager);
 private:
     QtDoubleSpinBoxFactoryPrivate *d_ptr;
@@ -245,7 +252,8 @@ protected:
     void connectPropertyManager(QtDoublePropertyManager *manager);
     QWidget *createEditor(QtDoublePropertyManager *manager, QtProperty *property,
                           QWidget *parent);
-    QWidget *createAttributeEditor(QtDoublePropertyManager *manager, QtProperty *property, QWidget *parent, int attribute);
+    QWidget *createAttributeEditor(QtDoublePropertyManager *manager, QtProperty *property,
+                                   QWidget *parent, Attribute attribute);
     void disconnectPropertyManager(QtDoublePropertyManager *manager);
 private:
     QtDoubleEditFactoryPrivate *d_ptr;

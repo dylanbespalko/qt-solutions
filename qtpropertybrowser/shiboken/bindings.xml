@@ -12,7 +12,8 @@
     <enum-type name="PkAvg"/>
     <enum-type name="Format"/>
     <enum-type name="Domain"/>
-    
+    <enum-type name="Attribute"/>
+ 	   
     <!--    Complex Conversion
     <primitive-type name="QComplex" target-lang-api-name="PyComplex">
         <include file-name="complex" location="global"/>
@@ -92,7 +93,6 @@
     <!--    Qt Property Browsers-->
     <object-type name="QtBrowserItem"/>
     <object-type name="QtAbstractPropertyBrowser">
-        <enum-type name="AttributeType"/>
         <inject-code class="native" position="beginning" file="./glue/qtpropertybrowser.cpp" snippet="qtabstractpropertybrowser-setFactoryForManager"/>
         <add-function signature="setFactoryForManager( PyObject*, PyObject* )" return-type="void">
             <inject-code class="target" position="beginning">

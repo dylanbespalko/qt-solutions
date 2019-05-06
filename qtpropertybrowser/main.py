@@ -26,7 +26,7 @@ from qtpropertybrowser import QtDoubleEditFactory, QtDoubleSpinBoxFactory  #, Qt
 from qtpropertybrowser import QtDateEditFactory, QtDateTimeEditFactory, QtTimeEditFactory
 from qtpropertybrowser import QtCursorEditorFactory, QtColorEditorFactory, QtFontEditorFactory
 from qtpropertybrowser import QtKeySequenceEditorFactory
-from qtpropertybrowser import PkAvg, Scale, Format, Domain
+from qtpropertybrowser import PkAvg, Scale, Format, Domain, Attribute
 
 
 @unique
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     for count in range(1):
         tree_scroll_area = QScrollArea()
         tree_browser = QtTreePropertyBrowser()
-        tree_browser.setAttributes([QtTreePropertyBrowser.AttributeType.PkAvg, QtTreePropertyBrowser.AttributeType.Unit, QtTreePropertyBrowser.AttributeType.Format])
+        tree_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT])
         box_scroll_area = QScrollArea()
         box_browser = QtGroupBoxPropertyBrowser()
         button_scroll_area = QScrollArea()
@@ -172,6 +172,7 @@ if __name__ == "__main__":
         property_ = manager_map['float'].addProperty("float_read")
         property_.propertyManager().setReadOnly(property_, True)
         property_.propertyManager().setPrecision(property_, 2)
+        property_.propertyManager().setScale(property_, Scale.T)
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
         property_.propertyManager().setValue(property_, 3.14)

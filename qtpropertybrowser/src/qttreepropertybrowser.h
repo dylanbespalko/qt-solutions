@@ -62,9 +62,9 @@ class QT_QTPROPERTYBROWSER_EXPORT QtTreePropertyBrowser : public QtAbstractPrope
     Q_PROPERTY(ResizeMode resizeMode READ resizeMode WRITE setResizeMode)
     Q_PROPERTY(int splitterPosition READ splitterPosition WRITE setSplitterPosition)
     Q_PROPERTY(bool propertiesWithoutValueMarked READ propertiesWithoutValueMarked WRITE setPropertiesWithoutValueMarked)
-    Q_PROPERTY(AttributeType attribute1 READ attribute1 WRITE setAttribute1)
-    Q_PROPERTY(AttributeType attribute2 READ attribute2 WRITE setAttribute2)
-    Q_PROPERTY(AttributeType attribute3 READ attribute3 WRITE setAttribute3)
+    Q_PROPERTY(Attribute attribute1 READ attribute1 WRITE setAttribute1)
+    Q_PROPERTY(Attribute attribute2 READ attribute2 WRITE setAttribute2)
+    Q_PROPERTY(Attribute attribute3 READ attribute3 WRITE setAttribute3)
 public:
 
     enum ResizeMode
@@ -113,14 +113,14 @@ public:
     void setPropertiesWithoutValueMarked(bool mark);
     bool propertiesWithoutValueMarked() const;
 
-    QList<QtAbstractPropertyBrowser::AttributeType> attributes() const;
-    void setAttributes(const QList<QtAbstractPropertyBrowser::AttributeType> &attributeList);
-    QtAbstractPropertyBrowser::AttributeType attribute1() const;
-    void setAttribute1(QtAbstractPropertyBrowser::AttributeType attribute);
-    QtAbstractPropertyBrowser::AttributeType attribute2() const;
-    void setAttribute2(QtAbstractPropertyBrowser::AttributeType attribute);
-    QtAbstractPropertyBrowser::AttributeType attribute3() const;
-    void setAttribute3(QtAbstractPropertyBrowser::AttributeType attribute);
+    QList<Attribute> attributes() const;
+    void setAttributes(const QList<Attribute> &attributeList);
+    Attribute attribute1() const;
+    void setAttribute1(Attribute attribute);
+    Attribute attribute2() const;
+    void setAttribute2(Attribute attribute);
+    Attribute attribute3() const;
+    void setAttribute3(Attribute attribute);
 
     void editItem(QtBrowserItem *item);
 

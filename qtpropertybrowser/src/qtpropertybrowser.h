@@ -46,6 +46,7 @@
 #include <QSet>
 #include <QLineEdit>
 #include <QIcon>
+#include "qcomplexedit.h"
 
 #if QT_VERSION >= 0x040400
 QT_BEGIN_NAMESPACE
@@ -175,7 +176,7 @@ class QT_QTPROPERTYBROWSER_EXPORT QtAbstractEditorFactoryBase : public QObject
     Q_OBJECT
 public:
     virtual QWidget *createEditor(QtProperty *property, QWidget *parent) = 0;
-    virtual QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, int atttribute) = 0;
+    virtual QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, Attribute atttribute) = 0;
 protected:
     explicit QtAbstractEditorFactoryBase(QObject *parent = 0)
         : QObject(parent) {}
@@ -203,7 +204,7 @@ public:
         }
         return 0;
     }
-    QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, int attribute)
+    QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, Attribute attribute)
     {
         QSetIterator<PropertyManager *> it(m_managers);
         while (it.hasNext()) {
@@ -252,7 +253,7 @@ protected:
     virtual void connectPropertyManager(PropertyManager *manager) = 0;
     virtual QWidget *createEditor(PropertyManager *manager, QtProperty *property,
                 QWidget *parent) = 0;
-    virtual QWidget *createAttributeEditor(PropertyManager *manager, QtProperty *property,QWidget *parent, int attribute)
+    virtual QWidget *createAttributeEditor(PropertyManager *manager, QtProperty *property,QWidget *parent, Attribute attribute)
     {Q_UNUSED(manager);Q_UNUSED(property);Q_UNUSED(parent);Q_UNUSED(attribute);return 0;};
     virtual void disconnectPropertyManager(PropertyManager *manager) = 0;
     void managerDestroyed(QObject *manager)
@@ -305,18 +306,7 @@ class QtAbstractPropertyBrowserPrivate;
 class QT_QTPROPERTYBROWSER_EXPORT QtAbstractPropertyBrowser : public QWidget
 {
     Q_OBJECT
-    Q_ENUMS(AttributeType)
 public:
-    enum AttributeType
-    {
-        Empty,
-        Unit,
-        PkAvg,
-        Format,
-        Minimum,
-        Maximum,
-        Check
-    };
     explicit QtAbstractPropertyBrowser(QWidget *parent = 0);
     ~QtAbstractPropertyBrowser();
 
@@ -358,7 +348,7 @@ protected:
     virtual void itemChanged(QtBrowserItem *item) = 0;
 
     virtual QWidget *createEditor(QtProperty *property, QWidget *parent);
-    virtual QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, int);
+    virtual QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, Attribute attribute);
 private:
 
     bool addFactory(QtAbstractPropertyManager *abstractManager,

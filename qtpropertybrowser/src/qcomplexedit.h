@@ -70,6 +70,18 @@ enum Domain
     TH,
 };
 
+
+enum Attribute
+{
+    NONE,
+    UNIT,
+    PKAVG,
+    FORMAT,
+    MINIMUM,
+    MAXIMUM,
+    CHECK
+};
+
 class QT_QTPROPERTYBROWSER_EXPORT QComplex : public std::complex<double>
 {
 public:

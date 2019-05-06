@@ -1036,7 +1036,7 @@ void QtAbstractPropertyManager::uninitializeProperty(QtProperty *property)
 
 /*!
  \fn virtual QWidget *QtAbstractEditorFactoryBase::createAttributeEditor(QtProperty *property,
- QWidget *parent, AttributeType attribute) = 0
+ QWidget *parent, Attribute attribute) = 0
 
  Creates an attribute editing widget (with the given \a parent) for the given
  \a property.
@@ -1159,7 +1159,8 @@ void QtAbstractPropertyManager::uninitializeProperty(QtProperty *property)
 */
 
 /*!
- \fn QWidget *QtAbstractEditorFactory::createAttributeEditor(QtProperty *property, QWidget *parent)
+ \fn QWidget *QtAbstractEditorFactory::createAttributeEditor(QtProperty *property,
+QWidget *parent, Attribute attribute)
 
  Creates an attribute editing widget (with the given \a parent) for the given
  \a property.
@@ -1227,7 +1228,7 @@ void QtAbstractPropertyManager::uninitializeProperty(QtProperty *property)
 
 /*!
  \fn virtual QWidget *QtAbstractEditorFactory::createAttributeEditor(PropertyManager *manager, QtProperty *property,
- QWidget *parent) = 0
+ QWidget *parent, Attribute attribute) = 0
 
  Creates an attribute editing widget with the given \a parent for the
  specified \a property created by the given \a manager. The
@@ -2150,7 +2151,7 @@ QWidget *QtAbstractPropertyBrowser::createEditor(QtProperty *property,
  \sa setFactoryForManager()
  */
 QWidget *QtAbstractPropertyBrowser::createAttributeEditor(QtProperty *property,
-                                                 QWidget *parent, int attribute)
+                                                          QWidget *parent, Attribute attribute)
 {
     QtAbstractEditorFactoryBase *factory = 0;
     QtAbstractPropertyManager *manager = property->propertyManager();
@@ -2162,7 +2163,7 @@ QWidget *QtAbstractPropertyBrowser::createAttributeEditor(QtProperty *property,
 
     if (!factory)
         return 0;
-    return factory->createAttributeEditor(property, parent, int(attribute));
+    return factory->createAttributeEditor(property, parent, attribute);
 }
 
 bool QtAbstractPropertyBrowser::addFactory(QtAbstractPropertyManager *abstractManager,
