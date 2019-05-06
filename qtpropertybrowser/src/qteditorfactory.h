@@ -75,9 +75,11 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(int))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
     Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
-    Q_PRIVATE_SLOT(d_func(), void slotComboBoxAttributeEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotLineEditAttributeEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotCheckBoxAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotUnitAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotFormatAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotMinimumAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotMaximumAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
 class QtIntEditFactoryPrivate;
@@ -114,9 +116,11 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotSetMaximum(double))
     Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotComboBoxAttributeEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotLineEditAttributeEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotCheckBoxAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotUnitAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotFormatAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotMinimumAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotMaximumAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
 class QtSliderFactoryPrivate;
@@ -144,9 +148,11 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(int))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
     Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
-    Q_PRIVATE_SLOT(d_func(), void slotComboBoxAttributeEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotLineEditAttributeEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotCheckBoxAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotUnitAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotFormatAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotMinimumAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotMaximumAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
 class QtScrollBarFactoryPrivate;
@@ -174,9 +180,11 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(int))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
     Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
-    Q_PRIVATE_SLOT(d_func(), void slotComboBoxAttributeEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotLineEditAttributeEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotCheckBoxAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotUnitAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotFormatAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotMinimumAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotMaximumAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
 class QtCheckBoxFactoryPrivate;
@@ -203,9 +211,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(bool))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
     Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
-    Q_PRIVATE_SLOT(d_func(), void slotComboBoxAttributeEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotLineEditAttributeEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotCheckBoxAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
 class QtDoubleSpinBoxFactoryPrivate;
@@ -235,9 +241,11 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(double))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
     Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
-    Q_PRIVATE_SLOT(d_func(), void slotComboBoxAttributeEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotLineEditAttributeEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotCheckBoxAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotUnitAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotFormatAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotMinimumAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotMaximumAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
 class QtDoubleEditFactoryPrivate;
@@ -271,9 +279,11 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotSetMaximum(double))
     Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotComboBoxAttributeEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotLineEditAttributeEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotCheckBoxAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotUnitAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotFormatAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotMinimumAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotMaximumAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
 class QtLineEditFactoryPrivate;

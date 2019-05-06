@@ -94,37 +94,61 @@ public:
     typedef QList<Editor *> EditorList;
     typedef QMap<QtProperty *, EditorList> PropertyToEditorListMap;
     typedef QMap<Editor *, QtProperty *> EditorToPropertyMap;
-    typedef QList<QComboBox *> ComboBoxAttributeEditorList;
-    typedef QList<QDoubleEdit *> LineEditAttributeEditorList;
-    typedef QList<QtBoolEdit *> CheckBoxAttributeEditorList;
-    typedef QMap<QtProperty *, ComboBoxAttributeEditorList> PropertyToComboBoxAttributeEditorListMap;
-    typedef QMap<QtProperty *, LineEditAttributeEditorList> PropertyToLineEditAttributeEditorListMap;
-    typedef QMap<QtProperty *, CheckBoxAttributeEditorList> PropertyToCheckBoxAttributeEditorListMap;
-    typedef QMap<QComboBox *, QtProperty *> ComboBoxAttributeEditorToPropertyMap;
-    typedef QMap<QDoubleEdit *, QtProperty *> LineEditAttributeEditorToPropertyMap;
-    typedef QMap<QtBoolEdit *, QtProperty *> CheckBoxAttributeEditorToPropertyMap;
+    typedef QList<QComboBox *> UnitAttributeEditorList;
+    typedef QList<QComboBox *> PkAvgAttributeEditorList;
+    typedef QList<QComboBox *> FormatAttributeEditorList;
+    typedef QList<QDoubleEdit *> MinimumAttributeEditorList;
+    typedef QList<QDoubleEdit *> MaximumAttributeEditorList;
+    typedef QList<QtBoolEdit *> CheckAttributeEditorList;
+    typedef QMap<QtProperty *, UnitAttributeEditorList> PropertyToUnitAttributeEditorListMap;
+    typedef QMap<QtProperty *, PkAvgAttributeEditorList> PropertyToPkAvgAttributeEditorListMap;
+    typedef QMap<QtProperty *, FormatAttributeEditorList> PropertyToFormatAttributeEditorListMap;
+    typedef QMap<QtProperty *, MinimumAttributeEditorList> PropertyToMinimumAttributeEditorListMap;
+    typedef QMap<QtProperty *, MaximumAttributeEditorList> PropertyToMaximumAttributeEditorListMap;
+    typedef QMap<QtProperty *, CheckAttributeEditorList> PropertyToCheckAttributeEditorListMap;
+    typedef QMap<QComboBox *, QtProperty *> UnitAttributeEditorToPropertyMap;
+    typedef QMap<QComboBox *, QtProperty *> PkAvgAttributeEditorToPropertyMap;
+    typedef QMap<QComboBox *, QtProperty *> FormatAttributeEditorToPropertyMap;
+    typedef QMap<QDoubleEdit *, QtProperty *> MinimumAttributeEditorToPropertyMap;
+    typedef QMap<QDoubleEdit *, QtProperty *> MaximumAttributeEditorToPropertyMap;
+    typedef QMap<QtBoolEdit *, QtProperty *> CheckAttributeEditorToPropertyMap;
 
     Editor *createEditor(QtProperty *property, QWidget *parent);
-    QComboBox *createComboBoxAttributeEditor(QtProperty *property, QWidget *parent);
-    QDoubleEdit *createLineEditAttributeEditor(QtProperty *property, QWidget *parent);
-    QtBoolEdit *createCheckBoxAttributeEditor(QtProperty *property, QWidget *parent);
+    QComboBox *createUnitAttributeEditor(QtProperty *property, QWidget *parent);
+    QComboBox *createPkAvgAttributeEditor(QtProperty *property, QWidget *parent);
+    QComboBox *createFormatAttributeEditor(QtProperty *property, QWidget *parent);
+    QDoubleEdit *createMinimumAttributeEditor(QtProperty *property, QWidget *parent);
+    QDoubleEdit *createMaximumAttributeEditor(QtProperty *property, QWidget *parent);
+    QtBoolEdit *createCheckAttributeEditor(QtProperty *property, QWidget *parent);
     void initializeEditor(QtProperty *property, Editor *e);
-    void initializeComboBoxAttributeEditor(QtProperty *property, QComboBox *e);
-    void initializeLineEditAttributeEditor(QtProperty *property, QDoubleEdit *e);
-    void initializeCheckBoxAttributeEditor(QtProperty *property, QtBoolEdit *e);
+    void initializeUnitAttributeEditor(QtProperty *property, QComboBox *e);
+    void initializePkAvgAttributeEditor(QtProperty *property, QComboBox *e);
+    void initializeFormatAttributeEditor(QtProperty *property, QComboBox *e);
+    void initializeMinimumAttributeEditor(QtProperty *property, QDoubleEdit *e);
+    void initializeMaximumAttributeEditor(QtProperty *property, QDoubleEdit *e);
+    void initializeCheckAttributeEditor(QtProperty *property, QtBoolEdit *e);
     void slotEditorDestroyed(QObject *object);
-    void slotComboBoxAttributeEditorDestroyed(QObject *object);
-    void slotLineEditAttributeEditorDestroyed(QObject *object);
-    void slotCheckBoxAttributeEditorDestroyed(QObject *object);
+    void slotUnitAttributeEditorDestroyed(QObject *object);
+    void slotPkAvgAttributeEditorDestroyed(QObject *object);
+    void slotFormatAttributeEditorDestroyed(QObject *object);
+    void slotMinimumAttributeEditorDestroyed(QObject *object);
+    void slotMaximumAttributeEditorDestroyed(QObject *object);
+    void slotCheckAttributeEditorDestroyed(QObject *object);
 
     PropertyToEditorListMap  m_createdEditors;
     EditorToPropertyMap m_editorToProperty;
-    PropertyToComboBoxAttributeEditorListMap m_createdComboBoxAttributeEditors;
-    PropertyToLineEditAttributeEditorListMap m_createdLineEditAttributeEditors;
-    PropertyToCheckBoxAttributeEditorListMap m_createdCheckBoxAttributeEditors;
-    ComboBoxAttributeEditorToPropertyMap m_comboBoxAttributeEditorToProperty;
-    LineEditAttributeEditorToPropertyMap m_lineEditAttributeEditorToProperty;
-    CheckBoxAttributeEditorToPropertyMap m_checkBoxAttributeEditorToProperty;
+    PropertyToUnitAttributeEditorListMap m_createdUnitAttributeEditors;
+    PropertyToPkAvgAttributeEditorListMap m_createdPkAvgAttributeEditors;
+    PropertyToFormatAttributeEditorListMap m_createdFormatAttributeEditors;
+    PropertyToMinimumAttributeEditorListMap m_createdMinimumAttributeEditors;
+    PropertyToMaximumAttributeEditorListMap m_createdMaximumAttributeEditors;
+    PropertyToCheckAttributeEditorListMap m_createdCheckAttributeEditors;
+    UnitAttributeEditorToPropertyMap m_unitAttributeEditorToProperty;
+    PkAvgAttributeEditorToPropertyMap m_pkAvgAttributeEditorToProperty;
+    FormatAttributeEditorToPropertyMap m_formatAttributeEditorToProperty;
+    MinimumAttributeEditorToPropertyMap m_minimumAttributeEditorToProperty;
+    MaximumAttributeEditorToPropertyMap m_maximumAttributeEditorToProperty;
+    CheckAttributeEditorToPropertyMap m_checkAttributeEditorToProperty;
 };
 
 template <class Editor>
@@ -136,26 +160,50 @@ Editor *EditorFactoryPrivate<Editor>::createEditor(QtProperty *property, QWidget
 }
 
 template <class Editor>
-QComboBox *EditorFactoryPrivate<Editor>::createComboBoxAttributeEditor(QtProperty *property, QWidget *parent)
+QComboBox *EditorFactoryPrivate<Editor>::createUnitAttributeEditor(QtProperty *property, QWidget *parent)
 {
     QComboBox *editor = new QComboBox(parent);
-    initializeComboBoxAttributeEditor(property, editor);
+    initializeUnitAttributeEditor(property, editor);
     return editor;
 }
 
 template <class Editor>
-QDoubleEdit *EditorFactoryPrivate<Editor>::createLineEditAttributeEditor(QtProperty *property, QWidget *parent)
+QComboBox *EditorFactoryPrivate<Editor>::createPkAvgAttributeEditor(QtProperty *property, QWidget *parent)
+{
+    QComboBox *editor = new QComboBox(parent);
+    initializePkAvgAttributeEditor(property, editor);
+    return editor;
+}
+
+template <class Editor>
+QComboBox *EditorFactoryPrivate<Editor>::createFormatAttributeEditor(QtProperty *property, QWidget *parent)
+{
+    QComboBox *editor = new QComboBox(parent);
+    initializeFormatAttributeEditor(property, editor);
+    return editor;
+}
+
+template <class Editor>
+QDoubleEdit *EditorFactoryPrivate<Editor>::createMinimumAttributeEditor(QtProperty *property, QWidget *parent)
 {
     QDoubleEdit *editor = new QDoubleEdit(parent);
-    initializeLineEditAttributeEditor(property, editor);
+    initializeMinimumAttributeEditor(property, editor);
     return editor;
 }
 
 template <class Editor>
-QtBoolEdit *EditorFactoryPrivate<Editor>::createCheckBoxAttributeEditor(QtProperty *property, QWidget *parent)
+QDoubleEdit *EditorFactoryPrivate<Editor>::createMaximumAttributeEditor(QtProperty *property, QWidget *parent)
+{
+    QDoubleEdit *editor = new QDoubleEdit(parent);
+    initializeMaximumAttributeEditor(property, editor);
+    return editor;
+}
+
+template <class Editor>
+QtBoolEdit *EditorFactoryPrivate<Editor>::createCheckAttributeEditor(QtProperty *property, QWidget *parent)
 {
     QtBoolEdit *editor = new QtBoolEdit(parent);
-    initializeCheckBoxAttributeEditor(property, editor);
+    initializeCheckAttributeEditor(property, editor);
     return editor;
 }
 
@@ -170,33 +218,63 @@ void EditorFactoryPrivate<Editor>::initializeEditor(QtProperty *property, Editor
 }
 
 template <class Editor>
-void EditorFactoryPrivate<Editor>::initializeComboBoxAttributeEditor(QtProperty *property, QComboBox *editor)
+void EditorFactoryPrivate<Editor>::initializeUnitAttributeEditor(QtProperty *property, QComboBox *editor)
 {
-    typename PropertyToComboBoxAttributeEditorListMap::iterator it = m_createdComboBoxAttributeEditors.find(property);
-    if (it == m_createdComboBoxAttributeEditors.end())
-        it = m_createdComboBoxAttributeEditors.insert(property, ComboBoxAttributeEditorList());
+    typename PropertyToUnitAttributeEditorListMap::iterator it = m_createdUnitAttributeEditors.find(property);
+    if (it == m_createdUnitAttributeEditors.end())
+        it = m_createdUnitAttributeEditors.insert(property, UnitAttributeEditorList());
     it.value().append(editor);
-    m_comboBoxAttributeEditorToProperty.insert(editor, property);
+    m_unitAttributeEditorToProperty.insert(editor, property);
 }
 
 template <class Editor>
-void EditorFactoryPrivate<Editor>::initializeLineEditAttributeEditor(QtProperty *property, QDoubleEdit *editor)
+void EditorFactoryPrivate<Editor>::initializePkAvgAttributeEditor(QtProperty *property, QComboBox *editor)
 {
-    typename PropertyToLineEditAttributeEditorListMap::iterator it = m_createdLineEditAttributeEditors.find(property);
-    if (it == m_createdLineEditAttributeEditors.end())
-        it = m_createdLineEditAttributeEditors.insert(property, LineEditAttributeEditorList());
+    typename PropertyToPkAvgAttributeEditorListMap::iterator it = m_createdPkAvgAttributeEditors.find(property);
+    if (it == m_createdPkAvgAttributeEditors.end())
+        it = m_createdPkAvgAttributeEditors.insert(property, PkAvgAttributeEditorList());
     it.value().append(editor);
-    m_lineEditAttributeEditorToProperty.insert(editor, property);
+    m_pkAvgAttributeEditorToProperty.insert(editor, property);
 }
 
 template <class Editor>
-void EditorFactoryPrivate<Editor>::initializeCheckBoxAttributeEditor(QtProperty *property, QtBoolEdit *editor)
+void EditorFactoryPrivate<Editor>::initializeFormatAttributeEditor(QtProperty *property, QComboBox *editor)
 {
-    typename PropertyToCheckBoxAttributeEditorListMap::iterator it = m_createdCheckBoxAttributeEditors.find(property);
-    if (it == m_createdCheckBoxAttributeEditors.end())
-        it = m_createdCheckBoxAttributeEditors.insert(property, CheckBoxAttributeEditorList());
+    typename PropertyToFormatAttributeEditorListMap::iterator it = m_createdFormatAttributeEditors.find(property);
+    if (it == m_createdFormatAttributeEditors.end())
+        it = m_createdFormatAttributeEditors.insert(property, FormatAttributeEditorList());
     it.value().append(editor);
-    m_checkBoxAttributeEditorToProperty.insert(editor, property);
+    m_formatAttributeEditorToProperty.insert(editor, property);
+}
+
+template <class Editor>
+void EditorFactoryPrivate<Editor>::initializeMinimumAttributeEditor(QtProperty *property, QDoubleEdit *editor)
+{
+    typename PropertyToMinimumAttributeEditorListMap::iterator it = m_createdMinimumAttributeEditors.find(property);
+    if (it == m_createdMinimumAttributeEditors.end())
+        it = m_createdMinimumAttributeEditors.insert(property, MinimumAttributeEditorList());
+    it.value().append(editor);
+    m_minimumAttributeEditorToProperty.insert(editor, property);
+}
+
+template <class Editor>
+void EditorFactoryPrivate<Editor>::initializeMaximumAttributeEditor(QtProperty *property, QDoubleEdit *editor)
+{
+    typename PropertyToMaximumAttributeEditorListMap::iterator it = m_createdMaximumAttributeEditors.find(property);
+    if (it == m_createdMaximumAttributeEditors.end())
+        it = m_createdMaximumAttributeEditors.insert(property, MaximumAttributeEditorList());
+    it.value().append(editor);
+    m_maximumAttributeEditorToProperty.insert(editor, property);
+}
+
+template <class Editor>
+void EditorFactoryPrivate<Editor>::initializeCheckAttributeEditor(QtProperty *property, QtBoolEdit *editor)
+{
+    typename PropertyToCheckAttributeEditorListMap::iterator it = m_createdCheckAttributeEditors.find(property);
+    if (it == m_createdCheckAttributeEditors.end())
+        it = m_createdCheckAttributeEditors.insert(property, CheckAttributeEditorList());
+    it.value().append(editor);
+    m_checkAttributeEditorToProperty.insert(editor, property);
     editor->setChecked(property->check());
     editor->setTextVisible(false);
 }
@@ -222,60 +300,120 @@ void EditorFactoryPrivate<Editor>::slotEditorDestroyed(QObject *object)
 }
 
 template <class Editor>
-void EditorFactoryPrivate<Editor>::slotComboBoxAttributeEditorDestroyed(QObject *object)
+void EditorFactoryPrivate<Editor>::slotUnitAttributeEditorDestroyed(QObject *object)
 {
-    const typename ComboBoxAttributeEditorToPropertyMap::iterator ecend = m_comboBoxAttributeEditorToProperty.end();
-    for (typename ComboBoxAttributeEditorToPropertyMap::iterator itEditor = m_comboBoxAttributeEditorToProperty.begin(); itEditor !=  ecend; ++itEditor) {
+    const typename UnitAttributeEditorToPropertyMap::iterator ecend = m_unitAttributeEditorToProperty.end();
+    for (typename UnitAttributeEditorToPropertyMap::iterator itEditor = m_unitAttributeEditorToProperty.begin(); itEditor !=  ecend; ++itEditor) {
         if (itEditor.key() == object) {
             QComboBox *editor = itEditor.key();
             QtProperty *property = itEditor.value();
-            const typename PropertyToComboBoxAttributeEditorListMap::iterator pit = m_createdComboBoxAttributeEditors.find(property);
-            if (pit != m_createdComboBoxAttributeEditors.end()) {
+            const typename PropertyToUnitAttributeEditorListMap::iterator pit = m_createdUnitAttributeEditors.find(property);
+            if (pit != m_createdUnitAttributeEditors.end()) {
                 pit.value().removeAll(editor);
                 if (pit.value().empty())
-                    m_createdComboBoxAttributeEditors.erase(pit);
+                    m_createdUnitAttributeEditors.erase(pit);
             }
-            m_comboBoxAttributeEditorToProperty.erase(itEditor);
+            m_unitAttributeEditorToProperty.erase(itEditor);
             return;
         }
     }
 }
 
 template <class Editor>
-void EditorFactoryPrivate<Editor>::slotLineEditAttributeEditorDestroyed(QObject *object)
+void EditorFactoryPrivate<Editor>::slotPkAvgAttributeEditorDestroyed(QObject *object)
 {
-    const typename LineEditAttributeEditorToPropertyMap::iterator ecend = m_lineEditAttributeEditorToProperty.end();
-    for (typename LineEditAttributeEditorToPropertyMap::iterator itEditor = m_lineEditAttributeEditorToProperty.begin(); itEditor !=  ecend; ++itEditor) {
+    const typename PkAvgAttributeEditorToPropertyMap::iterator ecend = m_pkAvgAttributeEditorToProperty.end();
+    for (typename PkAvgAttributeEditorToPropertyMap::iterator itEditor = m_pkAvgAttributeEditorToProperty.begin(); itEditor !=  ecend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QComboBox *editor = itEditor.key();
+            QtProperty *property = itEditor.value();
+            const typename PropertyToPkAvgAttributeEditorListMap::iterator pit = m_createdPkAvgAttributeEditors.find(property);
+            if (pit != m_createdPkAvgAttributeEditors.end()) {
+                pit.value().removeAll(editor);
+                if (pit.value().empty())
+                    m_createdPkAvgAttributeEditors.erase(pit);
+            }
+            m_pkAvgAttributeEditorToProperty.erase(itEditor);
+            return;
+        }
+    }
+}
+
+template <class Editor>
+void EditorFactoryPrivate<Editor>::slotFormatAttributeEditorDestroyed(QObject *object)
+{
+    const typename FormatAttributeEditorToPropertyMap::iterator ecend = m_formatAttributeEditorToProperty.end();
+    for (typename FormatAttributeEditorToPropertyMap::iterator itEditor = m_formatAttributeEditorToProperty.begin(); itEditor !=  ecend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QComboBox *editor = itEditor.key();
+            QtProperty *property = itEditor.value();
+            const typename PropertyToFormatAttributeEditorListMap::iterator pit = m_createdFormatAttributeEditors.find(property);
+            if (pit != m_createdFormatAttributeEditors.end()) {
+                pit.value().removeAll(editor);
+                if (pit.value().empty())
+                    m_createdFormatAttributeEditors.erase(pit);
+            }
+            m_formatAttributeEditorToProperty.erase(itEditor);
+            return;
+        }
+    }
+}
+
+template <class Editor>
+void EditorFactoryPrivate<Editor>::slotMinimumAttributeEditorDestroyed(QObject *object)
+{
+    const typename MinimumAttributeEditorToPropertyMap::iterator ecend = m_minimumAttributeEditorToProperty.end();
+    for (typename MinimumAttributeEditorToPropertyMap::iterator itEditor = m_minimumAttributeEditorToProperty.begin(); itEditor !=  ecend; ++itEditor) {
         if (itEditor.key() == object) {
             QDoubleEdit *editor = itEditor.key();
             QtProperty *property = itEditor.value();
-            const typename PropertyToLineEditAttributeEditorListMap::iterator pit = m_createdLineEditAttributeEditors.find(property);
-            if (pit != m_createdLineEditAttributeEditors.end()) {
+            const typename PropertyToMinimumAttributeEditorListMap::iterator pit = m_createdMinimumAttributeEditors.find(property);
+            if (pit != m_createdMinimumAttributeEditors.end()) {
                 pit.value().removeAll(editor);
                 if (pit.value().empty())
-                    m_createdLineEditAttributeEditors.erase(pit);
+                    m_createdMinimumAttributeEditors.erase(pit);
             }
-            m_lineEditAttributeEditorToProperty.erase(itEditor);
+            m_minimumAttributeEditorToProperty.erase(itEditor);
             return;
         }
     }
 }
 
 template <class Editor>
-void EditorFactoryPrivate<Editor>::slotCheckBoxAttributeEditorDestroyed(QObject *object)
+void EditorFactoryPrivate<Editor>::slotMaximumAttributeEditorDestroyed(QObject *object)
 {
-    const typename CheckBoxAttributeEditorToPropertyMap::iterator ecend = m_checkBoxAttributeEditorToProperty.end();
-    for (typename CheckBoxAttributeEditorToPropertyMap::iterator itEditor = m_checkBoxAttributeEditorToProperty.begin(); itEditor !=  ecend; ++itEditor) {
+    const typename MaximumAttributeEditorToPropertyMap::iterator ecend = m_maximumAttributeEditorToProperty.end();
+    for (typename MaximumAttributeEditorToPropertyMap::iterator itEditor = m_maximumAttributeEditorToProperty.begin(); itEditor !=  ecend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QDoubleEdit *editor = itEditor.key();
+            QtProperty *property = itEditor.value();
+            const typename PropertyToMaximumAttributeEditorListMap::iterator pit = m_createdMaximumAttributeEditors.find(property);
+            if (pit != m_createdMaximumAttributeEditors.end()) {
+                pit.value().removeAll(editor);
+                if (pit.value().empty())
+                    m_createdMaximumAttributeEditors.erase(pit);
+            }
+            m_maximumAttributeEditorToProperty.erase(itEditor);
+            return;
+        }
+    }
+}
+
+template <class Editor>
+void EditorFactoryPrivate<Editor>::slotCheckAttributeEditorDestroyed(QObject *object)
+{
+    const typename CheckAttributeEditorToPropertyMap::iterator ecend = m_checkAttributeEditorToProperty.end();
+    for (typename CheckAttributeEditorToPropertyMap::iterator itEditor = m_checkAttributeEditorToProperty.begin(); itEditor !=  ecend; ++itEditor) {
         if (itEditor.key() == object) {
             QtBoolEdit *editor = itEditor.key();
             QtProperty *property = itEditor.value();
-            const typename PropertyToCheckBoxAttributeEditorListMap::iterator pit = m_createdCheckBoxAttributeEditors.find(property);
-            if (pit != m_createdCheckBoxAttributeEditors.end()) {
+            const typename PropertyToCheckAttributeEditorListMap::iterator pit = m_createdCheckAttributeEditors.find(property);
+            if (pit != m_createdCheckAttributeEditors.end()) {
                 pit.value().removeAll(editor);
                 if (pit.value().empty())
-                    m_createdCheckBoxAttributeEditors.erase(pit);
+                    m_createdCheckAttributeEditors.erase(pit);
             }
-            m_checkBoxAttributeEditorToProperty.erase(itEditor);
+            m_checkAttributeEditorToProperty.erase(itEditor);
             return;
         }
     }
@@ -381,8 +519,8 @@ void QtSpinBoxFactoryPrivate::slotSetValue(int value)
 void QtSpinBoxFactoryPrivate::slotSetCheck(bool check)
 {
     QObject *object = q_ptr->sender();
-    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkBoxAttributeEditorToProperty.constEnd();
-    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkBoxAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
+    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
         if (itEditor.key() == object) {
             QtProperty *property = itEditor.value();
             property->setCheck(check);
@@ -417,9 +555,11 @@ QtSpinBoxFactory::QtSpinBoxFactory(QObject *parent)
 QtSpinBoxFactory::~QtSpinBoxFactory()
 {
     qDeleteAll(d_ptr->m_editorToProperty.keys());
-    qDeleteAll(d_ptr->m_comboBoxAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_lineEditAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_checkBoxAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_unitAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_formatAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_minimumAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_maximumAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
     delete d_ptr;
 }
 
@@ -481,10 +621,10 @@ QWidget *QtSpinBoxFactory::createAttributeEditor(QtIntPropertyManager *manager, 
         case Attribute::MAXIMUM:
             break;
         case Attribute::CHECK:
-            QtBoolEdit *editor = d_ptr->createCheckBoxAttributeEditor(property, parent);
+            QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
             connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
             connect(editor, SIGNAL(destroyed(QObject *)),
-                    this, SLOT(slotCheckBoxAttributeEditorDestroyed(QObject *)));
+                    this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
 
     }
     return editor;
@@ -646,8 +786,8 @@ void QtIntEditFactoryPrivate::slotSetValue(int value)
 void QtIntEditFactoryPrivate::slotSetScale(int scaleSelection)
 {
     QObject *object = q_ptr->sender();
-    const QMap<QComboBox *, QtProperty *>::ConstIterator itcend = m_comboBoxAttributeEditorToProperty.constEnd();
-    for (QMap<QComboBox *, QtProperty *>::ConstIterator itEditor = m_comboBoxAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+    const QMap<QComboBox *, QtProperty *>::ConstIterator itcend = m_unitAttributeEditorToProperty.constEnd();
+    for (QMap<QComboBox *, QtProperty *>::ConstIterator itEditor = m_unitAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
         if (itEditor.key() == object) {
             QtProperty *property = itEditor.value();
             QtIntPropertyManager *manager = q_ptr->propertyManager(property);
@@ -662,8 +802,8 @@ void QtIntEditFactoryPrivate::slotSetScale(int scaleSelection)
 void QtIntEditFactoryPrivate::slotSetFormat(int formatSelection)
 {
     QObject *object = q_ptr->sender();
-    const QMap<QComboBox *, QtProperty *>::ConstIterator itcend = m_comboBoxAttributeEditorToProperty.constEnd();
-    for (QMap<QComboBox *, QtProperty *>::ConstIterator itEditor = m_comboBoxAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+    const QMap<QComboBox *, QtProperty *>::ConstIterator itcend = m_formatAttributeEditorToProperty.constEnd();
+    for (QMap<QComboBox *, QtProperty *>::ConstIterator itEditor = m_formatAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
         if (itEditor.key() == object) {
             QtProperty *property = itEditor.value();
             QtIntPropertyManager *manager = q_ptr->propertyManager(property);
@@ -683,8 +823,8 @@ void QtIntEditFactoryPrivate::slotSetMinimum(double minVal)
 void QtIntEditFactoryPrivate::slotSetMinimum(int minVal)
 {
     QObject *object = q_ptr->sender();
-    const QMap<QDoubleEdit *, QtProperty *>::ConstIterator itcend = m_lineEditAttributeEditorToProperty.constEnd();
-    for (QMap<QDoubleEdit *, QtProperty *>::ConstIterator itEditor = m_lineEditAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+    const QMap<QDoubleEdit *, QtProperty *>::ConstIterator itcend = m_minimumAttributeEditorToProperty.constEnd();
+    for (QMap<QDoubleEdit *, QtProperty *>::ConstIterator itEditor = m_minimumAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
         if (itEditor.key() == object) {
             QtProperty *property = itEditor.value();
             QtIntPropertyManager *manager = q_ptr->propertyManager(property);
@@ -704,8 +844,8 @@ void QtIntEditFactoryPrivate::slotSetMaximum(double maxVal)
 void QtIntEditFactoryPrivate::slotSetMaximum(int maxVal)
 {
     QObject *object = q_ptr->sender();
-    const QMap<QDoubleEdit *, QtProperty *>::ConstIterator itcend = m_lineEditAttributeEditorToProperty.constEnd();
-    for (QMap<QDoubleEdit *, QtProperty *>::ConstIterator itEditor = m_lineEditAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+    const QMap<QDoubleEdit *, QtProperty *>::ConstIterator itcend = m_maximumAttributeEditorToProperty.constEnd();
+    for (QMap<QDoubleEdit *, QtProperty *>::ConstIterator itEditor = m_maximumAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
         if (itEditor.key() == object) {
             QtProperty *property = itEditor.value();
             QtIntPropertyManager *manager = q_ptr->propertyManager(property);
@@ -720,8 +860,8 @@ void QtIntEditFactoryPrivate::slotSetMaximum(int maxVal)
 void QtIntEditFactoryPrivate::slotSetCheck(bool check)
 {
     QObject *object = q_ptr->sender();
-    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkBoxAttributeEditorToProperty.constEnd();
-    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkBoxAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
+    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
         if (itEditor.key() == object) {
             QtProperty *property = itEditor.value();
             property->setCheck(check);
@@ -754,9 +894,11 @@ QtIntEditFactory::QtIntEditFactory(QObject *parent)
 QtIntEditFactory::~QtIntEditFactory()
 {
     qDeleteAll(d_ptr->m_editorToProperty.keys());
-    qDeleteAll(d_ptr->m_comboBoxAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_lineEditAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_checkBoxAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_unitAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_formatAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_minimumAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_maximumAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
     delete d_ptr;
 }
 
@@ -820,7 +962,7 @@ QWidget *QtIntEditFactory::createAttributeEditor(QtIntPropertyManager *manager, 
         char currentScale = manager->scale(property);
         QString unit = manager->unit(property);
         int currentIndex = 0;
-        QComboBox *editor1 = d_ptr->createComboBoxAttributeEditor(property, parent);
+        QComboBox *editor1 = d_ptr->createUnitAttributeEditor(property, parent);
 
         editor1->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
         editor1->setMinimumContentsLength(1);
@@ -837,7 +979,7 @@ QWidget *QtIntEditFactory::createAttributeEditor(QtIntPropertyManager *manager, 
 
         connect(editor1, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetScale(int)));
         connect(editor1, SIGNAL(destroyed(QObject *)),
-                this, SLOT(slotComboBoxAttributeEditorDestroyed(QObject *)));
+                this, SLOT(slotUnitAttributeEditorDestroyed(QObject *)));
         return editor1;
     }
     else if (attribute == Attribute::PKAVG)
@@ -849,7 +991,7 @@ QWidget *QtIntEditFactory::createAttributeEditor(QtIntPropertyManager *manager, 
         if (!manager->attributesEditable())
         return NULL;
         QStringList enumNames;
-        QComboBox *editor3 = d_ptr->createComboBoxAttributeEditor(property, parent);
+        QComboBox *editor3 = d_ptr->createFormatAttributeEditor(property, parent);
 
         editor3->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
         editor3->setMinimumContentsLength(1);
@@ -860,12 +1002,12 @@ QWidget *QtIntEditFactory::createAttributeEditor(QtIntPropertyManager *manager, 
 
         connect(editor3, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetFormat(int)));
         connect(editor3, SIGNAL(destroyed(QObject *)),
-                this, SLOT(slotComboBoxAttributeEditorDestroyed(QObject *)));
+                this, SLOT(slotFormatAttributeEditorDestroyed(QObject *)));
         return editor3;
     }
     else if (attribute == Attribute::MINIMUM)
     {
-        QDoubleEdit *editor4 = d_ptr->createLineEditAttributeEditor(property, parent);
+        QDoubleEdit *editor4 = d_ptr->createMinimumAttributeEditor(property, parent);
 
         //        editor4->setSingleStep(std::abs(manager->singleStep(property)));
         editor4->setScale(manager->scale(property));
@@ -876,12 +1018,12 @@ QWidget *QtIntEditFactory::createAttributeEditor(QtIntPropertyManager *manager, 
 
         connect(editor4, SIGNAL(valueChanged(double)), this, SLOT(slotSetMinimum(double)));
         connect(editor4, SIGNAL(destroyed(QObject *)),
-                this, SLOT(slotLineEditAttributeEditorDestroyed(QObject *)));
+                this, SLOT(slotMinimumAttributeEditorDestroyed(QObject *)));
         return editor4;
     }
     else if (attribute == Attribute::MAXIMUM)
     {
-        QDoubleEdit *editor5 = d_ptr->createLineEditAttributeEditor(property, parent);
+        QDoubleEdit *editor5 = d_ptr->createMaximumAttributeEditor(property, parent);
 
         //        editor5->setSingleStep(std::abs(manager->singleStep(property)));
         editor5->setScale(manager->scale(property));
@@ -892,21 +1034,21 @@ QWidget *QtIntEditFactory::createAttributeEditor(QtIntPropertyManager *manager, 
 
         connect(editor5, SIGNAL(valueChanged(double)), this, SLOT(slotSetMaximum(double)));
         connect(editor5, SIGNAL(destroyed(QObject *)),
-                this, SLOT(slotLineEditAttributeEditorDestroyed(QObject *)));
+                this, SLOT(slotMaximumAttributeEditorDestroyed(QObject *)));
         return editor5;
     }
     else if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable())
         return NULL;
-        QtBoolEdit *editor6 = d_ptr->createCheckBoxAttributeEditor(property, parent);
+        QtBoolEdit *editor6 = d_ptr->createCheckAttributeEditor(property, parent);
 
         editor6->setChecked(property->check());
         editor6->setTextVisible(false);
 
         connect(editor6, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
         connect(editor6, SIGNAL(destroyed(QObject *)),
-                this, SLOT(slotCheckBoxAttributeEditorDestroyed(QObject *)));
+                this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor6;
     }
     return NULL;
@@ -1009,8 +1151,8 @@ void QtSliderFactoryPrivate::slotSetValue(int value)
 void QtSliderFactoryPrivate::slotSetCheck(bool check)
 {
     QObject *object = q_ptr->sender();
-    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkBoxAttributeEditorToProperty.constEnd();
-    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkBoxAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
+    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
         if (itEditor.key() == object) {
             QtProperty *property = itEditor.value();
             property->setCheck(check);
@@ -1045,9 +1187,11 @@ QtSliderFactory::QtSliderFactory(QObject *parent)
 QtSliderFactory::~QtSliderFactory()
 {
     qDeleteAll(d_ptr->m_editorToProperty.keys());
-    qDeleteAll(d_ptr->m_comboBoxAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_lineEditAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_checkBoxAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_unitAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_formatAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_minimumAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_maximumAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
     delete d_ptr;
 }
 
@@ -1098,14 +1242,14 @@ QWidget *QtSliderFactory::createAttributeEditor(QtIntPropertyManager *manager, Q
     {
         if (!manager->attributesEditable())
             return NULL;
-        QtBoolEdit *editor6 = d_ptr->createCheckBoxAttributeEditor(property, parent);
+        QtBoolEdit *editor6 = d_ptr->createCheckAttributeEditor(property, parent);
 
         editor6->setChecked(property->check());
         editor6->setTextVisible(false);
 
         connect(editor6, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
         connect(editor6, SIGNAL(destroyed(QObject *)),
-                this, SLOT(slotCheckBoxAttributeEditorDestroyed(QObject *)));
+                this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor6;
     }
     return NULL;
@@ -1205,8 +1349,8 @@ void QtScrollBarFactoryPrivate::slotSetValue(int value)
 void QtScrollBarFactoryPrivate::slotSetCheck(bool check)
 {
     QObject *object = q_ptr->sender();
-    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkBoxAttributeEditorToProperty.constEnd();
-    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkBoxAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
+    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
         if (itEditor.key() == object) {
             QtProperty *property = itEditor.value();
             property->setCheck(check);
@@ -1241,9 +1385,11 @@ QtScrollBarFactory::QtScrollBarFactory(QObject *parent)
 QtScrollBarFactory::~QtScrollBarFactory()
 {
     qDeleteAll(d_ptr->m_editorToProperty.keys());
-    qDeleteAll(d_ptr->m_comboBoxAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_lineEditAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_checkBoxAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_unitAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_formatAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_minimumAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_maximumAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
     delete d_ptr;
 }
 
@@ -1293,14 +1439,14 @@ QWidget *QtScrollBarFactory::createAttributeEditor(QtIntPropertyManager *manager
     {
         if (!manager->attributesEditable())
             return NULL;
-        QtBoolEdit *editor6 = d_ptr->createCheckBoxAttributeEditor(property, parent);
+        QtBoolEdit *editor6 = d_ptr->createCheckAttributeEditor(property, parent);
 
         editor6->setChecked(property->check());
         editor6->setTextVisible(false);
 
         connect(editor6, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
         connect(editor6, SIGNAL(destroyed(QObject *)),
-                this, SLOT(slotCheckBoxAttributeEditorDestroyed(QObject *)));
+                this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor6;
     }
     return NULL;
@@ -1384,8 +1530,8 @@ void QtCheckBoxFactoryPrivate::slotSetValue(bool value)
 void QtCheckBoxFactoryPrivate::slotSetCheck(bool check)
 {
     QObject *object = q_ptr->sender();
-    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkBoxAttributeEditorToProperty.constEnd();
-    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkBoxAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
+    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
         if (itEditor.key() == object) {
             QtProperty *property = itEditor.value();
             property->setCheck(check);
@@ -1420,9 +1566,7 @@ QtCheckBoxFactory::QtCheckBoxFactory(QObject *parent)
 QtCheckBoxFactory::~QtCheckBoxFactory()
 {
     qDeleteAll(d_ptr->m_editorToProperty.keys());
-    qDeleteAll(d_ptr->m_comboBoxAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_lineEditAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_checkBoxAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
     delete d_ptr;
 }
 
@@ -1469,14 +1613,14 @@ QWidget *QtCheckBoxFactory::createAttributeEditor(QtBoolPropertyManager *manager
     {
         if (!manager->attributesEditable())
             return NULL;
-        QtBoolEdit *editor6 = d_ptr->createCheckBoxAttributeEditor(property, parent);
+        QtBoolEdit *editor6 = d_ptr->createCheckAttributeEditor(property, parent);
 
         editor6->setChecked(property->check());
         editor6->setTextVisible(false);
 
         connect(editor6, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
         connect(editor6, SIGNAL(destroyed(QObject *)),
-                this, SLOT(slotCheckBoxAttributeEditorDestroyed(QObject *)));
+                this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor6;
     }
     return NULL;
@@ -1624,8 +1768,8 @@ void QtDoubleSpinBoxFactoryPrivate::slotSetValue(double value)
 void QtDoubleSpinBoxFactoryPrivate::slotSetCheck(bool check)
 {
     QObject *object = q_ptr->sender();
-    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkBoxAttributeEditorToProperty.constEnd();
-    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkBoxAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
+    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
         if (itEditor.key() == object) {
             QtProperty *property = itEditor.value();
             property->setCheck(check);
@@ -1659,9 +1803,11 @@ QtDoubleSpinBoxFactory::QtDoubleSpinBoxFactory(QObject *parent)
 QtDoubleSpinBoxFactory::~QtDoubleSpinBoxFactory()
 {
     qDeleteAll(d_ptr->m_editorToProperty.keys());
-    qDeleteAll(d_ptr->m_comboBoxAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_lineEditAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_checkBoxAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_unitAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_formatAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_minimumAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_maximumAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
     delete d_ptr;
 }
 
@@ -1718,14 +1864,14 @@ QWidget *QtDoubleSpinBoxFactory::createAttributeEditor(QtDoublePropertyManager *
     {
         if (!manager->attributesEditable())
             return NULL;
-        QtBoolEdit *editor6 = d_ptr->createCheckBoxAttributeEditor(property, parent);
+        QtBoolEdit *editor6 = d_ptr->createCheckAttributeEditor(property, parent);
 
         editor6->setChecked(property->check());
         editor6->setTextVisible(false);
 
         connect(editor6, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
         connect(editor6, SIGNAL(destroyed(QObject *)),
-                this, SLOT(slotCheckBoxAttributeEditorDestroyed(QObject *)));
+                this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor6;
     }
     return NULL;
@@ -1882,8 +2028,8 @@ void QtDoubleEditFactoryPrivate::slotSetValue(double value)
 void QtDoubleEditFactoryPrivate::slotSetScale(int scaleSelection)
 {
     QObject *object = q_ptr->sender();
-    const QMap<QComboBox *, QtProperty *>::ConstIterator itcend = m_comboBoxAttributeEditorToProperty.constEnd();
-    for (QMap<QComboBox *, QtProperty *>::ConstIterator itEditor = m_comboBoxAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+    const QMap<QComboBox *, QtProperty *>::ConstIterator itcend = m_unitAttributeEditorToProperty.constEnd();
+    for (QMap<QComboBox *, QtProperty *>::ConstIterator itEditor = m_unitAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
         if (itEditor.key() == object) {
             QtProperty *property = itEditor.value();
             QtDoublePropertyManager *manager = q_ptr->propertyManager(property);
@@ -1898,8 +2044,8 @@ void QtDoubleEditFactoryPrivate::slotSetScale(int scaleSelection)
 void QtDoubleEditFactoryPrivate::slotSetFormat(int formatSelection)
 {
     QObject *object = q_ptr->sender();
-    const QMap<QComboBox *, QtProperty *>::ConstIterator itcend = m_comboBoxAttributeEditorToProperty.constEnd();
-    for (QMap<QComboBox *, QtProperty *>::ConstIterator itEditor = m_comboBoxAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+    const QMap<QComboBox *, QtProperty *>::ConstIterator itcend = m_formatAttributeEditorToProperty.constEnd();
+    for (QMap<QComboBox *, QtProperty *>::ConstIterator itEditor = m_formatAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
         if (itEditor.key() == object) {
             QtProperty *property = itEditor.value();
             QtDoublePropertyManager *manager = q_ptr->propertyManager(property);
@@ -1914,8 +2060,8 @@ void QtDoubleEditFactoryPrivate::slotSetFormat(int formatSelection)
 void QtDoubleEditFactoryPrivate::slotSetMinimum(double minVal)
 {
     QObject *object = q_ptr->sender();
-    const QMap<QDoubleEdit *, QtProperty *>::ConstIterator itcend = m_lineEditAttributeEditorToProperty.constEnd();
-    for (QMap<QDoubleEdit *, QtProperty *>::ConstIterator itEditor = m_lineEditAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+    const QMap<QDoubleEdit *, QtProperty *>::ConstIterator itcend = m_minimumAttributeEditorToProperty.constEnd();
+    for (QMap<QDoubleEdit *, QtProperty *>::ConstIterator itEditor = m_minimumAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
         if (itEditor.key() == object) {
             QtProperty *property = itEditor.value();
             QtDoublePropertyManager *manager = q_ptr->propertyManager(property);
@@ -1930,8 +2076,8 @@ void QtDoubleEditFactoryPrivate::slotSetMinimum(double minVal)
 void QtDoubleEditFactoryPrivate::slotSetMaximum(double maxVal)
 {
     QObject *object = q_ptr->sender();
-    const QMap<QDoubleEdit *, QtProperty *>::ConstIterator itcend = m_lineEditAttributeEditorToProperty.constEnd();
-    for (QMap<QDoubleEdit *, QtProperty *>::ConstIterator itEditor = m_lineEditAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+    const QMap<QDoubleEdit *, QtProperty *>::ConstIterator itcend = m_maximumAttributeEditorToProperty.constEnd();
+    for (QMap<QDoubleEdit *, QtProperty *>::ConstIterator itEditor = m_maximumAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
         if (itEditor.key() == object) {
             QtProperty *property = itEditor.value();
             QtDoublePropertyManager *manager = q_ptr->propertyManager(property);
@@ -1946,8 +2092,8 @@ void QtDoubleEditFactoryPrivate::slotSetMaximum(double maxVal)
 void QtDoubleEditFactoryPrivate::slotSetCheck(bool check)
 {
     QObject *object = q_ptr->sender();
-    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkBoxAttributeEditorToProperty.constEnd();
-    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkBoxAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
+    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
         if (itEditor.key() == object) {
             QtProperty *property = itEditor.value();
             property->setCheck(check);
@@ -1980,9 +2126,12 @@ QtDoubleEditFactory::QtDoubleEditFactory(QObject *parent)
 QtDoubleEditFactory::~QtDoubleEditFactory()
 {
     qDeleteAll(d_ptr->m_editorToProperty.keys());
-    qDeleteAll(d_ptr->m_comboBoxAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_lineEditAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_checkBoxAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_unitAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_pkAvgAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_formatAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_minimumAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_maximumAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
     delete d_ptr;
 }
 
@@ -2048,7 +2197,7 @@ QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *man
         char currentScale = manager->scale(property);
         QString unit = manager->unit(property);
         int currentIndex = 0;
-        QComboBox *editor = d_ptr->createComboBoxAttributeEditor(property, parent);
+        QComboBox *editor = d_ptr->createUnitAttributeEditor(property, parent);
 
         editor->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
         editor->setMinimumContentsLength(1);
@@ -2065,7 +2214,7 @@ QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *man
 
         connect(editor, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetScale(int)));
         connect(editor, SIGNAL(destroyed(QObject *)),
-                this, SLOT(slotComboBoxAttributeEditorDestroyed(QObject *)));
+                this, SLOT(slotUnitAttributeEditorDestroyed(QObject *)));
         return editor;
     }
     else if (attribute == Attribute::PKAVG)
@@ -2077,7 +2226,7 @@ QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *man
         if (!manager->attributesEditable())
         return NULL;
         QStringList enumNames;
-        QComboBox *editor3 = d_ptr->createComboBoxAttributeEditor(property, parent);
+        QComboBox *editor3 = d_ptr->createFormatAttributeEditor(property, parent);
 
         editor3->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
         editor3->setMinimumContentsLength(1);
@@ -2088,12 +2237,12 @@ QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *man
 
         connect(editor3, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetFormat(int)));
         connect(editor3, SIGNAL(destroyed(QObject *)),
-                this, SLOT(slotComboBoxAttributeEditorDestroyed(QObject *)));
+                this, SLOT(slotFormatAttributeEditorDestroyed(QObject *)));
         return editor3;
     }
     else if (attribute == Attribute::MINIMUM)
     {
-        QDoubleEdit *editor4 = d_ptr->createLineEditAttributeEditor(property, parent);
+        QDoubleEdit *editor4 = d_ptr->createMinimumAttributeEditor(property, parent);
 
         //        editor4->setSingleStep(std::abs(manager->singleStep(property)));
         editor4->setScale(manager->scale(property));
@@ -2104,12 +2253,12 @@ QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *man
 
         connect(editor4, SIGNAL(valueChanged(double)), this, SLOT(slotSetMinimum(double)));
         connect(editor4, SIGNAL(destroyed(QObject *)),
-                this, SLOT(slotLineEditAttributeEditorDestroyed(QObject *)));
+                this, SLOT(slotMinimumAttributeEditorDestroyed(QObject *)));
         return editor4;
     }
     else if (attribute == Attribute::MAXIMUM)
     {
-        QDoubleEdit *editor5 = d_ptr->createLineEditAttributeEditor(property, parent);
+        QDoubleEdit *editor5 = d_ptr->createMaximumAttributeEditor(property, parent);
 
         //        editor5->setSingleStep(std::abs(manager->singleStep(property)));
         editor5->setScale(manager->scale(property));
@@ -2120,21 +2269,21 @@ QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *man
 
         connect(editor5, SIGNAL(valueChanged(double)), this, SLOT(slotSetMaximum(double)));
         connect(editor5, SIGNAL(destroyed(QObject *)),
-                this, SLOT(slotLineEditAttributeEditorDestroyed(QObject *)));
+                this, SLOT(slotMaximumAttributeEditorDestroyed(QObject *)));
         return editor5;
     }
     else if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable())
         return NULL;
-        QtBoolEdit *editor6 = d_ptr->createCheckBoxAttributeEditor(property, parent);
+        QtBoolEdit *editor6 = d_ptr->createCheckAttributeEditor(property, parent);
 
         editor6->setChecked(property->check());
         editor6->setTextVisible(false);
 
         connect(editor6, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
         connect(editor6, SIGNAL(destroyed(QObject *)),
-                this, SLOT(slotCheckBoxAttributeEditorDestroyed(QObject *)));
+                this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor6;
     }
     return NULL;
