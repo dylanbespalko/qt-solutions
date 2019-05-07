@@ -19,7 +19,8 @@ from qtpropertybrowser import QtSizePropertyManager, QtSizeFPropertyManager
 from qtpropertybrowser import QtRectPropertyManager, QtRectFPropertyManager
 from qtpropertybrowser import QtCursorPropertyManager, QtColorPropertyManager, QtFontPropertyManager, QtKeySequencePropertyManager
 from qtpropertybrowser import QtSizePolicyPropertyManager
-from qtpropertybrowser import QtCheckBoxFactory, QtEnumEditorFactory, QtIntEditFactory, QtSpinBoxFactory
+from qtpropertybrowser import QtCheckBoxFactory, QtEnumEditorFactory
+from qtpropertybrowser import QtIntEditFactory, QtSpinBoxFactory, QtSliderFactory, QtScrollBarFactory
 from qtpropertybrowser import QtLineEditFactory
 #from qtpropertybrowser import QtFileEditorFactory
 from qtpropertybrowser import QtDoubleEditFactory, QtDoubleSpinBoxFactory  #, QtComplexEditFactory, QtArrayEditFactory
@@ -97,6 +98,8 @@ if __name__ == "__main__":
                        'flag': False,
                        'int': QtIntEditFactory(),
                        'int2': QtSpinBoxFactory(),
+                       'int3': QtSliderFactory(),
+                       'int4': QtScrollBarFactory(),
                        'float': QtDoubleEditFactory(),
                        'float2': QtDoubleSpinBoxFactory(),
                        #'complex': QtComplexEditFactory(),
@@ -164,6 +167,60 @@ if __name__ == "__main__":
         tree_browser.setFactoryForManager(manager_map['int'], factory_map['int'])
         box_browser.setFactoryForManager(manager_map['int'], factory_map['int'])
         button_browser.setFactoryForManager(manager_map['int'], factory_map['int'])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # int_read_write spinbox
+        manager_map['int'].valueChanged.connect(set_value)
+        property_ = manager_map['int'].addProperty("int_spinbox")
+        property_.propertyManager().setReadOnly(property_, False)
+        property_.propertyManager().setUnit(property_, "V")
+
+        property_.propertyManager().setMinimum(property_, 0)
+        property_.propertyManager().setMaximum(property_, 2)
+        property_.propertyManager().setValue(property_, 3)
+        tree_browser.setFactoryForManager(manager_map['int'], factory_map['int2'])
+        box_browser.setFactoryForManager(manager_map['int'], factory_map['int2'])
+        button_browser.setFactoryForManager(manager_map['int'], factory_map['int2'])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # int_read_write slider
+        manager_map['int'].valueChanged.connect(set_value)
+        property_ = manager_map['int'].addProperty("int_slider")
+        property_.propertyManager().setReadOnly(property_, False)
+        property_.propertyManager().setUnit(property_, "V")
+
+        property_.propertyManager().setMinimum(property_, 0)
+        property_.propertyManager().setMaximum(property_, 2)
+        property_.propertyManager().setValue(property_, 3)
+        tree_browser.setFactoryForManager(manager_map['int'], factory_map['int3'])
+        box_browser.setFactoryForManager(manager_map['int'], factory_map['int3'])
+        button_browser.setFactoryForManager(manager_map['int'], factory_map['int3'])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # int_read_write scroll
+        manager_map['int'].valueChanged.connect(set_value)
+        property_ = manager_map['int'].addProperty("int_scroll")
+        property_.propertyManager().setReadOnly(property_, False)
+        property_.propertyManager().setUnit(property_, "V")
+
+        property_.propertyManager().setMinimum(property_, 0)
+        property_.propertyManager().setMaximum(property_, 2)
+        property_.propertyManager().setValue(property_, 3)
+        tree_browser.setFactoryForManager(manager_map['int'], factory_map['int4'])
+        box_browser.setFactoryForManager(manager_map['int'], factory_map['int4'])
+        button_browser.setFactoryForManager(manager_map['int'], factory_map['int4'])
         browser_item = tree_browser.addProperty(property_)
         tree_browser.setExpanded(browser_item, False)
         browser_item = box_browser.addProperty(property_)
