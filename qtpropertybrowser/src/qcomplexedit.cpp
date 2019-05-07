@@ -34,6 +34,55 @@
 
 QT_BEGIN_NAMESPACE
 
+QMap<Format, QString> FormatNameMap = {
+    {Format::RE, "Re"},
+    {Format::RE_IM, "Re+Imj"},
+    {Format::LIN_DEG, QString("Lin") + QString(QChar(0x2220)) + QString("Deg")},
+    {Format::LOG_DEG, QString("Log") + QString(QChar(0x2220)) + QString("Deg")}
+};
+
+QMap<Scale, QString> ScaleNameMap = {
+    {Scale::p, "p"},
+    {Scale::n, "n"},
+    {Scale::u, "u"},
+    {Scale::m, "m"},
+    {Scale::_, " "},
+    {Scale::K, "K"},
+    {Scale::M, "M"},
+    {Scale::G, "G"},
+    {Scale::T, "T"},
+};
+QMap<Scale, int> ScaleValueMap = {
+    {Scale::p, -12},
+    {Scale::n, -9},
+    {Scale::u, -6},
+    {Scale::m, -3},
+    {Scale::_, 0},
+    {Scale::K, 3},
+    {Scale::M, 6},
+    {Scale::G, 9},
+    {Scale::T, 12},
+};
+
+QMap<PkAvg, QString> PkAvgNameMap = {
+    {PkAvg::PK, "pk"},
+    {PkAvg::AVG, "avg"},
+};
+QMap<Domain, QString> DomainNameMap = {
+    {Domain::TF, "TF"},
+    {Domain::FF, "FF"},
+    {Domain::FT, "FT"},
+    {Domain::TT, "TT"},
+    {Domain::TH, "TH"},
+};
+QMap<Attribute, QString> AttributeNameMap = {
+    {Attribute::UNIT, "Unit"},
+    {Attribute::PKAVG, "PkAvg"},
+    {Attribute::FORMAT, "Format"},
+    {Attribute::MINIMUM, "Minimum"},
+    {Attribute::MAXIMUM, "Maximum"},
+};
+
 double infinity(std::numeric_limits<double>::infinity());
 double neg_infinity(-std::numeric_limits<double>::infinity());
 double highest(std::numeric_limits<double>::max());
@@ -270,16 +319,17 @@ QString QIntEdit::num2str(int val, const Scale scale, const Format format, int p
 {
     double scaled_val;
     QString text;
+    int scale_ = ScaleValueMap[scale];
     switch (format) {
         case Format::LOG_DEG:
-            scaled_val = val/sqrt(pow(10, int(scale)));
+            scaled_val = val/sqrt(pow(10, scale_));
             text = double2str(20*log10(scaled_val), precision);
             break;
         case Format::RE:
         case Format::RE_IM:
         case Format::LIN_DEG:
         default:
-            scaled_val = val/pow(10, int(scale));
+            scaled_val = val/pow(10, scale_);
             text = double2str(scaled_val, precision);
             break;
     }
@@ -291,13 +341,14 @@ int QIntEdit::str2num(const QString &text, const Scale scale, const Format forma
     QRegExp regExp = regExps[format];
     int pos;
     int val = 0;
+    int scale_ = ScaleValueMap[scale];
     switch (format) {
         case Format::LOG_DEG:
             pos = regExp.indexIn(text);
             if (pos == -1)
                 return val;
             val = int(pow(10,(regExp.cap(1).toDouble())/20));
-            val *= sqrt(pow(10, int(scale)));
+            val *= sqrt(pow(10, scale_));
             break;
         case Format::RE:
         case Format::RE_IM:
@@ -307,7 +358,7 @@ int QIntEdit::str2num(const QString &text, const Scale scale, const Format forma
             if (pos == -1)
                 return val;
             val = regExp.cap(1).toInt();
-            val *= pow(10, int(scale));
+            val *= pow(10, scale_);
             break;
     }
     if (isinf(std::abs(val)))
@@ -503,16 +554,17 @@ QString QDoubleEdit::num2str(double val, const Scale scale, const Format format,
 {
     double scaled_val;
     QString text;
+    int scale_ = ScaleValueMap[scale];
     switch (format) {
         case Format::LOG_DEG:
-            scaled_val = val/sqrt(pow(10, int(scale)));
+            scaled_val = val/sqrt(pow(10, scale_));
             text = double2str(20*log10(scaled_val), precision);
             break;
         case Format::RE:
         case Format::RE_IM:
         case Format::LIN_DEG:
         default:
-            scaled_val = val/pow(10, int(scale));
+            scaled_val = val/pow(10, scale_);
             text = double2str(scaled_val, precision);
             break;
     }
@@ -524,13 +576,14 @@ double QDoubleEdit::str2num(const QString &text, const Scale scale, const Format
     QRegExp regExp = regExps[format];
     int pos;
     double val = 0;
+    int scale_ = ScaleValueMap[scale];
     switch (format) {
         case Format::LOG_DEG:
             pos = regExp.indexIn(text);
             if (pos == -1)
                 return val;
             val = pow(10,(regExp.cap(1).toDouble())/20);
-            val *= sqrt(pow(10, int(scale)));
+            val *= sqrt(pow(10, scale_));
             break;
     case Format::RE:
     case Format::RE_IM:
@@ -540,7 +593,7 @@ double QDoubleEdit::str2num(const QString &text, const Scale scale, const Format
         if (pos == -1)
             return val;
         val = regExp.cap(1).toDouble();
-        val *= pow(10, int(scale));
+        val *= pow(10, scale_);
         break;
     }
     if (isinf(std::abs(val)))
@@ -736,28 +789,29 @@ QString QComplexEdit::num2str(const QComplex& val, const Scale scale, const Form
 {
     QComplex scaled_val;
     QString text1, sep, text2;
+    int scale_ = ScaleValueMap[scale];
     switch (format) {
         case Format::RE:
-            scaled_val = val/pow(10, int(scale));
+            scaled_val = val/pow(10, scale_);
             text1 = double2str(scaled_val.real(), precision);
             sep = QString("");
             text2 = QString("");
             break;
         case Format::RE_IM:
-            scaled_val = val/pow(10, int(scale));
+            scaled_val = val/pow(10, scale_);
             text1 = double2str(scaled_val.real(), precision);
             sep = QString("+");
             text2 = double2str(scaled_val.imag(), precision) + "j";
             break;
         case Format::LOG_DEG:
-            scaled_val = val/sqrt(pow(10, int(scale)));
+            scaled_val = val/sqrt(pow(10, scale_));
             text1 = double2str(20*log10(abs(scaled_val)), precision);
             sep = QString(QChar(0x2220));
             text2 = double2str(arg(scaled_val)*180/M_PI, precision);
             break;
         case Format::LIN_DEG:
         default:
-            scaled_val = val/pow(10, int(scale));
+            scaled_val = val/pow(10, scale_);
             text1 = double2str(abs(scaled_val), precision);
             sep = QString(QChar(0x2220));
             text2 = double2str(arg(scaled_val)*180/M_PI, precision);
@@ -770,6 +824,7 @@ QComplex QComplexEdit::str2num(const QString &text, const Scale scale, const For
 {
     QRegExp regExp = regExps[format];
     int pos;
+    int scale_ = ScaleValueMap[scale];
     QComplex val = 0;
     switch (format) {
         case Format::RE:
@@ -777,7 +832,7 @@ QComplex QComplexEdit::str2num(const QString &text, const Scale scale, const For
             if (pos == -1)
                 return val;
             val = QComplex(regExp.cap(1).toDouble());
-            val *= pow(10, int(scale));
+            val *= pow(10, scale_);
             break;
         case Format::RE_IM:
             pos = regExp.indexIn(text);
@@ -787,7 +842,7 @@ QComplex QComplexEdit::str2num(const QString &text, const Scale scale, const For
                 val = QComplex(regExp.cap(1).toDouble(),regExp.cap(3).toDouble());
             else
                 val = QComplex(regExp.cap(1).toDouble());
-            val *= pow(10, int(scale));
+            val *= pow(10, scale_);
             break;
         case Format::LOG_DEG:
             pos = regExp.indexIn(text);
@@ -797,7 +852,7 @@ QComplex QComplexEdit::str2num(const QString &text, const Scale scale, const For
                 val = std::polar(pow(10,(regExp.cap(1).toDouble())/20),regExp.cap(3).toDouble()*M_PI/180);
             else
                 val = QComplex(pow(10,(regExp.cap(1).toDouble())/20),0);
-            val *= sqrt(pow(10, int(scale)));
+            val *= sqrt(pow(10, scale_));
             break;
         case Format::LIN_DEG:
         default:
@@ -808,7 +863,7 @@ QComplex QComplexEdit::str2num(const QString &text, const Scale scale, const For
                 val = std::polar(regExp.cap(1).toDouble(),regExp.cap(3).toDouble()*M_PI/180);
             else
                 val = QComplex(regExp.cap(1).toDouble(),0);
-            val *= pow(10, int(scale));
+            val *= pow(10, scale_);
             break;
     }
     if (isinf(std::abs(val)))

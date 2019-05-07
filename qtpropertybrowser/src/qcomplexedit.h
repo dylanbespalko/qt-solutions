@@ -42,24 +42,28 @@ enum Format
     LIN_DEG,
     LOG_DEG
 };
+extern QMap<Format, QString> FormatNameMap;
 
 enum Scale {
-    p = -12,
-    n = -9,
-    u = -6,
-    m = -3,
-    _ = 0,
-    K = 3,
-    M = 6,
-    G = 9,
-    T = 12
+    T,
+    G,
+    M,
+    K,
+    _,
+    m,
+    u,
+    n,
+    p,
 };
+extern QMap<Scale, QString> ScaleNameMap;
+extern QMap<Scale, int> ScaleValueMap;
 
 enum PkAvg
 {
     PK,
     AVG
 };
+extern QMap<PkAvg, QString> PkAvgNameMap;
 
 enum Domain
 {
@@ -69,6 +73,7 @@ enum Domain
     TT,
     TH,
 };
+extern QMap<Domain, QString> DomainNameMap;
 
 
 enum Attribute
@@ -81,6 +86,12 @@ enum Attribute
     MAXIMUM,
     CHECK
 };
+extern QMap<Attribute, QString> AttributeNameMap;
+
+extern double infinity;
+extern double neg_infinity;
+extern double highest;
+extern double lowest;
 
 class QT_QTPROPERTYBROWSER_EXPORT QComplex : public std::complex<double>
 {

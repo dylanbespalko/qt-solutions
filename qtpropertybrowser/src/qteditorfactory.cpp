@@ -225,6 +225,10 @@ void EditorFactoryPrivate<Editor>::initializeUnitAttributeEditor(QtProperty *pro
         it = m_createdUnitAttributeEditors.insert(property, UnitAttributeEditorList());
     it.value().append(editor);
     m_unitAttributeEditorToProperty.insert(editor, property);
+
+    editor->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
+    editor->setMinimumContentsLength(1);
+    editor->view()->setTextElideMode(Qt::ElideRight);
 }
 
 template <class Editor>
@@ -235,6 +239,10 @@ void EditorFactoryPrivate<Editor>::initializePkAvgAttributeEditor(QtProperty *pr
         it = m_createdPkAvgAttributeEditors.insert(property, PkAvgAttributeEditorList());
     it.value().append(editor);
     m_pkAvgAttributeEditorToProperty.insert(editor, property);
+
+    editor->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
+    editor->setMinimumContentsLength(1);
+    editor->view()->setTextElideMode(Qt::ElideRight);
 }
 
 template <class Editor>
@@ -245,6 +253,10 @@ void EditorFactoryPrivate<Editor>::initializeFormatAttributeEditor(QtProperty *p
         it = m_createdFormatAttributeEditors.insert(property, FormatAttributeEditorList());
     it.value().append(editor);
     m_formatAttributeEditorToProperty.insert(editor, property);
+
+    editor->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
+    editor->setMinimumContentsLength(1);
+    editor->view()->setTextElideMode(Qt::ElideRight);
 }
 
 template <class Editor>
@@ -954,33 +966,24 @@ QWidget *QtIntEditFactory::createAttributeEditor(QtIntPropertyManager *manager, 
 {
     if (attribute == Attribute::UNIT)
     {
-        if (!manager->attributesEditable())
-        return NULL;
+        QComboBox *editor = d_ptr->createUnitAttributeEditor(property, parent);
+
         QString prefix;
-        QStringList enumNames;
-        QVector<char> scaleNames;
-        char currentScale = manager->scale(property);
+        Scale currentScale = manager->scale(property);
         QString unit = manager->unit(property);
-        int currentIndex = 0;
-        QComboBox *editor1 = d_ptr->createUnitAttributeEditor(property, parent);
-
-        editor1->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
-        editor1->setMinimumContentsLength(1);
-        editor1->view()->setTextElideMode(Qt::ElideRight);
-        scaleNames << 'T' << 'G' << 'M'<< 'k' << ' ' << 'm' << 'u' << 'n' << 'p';
+        QStringList enumNames;
         manager->format(property) == LOG_DEG? prefix = "dB" : "";
-        for (unsigned short index = 0; index < scaleNames.size(); index++) {
-            enumNames << prefix + scaleNames[index] + unit;
-            if (scaleNames[index] == currentScale)
-            currentIndex = index;
+        QMap<Scale, QString>::iterator i;
+        for (i = ScaleNameMap.begin(); i != ScaleNameMap.end(); ++i) {
+            enumNames << prefix + i.value() + unit;
         }
-        editor1->addItems(enumNames);
-        editor1->setCurrentIndex(currentIndex);
+        editor->addItems(enumNames);
+        editor->setCurrentIndex((int)currentScale);
 
-        connect(editor1, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetScale(int)));
-        connect(editor1, SIGNAL(destroyed(QObject *)),
+        connect(editor, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetScale(int)));
+        connect(editor, SIGNAL(destroyed(QObject *)),
                 this, SLOT(slotUnitAttributeEditorDestroyed(QObject *)));
-        return editor1;
+        return editor;
     }
     else if (attribute == Attribute::PKAVG)
     {
@@ -2082,7 +2085,7 @@ void QtDoubleEditFactoryPrivate::slotSetMaximum(double maxVal)
             QtProperty *property = itEditor.value();
             QtDoublePropertyManager *manager = q_ptr->propertyManager(property);
             if (!manager)
-            return;
+                return;
             manager->setMaximum(property, maxVal);
             return;
         }
@@ -2186,35 +2189,24 @@ QWidget *QtDoubleEditFactory::createEditor(QtDoublePropertyManager *manager,
 QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *manager, QtProperty *property,
                                                     QWidget *parent, Attribute attribute)
 {
-    std::cout<<"Create the Attribute" << attribute << std::endl;
     if (attribute == Attribute::UNIT)
     {
-        if (!manager->attributesEditable())
-        return NULL;
-        QString prefix;
-        QStringList enumNames;
-        QVector<char> scaleNames;
-        char currentScale = manager->scale(property);
-        QString unit = manager->unit(property);
-        int currentIndex = 0;
         QComboBox *editor = d_ptr->createUnitAttributeEditor(property, parent);
 
-        editor->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
-        editor->setMinimumContentsLength(1);
-        editor->view()->setTextElideMode(Qt::ElideRight);
-        scaleNames << 'T' << 'G' << 'M'<< 'k' << ' ' << 'm' << 'u' << 'n' << 'p';
+        QString prefix;
+        Scale currentScale = manager->scale(property);
+        QString unit = manager->unit(property);
+        QStringList enumNames;
         manager->format(property) == LOG_DEG? prefix = "dB" : "";
-        for (unsigned short index = 0; index < scaleNames.size(); index++) {
-            enumNames << prefix + scaleNames[index] + unit;
-            if (scaleNames[index] == currentScale)
-            currentIndex = index;
+        QMap<Scale, QString>::iterator i;
+        for (i = ScaleNameMap.begin(); i != ScaleNameMap.end(); ++i) {
+            enumNames << prefix + i.value() + unit;
         }
         editor->addItems(enumNames);
-        editor->setCurrentIndex(currentIndex);
+        editor->setCurrentIndex((int)currentScale);
 
         connect(editor, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetScale(int)));
-        connect(editor, SIGNAL(destroyed(QObject *)),
-                this, SLOT(slotUnitAttributeEditorDestroyed(QObject *)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotUnitAttributeEditorDestroyed(QObject *)));
         return editor;
     }
     else if (attribute == Attribute::PKAVG)
@@ -2223,68 +2215,53 @@ QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *man
     }
     else if (attribute == Attribute::FORMAT)
     {
-        if (!manager->attributesEditable())
-        return NULL;
-        QStringList enumNames;
-        QComboBox *editor3 = d_ptr->createFormatAttributeEditor(property, parent);
+        QComboBox *editor = d_ptr->createFormatAttributeEditor(property, parent);
 
-        editor3->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
-        editor3->setMinimumContentsLength(1);
-        editor3->view()->setTextElideMode(Qt::ElideRight);
-        enumNames << "Re" << "Re+Imj"<<QString("Lin") + QString(QChar(0x2220)) + QString("Deg")<<QString("Log") + QString(QChar(0x2220)) + QString("Deg");
-        editor3->addItems(enumNames);
-        editor3->setCurrentIndex(manager->format(property));
+        editor->clear();
+        editor->addItems(FormatNameMap.values());
+        editor->setCurrentIndex(manager->format(property));
 
-        connect(editor3, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetFormat(int)));
-        connect(editor3, SIGNAL(destroyed(QObject *)),
-                this, SLOT(slotFormatAttributeEditorDestroyed(QObject *)));
-        return editor3;
+        connect(editor, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetFormat(int)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotFormatAttributeEditorDestroyed(QObject *)));
+        return editor;
     }
     else if (attribute == Attribute::MINIMUM)
     {
-        QDoubleEdit *editor4 = d_ptr->createMinimumAttributeEditor(property, parent);
+        QDoubleEdit *editor = d_ptr->createMinimumAttributeEditor(property, parent);
 
-        //        editor4->setSingleStep(std::abs(manager->singleStep(property)));
-        editor4->setScale(manager->scale(property));
-        editor4->setFormat(manager->format(property));
-        editor4->setPrecision(manager->precision(property));
-        editor4->setRange(0, LONG_MAX);
-        editor4->setValue(manager->minimum(property));
+        // editor->setSingleStep(std::abs(manager->singleStep(property)));
+        editor->setScale(manager->scale(property));
+        editor->setFormat(manager->format(property));
+        editor->setPrecision(manager->precision(property));
+        editor->setRange(lowest, highest);
+        editor->setValue(manager->minimum(property));
 
-        connect(editor4, SIGNAL(valueChanged(double)), this, SLOT(slotSetMinimum(double)));
-        connect(editor4, SIGNAL(destroyed(QObject *)),
-                this, SLOT(slotMinimumAttributeEditorDestroyed(QObject *)));
-        return editor4;
+        connect(editor, SIGNAL(valueChanged(double)), this, SLOT(slotSetMinimum(double)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotMinimumAttributeEditorDestroyed(QObject *)));
+        return editor;
     }
     else if (attribute == Attribute::MAXIMUM)
     {
-        QDoubleEdit *editor5 = d_ptr->createMaximumAttributeEditor(property, parent);
+        QDoubleEdit *editor = d_ptr->createMaximumAttributeEditor(property, parent);
 
-        //        editor5->setSingleStep(std::abs(manager->singleStep(property)));
-        editor5->setScale(manager->scale(property));
-        editor5->setFormat(manager->format(property));
-        editor5->setPrecision(manager->precision(property));
-        editor5->setRange(0, LONG_MAX);
-        editor5->setValue(manager->maximum(property));
+        // editor->setSingleStep(std::abs(manager->singleStep(property)));
+        editor->setScale(manager->scale(property));
+        editor->setFormat(manager->format(property));
+        editor->setPrecision(manager->precision(property));
+        editor->setRange(lowest, highest);
+        editor->setValue(manager->maximum(property));
 
-        connect(editor5, SIGNAL(valueChanged(double)), this, SLOT(slotSetMaximum(double)));
-        connect(editor5, SIGNAL(destroyed(QObject *)),
-                this, SLOT(slotMaximumAttributeEditorDestroyed(QObject *)));
-        return editor5;
+        connect(editor, SIGNAL(valueChanged(double)), this, SLOT(slotSetMaximum(double)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotMaximumAttributeEditorDestroyed(QObject *)));
+        return editor;
     }
     else if (attribute == Attribute::CHECK)
     {
-        if (!manager->attributesEditable())
-        return NULL;
-        QtBoolEdit *editor6 = d_ptr->createCheckAttributeEditor(property, parent);
+        QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
-        editor6->setChecked(property->check());
-        editor6->setTextVisible(false);
-
-        connect(editor6, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
-        connect(editor6, SIGNAL(destroyed(QObject *)),
-                this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
-        return editor6;
+        connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
+        return editor;
     }
     return NULL;
 }

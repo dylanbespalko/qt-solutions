@@ -169,8 +169,7 @@ void QtPropertyEditorView::drawRow(QPainter *painter, const QStyleOptionViewItem
         }
     }
     QColor warningColor = indexToItem(index)->foreground(0).color();
-    if (warningColor != Qt::black)
-        opt.palette.setBrush(QPalette::HighlightedText, warningColor);
+    opt.palette.setBrush(QPalette::HighlightedText, warningColor);
 
     QTreeWidget::drawRow(painter, opt, index);
     QColor color = static_cast<QRgb>(QApplication::style()->styleHint(QStyle::SH_Table_GridLineColor, &opt));

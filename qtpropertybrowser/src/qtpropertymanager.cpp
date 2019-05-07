@@ -39,6 +39,7 @@
 ****************************************************************************/
 
 
+#include "qcomplexedit.h"
 #include "qtpropertymanager.h"
 #include "qtpropertybrowserutils_p.h"
 #include <QDateTime>
@@ -379,19 +380,18 @@ static void setBorderValues(PropertyManager *manager, PropertyManagerPrivate *ma
         return;
 
     const Value oldVal = data.val;
-
     data.setMinimumValue(fromVal);
     data.setMaximumValue(toVal);
+    data.foreground = qSoftBound(fromVal, data.val, toVal);
 
     emit (manager->*rangeChangedSignal)(property, data.minVal, data.maxVal);
 
     if (setSubPropertyRange)
         (managerPrivate->*setSubPropertyRange)(property, data.minVal, data.maxVal, data.val);
 
+    emit (manager->*propertyChangedSignal)(property);
     if (data.val == oldVal)
         return;
-
-    emit (manager->*propertyChangedSignal)(property);
     emit (manager->*valueChangedSignal)(property, data.val);
 }
 
@@ -420,16 +420,16 @@ static void setBorderValue(PropertyManager *manager, PropertyManagerPrivate *man
     const Value oldVal = data.val;
 
     (data.*setRangeVal)(borderVal);
+    data.foreground = qSoftBound(data.minVal, data.val, data.maxVal);
 
     emit (manager->*rangeChangedSignal)(property, data.minVal, data.maxVal);
 
     if (setSubPropertyRange)
         (managerPrivate->*setSubPropertyRange)(property, data.minVal, data.maxVal, data.val);
 
+    emit (manager->*propertyChangedSignal)(property);
     if (data.val == oldVal)
         return;
-
-    emit (manager->*propertyChangedSignal)(property);
     emit (manager->*valueChangedSignal)(property, data.val);
 }
 
@@ -636,20 +636,6 @@ void QtMetaEnumProvider::localeToIndex(QLocale::Language language, QLocale::Coun
 }
 
 Q_GLOBAL_STATIC(QtMetaEnumProvider, metaEnumProvider)
-
-
-static QMap<Scale, char> ScaleMap(){
-    QMap<Scale, char> map;
-    map.insert(Scale::p, 'p');
-    map.insert(Scale::n, 'n');
-    map.insert(Scale::u, 'u');
-    map.insert(Scale::m, 'm');
-    map.insert(Scale::_, ' ');
-    map.insert(Scale::K, 'K');
-    map.insert(Scale::M, 'M');
-    map.insert(Scale::G, 'G');
-    map.insert(Scale::T, 'T');
-}
 
 
 // QtGroupPropertyManager
@@ -971,20 +957,15 @@ QString QtIntPropertyManager::maximumText(const QtProperty *property) const
  */
 QString QtIntPropertyManager::unitText(const QtProperty *property) const
 {
-//    if (!attributesEditable())
-//    return QString();
     const QtIntPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-    return QString();
+        return QString();
 
     switch (it.value().format) {
-        case Format::LOG_DEG:
-            return QString("dB") + ScaleMap()[it.value().scale] + it.value().unit;
-        case Format::RE:
-        case Format::RE_IM:
-        case Format::LIN_DEG:
-        default:
-            return it.value().scale + it.value().unit;
+    case Format::LOG_DEG:
+        return QString("dB") + ScaleNameMap[it.value().scale] + it.value().unit;
+    default:
+        return ScaleNameMap[it.value().scale] + it.value().unit;
     }
 }
 
@@ -993,23 +974,10 @@ QString QtIntPropertyManager::unitText(const QtProperty *property) const
  */
 QString QtIntPropertyManager::formatText(const QtProperty *property) const
 {
-//    if (!attributesEditable())
-//    return QString();
     const QtIntPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-    return QString();
-
-    switch (it.value().format) {
-        case Format::RE:
-            return QString("Re");
-        case Format::RE_IM:
-            return QString("Re+Imj");
-        case Format::LOG_DEG:
-            return QString("Log") + QString(QChar(0x2220)) + QString("Deg");
-        case Format::LIN_DEG:
-        default:
-            return QString("Lin") + QString(QChar(0x2220)) + QString("Deg");
-    }
+        return QString();
+    return FormatNameMap[it.value().format];
 }
 
 /*!
@@ -1580,20 +1548,15 @@ QString QtDoublePropertyManager::maximumText(const QtProperty *property) const
  */
 QString QtDoublePropertyManager::unitText(const QtProperty *property) const
 {
-//    if (!attributesEditable())
-//    return QString();
     const QtDoublePropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
     return QString();
 
     switch (it.value().format) {
-        case Format::LOG_DEG:
-            return QString("dB") + ScaleMap()[it.value().scale] + it.value().unit;
-        case Format::RE:
-        case Format::RE_IM:
-        case Format::LIN_DEG:
-        default:
-            return it.value().scale + it.value().unit;
+    case Format::LOG_DEG:
+        return QString("dB") + ScaleNameMap[it.value().scale] + it.value().unit;
+    default:
+        return ScaleNameMap[it.value().scale] + it.value().unit;
     }
 }
 
@@ -1602,23 +1565,10 @@ QString QtDoublePropertyManager::unitText(const QtProperty *property) const
  */
 QString QtDoublePropertyManager::formatText(const QtProperty *property) const
 {
-//    if (!attributesEditable())
-//    return QString();
     const QtDoublePropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-    return QString();
-
-    switch (it.value().format) {
-        case Format::RE:
-            return QString("Re");
-        case Format::RE_IM:
-            return QString("Re+Imj");
-        case Format::LOG_DEG:
-            return QString("Log") + QString(QChar(0x2220)) + QString("Deg");
-        case Format::LIN_DEG:
-        default:
-            return QString("Lin") + QString(QChar(0x2220)) + QString("Deg");
-    }
+        return QString();
+    return FormatNameMap[it.value().format];
 }
 
 /*!
