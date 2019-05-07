@@ -71,6 +71,9 @@ if __name__ == "__main__":
                        'flag': QtFlagPropertyManager(),
                        'enum': QtEnumPropertyManager(),
                        'int': QtIntPropertyManager(),
+                       'int2': QtIntPropertyManager(),
+                       'int3': QtIntPropertyManager(),
+                       'int4': QtIntPropertyManager(),
                        'float': QtDoublePropertyManager(),
                        #'complex': QtComplexPropertyManager(),
                        #'array': QtComplexArrayPropertyManager(),
@@ -141,7 +144,6 @@ if __name__ == "__main__":
         manager_map['int'].valueChanged.connect(set_value)
         property_ = manager_map['int'].addProperty("int_read")
         property_.propertyManager().setReadOnly(property_, True)
-        property_.propertyManager().setScale(property_, Scale.T)
         property_.propertyManager().setUnit(property_, "V")
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
@@ -174,17 +176,17 @@ if __name__ == "__main__":
         button_browser.setExpanded(browser_item, False)
 
         # int_read_write spinbox
-        manager_map['int'].valueChanged.connect(set_value)
-        property_ = manager_map['int'].addProperty("int_spinbox")
+        manager_map['int2'].valueChanged.connect(set_value)
+        property_ = manager_map['int2'].addProperty("int_spinbox")
         property_.propertyManager().setReadOnly(property_, False)
         property_.propertyManager().setUnit(property_, "V")
 
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
         property_.propertyManager().setValue(property_, 3)
-        tree_browser.setFactoryForManager(manager_map['int'], factory_map['int2'])
-        box_browser.setFactoryForManager(manager_map['int'], factory_map['int2'])
-        button_browser.setFactoryForManager(manager_map['int'], factory_map['int2'])
+        tree_browser.setFactoryForManager(manager_map['int2'], factory_map['int2'])
+        box_browser.setFactoryForManager(manager_map['int2'], factory_map['int2'])
+        button_browser.setFactoryForManager(manager_map['int2'], factory_map['int2'])
         browser_item = tree_browser.addProperty(property_)
         tree_browser.setExpanded(browser_item, False)
         browser_item = box_browser.addProperty(property_)
@@ -192,17 +194,17 @@ if __name__ == "__main__":
         button_browser.setExpanded(browser_item, False)
 
         # int_read_write slider
-        manager_map['int'].valueChanged.connect(set_value)
-        property_ = manager_map['int'].addProperty("int_slider")
+        manager_map['int3'].valueChanged.connect(set_value)
+        property_ = manager_map['int3'].addProperty("int_slider")
         property_.propertyManager().setReadOnly(property_, False)
         property_.propertyManager().setUnit(property_, "V")
 
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
         property_.propertyManager().setValue(property_, 3)
-        tree_browser.setFactoryForManager(manager_map['int'], factory_map['int3'])
-        box_browser.setFactoryForManager(manager_map['int'], factory_map['int3'])
-        button_browser.setFactoryForManager(manager_map['int'], factory_map['int3'])
+        tree_browser.setFactoryForManager(manager_map['int3'], factory_map['int3'])
+        box_browser.setFactoryForManager(manager_map['int3'], factory_map['int3'])
+        button_browser.setFactoryForManager(manager_map['int3'], factory_map['int3'])
         browser_item = tree_browser.addProperty(property_)
         tree_browser.setExpanded(browser_item, False)
         browser_item = box_browser.addProperty(property_)
@@ -210,17 +212,17 @@ if __name__ == "__main__":
         button_browser.setExpanded(browser_item, False)
 
         # int_read_write scroll
-        manager_map['int'].valueChanged.connect(set_value)
-        property_ = manager_map['int'].addProperty("int_scroll")
+        manager_map['int4'].valueChanged.connect(set_value)
+        property_ = manager_map['int4'].addProperty("int_scroll")
         property_.propertyManager().setReadOnly(property_, False)
         property_.propertyManager().setUnit(property_, "V")
 
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
         property_.propertyManager().setValue(property_, 3)
-        tree_browser.setFactoryForManager(manager_map['int'], factory_map['int4'])
-        box_browser.setFactoryForManager(manager_map['int'], factory_map['int4'])
-        button_browser.setFactoryForManager(manager_map['int'], factory_map['int4'])
+        tree_browser.setFactoryForManager(manager_map['int4'], factory_map['int4'])
+        box_browser.setFactoryForManager(manager_map['int4'], factory_map['int4'])
+        button_browser.setFactoryForManager(manager_map['int4'], factory_map['int4'])
         browser_item = tree_browser.addProperty(property_)
         tree_browser.setExpanded(browser_item, False)
         browser_item = box_browser.addProperty(property_)

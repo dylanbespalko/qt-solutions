@@ -396,11 +396,6 @@ void QtPropertyEditorDelegate::paint(QPainter *painter, const QStyleOptionViewIt
     if (c.isValid())
         painter->fillRect(option.rect, c);
     opt.state &= ~QStyle::State_HasFocus;
-    if (index.column() == m_editedColumn) {
-        QTreeWidgetItem *item = m_editorPrivate->indexToItem(index);
-        if (m_editedItem && m_editedItem == item)
-            m_disablePainting = true;
-    }
     QItemDelegate::paint(painter, opt, index);
     if (option.type)
     m_disablePainting = false;
@@ -513,7 +508,7 @@ void QtTreePropertyBrowserPrivate::init(QWidget *parent)
     m_delegate->setEditorPrivate(this);
     m_treeWidget->setItemDelegate(m_delegate);
     m_treeWidget->header()->setMovable(false);
-    m_treeWidget->header()->setResizeMode(QHeaderView::Fixed);
+    m_treeWidget->header()->setResizeMode(QHeaderView::Interactive);
     m_treeWidget->header()->setMinimumSectionSize(40);
     m_treeWidget->header()->setCascadingSectionResizes(true);
 

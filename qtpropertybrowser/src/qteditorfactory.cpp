@@ -444,6 +444,10 @@ public:
     void slotSingleStepChanged(QtProperty *property, int step);
     void slotReadOnlyChanged(QtProperty *property, bool readOnly);
     void slotSetValue(int value);
+    void slotSetMinimum(int minVal);
+    void slotSetMaximum(int maxVal);
+    void slotSetMinimum(double minVal);
+    void slotSetMaximum(double maxVal);
     void slotSetCheck(bool check);
 };
 
@@ -528,6 +532,48 @@ void QtSpinBoxFactoryPrivate::slotSetValue(int value)
     }
 }
 
+void QtSpinBoxFactoryPrivate::slotSetMinimum(double minVal)
+{
+    slotSetMinimum(int(minVal));
+}
+
+void QtSpinBoxFactoryPrivate::slotSetMinimum(int minVal)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QDoubleEdit *, QtProperty *>::ConstIterator itcend = m_minimumAttributeEditorToProperty.constEnd();
+    for (QMap<QDoubleEdit *, QtProperty *>::ConstIterator itEditor = m_minimumAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            QtIntPropertyManager *manager = q_ptr->propertyManager(property);
+            if (!manager)
+                return;
+            manager->setMinimum(property, minVal);
+            return;
+        }
+    }
+}
+
+void QtSpinBoxFactoryPrivate::slotSetMaximum(double maxVal)
+{
+    slotSetMaximum(int(maxVal));
+}
+
+void QtSpinBoxFactoryPrivate::slotSetMaximum(int maxVal)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QDoubleEdit *, QtProperty *>::ConstIterator itcend = m_maximumAttributeEditorToProperty.constEnd();
+    for (QMap<QDoubleEdit *, QtProperty *>::ConstIterator itEditor = m_maximumAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            QtIntPropertyManager *manager = q_ptr->propertyManager(property);
+            if (!manager)
+                return;
+            manager->setMaximum(property, maxVal);
+            return;
+        }
+    }
+}
+
 void QtSpinBoxFactoryPrivate::slotSetCheck(bool check)
 {
     QObject *object = q_ptr->sender();
@@ -567,8 +613,6 @@ QtSpinBoxFactory::QtSpinBoxFactory(QObject *parent)
 QtSpinBoxFactory::~QtSpinBoxFactory()
 {
     qDeleteAll(d_ptr->m_editorToProperty.keys());
-    qDeleteAll(d_ptr->m_unitAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_formatAttributeEditorToProperty.keys());
     qDeleteAll(d_ptr->m_minimumAttributeEditorToProperty.keys());
     qDeleteAll(d_ptr->m_maximumAttributeEditorToProperty.keys());
     qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
@@ -621,50 +665,11 @@ QWidget *QtSpinBoxFactory::createEditor(QtIntPropertyManager *manager, QtPropert
 QWidget *QtSpinBoxFactory::createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property,
                                                  QWidget *parent, Attribute attribute)
 {
-    if (attribute == Attribute::UNIT)
-    {
-        QComboBox *editor = d_ptr->createUnitAttributeEditor(property, parent);
-
-        QString prefix;
-        Scale currentScale = manager->scale(property);
-        QString unit = manager->unit(property);
-        QStringList enumNames;
-        manager->format(property) == LOG_DEG? prefix = "dB" : "";
-        QMap<Scale, QString>::iterator i;
-        for (i = ScaleNameMap.begin(); i != ScaleNameMap.end(); ++i) {
-            enumNames << prefix + i.value() + unit;
-        }
-        editor->addItems(enumNames);
-        editor->setCurrentIndex((int)currentScale);
-
-        connect(editor, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetScale(int)));
-        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotUnitAttributeEditorDestroyed(QObject *)));
-        return editor;
-    }
-    else if (attribute == Attribute::PKAVG)
-    {
-        //Do Nothing
-    }
-    else if (attribute == Attribute::FORMAT)
-    {
-        QComboBox *editor = d_ptr->createFormatAttributeEditor(property, parent);
-
-        editor->clear();
-        editor->addItems(FormatNameMap.values());
-        editor->setCurrentIndex(manager->format(property));
-
-        connect(editor, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetFormat(int)));
-        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotFormatAttributeEditorDestroyed(QObject *)));
-        return editor;
-    }
-    else if (attribute == Attribute::MINIMUM)
+    if (attribute == Attribute::MINIMUM)
     {
         QDoubleEdit *editor = d_ptr->createMinimumAttributeEditor(property, parent);
 
-        editor->setScale(manager->scale(property));
-        editor->setFormat(manager->format(property));
-        editor->setPrecision(manager->precision(property));
-        editor->setRange(lowest, highest);
+        editor->setRange(LONG_MIN, LONG_MAX);
         editor->setValue(manager->minimum(property));
 
         connect(editor, SIGNAL(valueChanged(double)), this, SLOT(slotSetMinimum(double)));
@@ -675,10 +680,7 @@ QWidget *QtSpinBoxFactory::createAttributeEditor(QtIntPropertyManager *manager, 
     {
         QDoubleEdit *editor = d_ptr->createMaximumAttributeEditor(property, parent);
 
-        editor->setScale(manager->scale(property));
-        editor->setFormat(manager->format(property));
-        editor->setPrecision(manager->precision(property));
-        editor->setRange(lowest, highest);
+        editor->setRange(LONG_MIN, LONG_MAX);
         editor->setValue(manager->maximum(property));
 
         connect(editor, SIGNAL(valueChanged(double)), this, SLOT(slotSetMaximum(double)));
@@ -724,12 +726,8 @@ public:
     void slotRangeChanged(QtProperty *property, int min, int max);
     void slotRangeChanged(QtProperty *property, double min, double max);
     void slotSingleStepChanged(QtProperty *property, int step);
-    void slotPrecisionChanged(QtProperty *property, int prec);
     void slotReadOnlyChanged(QtProperty *property, bool readOnly);
     void slotSetValue(int value);
-    void slotSetScale(int scaleSelection);
-    void slotSetPkAvg(int slotSetPkAvg);
-    void slotSetFormat(int formatSelection);
     void slotSetMinimum(int minVal);
     void slotSetMaximum(int maxVal);
     void slotSetMinimum(double minVal);
@@ -813,26 +811,6 @@ void QtIntEditFactoryPrivate::slotReadOnlyChanged( QtProperty *property, bool re
     }
 }
 
-void QtIntEditFactoryPrivate::slotPrecisionChanged(QtProperty *property, int prec)
-{
-    if (!m_createdEditors.contains(property))
-        return;
-
-    QtIntPropertyManager *manager = q_ptr->propertyManager(property);
-    if (!manager)
-        return;
-
-    QList<QIntEdit *> editors = m_createdEditors[property];
-    QListIterator<QIntEdit *> itEditor(editors);
-    while (itEditor.hasNext()) {
-        QIntEdit *editor = itEditor.next();
-        editor->blockSignals(true);
-        editor->setPrecision(prec);
-        editor->setValue(manager->value(property));
-        editor->blockSignals(false);
-    }
-}
-
 void QtIntEditFactoryPrivate::slotSetValue(int value)
 {
     QObject *object = q_ptr->sender();
@@ -844,38 +822,6 @@ void QtIntEditFactoryPrivate::slotSetValue(int value)
             if (!manager)
                 return;
             manager->setValue(property, value);
-            return;
-        }
-    }
-}
-
-void QtIntEditFactoryPrivate::slotSetScale(int scaleSelection)
-{
-    QObject *object = q_ptr->sender();
-    const QMap<QComboBox *, QtProperty *>::ConstIterator itcend = m_unitAttributeEditorToProperty.constEnd();
-    for (QMap<QComboBox *, QtProperty *>::ConstIterator itEditor = m_unitAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
-        if (itEditor.key() == object) {
-            QtProperty *property = itEditor.value();
-            QtIntPropertyManager *manager = q_ptr->propertyManager(property);
-            if (!manager)
-                return;
-            manager->setScale(property, Scale(scaleSelection));
-            return;
-        }
-    }
-}
-
-void QtIntEditFactoryPrivate::slotSetFormat(int formatSelection)
-{
-    QObject *object = q_ptr->sender();
-    const QMap<QComboBox *, QtProperty *>::ConstIterator itcend = m_formatAttributeEditorToProperty.constEnd();
-    for (QMap<QComboBox *, QtProperty *>::ConstIterator itEditor = m_formatAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
-        if (itEditor.key() == object) {
-            QtProperty *property = itEditor.value();
-            QtIntPropertyManager *manager = q_ptr->propertyManager(property);
-            if (!manager)
-                return;
-            manager->setFormat(property, Format(formatSelection));
             return;
         }
     }
@@ -960,8 +906,6 @@ QtIntEditFactory::QtIntEditFactory(QObject *parent)
 QtIntEditFactory::~QtIntEditFactory()
 {
     qDeleteAll(d_ptr->m_editorToProperty.keys());
-    qDeleteAll(d_ptr->m_unitAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_formatAttributeEditorToProperty.keys());
     qDeleteAll(d_ptr->m_minimumAttributeEditorToProperty.keys());
     qDeleteAll(d_ptr->m_maximumAttributeEditorToProperty.keys());
     qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
@@ -981,8 +925,6 @@ void QtIntEditFactory::connectPropertyManager(QtIntPropertyManager *manager)
             this, SLOT(slotRangeChanged(QtProperty *, int, int)));
     connect(manager, SIGNAL(singleStepChanged(QtProperty *, int)),
             this, SLOT(slotSingleStepChanged(QtProperty *, int)));
-    connect(manager, SIGNAL(precisionChanged(QtProperty *, int)),
-            this, SLOT(slotPrecisionChanged(QtProperty *, int)));
     connect(manager, SIGNAL(readOnlyChanged(QtProperty *, bool)),
             this, SLOT(slotReadOnlyChanged(QtProperty *, bool)));
 }
@@ -996,11 +938,8 @@ QWidget *QtIntEditFactory::createEditor(QtIntPropertyManager *manager, QtPropert
 {
     QIntEdit *editor = d_ptr->createEditor(property, parent);
     //editor->setSingleStep(manager->singleStep(property));
-    editor->setPrecision(manager->precision(property));
     editor->setRange(manager->minimum(property), manager->maximum(property));
     editor->setValue(manager->value(property));
-    editor->setFormat(manager->format(property));
-    editor->setScale(manager->scale(property));
     //editor->setKeyboardTracking(false);
     editor->setReadOnly(manager->isReadOnly(property));
 
@@ -1018,49 +957,10 @@ QWidget *QtIntEditFactory::createEditor(QtIntPropertyManager *manager, QtPropert
 QWidget *QtIntEditFactory::createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property,
                                                  QWidget *parent, Attribute attribute)
 {
-    if (attribute == Attribute::UNIT)
-    {
-        QComboBox *editor = d_ptr->createUnitAttributeEditor(property, parent);
-
-        QString prefix;
-        Scale currentScale = manager->scale(property);
-        QString unit = manager->unit(property);
-        QStringList enumNames;
-        manager->format(property) == LOG_DEG? prefix = "dB" : "";
-        QMap<Scale, QString>::iterator i;
-        for (i = ScaleNameMap.begin(); i != ScaleNameMap.end(); ++i) {
-            enumNames << prefix + i.value() + unit;
-        }
-        editor->addItems(enumNames);
-        editor->setCurrentIndex((int)currentScale);
-
-        connect(editor, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetScale(int)));
-        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotUnitAttributeEditorDestroyed(QObject *)));
-        return editor;
-    }
-    else if (attribute == Attribute::PKAVG)
-    {
-        //Do Nothing
-    }
-    else if (attribute == Attribute::FORMAT)
-    {
-        QComboBox *editor = d_ptr->createFormatAttributeEditor(property, parent);
-
-        editor->clear();
-        editor->addItems(FormatNameMap.values());
-        editor->setCurrentIndex(manager->format(property));
-
-        connect(editor, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetFormat(int)));
-        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotFormatAttributeEditorDestroyed(QObject *)));
-        return editor;
-    }
-    else if (attribute == Attribute::MINIMUM)
+    if (attribute == Attribute::MINIMUM)
     {
         QDoubleEdit *editor = d_ptr->createMinimumAttributeEditor(property, parent);
 
-        editor->setScale(manager->scale(property));
-        editor->setFormat(manager->format(property));
-        editor->setPrecision(manager->precision(property));
         editor->setRange(lowest, highest);
         editor->setValue(manager->minimum(property));
 
@@ -1072,9 +972,6 @@ QWidget *QtIntEditFactory::createAttributeEditor(QtIntPropertyManager *manager, 
     {
         QDoubleEdit *editor = d_ptr->createMaximumAttributeEditor(property, parent);
 
-        editor->setScale(manager->scale(property));
-        editor->setFormat(manager->format(property));
-        editor->setPrecision(manager->precision(property));
         editor->setRange(lowest, highest);
         editor->setValue(manager->maximum(property));
 
@@ -1106,8 +1003,6 @@ void QtIntEditFactory::disconnectPropertyManager(QtIntPropertyManager *manager)
                this, SLOT(slotRangeChanged(QtProperty *, int, int)));
     disconnect(manager, SIGNAL(singleStepChanged(QtProperty *, int)),
                this, SLOT(slotSingleStepChanged(QtProperty *, int)));
-    disconnect(manager, SIGNAL(precisionChanged(QtProperty *, int)),
-               this, SLOT(slotPrecisionChanged(QtProperty *, int)));
     disconnect(manager, SIGNAL(readOnlyChanged(QtProperty *, bool)),
                this, SLOT(slotReadOnlyChanged(QtProperty *, bool)));
 }
@@ -1123,6 +1018,10 @@ public:
     void slotRangeChanged(QtProperty *property, int min, int max);
     void slotSingleStepChanged(QtProperty *property, int step);
     void slotSetValue(int value);
+    void slotSetMinimum(int minVal);
+    void slotSetMaximum(int maxVal);
+    void slotSetMinimum(double minVal);
+    void slotSetMaximum(double maxVal);
     void slotSetCheck(bool check);
 };
 
@@ -1187,6 +1086,48 @@ void QtSliderFactoryPrivate::slotSetValue(int value)
     }
 }
 
+void QtSliderFactoryPrivate::slotSetMinimum(double minVal)
+{
+    slotSetMinimum(int(minVal));
+}
+
+void QtSliderFactoryPrivate::slotSetMinimum(int minVal)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QDoubleEdit *, QtProperty *>::ConstIterator itcend = m_minimumAttributeEditorToProperty.constEnd();
+    for (QMap<QDoubleEdit *, QtProperty *>::ConstIterator itEditor = m_minimumAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            QtIntPropertyManager *manager = q_ptr->propertyManager(property);
+            if (!manager)
+                return;
+            manager->setMinimum(property, minVal);
+            return;
+        }
+    }
+}
+
+void QtSliderFactoryPrivate::slotSetMaximum(double maxVal)
+{
+    slotSetMaximum(int(maxVal));
+}
+
+void QtSliderFactoryPrivate::slotSetMaximum(int maxVal)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QDoubleEdit *, QtProperty *>::ConstIterator itcend = m_maximumAttributeEditorToProperty.constEnd();
+    for (QMap<QDoubleEdit *, QtProperty *>::ConstIterator itEditor = m_maximumAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            QtIntPropertyManager *manager = q_ptr->propertyManager(property);
+            if (!manager)
+                return;
+            manager->setMaximum(property, maxVal);
+            return;
+        }
+    }
+}
+
 void QtSliderFactoryPrivate::slotSetCheck(bool check)
 {
     QObject *object = q_ptr->sender();
@@ -1226,8 +1167,6 @@ QtSliderFactory::QtSliderFactory(QObject *parent)
 QtSliderFactory::~QtSliderFactory()
 {
     qDeleteAll(d_ptr->m_editorToProperty.keys());
-    qDeleteAll(d_ptr->m_unitAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_formatAttributeEditorToProperty.keys());
     qDeleteAll(d_ptr->m_minimumAttributeEditorToProperty.keys());
     qDeleteAll(d_ptr->m_maximumAttributeEditorToProperty.keys());
     qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
@@ -1277,49 +1216,10 @@ QWidget *QtSliderFactory::createEditor(QtIntPropertyManager *manager, QtProperty
 QWidget *QtSliderFactory::createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property,
                                                 QWidget *parent, Attribute attribute)
 {
-    if (attribute == Attribute::UNIT)
-    {
-        QComboBox *editor = d_ptr->createUnitAttributeEditor(property, parent);
-
-        QString prefix;
-        Scale currentScale = manager->scale(property);
-        QString unit = manager->unit(property);
-        QStringList enumNames;
-        manager->format(property) == LOG_DEG? prefix = "dB" : "";
-        QMap<Scale, QString>::iterator i;
-        for (i = ScaleNameMap.begin(); i != ScaleNameMap.end(); ++i) {
-            enumNames << prefix + i.value() + unit;
-        }
-        editor->addItems(enumNames);
-        editor->setCurrentIndex((int)currentScale);
-
-        connect(editor, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetScale(int)));
-        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotUnitAttributeEditorDestroyed(QObject *)));
-        return editor;
-    }
-    else if (attribute == Attribute::PKAVG)
-    {
-        //Do Nothing
-    }
-    else if (attribute == Attribute::FORMAT)
-    {
-        QComboBox *editor = d_ptr->createFormatAttributeEditor(property, parent);
-
-        editor->clear();
-        editor->addItems(FormatNameMap.values());
-        editor->setCurrentIndex(manager->format(property));
-
-        connect(editor, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetFormat(int)));
-        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotFormatAttributeEditorDestroyed(QObject *)));
-        return editor;
-    }
-    else if (attribute == Attribute::MINIMUM)
+    if (attribute == Attribute::MINIMUM)
     {
         QDoubleEdit *editor = d_ptr->createMinimumAttributeEditor(property, parent);
 
-        editor->setScale(manager->scale(property));
-        editor->setFormat(manager->format(property));
-        editor->setPrecision(manager->precision(property));
         editor->setRange(lowest, highest);
         editor->setValue(manager->minimum(property));
 
@@ -1331,9 +1231,6 @@ QWidget *QtSliderFactory::createAttributeEditor(QtIntPropertyManager *manager, Q
     {
         QDoubleEdit *editor = d_ptr->createMaximumAttributeEditor(property, parent);
 
-        editor->setScale(manager->scale(property));
-        editor->setFormat(manager->format(property));
-        editor->setPrecision(manager->precision(property));
         editor->setRange(lowest, highest);
         editor->setValue(manager->maximum(property));
 
@@ -1378,6 +1275,10 @@ public:
     void slotRangeChanged(QtProperty *property, int min, int max);
     void slotSingleStepChanged(QtProperty *property, int step);
     void slotSetValue(int value);
+    void slotSetMinimum(int minVal);
+    void slotSetMaximum(int maxVal);
+    void slotSetMinimum(double minVal);
+    void slotSetMaximum(double maxVal);
     void slotSetCheck(bool check);
 };
 
@@ -1442,6 +1343,48 @@ void QtScrollBarFactoryPrivate::slotSetValue(int value)
         }
 }
 
+void QtScrollBarFactoryPrivate::slotSetMinimum(double minVal)
+{
+    slotSetMinimum(int(minVal));
+}
+
+void QtScrollBarFactoryPrivate::slotSetMinimum(int minVal)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QDoubleEdit *, QtProperty *>::ConstIterator itcend = m_minimumAttributeEditorToProperty.constEnd();
+    for (QMap<QDoubleEdit *, QtProperty *>::ConstIterator itEditor = m_minimumAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            QtIntPropertyManager *manager = q_ptr->propertyManager(property);
+            if (!manager)
+                return;
+            manager->setMinimum(property, minVal);
+            return;
+        }
+    }
+}
+
+void QtScrollBarFactoryPrivate::slotSetMaximum(double maxVal)
+{
+    slotSetMaximum(int(maxVal));
+}
+
+void QtScrollBarFactoryPrivate::slotSetMaximum(int maxVal)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QDoubleEdit *, QtProperty *>::ConstIterator itcend = m_maximumAttributeEditorToProperty.constEnd();
+    for (QMap<QDoubleEdit *, QtProperty *>::ConstIterator itEditor = m_maximumAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            QtIntPropertyManager *manager = q_ptr->propertyManager(property);
+            if (!manager)
+                return;
+            manager->setMaximum(property, maxVal);
+            return;
+        }
+    }
+}
+
 void QtScrollBarFactoryPrivate::slotSetCheck(bool check)
 {
     QObject *object = q_ptr->sender();
@@ -1481,8 +1424,6 @@ QtScrollBarFactory::QtScrollBarFactory(QObject *parent)
 QtScrollBarFactory::~QtScrollBarFactory()
 {
     qDeleteAll(d_ptr->m_editorToProperty.keys());
-    qDeleteAll(d_ptr->m_unitAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_formatAttributeEditorToProperty.keys());
     qDeleteAll(d_ptr->m_minimumAttributeEditorToProperty.keys());
     qDeleteAll(d_ptr->m_maximumAttributeEditorToProperty.keys());
     qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
@@ -1531,49 +1472,10 @@ QWidget *QtScrollBarFactory::createEditor(QtIntPropertyManager *manager, QtPrope
 QWidget *QtScrollBarFactory::createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property,
                                                    QWidget *parent, Attribute attribute)
 {
-    if (attribute == Attribute::UNIT)
-    {
-        QComboBox *editor = d_ptr->createUnitAttributeEditor(property, parent);
-
-        QString prefix;
-        Scale currentScale = manager->scale(property);
-        QString unit = manager->unit(property);
-        QStringList enumNames;
-        manager->format(property) == LOG_DEG? prefix = "dB" : "";
-        QMap<Scale, QString>::iterator i;
-        for (i = ScaleNameMap.begin(); i != ScaleNameMap.end(); ++i) {
-            enumNames << prefix + i.value() + unit;
-        }
-        editor->addItems(enumNames);
-        editor->setCurrentIndex((int)currentScale);
-
-        connect(editor, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetScale(int)));
-        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotUnitAttributeEditorDestroyed(QObject *)));
-        return editor;
-    }
-    else if (attribute == Attribute::PKAVG)
-    {
-        //Do Nothing
-    }
-    else if (attribute == Attribute::FORMAT)
-    {
-        QComboBox *editor = d_ptr->createFormatAttributeEditor(property, parent);
-
-        editor->clear();
-        editor->addItems(FormatNameMap.values());
-        editor->setCurrentIndex(manager->format(property));
-
-        connect(editor, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetFormat(int)));
-        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotFormatAttributeEditorDestroyed(QObject *)));
-        return editor;
-    }
-    else if (attribute == Attribute::MINIMUM)
+    if (attribute == Attribute::MINIMUM)
     {
         QDoubleEdit *editor = d_ptr->createMinimumAttributeEditor(property, parent);
 
-        editor->setScale(manager->scale(property));
-        editor->setFormat(manager->format(property));
-        editor->setPrecision(manager->precision(property));
         editor->setRange(lowest, highest);
         editor->setValue(manager->minimum(property));
 
@@ -1585,9 +1487,6 @@ QWidget *QtScrollBarFactory::createAttributeEditor(QtIntPropertyManager *manager
     {
         QDoubleEdit *editor = d_ptr->createMaximumAttributeEditor(property, parent);
 
-        editor->setScale(manager->scale(property));
-        editor->setFormat(manager->format(property));
-        editor->setPrecision(manager->precision(property));
         editor->setRange(lowest, highest);
         editor->setValue(manager->maximum(property));
 
@@ -1764,17 +1663,15 @@ QWidget *QtCheckBoxFactory::createAttributeEditor(QtBoolPropertyManager *manager
 {
     if (attribute == Attribute::CHECK)
     {
-        if (!manager->attributesEditable())
-            return NULL;
-        QtBoolEdit *editor6 = d_ptr->createCheckAttributeEditor(property, parent);
+        QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
-        editor6->setChecked(property->check());
-        editor6->setTextVisible(false);
+        editor->setChecked(property->check());
+        editor->setTextVisible(false);
 
-        connect(editor6, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
-        connect(editor6, SIGNAL(destroyed(QObject *)),
+        connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
+        connect(editor, SIGNAL(destroyed(QObject *)),
                 this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
-        return editor6;
+        return editor;
     }
     return NULL;
 
@@ -1807,6 +1704,10 @@ public:
     void slotPrecisionChanged(QtProperty *property, int prec);
     void slotReadOnlyChanged(QtProperty *property, bool readOnly);
     void slotSetValue(double value);
+    void slotSetScale(int scaleSelection);
+    void slotSetFormat(int formatSelection);
+    void slotSetMinimum(double minVal);
+    void slotSetMaximum(double maxVal);
     void slotSetCheck(bool check);
 };
 
@@ -1913,6 +1814,70 @@ void QtDoubleSpinBoxFactoryPrivate::slotSetValue(double value)
             if (!manager)
                 return;
             manager->setValue(property, value);
+            return;
+        }
+    }
+}
+
+void QtDoubleSpinBoxFactoryPrivate::slotSetScale(int scaleSelection)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QComboBox *, QtProperty *>::ConstIterator itcend = m_unitAttributeEditorToProperty.constEnd();
+    for (QMap<QComboBox *, QtProperty *>::ConstIterator itEditor = m_unitAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            QtDoublePropertyManager *manager = q_ptr->propertyManager(property);
+            if (!manager)
+                return;
+            manager->setScale(property, Scale(scaleSelection));
+            return;
+        }
+    }
+}
+
+void QtDoubleSpinBoxFactoryPrivate::slotSetFormat(int formatSelection)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QComboBox *, QtProperty *>::ConstIterator itcend = m_formatAttributeEditorToProperty.constEnd();
+    for (QMap<QComboBox *, QtProperty *>::ConstIterator itEditor = m_formatAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            QtDoublePropertyManager *manager = q_ptr->propertyManager(property);
+            if (!manager)
+                return;
+            manager->setFormat(property, Format(formatSelection));
+            return;
+        }
+    }
+}
+
+void QtDoubleSpinBoxFactoryPrivate::slotSetMinimum(double minVal)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QDoubleEdit *, QtProperty *>::ConstIterator itcend = m_minimumAttributeEditorToProperty.constEnd();
+    for (QMap<QDoubleEdit *, QtProperty *>::ConstIterator itEditor = m_minimumAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            QtDoublePropertyManager *manager = q_ptr->propertyManager(property);
+            if (!manager)
+                return;
+            manager->setMinimum(property, minVal);
+            return;
+        }
+    }
+}
+
+void QtDoubleSpinBoxFactoryPrivate::slotSetMaximum(double maxVal)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QDoubleEdit *, QtProperty *>::ConstIterator itcend = m_maximumAttributeEditorToProperty.constEnd();
+    for (QMap<QDoubleEdit *, QtProperty *>::ConstIterator itEditor = m_maximumAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            QtDoublePropertyManager *manager = q_ptr->propertyManager(property);
+            if (!manager)
+                return;
+            manager->setMaximum(property, maxVal);
             return;
         }
     }

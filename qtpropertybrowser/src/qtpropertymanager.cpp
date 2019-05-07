@@ -703,17 +703,14 @@ public:
     struct Data
     {
         Data()
-            : val(0), minVal(-INT_MAX), maxVal(INT_MAX), singleStep(1), precision(2), scale(Scale::_), unit(QString()),
-              format(Format::LIN_DEG), readOnly(false),
+            : val(0), minVal(-INT_MAX), maxVal(INT_MAX), singleStep(1), unit(QString()),
+              readOnly(false),
               foreground(QBrush(Qt::black, Qt::SolidPattern)){}
         int val;
         int minVal;
         int maxVal;
         int singleStep;
-        int precision;
-        Scale scale;
         QString unit;
-        Format format;
         bool readOnly;
         QBrush foreground;
         int minimumValue() const { return minVal; }
@@ -843,31 +840,6 @@ int QtIntPropertyManager::singleStep(const QtProperty *property) const
 }
 
 /*!
- Returns the given \a property's precision, in decimals.
-
- \sa setPrecision()
- */
-int QtIntPropertyManager::precision(const QtProperty *property) const
-{
-    return getData<int>(d_ptr->m_values, &QtIntPropertyManagerPrivate::Data::precision, property, 0);
-}
-
-/*!
- Returns the given \a property's scale, as a char.
-
- \sa setScale()
- */
-Scale QtIntPropertyManager::scale(const QtProperty *property) const
-{
-    typedef QMap<const QtProperty *, QtIntPropertyManagerPrivate::Data> PropertyToData;
-    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
-    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
-    if (it == d_ptr->m_values.constEnd())
-        return Scale::_;
-    return it.value().scale;
-}
-
-/*!
  Returns the given \a property's unit, as a QString.
 
  \sa setUnit()
@@ -875,21 +847,6 @@ Scale QtIntPropertyManager::scale(const QtProperty *property) const
 QString QtIntPropertyManager::unit(const QtProperty *property) const
 {
     return getData<QString>(d_ptr->m_values, &QtIntPropertyManagerPrivate::Data::unit, property, "");
-}
-
-/*!
- Returns the given \a property's format setting, as a Format.
-
- \sa setFormat()
- */
-Format QtIntPropertyManager::format(const QtProperty *property) const
-{
-    typedef QMap<const QtProperty *, QtIntPropertyManagerPrivate::Data> PropertyToData;
-    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
-    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
-    if (it == d_ptr->m_values.constEnd())
-        return Format::LIN_DEG;
-    return it.value().format;
 }
 
 /*!
@@ -926,7 +883,7 @@ QString QtIntPropertyManager::valueText(const QtProperty *property) const
         return QString();
 //    return QString::number(it.value().val);
     QtIntPropertyManagerPrivate::Data  data = it.value();
-    return QIntEdit::num2str(data.val, data.scale, data.format, data.precision);
+    return QIntEdit::num2str(data.val, Scale::_, Format::RE, 0);
 }
 
 QString QtIntPropertyManager::minimumText(const QtProperty *property) const
@@ -936,7 +893,7 @@ QString QtIntPropertyManager::minimumText(const QtProperty *property) const
     return QString();
 
     QtIntPropertyManagerPrivate::Data  data = it.value();
-    return QIntEdit::num2str(data.minVal, data.scale,data.format, data.precision);
+    return QIntEdit::num2str(data.minVal, Scale::_, Format::RE, 0);
 }
 
 /*!
@@ -949,7 +906,7 @@ QString QtIntPropertyManager::maximumText(const QtProperty *property) const
     return QString();
 
     QtIntPropertyManagerPrivate::Data  data = it.value();
-    return QIntEdit::num2str(data.maxVal, data.scale, data.format, data.precision);
+    return QIntEdit::num2str(data.maxVal, Scale::_, Format::RE, 0);
 }
 
 /*!
@@ -960,24 +917,7 @@ QString QtIntPropertyManager::unitText(const QtProperty *property) const
     const QtIntPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
-
-    switch (it.value().format) {
-    case Format::LOG_DEG:
-        return QString("dB") + ScaleNameMap[it.value().scale] + it.value().unit;
-    default:
-        return ScaleNameMap[it.value().scale] + it.value().unit;
-    }
-}
-
-/*!
- \reimp
- */
-QString QtIntPropertyManager::formatText(const QtProperty *property) const
-{
-    const QtIntPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
-    if (it == d_ptr->m_values.constEnd())
-        return QString();
-    return FormatNameMap[it.value().format];
+    return ScaleNameMap[Scale::_] + it.value().unit;
 }
 
 /*!
@@ -1097,64 +1037,6 @@ void QtIntPropertyManager::setSingleStep(QtProperty *property, int step)
 }
 
 /*!
- \fn void QtIntPropertyManager::setPrecision(QtProperty *property, int prec)
-
- Sets the precision of the given \a property to \a prec.
-
- The valid decimal range is 0-13. The default is 2.
-
- \sa precision()
- */
-void QtIntPropertyManager::setPrecision(QtProperty *property, int prec)
-{
-    const QtIntPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
-    if (it == d_ptr->m_values.end())
-    return;
-
-    QtIntPropertyManagerPrivate::Data data = it.value();
-
-    if (prec > 13)
-    prec = 13;
-    else if (prec < 0)
-    prec = 0;
-
-    if (data.precision == prec)
-    return;
-
-    data.precision = prec;
-
-    it.value() = data;
-
-    emit precisionChanged(property, data.precision);
-}
-
-/*!
- \fn void QtIntPropertyManager::setScale(QtProperty *property, Scale scale)
-
- Sets the scale of the given \a property to \a scale.
-
- \sa scale(), scaleChanged()
- */
-void QtIntPropertyManager::setScale(QtProperty *property, Scale scale)
-{
-    const QtIntPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
-    if (it == d_ptr->m_values.end())
-    return;
-
-    QtIntPropertyManagerPrivate::Data data = it.value();
-
-    if (data.scale == scale)
-    return;
-
-    data.scale = scale;
-
-    it.value() = data;
-
-    emit propertyChanged(property);
-    emit scaleChanged(property, data.scale);
-}
-
-/*!
  \fn void QtIntPropertyManager::setUnit(QtProperty *property, QString unit)
 
  Sets the unit of the given \a property to \a unit.
@@ -1179,32 +1061,6 @@ void QtIntPropertyManager::setUnit(QtProperty *property, const QString& unit)
 
     emit propertyChanged(property);
     emit unitChanged(property, data.unit);
-}
-
-/*!
- \fn void QtIntPropertyManager::setFormat(QtProperty *property, Format format_)
-
- Sets the format of the given \a property to \a format_.
-
- \sa format(), formatChanged()
- */
-void QtIntPropertyManager::setFormat(QtProperty *property, Format format_)
-{
-    const QtIntPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
-    if (it == d_ptr->m_values.end())
-    return;
-
-    QtIntPropertyManagerPrivate::Data data = it.value();
-
-    if (data.format == format_)
-    return;
-
-    data.format = format_;
-
-    it.value() = data;
-
-    emit propertyChanged(property);
-    emit formatChanged(property, data.format);
 }
 
 /*!
