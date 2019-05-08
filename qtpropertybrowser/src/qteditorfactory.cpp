@@ -726,6 +726,7 @@ public:
     void slotRangeChanged(QtProperty *property, int min, int max);
     void slotRangeChanged(QtProperty *property, double min, double max);
     void slotSingleStepChanged(QtProperty *property, int step);
+    void slotPrecisionChanged(QtProperty *property, int prec);
     void slotReadOnlyChanged(QtProperty *property, bool readOnly);
     void slotSetValue(int value);
     void slotSetMinimum(int minVal);
@@ -807,6 +808,26 @@ void QtIntEditFactoryPrivate::slotReadOnlyChanged( QtProperty *property, bool re
         QIntEdit *editor = itEditor.next();
         editor->blockSignals(true);
         editor->setReadOnly(readOnly);
+        editor->blockSignals(false);
+    }
+}
+
+void QtIntEditFactoryPrivate::slotPrecisionChanged(QtProperty *property, int prec)
+{
+    if (!m_createdEditors.contains(property))
+        return;
+
+    QtIntPropertyManager *manager = q_ptr->propertyManager(property);
+    if (!manager)
+        return;
+
+    QList<QIntEdit *> editors = m_createdEditors[property];
+    QListIterator<QIntEdit *> itEditor(editors);
+    while (itEditor.hasNext()) {
+        QIntEdit *editor = itEditor.next();
+        editor->blockSignals(true);
+        editor->setPrecision(prec);
+        editor->setValue(manager->value(property));
         editor->blockSignals(false);
     }
 }

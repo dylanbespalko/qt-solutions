@@ -703,13 +703,14 @@ public:
     struct Data
     {
         Data()
-            : val(0), minVal(-INT_MAX), maxVal(INT_MAX), singleStep(1), unit(QString()),
+            : val(0), minVal(-INT_MAX), maxVal(INT_MAX), singleStep(1), precision(2), unit(QString()),
               readOnly(false),
               foreground(QBrush(Qt::black, Qt::SolidPattern)){}
         int val;
         int minVal;
         int maxVal;
         int singleStep;
+        int precision;
         QString unit;
         bool readOnly;
         QBrush foreground;
@@ -840,6 +841,16 @@ int QtIntPropertyManager::singleStep(const QtProperty *property) const
 }
 
 /*!
+ Returns the given \a property's precision, in decimals.
+
+ \sa setPrecision()
+ */
+int QtIntPropertyManager::precision(const QtProperty *property) const
+{
+    return getData<int>(d_ptr->m_values, &QtIntPropertyManagerPrivate::Data::precision, property, 0);
+}
+
+/*!
  Returns the given \a property's unit, as a QString.
 
  \sa setUnit()
@@ -883,7 +894,7 @@ QString QtIntPropertyManager::valueText(const QtProperty *property) const
         return QString();
 //    return QString::number(it.value().val);
     QtIntPropertyManagerPrivate::Data  data = it.value();
-    return QIntEdit::num2str(data.val, Scale::_, Format::RE, 0);
+    return QIntEdit::num2str(data.val, Scale::_, Format::RE, data.precision);
 }
 
 QString QtIntPropertyManager::minimumText(const QtProperty *property) const
@@ -893,7 +904,7 @@ QString QtIntPropertyManager::minimumText(const QtProperty *property) const
     return QString();
 
     QtIntPropertyManagerPrivate::Data  data = it.value();
-    return QIntEdit::num2str(data.minVal, Scale::_, Format::RE, 0);
+    return QIntEdit::num2str(data.minVal, Scale::_, Format::RE, data.precision);
 }
 
 /*!
@@ -906,7 +917,7 @@ QString QtIntPropertyManager::maximumText(const QtProperty *property) const
     return QString();
 
     QtIntPropertyManagerPrivate::Data  data = it.value();
-    return QIntEdit::num2str(data.maxVal, Scale::_, Format::RE, 0);
+    return QIntEdit::num2str(data.maxVal, Scale::_, Format::RE, data.precision);
 }
 
 /*!
@@ -1034,6 +1045,38 @@ void QtIntPropertyManager::setSingleStep(QtProperty *property, int step)
     it.value() = data;
 
     emit singleStepChanged(property, data.singleStep);
+}
+
+/*!
+ \fn void QtIntPropertyManager::setPrecision(QtProperty *property, int prec)
+
+ Sets the precision of the given \a property to \a prec.
+
+ The valid decimal range is 0-13. The default is 2.
+
+ \sa precision()
+ */
+void QtIntPropertyManager::setPrecision(QtProperty *property, int prec)
+{
+    const QtIntPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+    return;
+
+    QtIntPropertyManagerPrivate::Data data = it.value();
+
+    if (prec > 13)
+    prec = 13;
+    else if (prec < 0)
+    prec = 0;
+
+    if (data.precision == prec)
+    return;
+
+    data.precision = prec;
+
+    it.value() = data;
+
+    emit precisionChanged(property, data.precision);
 }
 
 /*!

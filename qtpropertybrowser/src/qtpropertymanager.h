@@ -82,6 +82,7 @@ public:
     int minimum(const QtProperty *property) const;
     int maximum(const QtProperty *property) const;
     int singleStep(const QtProperty *property) const;
+    int precision(const QtProperty *property) const;
     QString unit(const QtProperty *property) const;
     bool isReadOnly(const QtProperty *property) const;
     QBrush foreground(const QtProperty *property) const;
@@ -92,12 +93,14 @@ public Q_SLOTS:
     void setMaximum(QtProperty *property, int maxVal);
     void setRange(QtProperty *property, int minVal, int maxVal);
     void setSingleStep(QtProperty *property, int step);
+    void setPrecision(QtProperty *property, int prec);
     void setUnit(QtProperty *property, const QString& unit);
     void setReadOnly(QtProperty *property, bool readOnly);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, int val);
     void rangeChanged(QtProperty *property, int minVal, int maxVal);
     void singleStepChanged(QtProperty *property, int step);
+    void precisionChanged(QtProperty *property, int prec);
     void unitChanged(QtProperty *property, const QString& unit);
     void readOnlyChanged(QtProperty *property, bool readOnly);
 protected:

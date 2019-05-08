@@ -460,7 +460,7 @@ if __name__ == "__main__":
         property_ = manager_map['size'].addProperty("size_read")
         property_.propertyManager().setReadOnly(property_, False)
         property_.propertyManager().setMinimum(property_, QSize(0, 0))
-        property_.propertyManager().setMaximum(property_, QSize(2, 2))
+        property_.propertyManager().setMaximum(property_, QSize(255, 255))
         property_.propertyManager().setValue(property_, QSize(-1, 3))
         tree_browser.setFactoryForManager(manager_map['size'].subIntPropertyManager(), factory_map['int'])
         box_browser.setFactoryForManager(manager_map['size'].subIntPropertyManager(), factory_map['int'])
