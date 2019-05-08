@@ -1538,7 +1538,7 @@ QVariant QtVariantPropertyManager::attributeValue(const QtProperty *property, co
         return QVariant();
     } else if (QtPointFPropertyManager *pointFManager = qobject_cast<QtPointFPropertyManager *>(manager)) {
         if (attribute == d_ptr->m_decimalsAttribute)
-            return pointFManager->decimals(internProp);
+            return pointFManager->precision(internProp);
         return QVariant();
     } else if (QtSizePropertyManager *sizeManager = qobject_cast<QtSizePropertyManager *>(manager)) {
         if (attribute == d_ptr->m_maximumAttribute)
@@ -1552,7 +1552,7 @@ QVariant QtVariantPropertyManager::attributeValue(const QtProperty *property, co
         if (attribute == d_ptr->m_minimumAttribute)
             return sizeFManager->minimum(internProp);
         if (attribute == d_ptr->m_decimalsAttribute)
-            return sizeFManager->decimals(internProp);
+            return sizeFManager->precision(internProp);
         return QVariant();
     } else if (QtRectPropertyManager *rectManager = qobject_cast<QtRectPropertyManager *>(manager)) {
         if (attribute == d_ptr->m_constraintAttribute)
@@ -1562,7 +1562,7 @@ QVariant QtVariantPropertyManager::attributeValue(const QtProperty *property, co
         if (attribute == d_ptr->m_constraintAttribute)
             return rectFManager->constraint(internProp);
         if (attribute == d_ptr->m_decimalsAttribute)
-            return rectFManager->decimals(internProp);
+            return rectFManager->precision(internProp);
         return QVariant();
     } else if (QtEnumPropertyManager *enumManager = qobject_cast<QtEnumPropertyManager *>(manager)) {
         if (attribute == d_ptr->m_enumNamesAttribute)
@@ -1793,7 +1793,7 @@ void QtVariantPropertyManager::setAttribute(QtProperty *property,
         return;
     } else if (QtPointFPropertyManager *pointFManager = qobject_cast<QtPointFPropertyManager *>(manager)) {
         if (attribute == d_ptr->m_decimalsAttribute)
-            pointFManager->setDecimals(internProp, qVariantValue<int>(value));
+            pointFManager->setPrecision(internProp, qVariantValue<int>(value));
         return;
     } else if (QtSizePropertyManager *sizeManager = qobject_cast<QtSizePropertyManager *>(manager)) {
         if (attribute == d_ptr->m_maximumAttribute)
@@ -1807,7 +1807,7 @@ void QtVariantPropertyManager::setAttribute(QtProperty *property,
         if (attribute == d_ptr->m_minimumAttribute)
             sizeFManager->setMinimum(internProp, qVariantValue<QSizeF>(value));
         if (attribute == d_ptr->m_decimalsAttribute)
-            sizeFManager->setDecimals(internProp, qVariantValue<int>(value));
+            sizeFManager->setPrecision(internProp, qVariantValue<int>(value));
         return;
     } else if (QtRectPropertyManager *rectManager = qobject_cast<QtRectPropertyManager *>(manager)) {
         if (attribute == d_ptr->m_constraintAttribute)
@@ -1817,7 +1817,7 @@ void QtVariantPropertyManager::setAttribute(QtProperty *property,
         if (attribute == d_ptr->m_constraintAttribute)
             rectFManager->setConstraint(internProp, qVariantValue<QRectF>(value));
         if (attribute == d_ptr->m_decimalsAttribute)
-            rectFManager->setDecimals(internProp, qVariantValue<int>(value));
+            rectFManager->setPrecision(internProp, qVariantValue<int>(value));
         return;
     } else if (QtEnumPropertyManager *enumManager = qobject_cast<QtEnumPropertyManager *>(manager)) {
         if (attribute == d_ptr->m_enumNamesAttribute)

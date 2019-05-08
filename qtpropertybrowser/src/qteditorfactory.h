@@ -304,6 +304,7 @@ protected:
     void connectPropertyManager(QtStringPropertyManager *manager);
     QWidget *createEditor(QtStringPropertyManager *manager, QtProperty *property,
                 QWidget *parent);
+    QWidget *createAttributeEditor(QtStringPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
     void disconnectPropertyManager(QtStringPropertyManager *manager);
 private:
     QtLineEditFactoryPrivate *d_ptr;
@@ -315,6 +316,8 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotReadOnlyChanged(QtProperty *, bool))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(const QString &))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
 class QtDateEditFactoryPrivate;
@@ -329,6 +332,7 @@ protected:
     void connectPropertyManager(QtDatePropertyManager *manager);
     QWidget *createEditor(QtDatePropertyManager *manager, QtProperty *property,
                 QWidget *parent);
+    QWidget *createAttributeEditor(QtDatePropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
     void disconnectPropertyManager(QtDatePropertyManager *manager);
 private:
     QtDateEditFactoryPrivate *d_ptr;
@@ -338,7 +342,9 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotRangeChanged(QtProperty *,
                         const QDate &, const QDate &))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(const QDate &))
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
 class QtTimeEditFactoryPrivate;
@@ -353,6 +359,7 @@ protected:
     void connectPropertyManager(QtTimePropertyManager *manager);
     QWidget *createEditor(QtTimePropertyManager *manager, QtProperty *property,
                 QWidget *parent);
+    QWidget *createAttributeEditor(QtTimePropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
     void disconnectPropertyManager(QtTimePropertyManager *manager);
 private:
     QtTimeEditFactoryPrivate *d_ptr;
@@ -361,6 +368,8 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QTime &))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(const QTime &))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
 class QtDateTimeEditFactoryPrivate;
@@ -375,6 +384,7 @@ protected:
     void connectPropertyManager(QtDateTimePropertyManager *manager);
     QWidget *createEditor(QtDateTimePropertyManager *manager, QtProperty *property,
                 QWidget *parent);
+    QWidget *createAttributeEditor(QtDateTimePropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
     void disconnectPropertyManager(QtDateTimePropertyManager *manager);
 private:
     QtDateTimeEditFactoryPrivate *d_ptr;
@@ -383,6 +393,8 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QDateTime &))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(const QDateTime &))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
 class QtKeySequenceEditorFactoryPrivate;
@@ -397,6 +409,7 @@ protected:
     void connectPropertyManager(QtKeySequencePropertyManager *manager);
     QWidget *createEditor(QtKeySequencePropertyManager *manager, QtProperty *property,
                 QWidget *parent);
+    QWidget *createAttributeEditor(QtKeySequencePropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
     void disconnectPropertyManager(QtKeySequencePropertyManager *manager);
 private:
     QtKeySequenceEditorFactoryPrivate *d_ptr;
@@ -405,6 +418,8 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QKeySequence &))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(const QKeySequence &))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
 class QtCharEditorFactoryPrivate;
@@ -419,6 +434,7 @@ protected:
     void connectPropertyManager(QtCharPropertyManager *manager);
     QWidget *createEditor(QtCharPropertyManager *manager, QtProperty *property,
                 QWidget *parent);
+    QWidget *createAttributeEditor(QtCharPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
     void disconnectPropertyManager(QtCharPropertyManager *manager);
 private:
     QtCharEditorFactoryPrivate *d_ptr;
@@ -427,6 +443,8 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QChar &))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(const QChar &))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
 class QtEnumEditorFactoryPrivate;
@@ -439,8 +457,8 @@ public:
     ~QtEnumEditorFactory();
 protected:
     void connectPropertyManager(QtEnumPropertyManager *manager);
-    QWidget *createEditor(QtEnumPropertyManager *manager, QtProperty *property,
-                QWidget *parent);
+    QWidget *createEditor(QtEnumPropertyManager *manager, QtProperty *property, QWidget *parent);
+    QWidget *createAttributeEditor(QtEnumPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
     void disconnectPropertyManager(QtEnumPropertyManager *manager);
 private:
     QtEnumEditorFactoryPrivate *d_ptr;
@@ -452,7 +470,9 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotEnumIconsChanged(QtProperty *,
                         const QMap<int, QIcon> &))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(int))
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
 class QtCursorEditorFactoryPrivate;
@@ -467,6 +487,7 @@ protected:
     void connectPropertyManager(QtCursorPropertyManager *manager);
     QWidget *createEditor(QtCursorPropertyManager *manager, QtProperty *property,
                 QWidget *parent);
+    QWidget *createAttributeEditor(QtCursorPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
     void disconnectPropertyManager(QtCursorPropertyManager *manager);
 private:
     QtCursorEditorFactoryPrivate *d_ptr;
@@ -474,7 +495,9 @@ private:
     Q_DISABLE_COPY(QtCursorEditorFactory)
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QCursor &))
     Q_PRIVATE_SLOT(d_func(), void slotEnumChanged(QtProperty *, int))
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
 class QtColorEditorFactoryPrivate;
@@ -489,6 +512,7 @@ protected:
     void connectPropertyManager(QtColorPropertyManager *manager);
     QWidget *createEditor(QtColorPropertyManager *manager, QtProperty *property,
                 QWidget *parent);
+    QWidget *createAttributeEditor(QtColorPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
     void disconnectPropertyManager(QtColorPropertyManager *manager);
 private:
     QtColorEditorFactoryPrivate *d_ptr;
@@ -497,6 +521,8 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QColor &))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(const QColor &))
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
 class QtFontEditorFactoryPrivate;
@@ -511,6 +537,7 @@ protected:
     void connectPropertyManager(QtFontPropertyManager *manager);
     QWidget *createEditor(QtFontPropertyManager *manager, QtProperty *property,
                 QWidget *parent);
+    QWidget *createAttributeEditor(QtFontPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
     void disconnectPropertyManager(QtFontPropertyManager *manager);
 private:
     QtFontEditorFactoryPrivate *d_ptr;
@@ -519,6 +546,8 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QFont &))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(const QFont &))
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
 #if QT_VERSION >= 0x040400

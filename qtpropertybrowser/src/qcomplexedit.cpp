@@ -172,7 +172,6 @@ QWidget(parent)
     setupTreeViewEditorMargin(lt);
     lt->setSpacing(0);
     lt->addWidget(d_ptr->m_edit);
-    lt->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Ignored));
     this->setFocusProxy(d_ptr->m_edit);
     
     connect(d_ptr->m_edit, SIGNAL(editingFinished()), this, SLOT(setValue()));
@@ -407,7 +406,6 @@ QWidget(parent)
     setupTreeViewEditorMargin(lt);
     lt->setSpacing(0);
     lt->addWidget(d_ptr->m_edit);
-    lt->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Ignored));
     this->setFocusProxy(d_ptr->m_edit);
     
     connect(d_ptr->m_edit, SIGNAL(editingFinished()), this, SLOT(setValue()));

@@ -1937,6 +1937,14 @@ QString QtStringPropertyManager::displayText(const QtProperty *property) const
 }
 
 /*!
+ \reimp
+ */
+QIcon QtStringPropertyManager::checkIcon(const QtProperty *property) const
+{
+    return property->check() ? drawCheckBox(true) : drawCheckBox(false);
+}
+
+/*!
     \fn void QtStringPropertyManager::setValue(QtProperty *property, const QString &value)
 
     Sets the value of the given \a property to \a value.
@@ -2375,6 +2383,14 @@ QString QtDatePropertyManager::valueText(const QtProperty *property) const
 }
 
 /*!
+ \reimp
+ */
+QIcon QtDatePropertyManager::checkIcon(const QtProperty *property) const
+{
+    return property->check() ? drawCheckBox(true) : drawCheckBox(false);
+}
+
+/*!
     \fn void QtDatePropertyManager::setValue(QtProperty *property, const QDate &value)
 
     Sets the value of the given \a property to \a value.
@@ -2557,6 +2573,14 @@ QString QtTimePropertyManager::valueText(const QtProperty *property) const
 }
 
 /*!
+ \reimp
+ */
+QIcon QtTimePropertyManager::checkIcon(const QtProperty *property) const
+{
+    return property->check() ? drawCheckBox(true) : drawCheckBox(false);
+}
+
+/*!
     \fn void QtTimePropertyManager::setValue(QtProperty *property, const QTime &value)
 
     Sets the value of the given \a property to \a value.
@@ -2671,6 +2695,14 @@ QString QtDateTimePropertyManager::valueText(const QtProperty *property) const
 }
 
 /*!
+ \reimp
+ */
+QIcon QtDateTimePropertyManager::checkIcon(const QtProperty *property) const
+{
+    return property->check() ? drawCheckBox(true) : drawCheckBox(false);
+}
+
+/*!
     \fn void QtDateTimePropertyManager::setValue(QtProperty *property, const QDateTime &value)
 
     Sets the value of the given \a property to \a value.
@@ -2781,6 +2813,14 @@ QString QtKeySequencePropertyManager::valueText(const QtProperty *property) cons
 }
 
 /*!
+ \reimp
+ */
+QIcon QtKeySequencePropertyManager::checkIcon(const QtProperty *property) const
+{
+    return property->check() ? drawCheckBox(true) : drawCheckBox(false);
+}
+
+/*!
     \fn void QtKeySequencePropertyManager::setValue(QtProperty *property, const QKeySequence &value)
 
     Sets the value of the given \a property to \a value.
@@ -2887,6 +2927,14 @@ QString QtCharPropertyManager::valueText(const QtProperty *property) const
         return QString();
     const QChar c = it.value();
     return c.isNull() ? QString() : QString(c);
+}
+
+/*!
+ \reimp
+ */
+QIcon QtCharPropertyManager::checkIcon(const QtProperty *property) const
+{
+    return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
 
 /*!
@@ -3082,6 +3130,14 @@ QString QtLocalePropertyManager::valueText(const QtProperty *property) const
             .arg(metaEnumProvider()->languageEnumNames().at(langIdx))
             .arg(metaEnumProvider()->countryEnumNames(loc.language()).at(countryIdx));
     return str;
+}
+
+/*!
+ \reimp
+ */
+QIcon QtLocalePropertyManager::checkIcon(const QtProperty *property) const
+{
+    return drawCheckBox(true);
 }
 
 /*!
@@ -3313,6 +3369,14 @@ QString QtPointPropertyManager::valueText(const QtProperty *property) const
 }
 
 /*!
+ \reimp
+ */
+QIcon QtPointPropertyManager::checkIcon(const QtProperty *property) const
+{
+    return drawCheckBox(true);
+}
+
+/*!
     \fn void QtPointPropertyManager::setValue(QtProperty *property, const QPoint &value)
 
     Sets the value of the given \a property to \a value. Nested
@@ -3391,10 +3455,9 @@ public:
 
     struct Data
     {
-        Data() : decimals(2),
-            foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
+        Data() : precision(2) {}
         QPointF val;
-        int decimals;
+        int precision;
         QBrush foreground;
     };
 
@@ -3468,13 +3531,13 @@ void QtPointFPropertyManagerPrivate::slotPropertyDestroyed(QtProperty *property)
 */
 
 /*!
-    \fn void QtPointFPropertyManager::decimalsChanged(QtProperty *property, int prec)
+    \fn void QtPointFPropertyManager::precisionChanged(QtProperty *property, int prec)
 
     This signal is emitted whenever a property created by this manager
     changes its precision of value, passing a pointer to the
     \a property and the new \a prec value
 
-    \sa setDecimals()
+    \sa setPrecision()
 */
 
 /*!
@@ -3533,11 +3596,11 @@ QPointF QtPointFPropertyManager::value(const QtProperty *property) const
 /*!
     Returns the given \a property's precision, in decimals.
 
-    \sa setDecimals()
+    \sa setPrecision()
 */
-int QtPointFPropertyManager::decimals(const QtProperty *property) const
+int QtPointFPropertyManager::precision(const QtProperty *property) const
 {
-    return getData<int>(d_ptr->m_values, &QtPointFPropertyManagerPrivate::Data::decimals, property, 0);
+    return getData<int>(d_ptr->m_values, &QtPointFPropertyManagerPrivate::Data::precision, property, 0);
 }
 
 /*!
@@ -3549,9 +3612,17 @@ QString QtPointFPropertyManager::valueText(const QtProperty *property) const
     if (it == d_ptr->m_values.constEnd())
         return QString();
     const QPointF v = it.value().val;
-    const int dec =  it.value().decimals;
+    const int dec =  it.value().precision;
     return QString(tr("(%1, %2)").arg(QString::number(v.x(), 'f', dec))
                                  .arg(QString::number(v.y(), 'f', dec)));
+}
+
+/*!
+ \reimp
+ */
+QIcon QtPointFPropertyManager::checkIcon(const QtProperty *property) const
+{
+    return drawCheckBox(true);
 }
 
 /*!
@@ -3580,15 +3651,15 @@ void QtPointFPropertyManager::setValue(QtProperty *property, const QPointF &val)
 }
 
 /*!
-    \fn void QtPointFPropertyManager::setDecimals(QtProperty *property, int prec)
+    \fn void QtPointFPropertyManager::setPrecision(QtProperty *property, int prec)
 
     Sets the precision of the given \a property to \a prec.
 
     The valid decimal range is 0-13. The default is 2.
 
-    \sa decimals()
+    \sa precision()
 */
-void QtPointFPropertyManager::setDecimals(QtProperty *property, int prec)
+void QtPointFPropertyManager::setPrecision(QtProperty *property, int prec)
 {
     const QtPointFPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
@@ -3601,16 +3672,16 @@ void QtPointFPropertyManager::setDecimals(QtProperty *property, int prec)
     else if (prec < 0)
         prec = 0;
 
-    if (data.decimals == prec)
+    if (data.precision == prec)
         return;
 
-    data.decimals = prec;
+    data.precision = prec;
     d_ptr->m_doublePropertyManager->setPrecision(d_ptr->m_propertyToX[property], prec);
     d_ptr->m_doublePropertyManager->setPrecision(d_ptr->m_propertyToY[property], prec);
 
     it.value() = data;
 
-    emit decimalsChanged(property, data.decimals);
+    emit precisionChanged(property, data.precision);
 }
 
 /*!
@@ -3622,7 +3693,7 @@ void QtPointFPropertyManager::initializeProperty(QtProperty *property)
 
     QtProperty *xProp = d_ptr->m_doublePropertyManager->addProperty();
     xProp->setPropertyName(tr("X"));
-    d_ptr->m_doublePropertyManager->setPrecision(xProp, decimals(property));
+    d_ptr->m_doublePropertyManager->setPrecision(xProp, precision(property));
     d_ptr->m_doublePropertyManager->setValue(xProp, 0);
     d_ptr->m_propertyToX[property] = xProp;
     d_ptr->m_xToProperty[xProp] = property;
@@ -3630,7 +3701,7 @@ void QtPointFPropertyManager::initializeProperty(QtProperty *property)
 
     QtProperty *yProp = d_ptr->m_doublePropertyManager->addProperty();
     yProp->setPropertyName(tr("Y"));
-    d_ptr->m_doublePropertyManager->setPrecision(yProp, decimals(property));
+    d_ptr->m_doublePropertyManager->setPrecision(yProp, precision(property));
     d_ptr->m_doublePropertyManager->setValue(yProp, 0);
     d_ptr->m_propertyToY[property] = yProp;
     d_ptr->m_yToProperty[yProp] = property;
@@ -3890,6 +3961,14 @@ QString QtSizePropertyManager::valueText(const QtProperty *property) const
 }
 
 /*!
+ \reimp
+ */
+QIcon QtSizePropertyManager::checkIcon(const QtProperty *property) const
+{
+    return drawCheckBox(true);
+}
+
+/*!
     \fn void QtSizePropertyManager::setValue(QtProperty *property, const QSize &value)
 
     Sets the value of the given \a property to \a value.
@@ -4058,13 +4137,13 @@ public:
 
     struct Data
     {
-        Data() : val(QSizeF(0, 0)), minVal(QSizeF(0, 0)), maxVal(QSizeF(INT_MAX, INT_MAX)), decimals(2),
+        Data() : val(QSizeF(0, 0)), minVal(QSizeF(0, 0)), maxVal(QSizeF(INT_MAX, INT_MAX)), precision(2),
             readOnly(false),
             foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QSizeF val;
         QSizeF minVal;
         QSizeF maxVal;
-        int decimals;
+        int precision;
         bool readOnly;
         QBrush foreground;
         QSizeF minimumValue() const { return minVal; }
@@ -4174,13 +4253,13 @@ void QtSizeFPropertyManagerPrivate::setRange(QtProperty *property,
 */
 
 /*!
-    \fn void QtSizeFPropertyManager::decimalsChanged(QtProperty *property, int prec)
+    \fn void QtSizeFPropertyManager::precisionChanged(QtProperty *property, int prec)
 
     This signal is emitted whenever a property created by this manager
     changes its precision of value, passing a pointer to the
     \a property and the new \a prec value
 
-    \sa setDecimals()
+    \sa setPrecision()
 */
 
 /*!
@@ -4239,11 +4318,11 @@ QSizeF QtSizeFPropertyManager::value(const QtProperty *property) const
 /*!
     Returns the given \a property's precision, in decimals.
 
-    \sa setDecimals()
+    \sa setPrecision()
 */
-int QtSizeFPropertyManager::decimals(const QtProperty *property) const
+int QtSizeFPropertyManager::precision(const QtProperty *property) const
 {
-    return getData<int>(d_ptr->m_values, &QtSizeFPropertyManagerPrivate::Data::decimals, property, 0);
+    return getData<int>(d_ptr->m_values, &QtSizeFPropertyManagerPrivate::Data::precision, property, 0);
 }
 
 /*!
@@ -4287,9 +4366,17 @@ QString QtSizeFPropertyManager::valueText(const QtProperty *property) const
     if (it == d_ptr->m_values.constEnd())
         return QString();
     const QSizeF v = it.value().val;
-    const int dec = it.value().decimals;
+    const int dec = it.value().precision;
     return QString(tr("%1 x %2").arg(QString::number(v.width(), 'f', dec))
                                 .arg(QString::number(v.height(), 'f', dec)));
+}
+
+/*!
+ \reimp
+ */
+QIcon QtSizeFPropertyManager::checkIcon(const QtProperty *property) const
+{
+    return drawCheckBox(true);
 }
 
 /*!
@@ -4312,15 +4399,15 @@ void QtSizeFPropertyManager::setValue(QtProperty *property, const QSizeF &val)
 }
 
 /*!
-    \fn void QtSizeFPropertyManager::setDecimals(QtProperty *property, int prec)
+    \fn void QtSizeFPropertyManager::setPrecision(QtProperty *property, int prec)
 
     Sets the precision of the given \a property to \a prec.
 
     The valid decimal range is 0-13. The default is 2.
 
-    \sa decimals()
+    \sa precision()
 */
-void QtSizeFPropertyManager::setDecimals(QtProperty *property, int prec)
+void QtSizeFPropertyManager::setPrecision(QtProperty *property, int prec)
 {
     const QtSizeFPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
@@ -4333,16 +4420,16 @@ void QtSizeFPropertyManager::setDecimals(QtProperty *property, int prec)
     else if (prec < 0)
         prec = 0;
 
-    if (data.decimals == prec)
+    if (data.precision == prec)
         return;
 
-    data.decimals = prec;
+    data.precision = prec;
     d_ptr->m_doublePropertyManager->setPrecision(d_ptr->m_propertyToW[property], prec);
     d_ptr->m_doublePropertyManager->setPrecision(d_ptr->m_propertyToH[property], prec);
 
     it.value() = data;
 
-    emit decimalsChanged(property, data.decimals);
+    emit precisionChanged(property, data.precision);
 }
 
 /*!
@@ -4419,7 +4506,7 @@ void QtSizeFPropertyManager::initializeProperty(QtProperty *property)
 
     QtProperty *wProp = d_ptr->m_doublePropertyManager->addProperty();
     wProp->setPropertyName(tr("Width"));
-    d_ptr->m_doublePropertyManager->setPrecision(wProp, decimals(property));
+    d_ptr->m_doublePropertyManager->setPrecision(wProp, precision(property));
     d_ptr->m_doublePropertyManager->setValue(wProp, 0);
     d_ptr->m_doublePropertyManager->setMinimum(wProp, 0);
     d_ptr->m_propertyToW[property] = wProp;
@@ -4428,7 +4515,7 @@ void QtSizeFPropertyManager::initializeProperty(QtProperty *property)
 
     QtProperty *hProp = d_ptr->m_doublePropertyManager->addProperty();
     hProp->setPropertyName(tr("Height"));
-    d_ptr->m_doublePropertyManager->setPrecision(hProp, decimals(property));
+    d_ptr->m_doublePropertyManager->setPrecision(hProp, precision(property));
     d_ptr->m_doublePropertyManager->setValue(hProp, 0);
     d_ptr->m_doublePropertyManager->setMinimum(hProp, 0);
     d_ptr->m_propertyToH[property] = hProp;
@@ -4712,6 +4799,14 @@ QString QtRectPropertyManager::valueText(const QtProperty *property) const
 }
 
 /*!
+ \reimp
+ */
+QIcon QtRectPropertyManager::checkIcon(const QtProperty *property) const
+{
+    return drawCheckBox(true);
+}
+
+/*!
     \fn void QtRectPropertyManager::setValue(QtProperty *property, const QRect &value)
 
     Sets the value of the given \a property to \a value. Nested
@@ -4905,11 +5000,11 @@ public:
 
     struct Data
     {
-        Data() : val(0, 0, 0, 0), decimals(2),
+        Data() : val(0, 0, 0, 0), precision(2),
             foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QRectF val;
         QRectF constraint;
-        int decimals;
+        int precision;
         QBrush foreground;
     };
 
@@ -5045,13 +5140,13 @@ void QtRectFPropertyManagerPrivate::setConstraint(QtProperty *property,
 */
 
 /*!
-    \fn void QtRectFPropertyManager::decimalsChanged(QtProperty *property, int prec)
+    \fn void QtRectFPropertyManager::precisionChanged(QtProperty *property, int prec)
 
     This signal is emitted whenever a property created by this manager
     changes its precision of value, passing a pointer to the
     \a property and the new \a prec value
 
-    \sa setDecimals()
+    \sa setPrecision()
 */
 
 /*!
@@ -5110,11 +5205,11 @@ QRectF QtRectFPropertyManager::value(const QtProperty *property) const
 /*!
     Returns the given \a property's precision, in decimals.
 
-    \sa setDecimals()
+    \sa setPrecision()
 */
-int QtRectFPropertyManager::decimals(const QtProperty *property) const
+int QtRectFPropertyManager::precision(const QtProperty *property) const
 {
-    return getData<int>(d_ptr->m_values, &QtRectFPropertyManagerPrivate::Data::decimals, property, 0);
+    return getData<int>(d_ptr->m_values, &QtRectFPropertyManagerPrivate::Data::precision, property, 0);
 }
 
 /*!
@@ -5136,11 +5231,19 @@ QString QtRectFPropertyManager::valueText(const QtProperty *property) const
     if (it == d_ptr->m_values.constEnd())
         return QString();
     const QRectF v = it.value().val;
-    const int dec = it.value().decimals;
+    const int dec = it.value().precision;
     return QString(tr("[(%1, %2), %3 x %4]").arg(QString::number(v.x(), 'f', dec))
                                 .arg(QString::number(v.y(), 'f', dec))
                                 .arg(QString::number(v.width(), 'f', dec))
                                 .arg(QString::number(v.height(), 'f', dec)));
+}
+
+/*!
+ \reimp
+ */
+QIcon QtRectFPropertyManager::checkIcon(const QtProperty *property) const
+{
+    return drawCheckBox(true);
 }
 
 /*!
@@ -5250,15 +5353,15 @@ void QtRectFPropertyManager::setConstraint(QtProperty *property, const QRectF &c
 }
 
 /*!
-    \fn void QtRectFPropertyManager::setDecimals(QtProperty *property, int prec)
+    \fn void QtRectFPropertyManager::setPrecision(QtProperty *property, int prec)
 
     Sets the precision of the given \a property to \a prec.
 
     The valid decimal range is 0-13. The default is 2.
 
-    \sa decimals()
+    \sa precision()
 */
-void QtRectFPropertyManager::setDecimals(QtProperty *property, int prec)
+void QtRectFPropertyManager::setPrecision(QtProperty *property, int prec)
 {
     const QtRectFPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
@@ -5271,10 +5374,10 @@ void QtRectFPropertyManager::setDecimals(QtProperty *property, int prec)
     else if (prec < 0)
         prec = 0;
 
-    if (data.decimals == prec)
+    if (data.precision == prec)
         return;
 
-    data.decimals = prec;
+    data.precision = prec;
     d_ptr->m_doublePropertyManager->setPrecision(d_ptr->m_propertyToX[property], prec);
     d_ptr->m_doublePropertyManager->setPrecision(d_ptr->m_propertyToY[property], prec);
     d_ptr->m_doublePropertyManager->setPrecision(d_ptr->m_propertyToW[property], prec);
@@ -5282,7 +5385,7 @@ void QtRectFPropertyManager::setDecimals(QtProperty *property, int prec)
 
     it.value() = data;
 
-    emit decimalsChanged(property, data.decimals);
+    emit precisionChanged(property, data.precision);
 }
 
 /*!
@@ -5294,7 +5397,7 @@ void QtRectFPropertyManager::initializeProperty(QtProperty *property)
 
     QtProperty *xProp = d_ptr->m_doublePropertyManager->addProperty();
     xProp->setPropertyName(tr("X"));
-    d_ptr->m_doublePropertyManager->setPrecision(xProp, decimals(property));
+    d_ptr->m_doublePropertyManager->setPrecision(xProp, precision(property));
     d_ptr->m_doublePropertyManager->setValue(xProp, 0);
     d_ptr->m_propertyToX[property] = xProp;
     d_ptr->m_xToProperty[xProp] = property;
@@ -5302,7 +5405,7 @@ void QtRectFPropertyManager::initializeProperty(QtProperty *property)
 
     QtProperty *yProp = d_ptr->m_doublePropertyManager->addProperty();
     yProp->setPropertyName(tr("Y"));
-    d_ptr->m_doublePropertyManager->setPrecision(yProp, decimals(property));
+    d_ptr->m_doublePropertyManager->setPrecision(yProp, precision(property));
     d_ptr->m_doublePropertyManager->setValue(yProp, 0);
     d_ptr->m_propertyToY[property] = yProp;
     d_ptr->m_yToProperty[yProp] = property;
@@ -5310,7 +5413,7 @@ void QtRectFPropertyManager::initializeProperty(QtProperty *property)
 
     QtProperty *wProp = d_ptr->m_doublePropertyManager->addProperty();
     wProp->setPropertyName(tr("Width"));
-    d_ptr->m_doublePropertyManager->setPrecision(wProp, decimals(property));
+    d_ptr->m_doublePropertyManager->setPrecision(wProp, precision(property));
     d_ptr->m_doublePropertyManager->setValue(wProp, 0);
     d_ptr->m_doublePropertyManager->setMinimum(wProp, 0);
     d_ptr->m_propertyToW[property] = wProp;
@@ -5319,7 +5422,7 @@ void QtRectFPropertyManager::initializeProperty(QtProperty *property)
 
     QtProperty *hProp = d_ptr->m_doublePropertyManager->addProperty();
     hProp->setPropertyName(tr("Height"));
-    d_ptr->m_doublePropertyManager->setPrecision(hProp, decimals(property));
+    d_ptr->m_doublePropertyManager->setPrecision(hProp, precision(property));
     d_ptr->m_doublePropertyManager->setValue(hProp, 0);
     d_ptr->m_doublePropertyManager->setMinimum(hProp, 0);
     d_ptr->m_propertyToH[property] = hProp;
@@ -5521,6 +5624,14 @@ QIcon QtEnumPropertyManager::valueIcon(const QtProperty *property) const
 
     const int v = data.val;
     return data.enumIcons.value(v);
+}
+
+/*!
+ \reimp
+ */
+QIcon QtEnumPropertyManager::checkIcon(const QtProperty *property) const
+{
+    return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
 
 /*!
@@ -5837,6 +5948,14 @@ QString QtFlagPropertyManager::valueText(const QtProperty *property) const
         level++;
     }
     return str;
+}
+
+/*!
+ \reimp
+ */
+QIcon QtFlagPropertyManager::checkIcon(const QtProperty *property) const
+{
+    return drawCheckBox(true);
 }
 
 /*!
@@ -6166,6 +6285,14 @@ QString QtSizePolicyPropertyManager::valueText(const QtProperty *property) const
     const QString vPolicy = vIndex != -1 ? mep->policyEnumNames().at(vIndex) : tr("<Invalid>");
     const QString str = tr("[%1, %2, %3, %4]").arg(hPolicy, vPolicy).arg(sp.horizontalStretch()).arg(sp.verticalStretch());
     return str;
+}
+
+/*!
+ \reimp
+ */
+QIcon QtSizePolicyPropertyManager::checkIcon(const QtProperty *property) const
+{
+    return drawCheckBox(true);
 }
 
 /*!
@@ -6604,6 +6731,14 @@ QIcon QtFontPropertyManager::valueIcon(const QtProperty *property) const
 }
 
 /*!
+ \reimp
+ */
+QIcon QtFontPropertyManager::checkIcon(const QtProperty *property) const
+{
+    return property->check() ? drawCheckBox(true) : drawCheckBox(false);
+}
+
+/*!
     \fn void QtFontPropertyManager::setValue(QtProperty *property, const QFont &value)
 
     Sets the value of the given \a property to \a value. Nested
@@ -6940,6 +7075,14 @@ QIcon QtColorPropertyManager::valueIcon(const QtProperty *property) const
 }
 
 /*!
+ \reimp
+ */
+QIcon QtColorPropertyManager::checkIcon(const QtProperty *property) const
+{
+    return property->check() ? drawCheckBox(true) : drawCheckBox(false);
+}
+
+/*!
     \fn void QtColorPropertyManager::setValue(QtProperty *property, const QColor &value)
 
     Sets the value of the given \a property to \a value.  Nested
@@ -7154,6 +7297,14 @@ QIcon QtCursorPropertyManager::valueIcon(const QtProperty *property) const
         return QIcon();
 
     return cursorDatabase()->cursorToShapeIcon(it.value());
+}
+
+/*!
+ \reimp
+ */
+QIcon QtCursorPropertyManager::checkIcon(const QtProperty *property) const
+{
+    return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
 
 /*!

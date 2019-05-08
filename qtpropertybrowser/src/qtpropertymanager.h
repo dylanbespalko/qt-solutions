@@ -235,6 +235,7 @@ Q_SIGNALS:
 protected:
     QString valueText(const QtProperty *property) const;
     QString displayText(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:
@@ -266,6 +267,7 @@ Q_SIGNALS:
     void rangeChanged(QtProperty *property, const QDate &minVal, const QDate &maxVal);
 protected:
     QString valueText(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:
@@ -291,6 +293,7 @@ Q_SIGNALS:
     void valueChanged(QtProperty *property, const QTime &val);
 protected:
     QString valueText(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:
@@ -316,6 +319,7 @@ Q_SIGNALS:
     void valueChanged(QtProperty *property, const QDateTime &val);
 protected:
     QString valueText(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:
@@ -341,6 +345,7 @@ Q_SIGNALS:
     void valueChanged(QtProperty *property, const QKeySequence &val);
 protected:
     QString valueText(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:
@@ -366,6 +371,7 @@ Q_SIGNALS:
     void valueChanged(QtProperty *property, const QChar &val);
 protected:
     QString valueText(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:
@@ -394,6 +400,7 @@ Q_SIGNALS:
     void valueChanged(QtProperty *property, const QLocale &val);
 protected:
     QString valueText(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:
@@ -423,6 +430,7 @@ Q_SIGNALS:
     void valueChanged(QtProperty *property, const QPoint &val);
 protected:
     QString valueText(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:
@@ -445,16 +453,17 @@ public:
     QtDoublePropertyManager *subDoublePropertyManager() const;
 
     QPointF value(const QtProperty *property) const;
-    int decimals(const QtProperty *property) const;
+    int precision(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, const QPointF &val);
-    void setDecimals(QtProperty *property, int prec);
+    void setPrecision(QtProperty *property, int prec);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QPointF &val);
-    void decimalsChanged(QtProperty *property, int prec);
+    void precisionChanged(QtProperty *property, int prec);
 protected:
     QString valueText(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:
@@ -493,6 +502,7 @@ Q_SIGNALS:
     void readOnlyChanged(QtProperty *property, bool readOnly);
 protected:
     QString valueText(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:
@@ -517,7 +527,7 @@ public:
     QSizeF value(const QtProperty *property) const;
     QSizeF minimum(const QtProperty *property) const;
     QSizeF maximum(const QtProperty *property) const;
-    int decimals(const QtProperty *property) const;
+    int precision(const QtProperty *property) const;
     bool isReadOnly(const QtProperty *property) const;
 
 public Q_SLOTS:
@@ -525,15 +535,16 @@ public Q_SLOTS:
     void setMinimum(QtProperty *property, const QSizeF &minVal);
     void setMaximum(QtProperty *property, const QSizeF &maxVal);
     void setRange(QtProperty *property, const QSizeF &minVal, const QSizeF &maxVal);
-    void setDecimals(QtProperty *property, int prec);
+    void setPrecision(QtProperty *property, int prec);
     void setReadOnly(QtProperty *property, bool readOnly);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QSizeF &val);
     void rangeChanged(QtProperty *property, const QSizeF &minVal, const QSizeF &maxVal);
-    void decimalsChanged(QtProperty *property, int prec);
+    void precisionChanged(QtProperty *property, int prec);
     void readOnlyChanged(QtProperty *property, bool readOnly);
 protected:
     QString valueText(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:
@@ -566,6 +577,7 @@ Q_SIGNALS:
     void constraintChanged(QtProperty *property, const QRect &constraint);
 protected:
     QString valueText(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:
@@ -589,18 +601,19 @@ public:
 
     QRectF value(const QtProperty *property) const;
     QRectF constraint(const QtProperty *property) const;
-    int decimals(const QtProperty *property) const;
+    int precision(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, const QRectF &val);
     void setConstraint(QtProperty *property, const QRectF &constraint);
-    void setDecimals(QtProperty *property, int prec);
+    void setPrecision(QtProperty *property, int prec);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QRectF &val);
     void constraintChanged(QtProperty *property, const QRectF &constraint);
-    void decimalsChanged(QtProperty *property, int prec);
+    void precisionChanged(QtProperty *property, int prec);
 protected:
     QString valueText(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:
@@ -635,6 +648,7 @@ Q_SIGNALS:
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon valueIcon(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:
@@ -665,6 +679,7 @@ Q_SIGNALS:
     void flagNamesChanged(QtProperty *property, const QStringList &names);
 protected:
     QString valueText(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:
@@ -695,6 +710,7 @@ Q_SIGNALS:
     void valueChanged(QtProperty *property, const QSizePolicy &val);
 protected:
     QString valueText(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:
@@ -728,6 +744,7 @@ Q_SIGNALS:
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon valueIcon(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:
@@ -762,6 +779,7 @@ Q_SIGNALS:
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon valueIcon(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:
@@ -792,6 +810,7 @@ Q_SIGNALS:
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon valueIcon(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:

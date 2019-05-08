@@ -2490,6 +2490,7 @@ public:
     void slotSetValue(const QString &value);
     void slotEchoModeChanged(QtProperty *, int);
     void slotReadOnlyChanged(QtProperty *, bool);
+    void slotSetCheck(bool check);
 };
 
 void QtLineEditFactoryPrivate::slotPropertyChanged(QtProperty *property,
@@ -2586,7 +2587,18 @@ void QtLineEditFactoryPrivate::slotSetValue(const QString &value)
         }
 }
 
-
+void QtLineEditFactoryPrivate::slotSetCheck(bool check)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
+    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            property->setCheck(check);
+            return;
+        }
+    }
+}
 
 /*!
     \class QtLineEditFactory
@@ -2614,6 +2626,7 @@ QtLineEditFactory::QtLineEditFactory(QObject *parent)
 QtLineEditFactory::~QtLineEditFactory()
 {
     qDeleteAll(d_ptr->m_editorToProperty.keys());
+    qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
     delete d_ptr;
 }
 
@@ -2661,6 +2674,29 @@ QWidget *QtLineEditFactory::createEditor(QtStringPropertyManager *manager,
 }
 
 /*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+QWidget *QtLineEditFactory::createAttributeEditor(QtStringPropertyManager *manager, QtProperty *property,
+                                                  QWidget *parent, Attribute attribute)
+{
+    if (attribute == Attribute::CHECK)
+    {
+        QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
+
+        editor->setChecked(property->check());
+        editor->setTextVisible(false);
+
+        connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
+        return editor;
+    }
+    return NULL;
+
+}
+
+/*!
     \internal
 
     Reimplemented from the QtAbstractEditorFactory class.
@@ -2689,6 +2725,7 @@ public:
     void slotPropertyChanged(QtProperty *property, const QDate &value);
     void slotRangeChanged(QtProperty *property, const QDate &min, const QDate &max);
     void slotSetValue(const QDate &value);
+    void slotSetCheck(bool check);
 };
 
 void QtDateEditFactoryPrivate::slotPropertyChanged(QtProperty *property, const QDate &value)
@@ -2739,6 +2776,19 @@ void QtDateEditFactoryPrivate::slotSetValue(const QDate &value)
         }
 }
 
+void QtDateEditFactoryPrivate::slotSetCheck(bool check)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
+    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            property->setCheck(check);
+            return;
+        }
+    }
+}
+
 /*!
     \class QtDateEditFactory
 
@@ -2765,6 +2815,7 @@ QtDateEditFactory::QtDateEditFactory(QObject *parent)
 QtDateEditFactory::~QtDateEditFactory()
 {
     qDeleteAll(d_ptr->m_editorToProperty.keys());
+    qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
     delete d_ptr;
 }
 
@@ -2802,6 +2853,28 @@ QWidget *QtDateEditFactory::createEditor(QtDatePropertyManager *manager, QtPrope
 }
 
 /*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+QWidget *QtDateEditFactory::createAttributeEditor(QtDatePropertyManager *manager, QtProperty *property,
+                                                  QWidget *parent, Attribute attribute)
+{
+    if (attribute == Attribute::CHECK)
+    {
+        QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
+
+        editor->setChecked(property->check());
+        editor->setTextVisible(false);
+
+        connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
+        return editor;
+    }
+    return NULL;
+}
+
+/*!
     \internal
 
     Reimplemented from the QtAbstractEditorFactory class.
@@ -2824,6 +2897,7 @@ public:
 
     void slotPropertyChanged(QtProperty *property, const QTime &value);
     void slotSetValue(const QTime &value);
+    void slotSetCheck(bool check);
 };
 
 void QtTimeEditFactoryPrivate::slotPropertyChanged(QtProperty *property, const QTime &value)
@@ -2854,6 +2928,19 @@ void QtTimeEditFactoryPrivate::slotSetValue(const QTime &value)
         }
 }
 
+void QtTimeEditFactoryPrivate::slotSetCheck(bool check)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
+    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            property->setCheck(check);
+            return;
+        }
+    }
+}
+
 /*!
     \class QtTimeEditFactory
 
@@ -2880,6 +2967,7 @@ QtTimeEditFactory::QtTimeEditFactory(QObject *parent)
 QtTimeEditFactory::~QtTimeEditFactory()
 {
     qDeleteAll(d_ptr->m_editorToProperty.keys());
+    qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
     delete d_ptr;
 }
 
@@ -2913,6 +3001,29 @@ QWidget *QtTimeEditFactory::createEditor(QtTimePropertyManager *manager, QtPrope
 }
 
 /*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+QWidget *QtTimeEditFactory::createAttributeEditor(QtTimePropertyManager *manager, QtProperty *property,
+                                                  QWidget *parent, Attribute attribute)
+{
+    if (attribute == Attribute::CHECK)
+    {
+        QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
+
+        editor->setChecked(property->check());
+        editor->setTextVisible(false);
+
+        connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
+        return editor;
+    }
+    return NULL;
+
+}
+
+/*!
     \internal
 
     Reimplemented from the QtAbstractEditorFactory class.
@@ -2933,6 +3044,7 @@ public:
 
     void slotPropertyChanged(QtProperty *property, const QDateTime &value);
     void slotSetValue(const QDateTime &value);
+    void slotSetCheck(bool check);
 
 };
 
@@ -2966,6 +3078,19 @@ void QtDateTimeEditFactoryPrivate::slotSetValue(const QDateTime &value)
         }
 }
 
+void QtDateTimeEditFactoryPrivate::slotSetCheck(bool check)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
+    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            property->setCheck(check);
+            return;
+        }
+    }
+}
+
 /*!
     \class QtDateTimeEditFactory
 
@@ -2992,6 +3117,7 @@ QtDateTimeEditFactory::QtDateTimeEditFactory(QObject *parent)
 QtDateTimeEditFactory::~QtDateTimeEditFactory()
 {
     qDeleteAll(d_ptr->m_editorToProperty.keys());
+    qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
     delete d_ptr;
 }
 
@@ -3025,6 +3151,29 @@ QWidget *QtDateTimeEditFactory::createEditor(QtDateTimePropertyManager *manager,
 }
 
 /*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+QWidget *QtDateTimeEditFactory::createAttributeEditor(QtDateTimePropertyManager *manager, QtProperty *property,
+                                                  QWidget *parent, Attribute attribute)
+{
+    if (attribute == Attribute::CHECK)
+    {
+        QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
+
+        editor->setChecked(property->check());
+        editor->setTextVisible(false);
+
+        connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
+        return editor;
+    }
+    return NULL;
+
+}
+
+/*!
     \internal
 
     Reimplemented from the QtAbstractEditorFactory class.
@@ -3045,6 +3194,7 @@ public:
 
     void slotPropertyChanged(QtProperty *property, const QKeySequence &value);
     void slotSetValue(const QKeySequence &value);
+    void slotSetCheck(bool check);
 };
 
 void QtKeySequenceEditorFactoryPrivate::slotPropertyChanged(QtProperty *property,
@@ -3077,6 +3227,19 @@ void QtKeySequenceEditorFactoryPrivate::slotSetValue(const QKeySequence &value)
         }
 }
 
+void QtKeySequenceEditorFactoryPrivate::slotSetCheck(bool check)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
+    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            property->setCheck(check);
+            return;
+        }
+    }
+}
+
 /*!
     \class QtKeySequenceEditorFactory
 
@@ -3103,6 +3266,7 @@ QtKeySequenceEditorFactory::QtKeySequenceEditorFactory(QObject *parent)
 QtKeySequenceEditorFactory::~QtKeySequenceEditorFactory()
 {
     qDeleteAll(d_ptr->m_editorToProperty.keys());
+    qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
     delete d_ptr;
 }
 
@@ -3133,6 +3297,29 @@ QWidget *QtKeySequenceEditorFactory::createEditor(QtKeySequencePropertyManager *
     connect(editor, SIGNAL(destroyed(QObject *)),
                 this, SLOT(slotEditorDestroyed(QObject *)));
     return editor;
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+QWidget *QtKeySequenceEditorFactory::createAttributeEditor(QtKeySequencePropertyManager *manager, QtProperty *property,
+                                                  QWidget *parent, Attribute attribute)
+{
+    if (attribute == Attribute::CHECK)
+    {
+        QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
+
+        editor->setChecked(property->check());
+        editor->setTextVisible(false);
+
+        connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
+        return editor;
+    }
+    return NULL;
+
 }
 
 /*!
@@ -3334,6 +3521,7 @@ public:
 
     void slotPropertyChanged(QtProperty *property, const QChar &value);
     void slotSetValue(const QChar &value);
+    void slotSetCheck(bool check);
 
 };
 
@@ -3367,6 +3555,19 @@ void QtCharEditorFactoryPrivate::slotSetValue(const QChar &value)
         }
 }
 
+void QtCharEditorFactoryPrivate::slotSetCheck(bool check)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
+    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            property->setCheck(check);
+            return;
+        }
+    }
+}
+
 /*!
     \class QtCharEditorFactory
 
@@ -3393,6 +3594,7 @@ QtCharEditorFactory::QtCharEditorFactory(QObject *parent)
 QtCharEditorFactory::~QtCharEditorFactory()
 {
     qDeleteAll(d_ptr->m_editorToProperty.keys());
+    qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
     delete d_ptr;
 }
 
@@ -3426,6 +3628,29 @@ QWidget *QtCharEditorFactory::createEditor(QtCharPropertyManager *manager,
 }
 
 /*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+QWidget *QtCharEditorFactory::createAttributeEditor(QtCharPropertyManager *manager, QtProperty *property,
+                                                  QWidget *parent, Attribute attribute)
+{
+    if (attribute == Attribute::CHECK)
+    {
+        QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
+
+        editor->setChecked(property->check());
+        editor->setTextVisible(false);
+
+        connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
+        return editor;
+    }
+    return NULL;
+
+}
+
+/*!
     \internal
 
     Reimplemented from the QtAbstractEditorFactory class.
@@ -3448,6 +3673,7 @@ public:
     void slotEnumNamesChanged(QtProperty *property, const QStringList &);
     void slotEnumIconsChanged(QtProperty *property, const QMap<int, QIcon> &);
     void slotSetValue(int value);
+    void slotSetCheck(bool check);
 };
 
 void QtEnumEditorFactoryPrivate::slotPropertyChanged(QtProperty *property, int value)
@@ -3528,6 +3754,19 @@ void QtEnumEditorFactoryPrivate::slotSetValue(int value)
         }
 }
 
+void QtEnumEditorFactoryPrivate::slotSetCheck(bool check)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
+    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            property->setCheck(check);
+            return;
+        }
+    }
+}
+
 /*!
     \class QtEnumEditorFactory
 
@@ -3554,6 +3793,7 @@ QtEnumEditorFactory::QtEnumEditorFactory(QObject *parent)
 QtEnumEditorFactory::~QtEnumEditorFactory()
 {
     qDeleteAll(d_ptr->m_editorToProperty.keys());
+    qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
     delete d_ptr;
 }
 
@@ -3597,6 +3837,29 @@ QWidget *QtEnumEditorFactory::createEditor(QtEnumPropertyManager *manager, QtPro
 }
 
 /*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+QWidget *QtEnumEditorFactory::createAttributeEditor(QtEnumPropertyManager *manager, QtProperty *property,
+                                                  QWidget *parent, Attribute attribute)
+{
+    if (attribute == Attribute::CHECK)
+    {
+        QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
+
+        editor->setChecked(property->check());
+        editor->setTextVisible(false);
+
+        connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
+        return editor;
+    }
+    return NULL;
+
+}
+
+/*!
     \internal
 
     Reimplemented from the QtAbstractEditorFactory class.
@@ -3613,7 +3876,7 @@ void QtEnumEditorFactory::disconnectPropertyManager(QtEnumPropertyManager *manag
 
 Q_GLOBAL_STATIC(QtCursorDatabase, cursorDatabase)
 
-class QtCursorEditorFactoryPrivate
+class QtCursorEditorFactoryPrivate: public EditorFactoryPrivate<QComboBox>
 {
     QtCursorEditorFactory *q_ptr;
     Q_DECLARE_PUBLIC(QtCursorEditorFactory)
@@ -3623,6 +3886,7 @@ public:
     void slotPropertyChanged(QtProperty *property, const QCursor &cursor);
     void slotEnumChanged(QtProperty *property, int value);
     void slotEditorDestroyed(QObject *object);
+    void slotSetCheck(bool check);
 
     QtEnumEditorFactory *m_enumEditorFactory;
     QtEnumPropertyManager *m_enumPropertyManager;
@@ -3689,6 +3953,19 @@ void QtCursorEditorFactoryPrivate::slotEditorDestroyed(QObject *object)
             }
             return;
         }
+}
+
+void QtCursorEditorFactoryPrivate::slotSetCheck(bool check)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
+    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            property->setCheck(check);
+            return;
+        }
+    }
 }
 
 /*!
@@ -3763,6 +4040,29 @@ QWidget *QtCursorEditorFactory::createEditor(QtCursorPropertyManager *manager, Q
     connect(editor, SIGNAL(destroyed(QObject *)),
                 this, SLOT(slotEditorDestroyed(QObject *)));
     return editor;
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+QWidget *QtCursorEditorFactory::createAttributeEditor(QtCursorPropertyManager *manager, QtProperty *property,
+                                                  QWidget *parent, Attribute attribute)
+{
+    if (attribute == Attribute::CHECK)
+    {
+        QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
+
+        editor->setChecked(property->check());
+        editor->setTextVisible(false);
+
+        connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
+        return editor;
+    }
+    return NULL;
+
 }
 
 /*!
@@ -3892,6 +4192,7 @@ public:
 
     void slotPropertyChanged(QtProperty *property, const QColor &value);
     void slotSetValue(const QColor &value);
+    void slotSetCheck(bool check);
 };
 
 void QtColorEditorFactoryPrivate::slotPropertyChanged(QtProperty *property,
@@ -3921,6 +4222,19 @@ void QtColorEditorFactoryPrivate::slotSetValue(const QColor &value)
         }
 }
 
+void QtColorEditorFactoryPrivate::slotSetCheck(bool check)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
+    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            property->setCheck(check);
+            return;
+        }
+    }
+}
+
 /*!
     \class QtColorEditorFactory
 
@@ -3946,6 +4260,7 @@ QtColorEditorFactory::QtColorEditorFactory(QObject *parent) :
 QtColorEditorFactory::~QtColorEditorFactory()
 {
     qDeleteAll(d_ptr->m_editorToProperty.keys());
+    qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
     delete d_ptr;
 }
 
@@ -3973,6 +4288,29 @@ QWidget *QtColorEditorFactory::createEditor(QtColorPropertyManager *manager,
     connect(editor, SIGNAL(valueChanged(QColor)), this, SLOT(slotSetValue(QColor)));
     connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotEditorDestroyed(QObject *)));
     return editor;
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+QWidget *QtColorEditorFactory::createAttributeEditor(QtColorPropertyManager *manager, QtProperty *property,
+                                                  QWidget *parent, Attribute attribute)
+{
+    if (attribute == Attribute::CHECK)
+    {
+        QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
+
+        editor->setChecked(property->check());
+        editor->setTextVisible(false);
+
+        connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
+        return editor;
+    }
+    return NULL;
+
 }
 
 /*!
@@ -4114,6 +4452,7 @@ public:
 
     void slotPropertyChanged(QtProperty *property, const QFont &value);
     void slotSetValue(const QFont &value);
+    void slotSetCheck(bool check);
 };
 
 void QtFontEditorFactoryPrivate::slotPropertyChanged(QtProperty *property,
@@ -4143,6 +4482,19 @@ void QtFontEditorFactoryPrivate::slotSetValue(const QFont &value)
         }
 }
 
+void QtFontEditorFactoryPrivate::slotSetCheck(bool check)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
+    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            property->setCheck(check);
+            return;
+        }
+    }
+}
+
 /*!
     \class QtFontEditorFactory
 
@@ -4168,6 +4520,7 @@ QtFontEditorFactory::QtFontEditorFactory(QObject *parent) :
 QtFontEditorFactory::~QtFontEditorFactory()
 {
     qDeleteAll(d_ptr->m_editorToProperty.keys());
+    qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
     delete d_ptr;
 }
 
@@ -4195,6 +4548,31 @@ QWidget *QtFontEditorFactory::createEditor(QtFontPropertyManager *manager,
     connect(editor, SIGNAL(valueChanged(QFont)), this, SLOT(slotSetValue(QFont)));
     connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotEditorDestroyed(QObject *)));
     return editor;
+}
+
+
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+QWidget *QtFontEditorFactory::createAttributeEditor(QtFontPropertyManager *manager, QtProperty *property,
+                                                  QWidget *parent, Attribute attribute)
+{
+    if (attribute == Attribute::CHECK)
+    {
+        QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
+
+        editor->setChecked(property->check());
+        editor->setTextVisible(false);
+
+        connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
+        return editor;
+    }
+    return NULL;
+
 }
 
 /*!

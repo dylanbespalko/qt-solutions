@@ -60,8 +60,7 @@ if __name__ == "__main__":
     for count in range(1):
         tree_scroll_area = QScrollArea()
         tree_browser = QtTreePropertyBrowser()
-        tree_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT,
-                                    Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
+        tree_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
         box_scroll_area = QScrollArea()
         box_browser = QtGroupBoxPropertyBrowser()
         button_scroll_area = QScrollArea()
@@ -368,6 +367,9 @@ if __name__ == "__main__":
         manager_map['date'].valueChanged.connect(set_value)
         property_ = manager_map['date'].addProperty("date")
         property_.propertyManager().setValue(property_, QDate.currentDate())
+        tree_browser.setFactoryForManager(manager_map['date'], factory_map['date'])
+        box_browser.setFactoryForManager(manager_map['date'], factory_map['date'])
+        button_browser.setFactoryForManager(manager_map['date'], factory_map['date'])
         browser_item = tree_browser.addProperty(property_)
         tree_browser.setExpanded(browser_item, False)
         browser_item = box_browser.addProperty(property_)
