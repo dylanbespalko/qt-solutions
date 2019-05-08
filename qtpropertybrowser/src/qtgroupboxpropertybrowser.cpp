@@ -43,6 +43,8 @@
 #include <QSet>
 #include <QGridLayout>
 #include <QLabel>
+#include <QCheckBox>
+#include <QComboBox>
 #include <QGroupBox>
 #include <QTimer>
 #include <QMap>
@@ -58,12 +60,16 @@ class QtGroupBoxPropertyBrowserPrivate
 public:
 
     void init(QWidget *parent);
+    void updateAttributes();
 
     void propertyInserted(QtBrowserItem *index, QtBrowserItem *afterIndex);
     void propertyRemoved(QtBrowserItem *index);
     void propertyChanged(QtBrowserItem *index);
     QWidget *createEditor(QtProperty *property, QWidget *parent) const
         { return q_ptr->createEditor(property, parent); }
+    QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, Attribute attribute) const
+    { return q_ptr->createAttributeEditor(property, parent,attribute); }
+    Attribute columnToAttribute(const int col) const;
 
     void slotEditorDestroyed();
     void slotUpdate();
@@ -71,10 +77,18 @@ public:
     struct WidgetItem
     {
         WidgetItem() : widget(0), label(0), widgetLabel(0),
+                unit(0), pkAvg(0), format(0), minimum(0), maximum(0), check(0),
                 groupBox(0), layout(0), line(0), parent(0) { }
         QWidget *widget; // can be null
         QLabel *label;
         QLabel *widgetLabel;
+        QLabel *widgetAttribute;
+        QComboBox *unit;
+        QComboBox *pkAvg;
+        QComboBox *format;
+        QDoubleEdit *minimum;
+        QDoubleEdit *maximum;
+        QCheckBox *check;
         QGroupBox *groupBox;
         QGridLayout *layout;
         QFrame *line;
@@ -95,6 +109,7 @@ private:
     QGridLayout *m_mainLayout;
     QList<WidgetItem *> m_children;
     QList<WidgetItem *> m_recreateQueue;
+    QList<Attribute> m_attributes;
 };
 
 void QtGroupBoxPropertyBrowserPrivate::init(QWidget *parent)
@@ -104,6 +119,11 @@ void QtGroupBoxPropertyBrowserPrivate::init(QWidget *parent)
     QLayoutItem *item = new QSpacerItem(0, 0,
                 QSizePolicy::Fixed, QSizePolicy::Expanding);
     m_mainLayout->addItem(item, 0, 0);
+}
+
+void QtGroupBoxPropertyBrowserPrivate::updateAttributes()
+{
+    return;
 }
 
 void QtGroupBoxPropertyBrowserPrivate::slotEditorDestroyed()
@@ -270,6 +290,42 @@ void QtGroupBoxPropertyBrowserPrivate::propertyInserted(QtBrowserItem *index, Qt
     else
         span = 2;
     layout->addWidget(newItem->label, row, 0, 1, span);
+    for (unsigned short ind = 0; ind < m_attributes.count(); ind++) {
+        switch (m_attributes.at(ind)) {
+        case Attribute::UNIT:
+            newItem->unit = (QComboBox*)createAttributeEditor(index->property(), parentWidget, Attribute::UNIT);
+            if (newItem->unit)
+                layout->addWidget(newItem->unit, row, ind+2, 1, 1);
+            break;
+        case Attribute::PKAVG:
+            newItem->pkAvg = (QComboBox*)createAttributeEditor(index->property(), parentWidget, Attribute::PKAVG);
+            if (newItem->pkAvg)
+                layout->addWidget(newItem->pkAvg, row, ind+2, 1, 1);
+            break;
+        case Attribute::FORMAT:
+            newItem->format = (QComboBox*)createAttributeEditor(index->property(), parentWidget, Attribute::FORMAT);
+            if (newItem->format)
+                layout->addWidget(newItem->format, row, ind+2, 1, 1);
+            break;
+        case Attribute::MINIMUM:
+            newItem->minimum = (QDoubleEdit*)createAttributeEditor(index->property(), parentWidget, Attribute::MINIMUM);
+            if (newItem->minimum)
+                layout->addWidget(newItem->minimum, row, ind+2, 1, 1);
+            break;
+        case Attribute::MAXIMUM:
+           newItem->maximum = (QDoubleEdit*)createAttributeEditor(index->property(), parentWidget, Attribute::MAXIMUM);
+            if (newItem->maximum)
+                layout->addWidget(newItem->maximum, row, ind+2, 1, 1);
+            break;
+        case Attribute::CHECK:
+            newItem->check = (QCheckBox*)createAttributeEditor(index->property(), parentWidget, Attribute::CHECK);
+            if (newItem->check)
+                layout->addWidget(newItem->check, row, ind+2, 1, 1);
+            break;
+        default:
+            break;
+        }
+    }
 
     m_itemToIndex[newItem] = index;
     m_indexToItem[index] = newItem;
@@ -445,10 +501,39 @@ void QtGroupBoxPropertyBrowserPrivate::updateItem(WidgetItem *item)
         item->widget->setEnabled(property->isEnabled());
         item->widget->setToolTip(property->valueText());
     }
-    //item->setIcon(1, property->valueIcon());
-}
-
-
+    if (item->unit){
+        QFont font = item->unit->font();
+        font.setUnderline(false);
+        item->unit->setFont(font);
+        item->unit->setEnabled(property->isEnabled());
+    }
+    if (item->pkAvg){
+        QFont font = item->pkAvg->font();
+        font.setUnderline(false);
+        item->pkAvg->setFont(font);
+        item->pkAvg->setEnabled(property->isEnabled());
+    }
+    if (item->format){
+        QFont font = item->format->font();
+        font.setUnderline(false);
+        item->format->setFont(font);
+        item->format->setEnabled(property->isEnabled());
+    }
+    if (item->minimum){
+        QFont font = item->minimum->font();
+        font.setUnderline(false);
+        item->minimum->setFont(font);
+        item->minimum->setEnabled(property->isEnabled());
+    }
+    if (item->maximum){
+        QFont font = item->maximum->font();
+        font.setUnderline(false);
+        item->maximum->setFont(font);
+        item->maximum->setEnabled(property->isEnabled());
+    }
+    if (item->check){
+        item->check->setEnabled(property->isEnabled());
+    }
 
 /*!
     \class QtGroupBoxPropertyBrowser
@@ -504,6 +589,95 @@ QtGroupBoxPropertyBrowser::~QtGroupBoxPropertyBrowser()
     for (QMap<QtGroupBoxPropertyBrowserPrivate::WidgetItem *, QtBrowserItem *>::ConstIterator it = d_ptr->m_itemToIndex.constBegin(); it != icend; ++it)
         delete it.key();
     delete d_ptr;
+}
+
+/*!
+ \property QtGroupBoxPropertyBrowser::attributes
+ \brief optional attribute column setting.
+
+ Optional setting to include an attribute column
+
+ \sa setAttribute1()
+ */
+
+QList<Attribute> QtGroupBoxPropertyBrowser::attributes() const
+{
+    return d_ptr->m_attributes;
+}
+
+void QtGroupBoxPropertyBrowser::setAttributes(const QList<Attribute> &attributeList)
+{
+    if (d_ptr->m_attributes == attributeList)
+        return;
+
+    d_ptr->m_attributes = attributeList;
+    d_ptr->updateAttributes();
+
+    QMapIterator<QtGroupBoxPropertyBrowserPrivate::WidgetItem *, QtBrowserItem *> it(d_ptr->m_itemToIndex);
+    while (it.hasNext()) {
+        QtProperty *property = it.next().value()->property();
+        d_ptr->updateItem(it.key());
+    }
+}
+
+/*!
+ \property QtGroupBoxPropertyBrowser::attribute1
+ \brief optional attribute column setting.
+
+ Optional setting to include an attribute column
+
+ \sa setAttribute1()
+ */
+
+Attribute QtGroupBoxPropertyBrowser::attribute1() const
+{
+    return d_ptr->m_attributes[0];
+}
+void QtGroupBoxPropertyBrowser::setAttribute1(Attribute attribute)
+{
+    QList<Attribute> &attributeList = d_ptr->m_attributes;
+    attributeList[0] = attribute;
+    setAttributes(attributeList);
+}
+
+/*!
+ \property QtGroupBoxPropertyBrowser::attribute2
+ \brief optional attribute column setting.
+
+ Optional setting to include an attribute column
+
+ \sa setAttribute2()
+ */
+void QtGroupBoxPropertyBrowser::setAttribute2(Attribute attribute)
+{
+    QList<Attribute> &attributeList = d_ptr->m_attributes;
+    attributeList[1] = attribute;
+    setAttributes(attributeList);
+}
+
+Attribute QtGroupBoxPropertyBrowser::attribute2() const
+{
+    return d_ptr->m_attributes[1];
+}
+
+/*!
+ \property QtGroupBoxPropertyBrowser::attribute3
+ \brief optional attribute column setting.
+
+ Optional setting to include an attribute column
+
+ \sa setAttribute3()
+ */
+
+Attribute QtGroupBoxPropertyBrowser::attribute3() const
+{
+    return d_ptr->m_attributes[2];
+}
+void QtGroupBoxPropertyBrowser::setAttribute3(Attribute attribute)
+{
+    QList<Attribute> &attributeList = d_ptr->m_attributes;
+    attributeList[2] = attribute;
+    setAttributes(attributeList);
 }
 
 /*!

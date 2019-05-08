@@ -1207,13 +1207,18 @@ bool QtTreePropertyBrowser::propertiesWithoutValueMarked() const
 }
 
 /*!
- \property QtTreePropertyBrowser::setAttribute1
+ \property QtTreePropertyBrowser::attributes
  \brief optional attribute column setting.
 
  Optional setting to include an attribute column
 
- \sa attribute1()
+ \sa setAttribute1()
  */
+
+QList<Attribute> QtTreePropertyBrowser::attributes() const
+{
+    return d_ptr->m_attributes;
+}
 
 void QtTreePropertyBrowser::setAttributes(const QList<Attribute> &attributeList)
 {
@@ -1230,19 +1235,19 @@ void QtTreePropertyBrowser::setAttributes(const QList<Attribute> &attributeList)
     }
 }
 
-QList<Attribute> QtTreePropertyBrowser::attributes() const
-{
-    return d_ptr->m_attributes;
-}
-
 /*!
- \property QtTreePropertyBrowser::setAttribute1
+ \property QtTreePropertyBrowser::attribute1
  \brief optional attribute column setting.
 
  Optional setting to include an attribute column
 
- \sa attribute1()
+ \sa setAttribute1()
  */
+
+Attribute QtTreePropertyBrowser::attribute1() const
+{
+    return d_ptr->m_attributes[0];
+}
 void QtTreePropertyBrowser::setAttribute1(Attribute attribute)
 {
     QList<Attribute> &attributeList = d_ptr->m_attributes;
@@ -1250,18 +1255,13 @@ void QtTreePropertyBrowser::setAttribute1(Attribute attribute)
     setAttributes(attributeList);
 }
 
-Attribute QtTreePropertyBrowser::attribute1() const
-{
-    return d_ptr->m_attributes[0];
-}
-
 /*!
- \property QtTreePropertyBrowser::setAttribute2
+ \property QtTreePropertyBrowser::attribute2
  \brief optional attribute column setting.
 
  Optional setting to include an attribute column
 
- \sa attribute2()
+ \sa setAttribute2()
  */
 void QtTreePropertyBrowser::setAttribute2(Attribute attribute)
 {
@@ -1276,23 +1276,23 @@ Attribute QtTreePropertyBrowser::attribute2() const
 }
 
 /*!
- \property QtTreePropertyBrowser::setAttribute3
+ \property QtTreePropertyBrowser::attribute3
  \brief optional attribute column setting.
 
  Optional setting to include an attribute column
 
- \sa attribute3()
+ \sa setAttribute3()
  */
+
+Attribute QtTreePropertyBrowser::attribute3() const
+{
+    return d_ptr->m_attributes[2];
+}
 void QtTreePropertyBrowser::setAttribute3(Attribute attribute)
 {
     QList<Attribute> &attributeList = d_ptr->m_attributes;
     attributeList[2] = attribute;
     setAttributes(attributeList);
-}
-
-Attribute QtTreePropertyBrowser::attribute3() const
-{
-    return d_ptr->m_attributes[2];
 }
 
 /*!

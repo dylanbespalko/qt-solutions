@@ -57,6 +57,18 @@ public:
 
     QtGroupBoxPropertyBrowser(QWidget *parent = 0);
     ~QtGroupBoxPropertyBrowser();
+    Q_PROPERTY(Attribute attribute1 READ attribute1 WRITE setAttribute1)
+    Q_PROPERTY(Attribute attribute2 READ attribute2 WRITE setAttribute2)
+    Q_PROPERTY(Attribute attribute3 READ attribute3 WRITE setAttribute3)
+
+    QList<Attribute> attributes() const;
+    void setAttributes(const QList<Attribute> &attributeList);
+    Attribute attribute1() const;
+    void setAttribute1(Attribute attribute);
+    Attribute attribute2() const;
+    void setAttribute2(Attribute attribute);
+    Attribute attribute3() const;
+    void setAttribute3(Attribute attribute);
 
 protected:
     virtual void itemInserted(QtBrowserItem *item, QtBrowserItem *afterItem);
