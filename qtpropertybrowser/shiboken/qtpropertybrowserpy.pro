@@ -57,6 +57,8 @@ HEADERS += \
     qtpropertybrowser/qtdateeditfactory_wrapper.h \
     qtpropertybrowser/qttimeeditfactory_wrapper.h \
     qtpropertybrowser/qtdatetimeeditfactory_wrapper.h \
+    qtpropertybrowser/qtkeysequenceeditorfactory_wrapper.h \
+    qtpropertybrowser/qtchareditorfactory_wrapper.h \
     qtpropertybrowser/qtenumeditorfactory_wrapper.h \
     qtpropertybrowser/qtcoloreditorfactory_wrapper.h \
     qtpropertybrowser/qtfonteditorfactory_wrapper.h \
@@ -118,6 +120,7 @@ SOURCES += \
     qtpropertybrowser/qttimeeditfactory_wrapper.cpp \
     qtpropertybrowser/qtdatetimeeditfactory_wrapper.cpp \
     qtpropertybrowser/qtkeysequenceeditorfactory_wrapper.cpp \
+    qtpropertybrowser/qtchareditorfactory_wrapper.cpp \
     qtpropertybrowser/qtenumeditorfactory_wrapper.cpp \
     qtpropertybrowser/qtcursoreditorfactory_wrapper.cpp \
     qtpropertybrowser/qtcoloreditorfactory_wrapper.cpp \

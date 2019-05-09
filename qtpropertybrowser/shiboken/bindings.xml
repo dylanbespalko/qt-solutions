@@ -80,6 +80,7 @@
     <object-type name="QtTimeEditFactory"/>
     <object-type name="QtDateTimeEditFactory"/>
     <object-type name="QtKeySequenceEditorFactory"/>
+    <object-type name="QtCharEditorFactory"/>
     <object-type name="QtEnumEditorFactory"/>
     <object-type name="QtCursorEditorFactory"/>
     <object-type name="QtColorEditorFactory"/>

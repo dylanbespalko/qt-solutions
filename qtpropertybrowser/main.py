@@ -17,7 +17,8 @@ from qtpropertybrowser import QtLocalePropertyManager
 from qtpropertybrowser import QtPointPropertyManager, QtPointFPropertyManager
 from qtpropertybrowser import QtSizePropertyManager, QtSizeFPropertyManager
 from qtpropertybrowser import QtRectPropertyManager, QtRectFPropertyManager
-from qtpropertybrowser import QtCursorPropertyManager, QtColorPropertyManager, QtFontPropertyManager, QtKeySequencePropertyManager
+from qtpropertybrowser import QtCharPropertyManager, QtKeySequencePropertyManager
+from qtpropertybrowser import QtCursorPropertyManager, QtColorPropertyManager, QtFontPropertyManager
 from qtpropertybrowser import QtSizePolicyPropertyManager
 from qtpropertybrowser import QtCheckBoxFactory, QtEnumEditorFactory
 from qtpropertybrowser import QtIntEditFactory, QtSpinBoxFactory, QtSliderFactory, QtScrollBarFactory
@@ -26,7 +27,7 @@ from qtpropertybrowser import QtLineEditFactory
 from qtpropertybrowser import QtDoubleEditFactory, QtDoubleSpinBoxFactory  #, QtComplexEditFactory, QtArrayEditFactory
 from qtpropertybrowser import QtDateEditFactory, QtDateTimeEditFactory, QtTimeEditFactory
 from qtpropertybrowser import QtCursorEditorFactory, QtColorEditorFactory, QtFontEditorFactory
-from qtpropertybrowser import QtKeySequenceEditorFactory
+from qtpropertybrowser import QtCharEditorFactory, QtKeySequenceEditorFactory
 from qtpropertybrowser import PkAvg, Scale, Format, Domain, Attribute
 
 
@@ -129,18 +130,19 @@ if __name__ == "__main__":
         button_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
         # button_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
 
-        manager_map = {Manager.INT_SPIN: QtIntPropertyManager(),
+        manager_map = {Manager.INT_SPIN: QtIntPropertyManager(),  # todo: Does not support Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT
                        Manager.INT_EDIT: QtIntPropertyManager(),
                        Manager.INT_SLIDER: QtIntPropertyManager(),
                        Manager.INT_SCROLL: QtIntPropertyManager(),
                        Manager.BOOL: QtBoolPropertyManager(),
-                       Manager.DOUBLE_SPIN: QtDoublePropertyManager(),
+                       Manager.DOUBLE_SPIN: QtDoublePropertyManager(), # todo: Does not support Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT
                        Manager.DOUBLE_EDIT: QtDoublePropertyManager(),
                        Manager.STRING: QtStringPropertyManager(),
                        Manager.DATE: QtDatePropertyManager(),
                        Manager.TIME: QtTimePropertyManager(),
                        Manager.DATETIME: QtDateTimePropertyManager(),
                        Manager.KEY_SEQUENCE: QtKeySequencePropertyManager(),
+                       Manager.CHAR: QtCharPropertyManager(),
                        Manager.LOCALE: QtLocalePropertyManager(),
                        Manager.POINT: QtPointPropertyManager(),
                        Manager.POINTF: QtPointFPropertyManager(),
@@ -171,6 +173,7 @@ if __name__ == "__main__":
                        Factory.TIME: QtTimeEditFactory(),
                        Factory.DATETIME: QtDateTimeEditFactory(),
                        Factory.KEY_SEQUENCE: QtKeySequenceEditorFactory(),
+                       Factory.CHAR: QtCharEditorFactory(),
                        Factory.LOCALE: None,
                        Factory.POINT: None,
                        Factory.POINTF: None,
@@ -390,6 +393,34 @@ if __name__ == "__main__":
         tree_browser.setFactoryForManager(manager_map[Manager.DATETIME], factory_map[Factory.DATETIME])
         box_browser.setFactoryForManager(manager_map[Manager.DATETIME], factory_map[Factory.DATETIME])
         button_browser.setFactoryForManager(manager_map[Manager.DATETIME], factory_map[Factory.DATETIME])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # key sequence
+        value = QKeySequence(Qt.CTRL + Qt.Key_P)
+        manager_map[Manager.KEY_SEQUENCE].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.KEY_SEQUENCE].addProperty("key sequence")
+        property_.propertyManager().setValue(property_, value)
+        tree_browser.setFactoryForManager(manager_map[Manager.KEY_SEQUENCE], factory_map[Factory.KEY_SEQUENCE])
+        box_browser.setFactoryForManager(manager_map[Manager.KEY_SEQUENCE], factory_map[Factory.KEY_SEQUENCE])
+        button_browser.setFactoryForManager(manager_map[Manager.KEY_SEQUENCE], factory_map[Factory.KEY_SEQUENCE])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # char
+        value = 'a'
+        manager_map[Manager.CHAR].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.CHAR].addProperty("char")
+        property_.propertyManager().setValue(property_, value)
+        tree_browser.setFactoryForManager(manager_map[Manager.CHAR], factory_map[Factory.CHAR])
+        box_browser.setFactoryForManager(manager_map[Manager.CHAR], factory_map[Factory.CHAR])
+        button_browser.setFactoryForManager(manager_map[Manager.CHAR], factory_map[Factory.CHAR])
         browser_item = tree_browser.addProperty(property_)
         tree_browser.setExpanded(browser_item, False)
         browser_item = box_browser.addProperty(property_)
