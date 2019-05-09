@@ -43,6 +43,8 @@
 #include <QSet>
 #include <QGridLayout>
 #include <QLabel>
+#include <QComboBox>
+#include <QCheckBox>
 #include <QTimer>
 #include <QMap>
 #include <QToolButton>
@@ -59,12 +61,15 @@ class QtButtonPropertyBrowserPrivate
 public:
 
     void init(QWidget *parent);
+    void updateAttributes();
 
     void propertyInserted(QtBrowserItem *index, QtBrowserItem *afterIndex);
     void propertyRemoved(QtBrowserItem *index);
     void propertyChanged(QtBrowserItem *index);
     QWidget *createEditor(QtProperty *property, QWidget *parent) const
         { return q_ptr->createEditor(property, parent); }
+    QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, Attribute attribute) const
+    { return q_ptr->createAttributeEditor(property, parent,attribute); }
 
     void slotEditorDestroyed();
     void slotUpdate();
@@ -73,10 +78,17 @@ public:
     struct WidgetItem
     {
         WidgetItem() : widget(0), label(0), widgetLabel(0),
+                unit(0), pkAvg(0), format(0), minimum(0), maximum(0), check(0),
                 button(0), container(0), layout(0), /*line(0), */parent(0), expanded(false) { }
         QWidget *widget; // can be null
         QLabel *label; // main label with property name
         QLabel *widgetLabel; // label substitute showing the current value if there is no widget
+        QComboBox *unit;
+        QComboBox *pkAvg;
+        QComboBox *format;
+        QDoubleEdit *minimum;
+        QDoubleEdit *maximum;
+        QCheckBox *check;
         QToolButton *button; // expandable button for items with children
         QWidget *container; // container which is expanded when the button is clicked
         QGridLayout *layout; // layout in container
@@ -101,6 +113,7 @@ private:
     QGridLayout *m_mainLayout;
     QList<WidgetItem *> m_children;
     QList<WidgetItem *> m_recreateQueue;
+    QList<Attribute> m_attributes;
 };
 
 QToolButton *QtButtonPropertyBrowserPrivate::createButton(QWidget *parent) const
@@ -153,6 +166,11 @@ void QtButtonPropertyBrowserPrivate::init(QWidget *parent)
     QLayoutItem *item = new QSpacerItem(0, 0,
                 QSizePolicy::Fixed, QSizePolicy::Expanding);
     m_mainLayout->addItem(item, 0, 0);
+}
+
+void QtButtonPropertyBrowserPrivate::updateAttributes()
+{
+    return;
 }
 
 void QtButtonPropertyBrowserPrivate::slotEditorDestroyed()
@@ -215,7 +233,7 @@ void QtButtonPropertyBrowserPrivate::setExpanded(WidgetItem *item, bool expanded
 
     if (expanded) {
         insertRow(l, row + 1);
-        l->addWidget(item->container, row + 1, 0, 1, 2);
+        l->addWidget(item->container, row + 1, 0, 1, m_attributes.count() + 2);
         item->container->show();
     } else {
         l->removeWidget(item->container);
@@ -329,6 +347,38 @@ void QtButtonPropertyBrowserPrivate::propertyInserted(QtBrowserItem *index, QtBr
     else
         span = 2;
     layout->addWidget(newItem->label, row, 0, span, 1);
+    for (unsigned short ind = 0; ind < m_attributes.count(); ind++) {
+        switch (m_attributes.at(ind)) {
+        case Attribute::UNIT:
+            newItem->unit = (QComboBox*)createAttributeEditor(index->property(), parentWidget, Attribute::UNIT);
+            if (newItem->unit)
+                layout->addWidget(newItem->unit, row, ind+2, 1, 1);
+            break;
+        case Attribute::PKAVG:
+            newItem->pkAvg = (QComboBox*)createAttributeEditor(index->property(), parentWidget, Attribute::PKAVG);
+            if (newItem->pkAvg)
+                layout->addWidget(newItem->pkAvg, row, ind+2, 1, 1);
+            break;
+        case Attribute::FORMAT:
+            newItem->format = (QComboBox*)createAttributeEditor(index->property(), parentWidget, Attribute::FORMAT);
+            if (newItem->format)
+                layout->addWidget(newItem->format, row, ind+2, 1, 1);
+            break;
+        case Attribute::MINIMUM:
+            newItem->minimum = (QDoubleEdit*)createAttributeEditor(index->property(), parentWidget, Attribute::MINIMUM);
+            if (newItem->minimum)
+                layout->addWidget(newItem->minimum, row, ind+2, 1, 1);
+            break;
+        case Attribute::MAXIMUM:
+           newItem->maximum = (QDoubleEdit*)createAttributeEditor(index->property(), parentWidget, Attribute::MAXIMUM);
+            if (newItem->maximum)
+                layout->addWidget(newItem->maximum, row, ind+2, 1, 1);
+            break;
+        default:
+            break;
+        }
+    }
+
 
     m_itemToIndex[newItem] = index;
     m_indexToItem[index] = newItem;
@@ -496,6 +546,39 @@ void QtButtonPropertyBrowserPrivate::updateItem(WidgetItem *item)
         item->widget->setEnabled(property->isEnabled());
         item->widget->setToolTip(property->valueText());
     }
+    if (item->unit){
+        QFont font = item->unit->font();
+        font.setUnderline(false);
+        item->unit->setFont(font);
+        item->unit->setEnabled(property->isEnabled());
+    }
+    if (item->pkAvg){
+        QFont font = item->pkAvg->font();
+        font.setUnderline(false);
+        item->pkAvg->setFont(font);
+        item->pkAvg->setEnabled(property->isEnabled());
+    }
+    if (item->format){
+        QFont font = item->format->font();
+        font.setUnderline(false);
+        item->format->setFont(font);
+        item->format->setEnabled(property->isEnabled());
+    }
+    if (item->minimum){
+        QFont font = item->minimum->font();
+        font.setUnderline(false);
+        item->minimum->setFont(font);
+        item->minimum->setEnabled(property->isEnabled());
+    }
+    if (item->maximum){
+        QFont font = item->maximum->font();
+        font.setUnderline(false);
+        item->maximum->setFont(font);
+        item->maximum->setEnabled(property->isEnabled());
+    }
+    if (item->check){
+        item->check->setEnabled(property->isEnabled());
+    }
 }
 
 
@@ -621,6 +704,95 @@ bool QtButtonPropertyBrowser::isExpanded(QtBrowserItem *item) const
     if (itm)
         return itm->expanded;
     return false;
+}
+
+/*!
+ \property QtButtonPropertyBrowser::attributes
+ \brief optional attribute column setting.
+
+ Optional setting to include an attribute column
+
+ \sa setAttribute1()
+ */
+
+QList<Attribute> QtButtonPropertyBrowser::attributes() const
+{
+    return d_ptr->m_attributes;
+}
+
+void QtButtonPropertyBrowser::setAttributes(const QList<Attribute> &attributeList)
+{
+    if (d_ptr->m_attributes == attributeList)
+        return;
+
+    d_ptr->m_attributes = attributeList;
+    d_ptr->updateAttributes();
+
+    QMapIterator<QtButtonPropertyBrowserPrivate::WidgetItem *, QtBrowserItem *> it(d_ptr->m_itemToIndex);
+    while (it.hasNext()) {
+        QtProperty *property = it.next().value()->property();
+        d_ptr->updateItem(it.key());
+    }
+}
+
+/*!
+ \property QtButtonPropertyBrowser::attribute1
+ \brief optional attribute column setting.
+
+ Optional setting to include an attribute column
+
+ \sa setAttribute1()
+ */
+
+Attribute QtButtonPropertyBrowser::attribute1() const
+{
+    return d_ptr->m_attributes[0];
+}
+void QtButtonPropertyBrowser::setAttribute1(Attribute attribute)
+{
+    QList<Attribute> &attributeList = d_ptr->m_attributes;
+    attributeList[0] = attribute;
+    setAttributes(attributeList);
+}
+
+/*!
+ \property QtButtonPropertyBrowser::attribute2
+ \brief optional attribute column setting.
+
+ Optional setting to include an attribute column
+
+ \sa setAttribute2()
+ */
+void QtButtonPropertyBrowser::setAttribute2(Attribute attribute)
+{
+    QList<Attribute> &attributeList = d_ptr->m_attributes;
+    attributeList[1] = attribute;
+    setAttributes(attributeList);
+}
+
+Attribute QtButtonPropertyBrowser::attribute2() const
+{
+    return d_ptr->m_attributes[1];
+}
+
+/*!
+ \property QtButtonPropertyBrowser::attribute3
+ \brief optional attribute column setting.
+
+ Optional setting to include an attribute column
+
+ \sa setAttribute3()
+ */
+
+Attribute QtButtonPropertyBrowser::attribute3() const
+{
+    return d_ptr->m_attributes[2];
+}
+void QtButtonPropertyBrowser::setAttribute3(Attribute attribute)
+{
+    QList<Attribute> &attributeList = d_ptr->m_attributes;
+    attributeList[2] = attribute;
+    setAttributes(attributeList);
 }
 
 #if QT_VERSION >= 0x040400

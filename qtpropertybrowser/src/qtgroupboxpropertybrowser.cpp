@@ -82,7 +82,6 @@ public:
         QWidget *widget; // can be null
         QLabel *label;
         QLabel *widgetLabel;
-        QLabel *widgetAttribute;
         QComboBox *unit;
         QComboBox *pkAvg;
         QComboBox *format;
