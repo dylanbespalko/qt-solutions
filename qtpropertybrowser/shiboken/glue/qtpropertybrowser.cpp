@@ -109,6 +109,21 @@ static void setFactoryForManager_glue(QtAbstractPropertyBrowser* self, PyObject*
         self->setFactoryForManager(cppManager, cppFactory);
         return;
     }
+    pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTFILEPROPERTYMANAGER_IDX]), pyManager);
+    if (pythonToCpp) {
+        QtFilePropertyManager* cppManager;
+        QtAbstractEditorFactory< QtFilePropertyManager >* cppFactory;
+        pythonToCpp( pyManager, &cppManager);
+        if (pyFactory == Py_None)
+            cppFactory = 0;
+        shiboType = reinterpret_cast<SbkObjectType*>(pyFactory->ob_type);
+        if (Shiboken::ObjectType::hasCast(shiboType))
+            cppFactory = reinterpret_cast<QtAbstractEditorFactory< QtFilePropertyManager >*>(Shiboken::ObjectType::cast(shiboType, reinterpret_cast<SbkObject*>(pyFactory), Shiboken::SbkType<QtAbstractEditorFactory< QtFilePropertyManager >>()));
+        cppFactory = (QtAbstractEditorFactory< QtFilePropertyManager >*) Shiboken::Object::cppPointer(reinterpret_cast<SbkObject*>(pyFactory), Shiboken::SbkType<QtAbstractEditorFactory< QtFilePropertyManager >>());
+        gil.release();
+        self->setFactoryForManager(cppManager, cppFactory);
+        return;
+    }
     pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTKEYSEQUENCEPROPERTYMANAGER_IDX]), pyManager);
     if (pythonToCpp) {
         QtKeySequencePropertyManager* cppManager;

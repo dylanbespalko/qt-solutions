@@ -181,7 +181,6 @@ public:
     void setScale(Scale);
     void setFormat(Format);
     void setReadOnly(bool readOnly);
-    void update();
     
 Q_SIGNALS:
     void valueChanged(double val);

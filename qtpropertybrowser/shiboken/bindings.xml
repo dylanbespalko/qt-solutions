@@ -42,6 +42,7 @@
     <object-type name="QtBoolPropertyManager" default-superclass="QtAbstractPropertyManager"/>
     <object-type name="QtDoublePropertyManager"/>	
     <object-type name="QtStringPropertyManager"/>
+    <object-type name="QtFilePropertyManager"/>
     <object-type name="QtDatePropertyManager"/>
     <object-type name="QtTimePropertyManager"/>
     <object-type name="QtDateTimePropertyManager"/>
@@ -61,7 +62,6 @@
     <object-type name="QtColorPropertyManager"/>
     <object-type name="QtCursorPropertyManager"/>
     <object-type name="QtVariantPropertyManager"/>
-    <!--    <object-type name="QtFilePathManager"/> -->
     <!--    <object-type name="QtComplexPropertyManager"/> -->
     <!--    <object-type name="QtComplexArrayPropertyManager"/> -->
     
@@ -76,6 +76,7 @@
     <object-type name="QtDoubleSpinBoxFactory"/>
     <object-type name="QtDoubleEditFactory"/>
     <object-type name="QtLineEditFactory"/>
+    <object-type name="QtFileEditorFactory"/>
     <object-type name="QtDateEditFactory"/>
     <object-type name="QtTimeEditFactory"/>
     <object-type name="QtDateTimeEditFactory"/>
@@ -86,7 +87,6 @@
     <object-type name="QtColorEditorFactory"/>
     <object-type name="QtFontEditorFactory"/>
     <object-type name="QtVariantEditorFactory"/>
-    <!--    <object-type name="QtFileEditorFactory"/> -->
     <!--    <object-type name="QtComplexEditFactory"/> -->
     <!--    <object-type name="QtArrayEditFactory"/> -->
     <!--    <object-type name="QtEquationEditFactory"/> -->

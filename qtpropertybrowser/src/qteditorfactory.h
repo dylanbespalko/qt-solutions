@@ -550,6 +550,32 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
+class QtFileEditorFactoryPrivate;
+
+class QT_QTPROPERTYBROWSER_EXPORT QtFileEditorFactory: public QtAbstractEditorFactory<QtFilePropertyManager>
+{
+    Q_OBJECT
+public:
+    QtFileEditorFactory(QObject *parent = 0);
+    ~QtFileEditorFactory();
+protected:
+    void connectPropertyManager(QtFilePropertyManager *manager);
+    QWidget *createEditor(QtFilePropertyManager *manager, QtProperty *property, QWidget *parent);
+    QWidget *createAttributeEditor(QtFilePropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    void disconnectPropertyManager(QtFilePropertyManager *manager);
+private:
+    QtFileEditorFactoryPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QtFileEditorFactory)
+    Q_DISABLE_COPY(QtFileEditorFactory)
+    Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QString &))
+    Q_PRIVATE_SLOT(d_func(), void slotFilterChanged(QtProperty *, const QString &))
+    Q_PRIVATE_SLOT(d_func(), void slotReadOnlyChanged(QtProperty *, bool))
+    Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotSetValue(const QString &))
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
+};
+
 #if QT_VERSION >= 0x040400
 QT_END_NAMESPACE
 #endif

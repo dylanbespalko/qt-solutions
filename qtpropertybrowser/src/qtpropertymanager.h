@@ -44,6 +44,7 @@
 
 #include "qtpropertybrowser.h"
 #include <QLineEdit>
+#include <QFileDialog>
 #include "qcomplexedit.h"
 
 #if QT_VERSION >= 0x040400
@@ -817,6 +818,39 @@ private:
     QtCursorPropertyManagerPrivate *d_ptr;
     Q_DECLARE_PRIVATE(QtCursorPropertyManager)
     Q_DISABLE_COPY(QtCursorPropertyManager)
+};
+
+class QtFilePropertyManagerPrivate;
+
+class QT_QTPROPERTYBROWSER_EXPORT QtFilePropertyManager : public QtAbstractPropertyManager
+{
+    Q_OBJECT
+public:
+    QtFilePropertyManager(QObject *parent = 0);
+    ~QtFilePropertyManager();
+
+    QString value(const QtProperty *property) const;
+    QString filter(const QtProperty *property) const;
+    QFileDialog::FileMode fileMode(const QtProperty *property) const;
+    bool isReadOnly(const QtProperty *property) const;
+public Q_SLOTS:
+    void setValue(QtProperty *, const QString &);
+    void setFilter(QtProperty *, const QString &);
+    void setFileMode(QtProperty *, const QFileDialog::FileMode mode);
+    void setReadOnly(QtProperty *property, bool readOnly);
+Q_SIGNALS:
+    void valueChanged(QtProperty *, const QString &);
+    void filterChanged(QtProperty *, const QString &);
+    void readOnlyChanged(QtProperty *property, bool readOnly);
+protected:
+    QString valueText(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
+    virtual void initializeProperty(QtProperty *property);
+    virtual void uninitializeProperty(QtProperty *property);
+private:
+    QtFilePropertyManagerPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QtFilePropertyManager)
+    Q_DISABLE_COPY(QtFilePropertyManager)
 };
 
 #if QT_VERSION >= 0x040400

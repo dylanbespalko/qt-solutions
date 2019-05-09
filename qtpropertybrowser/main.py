@@ -8,26 +8,25 @@ from PySide2.QtWidgets import QSizePolicy
 from PySide2.QtWidgets import QApplication, QDialog, QLabel, QGridLayout, QScrollArea
 
 from qtpropertybrowser import QtTreePropertyBrowser, QtGroupBoxPropertyBrowser, QtButtonPropertyBrowser
-from qtpropertybrowser import QtBoolPropertyManager, QtIntPropertyManager, QtDoublePropertyManager  #, QtComplexPropertyManager
-from qtpropertybrowser import QtStringPropertyManager, QtEnumPropertyManager, QtFlagPropertyManager
-#from qtpropertybrowser import QtFilePathManager
-#from qtpropertybrowser import QtComplexArrayPropertyManager
-from qtpropertybrowser import QtDatePropertyManager, QtDateTimePropertyManager, QtTimePropertyManager
+from qtpropertybrowser import QtIntPropertyManager, QtBoolPropertyManager
+from qtpropertybrowser import QtDoublePropertyManager  #, QtComplexPropertyManager, QtComplexArrayPropertyManager
+from qtpropertybrowser import QtStringPropertyManager, QtFilePropertyManager
+from qtpropertybrowser import QtDatePropertyManager, QtTimePropertyManager, QtDateTimePropertyManager
+from qtpropertybrowser import QtCharPropertyManager, QtKeySequencePropertyManager
 from qtpropertybrowser import QtLocalePropertyManager
 from qtpropertybrowser import QtPointPropertyManager, QtPointFPropertyManager
 from qtpropertybrowser import QtSizePropertyManager, QtSizeFPropertyManager
 from qtpropertybrowser import QtRectPropertyManager, QtRectFPropertyManager
-from qtpropertybrowser import QtCharPropertyManager, QtKeySequencePropertyManager
-from qtpropertybrowser import QtCursorPropertyManager, QtColorPropertyManager, QtFontPropertyManager
+from qtpropertybrowser import QtEnumPropertyManager, QtFlagPropertyManager
 from qtpropertybrowser import QtSizePolicyPropertyManager
-from qtpropertybrowser import QtCheckBoxFactory, QtEnumEditorFactory
-from qtpropertybrowser import QtIntEditFactory, QtSpinBoxFactory, QtSliderFactory, QtScrollBarFactory
-from qtpropertybrowser import QtLineEditFactory
-#from qtpropertybrowser import QtFileEditorFactory
+from qtpropertybrowser import QtFontPropertyManager, QtColorPropertyManager, QtCursorPropertyManager
+from qtpropertybrowser import QtIntEditFactory, QtSpinBoxFactory, QtSliderFactory, QtScrollBarFactory, QtCheckBoxFactory
 from qtpropertybrowser import QtDoubleEditFactory, QtDoubleSpinBoxFactory  #, QtComplexEditFactory, QtArrayEditFactory
-from qtpropertybrowser import QtDateEditFactory, QtDateTimeEditFactory, QtTimeEditFactory
-from qtpropertybrowser import QtCursorEditorFactory, QtColorEditorFactory, QtFontEditorFactory
-from qtpropertybrowser import QtCharEditorFactory, QtKeySequenceEditorFactory
+from qtpropertybrowser import QtLineEditFactory, QtFileEditorFactory
+from qtpropertybrowser import QtDateEditFactory, QtTimeEditFactory, QtDateTimeEditFactory
+from qtpropertybrowser import QtKeySequenceEditorFactory, QtCharEditorFactory
+from qtpropertybrowser import QtEnumEditorFactory
+from qtpropertybrowser import QtFontEditorFactory, QtColorEditorFactory, QtCursorEditorFactory
 from qtpropertybrowser import PkAvg, Scale, Format, Domain, Attribute
 
 
@@ -41,6 +40,7 @@ class Manager(Enum):
     DOUBLE_SPIN = auto()
     DOUBLE_EDIT = auto()
     STRING = auto()
+    FILE = auto()
     DATE = auto()
     TIME = auto()
     DATETIME = auto()
@@ -70,6 +70,7 @@ class Factory(Enum):
     DOUBLE_SPIN = auto()
     DOUBLE_EDIT = auto()
     STRING = auto()
+    FILE = auto()
     DATE = auto()
     TIME = auto()
     DATETIME = auto()
@@ -138,6 +139,7 @@ if __name__ == "__main__":
                        Manager.DOUBLE_SPIN: QtDoublePropertyManager(), # todo: Does not support Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT
                        Manager.DOUBLE_EDIT: QtDoublePropertyManager(),
                        Manager.STRING: QtStringPropertyManager(),
+                       Manager.FILE: QtFilePropertyManager(),
                        Manager.DATE: QtDatePropertyManager(),
                        Manager.TIME: QtTimePropertyManager(),
                        Manager.DATETIME: QtDateTimePropertyManager(),
@@ -169,6 +171,7 @@ if __name__ == "__main__":
                        Factory.DOUBLE_SPIN: QtDoubleSpinBoxFactory(),
                        Factory.DOUBLE_EDIT: QtDoubleEditFactory(),
                        Factory.STRING: QtLineEditFactory(),
+                       Factory.FILE: QtFileEditorFactory(),
                        Factory.DATE: QtDateEditFactory(),
                        Factory.TIME: QtTimeEditFactory(),
                        Factory.DATETIME: QtDateTimeEditFactory(),
@@ -354,6 +357,23 @@ if __name__ == "__main__":
         tree_browser.setFactoryForManager(manager_map[Manager.STRING], factory_map[Factory.STRING])
         box_browser.setFactoryForManager(manager_map[Manager.STRING], factory_map[Factory.STRING])
         button_browser.setFactoryForManager(manager_map[Manager.STRING], factory_map[Factory.STRING])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # file
+        value = open("./file.txt", mode='w')
+        value.close()
+        manager_map[Manager.FILE].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.FILE].addProperty("file")
+        property_.propertyManager().setReadOnly(property_, False)
+        property_.setEnabled(True)
+        property_.propertyManager().setValue(property_, value.name)
+        tree_browser.setFactoryForManager(manager_map[Manager.FILE], factory_map[Factory.FILE])
+        box_browser.setFactoryForManager(manager_map[Manager.FILE], factory_map[Factory.FILE])
+        button_browser.setFactoryForManager(manager_map[Manager.FILE], factory_map[Factory.FILE])
         browser_item = tree_browser.addProperty(property_)
         tree_browser.setExpanded(browser_item, False)
         browser_item = box_browser.addProperty(property_)

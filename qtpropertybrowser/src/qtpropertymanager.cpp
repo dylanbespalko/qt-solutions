@@ -56,6 +56,7 @@
 #include <QLabel>
 #include <QCheckBox>
 #include <QLineEdit>
+#include <QFileDialog>
 
 #include <limits.h>
 #include <float.h>
@@ -7345,6 +7346,235 @@ void QtCursorPropertyManager::initializeProperty(QtProperty *property)
     \reimp
 */
 void QtCursorPropertyManager::uninitializeProperty(QtProperty *property)
+{
+    d_ptr->m_values.remove(property);
+}
+
+class QtFilePropertyManagerPrivate
+{
+    QtFilePropertyManager *q_ptr;
+    Q_DECLARE_PUBLIC(QtFilePropertyManager)
+public:
+    struct Data {
+        Data() : filter("All Files (*)"), fileMode(QFileDialog::AnyFile) {}
+        QString val;
+        QString filter;
+        QFileDialog::FileMode fileMode;
+        bool readOnly;
+    };
+    typedef QMap<const QtProperty *, Data> PropertyValueMap;
+    PropertyValueMap m_values;
+};
+
+/*!
+ \class QtFilePropertyManager
+
+ \brief The QtFilePropertyManager provides and manages file path QString properties.
+
+ A QString property Value has a current file path which can be
+ retrieved using the value() function, and set using the setValue()
+ slot. In addition, a QtString property Filter stores the file open/save dialog
+ filter information.
+
+ \sa QtAbstractPropertyManager
+ */
+
+/*!
+ \fn void QtFilePropertyManager::valueChanged(QtProperty *property, const QString &value)
+
+ This signal is emitted whenever a property created by this manager
+ changes its value, passing a pointer to the \a property and the new
+ \a value as parameters.
+
+ \sa setValue()
+ */
+
+/*!
+ Creates a manager with the given \a parent.
+ */
+QtFilePropertyManager::QtFilePropertyManager(QObject *parent)
+: QtAbstractPropertyManager(parent)
+{
+    d_ptr = new QtFilePropertyManagerPrivate;
+    d_ptr->q_ptr = this;
+}
+
+/*!
+ Destroys this manager, and all the properties it has created.
+ */
+QtFilePropertyManager::~QtFilePropertyManager()
+{
+    clear();
+    delete d_ptr;
+}
+
+/*!
+ Returns the given \a property's value.
+
+ If the given \a property is not managed by this manager, this
+ function returns an empty QString.
+
+ \sa setValue()
+ */
+QString QtFilePropertyManager::value(const QtProperty *property) const
+{
+    return getValue<QString>(d_ptr->m_values, property);
+}
+
+/*!
+ Returns the given \a property's filter.
+
+ If the given \a property is not managed by this manager, this
+ function returns an empty QString.
+
+ \sa setValue()
+ */
+QString QtFilePropertyManager::filter(const QtProperty *property) const
+{
+    return getData<QString>(d_ptr->m_values, &QtFilePropertyManagerPrivate::Data::filter, property, "");
+}
+
+/*!
+ Returns the given \a property's fileMode.
+
+ \sa setFileMode()
+ */
+QFileDialog::FileMode QtFilePropertyManager::fileMode(const QtProperty *property) const
+{
+    return getData<QFileDialog::FileMode>(d_ptr->m_values, &QtFilePropertyManagerPrivate::Data::fileMode, property, QFileDialog::AnyFile);
+}
+
+/*!
+ Returns read-only status of the property.
+
+ When property is read-only it's value can be selected and copied from editor but not modified.
+
+ \sa QtQtFilePropertyManager::setReadOnly
+ */
+bool QtFilePropertyManager::isReadOnly(const QtProperty *property) const
+{
+    return getData<bool>(d_ptr->m_values, &QtFilePropertyManagerPrivate::Data::readOnly, property, false);
+}
+
+/*!
+ \fn void QtQtFilePropertyManager::setValue(QtProperty *property, const QString &value)
+
+ Sets the value of the given \a property to \a value.
+
+ \sa value(), valueChanged()
+ */
+void QtFilePropertyManager::setValue(QtProperty *property, const QString &value)
+{
+    const QtFilePropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+    QtFilePropertyManagerPrivate::Data data = it.value();
+
+    if (data.val == value)
+        return;
+
+    data.val = value;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit valueChanged(property, value);
+}
+
+/*!
+ \fn void QtQtFilePropertyManager::setFilter(QtProperty *property, const QString &filter)
+
+ Sets the filter of the given \a property to \a filter.
+
+ \sa filter()
+ */
+void QtFilePropertyManager::setFilter(QtProperty *property, const QString &filter)
+{
+    const QtFilePropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+    QtFilePropertyManagerPrivate::Data data = it.value();
+
+    if (data.filter == filter)
+        return;
+
+    data.filter = filter;
+    it.value() = data;
+
+    emit filterChanged(property, filter);
+}
+
+/*!
+ \fn void QtQtFilePropertyManager::setFileMode(QtProperty *property, const QFileDialog::FileMode mode)
+
+ Sets the filter of the given \a property to \a filter.
+
+ \sa filter()
+ */
+void QtFilePropertyManager::setFileMode(QtProperty *property, const QFileDialog::FileMode mode)
+{
+    const QtFilePropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+    QtFilePropertyManagerPrivate::Data data = it.value();
+
+    if (data.fileMode == mode)
+        return;
+
+    data.fileMode = mode;
+    it.value() = data;
+}
+
+/*!
+ Sets read-only status of the property.
+
+ \sa QtFilePropertyManager::setReadOnly
+ */
+void QtFilePropertyManager::setReadOnly(QtProperty *property, bool readOnly)
+{
+    const QtFilePropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtFilePropertyManagerPrivate::Data data = it.value();
+
+    if (data.readOnly == readOnly)
+        return;
+
+    data.readOnly = readOnly;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit readOnlyChanged(property, data.readOnly);
+}
+
+/*!
+ \reimp
+ */
+QString QtFilePropertyManager::valueText(const QtProperty *property) const
+{
+    return value(property);
+}
+
+/*!
+ \reimp
+ */
+QIcon QtFilePropertyManager::checkIcon(const QtProperty *property) const
+{
+    return property->check() ? drawCheckBox(true) : drawCheckBox(false);
+}
+
+/*!
+ \reimp
+ */
+void QtFilePropertyManager::initializeProperty(QtProperty *property)
+{
+    d_ptr->m_values[property] = QtFilePropertyManagerPrivate::Data();
+}
+
+/*!
+ \reimp
+ */
+void QtFilePropertyManager::uninitializeProperty(QtProperty *property)
 {
     d_ptr->m_values.remove(property);
 }

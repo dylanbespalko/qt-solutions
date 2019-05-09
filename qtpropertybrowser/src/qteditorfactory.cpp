@@ -4594,6 +4594,383 @@ void QtFontEditorFactory::disconnectPropertyManager(QtFontPropertyManager *manag
     disconnect(manager, SIGNAL(valueChanged(QtProperty*,QFont)), this, SLOT(slotPropertyChanged(QtProperty*,QFont)));
 }
 
+// FileEditWidget
+class FileEditWidget : public QWidget {
+    Q_OBJECT
+
+public:
+    FileEditWidget(QWidget *parent);
+    ~FileEditWidget();
+
+    bool eventFilter(QObject *obj, QEvent *ev);
+
+    bool fileExists(QString path) const;
+    bool validExtension(QString path) const;
+
+    public Q_SLOTS:
+    void setValue(const QString &value);
+    void setFilter(const QString &filter);
+    void setFileMode(const QFileDialog::FileMode mode);
+    void setReadOnly(const bool readOnly);
+
+Q_SIGNALS:
+    void valueChanged(const QString &value);
+    void destroyed(QObject *obj);
+protected:
+    void paintEvent(QPaintEvent *);
+
+private Q_SLOTS:
+    void slotEditFinished();
+    void slotButtonClicked();
+
+private:
+    QString m_fileName;
+    QString m_filter;
+    QFileDialog::FileMode m_fileMode;
+    bool m_readOnly;
+    QLineEdit *m_edit;
+    QToolButton *m_button;
+};
+
+FileEditWidget::FileEditWidget(QWidget *parent) :
+QWidget(parent),
+m_edit(new QLineEdit),
+m_button(new QToolButton)
+{
+    m_fileName = QString();
+    m_filter = QString();
+    m_fileMode = QFileDialog::AnyFile;
+    m_readOnly = false;
+
+    QHBoxLayout *lt = new QHBoxLayout(this);
+    setupTreeViewEditorMargin(lt);
+    lt->setSpacing(0);
+    lt->addWidget(m_edit);
+    lt->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Ignored));
+
+    m_button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Ignored);
+    m_button->setFixedWidth(20);
+    setFocusProxy(m_button);
+    setFocusPolicy(m_button->focusPolicy());
+    m_button->setText(tr("..."));
+    m_button->installEventFilter(this);
+
+    connect(m_button, SIGNAL(clicked()), this, SLOT(slotButtonClicked()));
+    connect(m_edit, SIGNAL(editingFinished()), this, SLOT(slotEditFinished()));
+
+    lt->addWidget(m_button);
+    m_edit->setText(m_fileName);
+}
+
+FileEditWidget::~FileEditWidget()
+{
+    emit destroyed(this);
+}
+
+bool FileEditWidget::fileExists(QString path) const{
+    QFileInfo checkFile(path);
+    // check if file exists and if yes: Is it really a file and no directory?
+    if (checkFile.exists() && m_fileMode != QFileDialog::Directory && checkFile.isFile())
+        return true;
+    else if (checkFile.exists() && m_fileMode == QFileDialog::Directory && checkFile.isDir())
+        return true;
+    else
+        return false;
+}
+
+bool FileEditWidget::validExtension(QString path) const{
+    QFileInfo fileInfo = QFileInfo(path);
+    QString ext = fileInfo.completeSuffix();
+    QRegExp regExp = QRegExp("\\*(?:[\\.\\w\\d]+)?");
+    QString match;
+    int pos = 0;
+
+    if (m_fileMode == QFileDialog::Directory){
+        if (ext.isEmpty())
+            return true;
+        else
+            return false;
+    }
+    else{
+        if (ext.isEmpty())
+            return false;
+        while ((pos = regExp.indexIn(m_filter, pos)) != -1) {
+            match = regExp.cap(0);
+            pos += regExp.matchedLength();
+            if (match == QString("*."+ext) || match == "*")
+                return true;
+        }
+    }
+    return false;
+
+}
+
+void FileEditWidget::setValue(const QString &fileName)
+{
+    if (fileExists(fileName) && validExtension(fileName) && fileName != m_fileName) {
+        m_fileName = fileName;
+        m_edit->setText(fileName);
+        emit valueChanged(fileName);
+    }
+}
+void FileEditWidget::setFilter(const QString &filter)
+{
+    if (m_filter != filter) {
+        m_filter = filter;
+    }
+}
+
+void FileEditWidget::setFileMode(const QFileDialog::FileMode mode)
+{
+    if (m_fileMode != mode) {
+        m_fileMode = mode;
+    }
+}
+
+void FileEditWidget::setReadOnly(const bool readOnly)
+{
+    if (m_readOnly != readOnly) {
+        m_edit->setReadOnly(readOnly);
+    }
+}
+
+void FileEditWidget::slotEditFinished()
+{
+    QString fileName = m_edit->text();
+    setValue(fileName);
+}
+
+void FileEditWidget::slotButtonClicked()
+{
+//    QString fileName = QFileDialog::getOpenFileName(this,
+//                                                    tr("QFileDialog::getOpenFileName()"),
+//                                                    m_fileName,
+//                                                    m_filter);
+    QStringList fileNames;
+    QFileDialog dialog(this);
+    if (m_fileMode != QFileDialog::Directory)
+        dialog.setNameFilter(m_filter);
+    dialog.setFileMode(m_fileMode);
+    dialog.setViewMode(QFileDialog::Detail);
+
+
+    if (dialog.exec())
+        fileNames = dialog.selectedFiles();
+
+    if ((!fileNames.isEmpty()) && (fileNames.at(0) != m_fileName)){
+        setValue(fileNames.at(0));
+    }
+}
+
+bool FileEditWidget::eventFilter(QObject *obj, QEvent *ev)
+{
+    if (obj == m_button) {
+        switch (ev->type()) {
+            case QEvent::KeyPress:
+            case QEvent::KeyRelease: { // Prevent the QToolButton from handling Enter/Escape meant control the delegate
+                switch (static_cast<const QKeyEvent*>(ev)->key()) {
+                    case Qt::Key_Escape:
+                    case Qt::Key_Enter:
+                    case Qt::Key_Return:
+                        ev->ignore();
+                        return true;
+                    default:
+                        break;
+                }
+            }
+                break;
+            default:
+                break;
+        }
+    }
+    return QWidget::eventFilter(obj, ev);
+}
+
+void FileEditWidget::paintEvent(QPaintEvent *)
+{
+    QStyleOption opt;
+    opt.init(this);
+    QPainter p(this);
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
+// QtFileEditorFactoryPrivate
+
+class QtFileEditorFactoryPrivate : public EditorFactoryPrivate<FileEditWidget>
+{
+    QtFileEditorFactory *q_ptr;
+    Q_DECLARE_PUBLIC(QtFileEditorFactory)
+public:
+    void slotPropertyChanged(QtProperty *property, const QString &value);
+    void slotSetValue(const QString &value);
+    void slotFilterChanged(QtProperty *property, const QString &value);
+    void slotReadOnlyChanged(QtProperty *property, const bool value);
+    void slotSetCheck(bool check);
+};
+
+void QtFileEditorFactoryPrivate::slotPropertyChanged(QtProperty *property, const QString &value)
+{
+    const PropertyToEditorListMap::iterator it = m_createdEditors.find(property);
+    if (it == m_createdEditors.end())
+        return;
+    QListIterator<FileEditWidget *> itEditor(it.value());
+
+    while (itEditor.hasNext())
+        itEditor.next()->setValue(value);
+}
+
+void QtFileEditorFactoryPrivate::slotSetValue(const QString &value)
+{
+    QObject *object = q_ptr->sender();
+    const EditorToPropertyMap::ConstIterator ecend = m_editorToProperty.constEnd();
+    for (EditorToPropertyMap::ConstIterator itEditor = m_editorToProperty.constBegin(); itEditor != ecend; ++itEditor)
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            QtFilePropertyManager *manager = q_ptr->propertyManager(property);
+            if (!manager)
+                return;
+            manager->setValue(property, value);
+            return;
+        }
+}
+
+void QtFileEditorFactoryPrivate::slotFilterChanged(QtProperty *property, const QString &value)
+{
+    const PropertyToEditorListMap::iterator it = m_createdEditors.find(property);
+    if (it == m_createdEditors.end())
+        return;
+    QListIterator<FileEditWidget *> itEditor(it.value());
+
+    while (itEditor.hasNext())
+        itEditor.next()->setValue(value);
+}
+
+void QtFileEditorFactoryPrivate::slotReadOnlyChanged( QtProperty *property, bool readOnly)
+{
+    if (!m_createdEditors.contains(property))
+        return;
+
+    QtFilePropertyManager *manager = q_ptr->propertyManager(property);
+    if (!manager)
+        return;
+
+    QListIterator<FileEditWidget *> itEditor(m_createdEditors[property]);
+    while (itEditor.hasNext()) {
+        FileEditWidget *editor = itEditor.next();
+        editor->blockSignals(true);
+        editor->setReadOnly(readOnly);
+        editor->blockSignals(false);
+    }
+}
+
+void QtFileEditorFactoryPrivate::slotSetCheck(bool check)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
+    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            property->setCheck(check);
+            return;
+        }
+    }
+}
+
+/*!
+ \class QtFileEditorFactory
+
+ \brief The QtFileEditorFactory class provides file editor selection for
+ properties created by QtFilePropertyManager objects.
+
+ \sa QtAbstractEditorFactory, QtFilePropertyManager
+ */
+
+/*!
+ Creates a factory with the given \a parent.
+ */
+QtFileEditorFactory::QtFileEditorFactory(QObject *parent) :
+QtAbstractEditorFactory<QtFilePropertyManager>(parent),
+d_ptr(new QtFileEditorFactoryPrivate())
+{
+    d_ptr->q_ptr = this;
+}
+
+/*!
+ Destroys this factory, and all the widgets it has created.
+ */
+QtFileEditorFactory::~QtFileEditorFactory()
+{
+    qDeleteAll(d_ptr->m_editorToProperty.keys());
+    qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
+    delete d_ptr;
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+void QtFileEditorFactory::connectPropertyManager(QtFilePropertyManager *manager)
+{
+    connect(manager, SIGNAL(valueChanged(QtProperty *,const QString &)),
+            this, SLOT(slotPropertyChanged(QtProperty *,const QString &)));
+    connect(manager, SIGNAL(filterChanged(QtProperty *,const QString &)),
+            this, SLOT(slotFilterChanged(QtProperty *,const QString &)));
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+QWidget *QtFileEditorFactory::createEditor(QtFilePropertyManager *manager, QtProperty *property, QWidget *parent)
+{
+    FileEditWidget *editor = d_ptr->createEditor(property, parent);
+    editor->setFilter(manager->filter(property));
+    editor->setFileMode(manager->fileMode(property));
+    editor->setValue(manager->value(property));
+    editor->setReadOnly(manager->isReadOnly(property));
+    connect(editor, SIGNAL(valueChanged(QString)), this, SLOT(slotSetValue(QString)));
+    connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotEditorDestroyed(QObject *)));
+    return editor;
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+QWidget *QtFileEditorFactory::createAttributeEditor(QtFilePropertyManager *manager, QtProperty *property,
+                                                    QWidget *parent, Attribute attribute)
+{
+    if (attribute == Attribute::CHECK)
+    {
+        QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
+
+        editor->setChecked(property->check());
+        editor->setTextVisible(false);
+
+        connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
+        return editor;
+    }
+    return NULL;
+
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+void QtFileEditorFactory::disconnectPropertyManager(QtFilePropertyManager *manager)
+{
+    disconnect(manager, SIGNAL(valueChanged(QtProperty *,const QString &)),
+            this, SLOT(slotPropertyChanged(QtProperty *,const QString &)));
+    disconnect(manager, SIGNAL(filterChanged(QtProperty *,const QString &)),
+            this, SLOT(slotFilterChanged(QtProperty *,const QString &)));
+}
+
 #if QT_VERSION >= 0x040400
 QT_END_NAMESPACE
 #endif

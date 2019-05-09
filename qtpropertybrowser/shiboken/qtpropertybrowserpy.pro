@@ -21,6 +21,7 @@ HEADERS += \
     qtpropertybrowser/qtboolpropertymanager_wrapper.h \
     qtpropertybrowser/qtdoublepropertymanager_wrapper.h \
     qtpropertybrowser/qtstringpropertymanager_wrapper.h \
+    qtpropertybrowser/qtfilepropertymanager_wrapper.h \
     qtpropertybrowser/qtdatepropertymanager_wrapper.h \
     qtpropertybrowser/qttimepropertymanager_wrapper.h \
     qtpropertybrowser/qtdatetimepropertymanager_wrapper.h \
@@ -41,7 +42,6 @@ HEADERS += \
     qtpropertybrowser/qtcursorpropertymanager_wrapper.h \
     qtpropertybrowser/qtcursorpropertymanager_wrapper.h \
     qtpropertybrowser/qtvariantpropertymanager_wrapper.h \
-    #qtpropertybrowser/qtfilepathmanager_wrapper.h \
     #qtpropertybrowser/qtcomplexpropertymanager_wrapper.h \
     #qtpropertybrowser/qtcomplexarraypropertymanager_wrapper.h \
     \
@@ -54,6 +54,7 @@ HEADERS += \
     qtpropertybrowser/qtdoublespinboxfactory_wrapper.h \
     qtpropertybrowser/qtdoubleeditfactory_wrapper.h \
     qtpropertybrowser/qtlineeditfactory_wrapper.h \
+    qtpropertybrowser/qtfileeditorfactory_wrapper.h \
     qtpropertybrowser/qtdateeditfactory_wrapper.h \
     qtpropertybrowser/qttimeeditfactory_wrapper.h \
     qtpropertybrowser/qtdatetimeeditfactory_wrapper.h \
@@ -65,7 +66,6 @@ HEADERS += \
     qtpropertybrowser/qtvarianteditorfactory_wrapper.h \
     #qtpropertybrowser/qtarrayeditfactory_wrapper.h \
     #qtpropertybrowser/qtequationeditfactory_wrapper.h \
-    #qtpropertybrowser/qtfileeditorfactory_wrapper.h \
     \
     qtpropertybrowser/qtabstractpropertybrowser_wrapper.h \
     qtpropertybrowser/qttreepropertybrowser_wrapper.h \
@@ -84,6 +84,7 @@ SOURCES += \
     qtpropertybrowser/qtboolpropertymanager_wrapper.cpp \
     qtpropertybrowser/qtdoublepropertymanager_wrapper.cpp \
     qtpropertybrowser/qtstringpropertymanager_wrapper.cpp \
+    qtpropertybrowser/qtfilepropertymanager_wrapper.cpp \
     qtpropertybrowser/qtdatepropertymanager_wrapper.cpp \
     qtpropertybrowser/qttimepropertymanager_wrapper.cpp \
     qtpropertybrowser/qtdatetimepropertymanager_wrapper.cpp \
@@ -105,7 +106,6 @@ SOURCES += \
     qtpropertybrowser/qtvariantpropertymanager_wrapper.cpp \
     #qtpropertybrowser/qtcomplexpropertymanager_wrapper.cpp \
     #qtpropertybrowser/qtcomplexarraypropertymanager_wrapper.cpp \
-    #qtpropertybrowser/qtfilepathmanager_wrapper.cpp \
     \
     qtpropertybrowser/qtabstracteditorfactorybase_wrapper.cpp \
     qtpropertybrowser/qtspinboxfactory_wrapper.cpp \
@@ -116,6 +116,7 @@ SOURCES += \
     qtpropertybrowser/qtdoublespinboxfactory_wrapper.cpp \
     qtpropertybrowser/qtdoubleeditfactory_wrapper.cpp \
     qtpropertybrowser/qtlineeditfactory_wrapper.cpp \
+    qtpropertybrowser/qtfileeditorfactory_wrapper.cpp \
     qtpropertybrowser/qtdateeditfactory_wrapper.cpp \
     qtpropertybrowser/qttimeeditfactory_wrapper.cpp \
     qtpropertybrowser/qtdatetimeeditfactory_wrapper.cpp \
@@ -126,7 +127,6 @@ SOURCES += \
     qtpropertybrowser/qtcoloreditorfactory_wrapper.cpp \
     qtpropertybrowser/qtfonteditorfactory_wrapper.cpp \
     qtpropertybrowser/qtvarianteditorfactory_wrapper.cpp \
-    #qtpropertybrowser/qtfileeditorfactory_wrapper.cpp \
     #qtpropertybrowser/qtcomplexeditfactory_wrapper.cpp \
     #qtpropertybrowser/qtarrayeditfactory_wrapper.cpp \
     #qtpropertybrowser/qtequationeditfactory_wrapper.cpp \
