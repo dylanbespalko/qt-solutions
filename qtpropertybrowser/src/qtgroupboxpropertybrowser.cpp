@@ -250,7 +250,7 @@ void QtGroupBoxPropertyBrowserPrivate::propertyInserted(QtBrowserItem *index, Qt
             if (parentItem->widget) {
                 l->removeWidget(parentItem->widget);
                 parentItem->widget->setParent(parentItem->groupBox);
-                parentItem->layout->addWidget(parentItem->widget, 0, 0, 1, 2);
+                parentItem->layout->addWidget(parentItem->widget, 0, 0, 1, m_attributes.count() + 2);
                 parentItem->line = new QFrame(parentItem->groupBox);
             } else if (parentItem->widgetLabel) {
                 l->removeWidget(parentItem->widgetLabel);
@@ -260,9 +260,9 @@ void QtGroupBoxPropertyBrowserPrivate::propertyInserted(QtBrowserItem *index, Qt
             if (parentItem->line) {
                 parentItem->line->setFrameShape(QFrame::HLine);
                 parentItem->line->setFrameShadow(QFrame::Sunken);
-                parentItem->layout->addWidget(parentItem->line, 1, 0, 1, 2);
+                parentItem->layout->addWidget(parentItem->line, 1, 0, 1, m_attributes.count() + 2);
             }
-            l->addWidget(parentItem->groupBox, oldRow, 0, 1, 2);
+            l->addWidget(parentItem->groupBox, oldRow, 0, 1, m_attributes.count() + 2);
             updateItem(parentItem);
         }
         layout = parentItem->layout;
@@ -316,11 +316,6 @@ void QtGroupBoxPropertyBrowserPrivate::propertyInserted(QtBrowserItem *index, Qt
            newItem->maximum = (QDoubleEdit*)createAttributeEditor(index->property(), parentWidget, Attribute::MAXIMUM);
             if (newItem->maximum)
                 layout->addWidget(newItem->maximum, row, ind+2, 1, 1);
-            break;
-        case Attribute::CHECK:
-            newItem->check = (QCheckBox*)createAttributeEditor(index->property(), parentWidget, Attribute::CHECK);
-            if (newItem->check)
-                layout->addWidget(newItem->check, row, ind+2, 1, 1);
             break;
         default:
             break;
@@ -534,6 +529,7 @@ void QtGroupBoxPropertyBrowserPrivate::updateItem(WidgetItem *item)
     if (item->check){
         item->check->setEnabled(property->isEnabled());
     }
+}
 
 /*!
     \class QtGroupBoxPropertyBrowser

@@ -548,6 +548,11 @@ QValidator::State QDoubleEdit::validate(QString &text, int &pos) const
     
 }
 
+void QDoubleEdit::update()
+{
+    d_ptr->m_edit->setText(num2str(d_ptr->m_value, d_ptr->m_scale, d_ptr->m_format, d_ptr->m_precision));
+}
+
 QString QDoubleEdit::num2str(double val, const Scale scale, const Format format, int precision)
 {
     double scaled_val;

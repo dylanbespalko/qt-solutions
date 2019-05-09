@@ -1738,6 +1738,8 @@ void QtDoubleSpinBoxFactoryPrivate::slotPropertyChanged(QtProperty *property, do
     QListIterator<QDoubleSpinBox *> itEditor(m_createdEditors[property]);
     while (itEditor.hasNext()) {
         QDoubleSpinBox *editor = itEditor.next();
+//        editor->setFormat(manager->format(property));
+//        editor->setScale(manager->scale(property));
         if (editor->value() != value) {
             editor->blockSignals(true);
             editor->setValue(value);
@@ -1851,6 +1853,7 @@ void QtDoubleSpinBoxFactoryPrivate::slotSetScale(int scaleSelection)
             if (!manager)
                 return;
             manager->setScale(property, Scale(scaleSelection));
+            slotPropertyChanged(property, manager->value(property));
             return;
         }
     }
@@ -1867,6 +1870,7 @@ void QtDoubleSpinBoxFactoryPrivate::slotSetFormat(int formatSelection)
             if (!manager)
                 return;
             manager->setFormat(property, Format(formatSelection));
+            slotPropertyChanged(property, manager->value(property));
             return;
         }
     }
@@ -2116,10 +2120,13 @@ public:
 
 void QtDoubleEditFactoryPrivate::slotPropertyChanged(QtProperty *property, double value)
 {
+    QtDoublePropertyManager *manager = q_ptr->propertyManager(property);
     QList<QDoubleEdit *> editors = m_createdEditors[property];
     QListIterator<QDoubleEdit *> itEditor(m_createdEditors[property]);
     while (itEditor.hasNext()) {
         QDoubleEdit *editor = itEditor.next();
+        editor->setFormat(manager->format(property));
+        editor->setScale(manager->scale(property));
         if (editor->value() != value) {
             editor->blockSignals(true);
             editor->setValue(value);
@@ -2232,6 +2239,7 @@ void QtDoubleEditFactoryPrivate::slotSetScale(int scaleSelection)
             if (!manager)
                 return;
             manager->setScale(property, Scale(scaleSelection));
+            slotPropertyChanged(property, manager->value(property));
             return;
         }
     }
@@ -2248,6 +2256,7 @@ void QtDoubleEditFactoryPrivate::slotSetFormat(int formatSelection)
             if (!manager)
                 return;
             manager->setFormat(property, Format(formatSelection));
+            slotPropertyChanged(property, manager->value(property));
             return;
         }
     }
