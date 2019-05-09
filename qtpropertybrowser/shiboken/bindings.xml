@@ -37,58 +37,58 @@
     
     <!--    Qt Property Managers-->
     <object-type name="QtAbstractPropertyManager" default-superclass="QObject"/>
-    <object-type name="QtBoolPropertyManager" default-superclass="QtAbstractPropertyManager"/>
-    <object-type name="QtFlagPropertyManager"/>
-    <object-type name="QtEnumPropertyManager"/>
+    <object-type name="QtGroupPropertyManager"/>
     <object-type name="QtIntPropertyManager"/>
-    <object-type name="QtDoublePropertyManager"/>
-    <!--    <object-type name="QtComplexPropertyManager"/> -->
-    <!--    <object-type name="QtComplexArrayPropertyManager"/> -->
-    <object-type name="QtDatePropertyManager"/>
-    <object-type name="QtDateTimePropertyManager"/>
-    <object-type name="QtTimePropertyManager"/>
-    <object-type name="QtCharPropertyManager"/>
+    <object-type name="QtBoolPropertyManager" default-superclass="QtAbstractPropertyManager"/>
+    <object-type name="QtDoublePropertyManager"/>	
     <object-type name="QtStringPropertyManager"/>
-    <!--    <object-type name="QtFilePathManager"/> -->
+    <object-type name="QtDatePropertyManager"/>
+    <object-type name="QtTimePropertyManager"/>
+    <object-type name="QtDateTimePropertyManager"/>
+    <object-type name="QtKeySequencePropertyManager"/>
+    <object-type name="QtCharPropertyManager"/>
     <object-type name="QtLocalePropertyManager"/>
     <object-type name="QtPointPropertyManager"/>
     <object-type name="QtPointFPropertyManager"/>
-    <object-type name="QtRectPropertyManager"/>
-    <object-type name="QtRectFPropertyManager"/>
     <object-type name="QtSizePropertyManager"/>
     <object-type name="QtSizeFPropertyManager"/>
-    <object-type name="QtCursorPropertyManager"/>
-    <object-type name="QtColorPropertyManager"/>
-    <object-type name="QtFontPropertyManager"/>
-    <object-type name="QtKeySequencePropertyManager"/>
+    <object-type name="QtRectPropertyManager"/>
+    <object-type name="QtRectFPropertyManager"/>
+    <object-type name="QtEnumPropertyManager"/>
+    <object-type name="QtFlagPropertyManager"/>
     <object-type name="QtSizePolicyPropertyManager"/>
+    <object-type name="QtFontPropertyManager"/>
+    <object-type name="QtColorPropertyManager"/>
+    <object-type name="QtCursorPropertyManager"/>
     <object-type name="QtVariantPropertyManager"/>
-    <object-type name="QtGroupPropertyManager"/>
+    <!--    <object-type name="QtFilePathManager"/> -->
+    <!--    <object-type name="QtComplexPropertyManager"/> -->
+    <!--    <object-type name="QtComplexArrayPropertyManager"/> -->
     
     <!--    Qt Editor Factories-->
     <object-type name="QtAbstractEditorFactoryBase"/>
 <!--    <object-type name="QtAbstractEditorFactory"/>-->
-    <object-type name="QtCheckBoxFactory"/>
-    <object-type name="QtEnumEditorFactory"/>
     <object-type name="QtSpinBoxFactory"/>
     <object-type name="QtIntEditFactory"/>
-    <object-type name="QtDoubleSpinBoxFactory"/>
-    <object-type name="QtScrollBarFactory"/>
     <object-type name="QtSliderFactory"/>
+    <object-type name="QtScrollBarFactory"/>
+    <object-type name="QtCheckBoxFactory"/>
+    <object-type name="QtDoubleSpinBoxFactory"/>
     <object-type name="QtDoubleEditFactory"/>
-    <!--    <object-type name="QtComplexEditFactory"/> -->
-    <!--    <object-type name="QtArrayEditFactory"/> -->
-    <!--    <object-type name="QtEquationEditFactory"/> -->
-    <object-type name="QtDateEditFactory"/>
-    <object-type name="QtDateTimeEditFactory"/>
-    <object-type name="QtTimeEditFactory"/>
     <object-type name="QtLineEditFactory"/>
-    <!--    <object-type name="QtFileEditorFactory"/> -->
+    <object-type name="QtDateEditFactory"/>
+    <object-type name="QtTimeEditFactory"/>
+    <object-type name="QtDateTimeEditFactory"/>
+    <object-type name="QtKeySequenceEditorFactory"/>
+    <object-type name="QtEnumEditorFactory"/>
     <object-type name="QtCursorEditorFactory"/>
     <object-type name="QtColorEditorFactory"/>
     <object-type name="QtFontEditorFactory"/>
-    <object-type name="QtKeySequenceEditorFactory"/>
     <object-type name="QtVariantEditorFactory"/>
+    <!--    <object-type name="QtFileEditorFactory"/> -->
+    <!--    <object-type name="QtComplexEditFactory"/> -->
+    <!--    <object-type name="QtArrayEditFactory"/> -->
+    <!--    <object-type name="QtEquationEditFactory"/> -->
     
     <!--    Qt Property Browsers-->
     <object-type name="QtBrowserItem"/>

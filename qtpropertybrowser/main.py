@@ -31,6 +31,65 @@ from qtpropertybrowser import PkAvg, Scale, Format, Domain, Attribute
 
 
 @unique
+class Manager(Enum):
+    INT_SPIN = auto()
+    INT_EDIT = auto()
+    INT_SLIDER = auto()
+    INT_SCROLL = auto()
+    BOOL = auto()
+    DOUBLE_SPIN = auto()
+    DOUBLE_EDIT = auto()
+    STRING = auto()
+    DATE = auto()
+    TIME = auto()
+    DATETIME = auto()
+    KEY_SEQUENCE = auto()
+    CHAR = auto()
+    LOCALE = auto()
+    POINT = auto()
+    POINTF = auto()
+    SIZE = auto()
+    SIZEF = auto()
+    RECT = auto()
+    RECTF = auto()
+    ENUM = auto()
+    FLAG = auto()
+    SIZE_POLICY = auto()
+    FONT = auto()
+    COLOR = auto()
+    CURSOR = auto()
+
+@unique
+class Factory(Enum):
+    INT_SPIN = auto()
+    INT_EDIT = auto()
+    INT_SLIDER = auto()
+    INT_SCROLL = auto()
+    BOOL = auto()
+    DOUBLE_SPIN = auto()
+    DOUBLE_EDIT = auto()
+    STRING = auto()
+    DATE = auto()
+    TIME = auto()
+    DATETIME = auto()
+    KEY_SEQUENCE = auto()
+    CHAR = auto()
+    LOCALE = auto()
+    POINT = auto()
+    POINTF = auto()
+    SIZE = auto()
+    SIZEF = auto()
+    RECT = auto()
+    RECTF = auto()
+    ENUM = auto()
+    FLAG = auto()
+    SIZE_POLICY = auto()
+    FONT = auto()
+    COLOR = auto()
+    CURSOR = auto()
+
+
+@unique
 class Color(Enum):
     RED = 0
     GREEN = 1
@@ -52,7 +111,6 @@ class ColorCombiner(Flag):
 def set_value(property_, value):
     print("Set Value of: %s" % (property_.propertyManager(),))
 
-
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     dialog = QDialog()
@@ -71,171 +129,187 @@ if __name__ == "__main__":
         button_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
         # button_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
 
-        manager_map = {'bool': QtBoolPropertyManager(),
-                       'flag': QtFlagPropertyManager(),
-                       'enum': QtEnumPropertyManager(),
-                       'int': QtIntPropertyManager(),
-                       'int2': QtIntPropertyManager(),
-                       'int3': QtIntPropertyManager(),
-                       'int4': QtIntPropertyManager(),
-                       'float': QtDoublePropertyManager(),
+        manager_map = {Manager.INT_SPIN: QtIntPropertyManager(),
+                       Manager.INT_EDIT: QtIntPropertyManager(),
+                       Manager.INT_SLIDER: QtIntPropertyManager(),
+                       Manager.INT_SCROLL: QtIntPropertyManager(),
+                       Manager.BOOL: QtBoolPropertyManager(),
+                       Manager.DOUBLE_SPIN: QtDoublePropertyManager(),
+                       Manager.DOUBLE_EDIT: QtDoublePropertyManager(),
+                       Manager.STRING: QtStringPropertyManager(),
+                       Manager.DATE: QtDatePropertyManager(),
+                       Manager.TIME: QtTimePropertyManager(),
+                       Manager.DATETIME: QtDateTimePropertyManager(),
+                       Manager.KEY_SEQUENCE: QtKeySequencePropertyManager(),
+                       Manager.LOCALE: QtLocalePropertyManager(),
+                       Manager.POINT: QtPointPropertyManager(),
+                       Manager.POINTF: QtPointFPropertyManager(),
+                       Manager.SIZE: QtSizePropertyManager(),
+                       Manager.SIZEF: QtSizeFPropertyManager(),
+                       Manager.RECT: QtRectPropertyManager(),
+                       Manager.RECTF: QtRectFPropertyManager(),
+                       Manager.ENUM: QtEnumPropertyManager(),
+                       Manager.FLAG: QtFlagPropertyManager(),
+                       Manager.SIZE_POLICY: QtSizePolicyPropertyManager(),
+                       Manager.FONT: QtFontPropertyManager(),
+                       Manager.COLOR: QtColorPropertyManager(),
+                       Manager.CURSOR: QtCursorPropertyManager(),
                        #'complex': QtComplexPropertyManager(),
                        #'array': QtComplexArrayPropertyManager(),
-                       'str': QtStringPropertyManager(),
                        #'tb_file': QtFilePathManager(),
                        #'file': QtFilePathManager(),
-                       'date': QtDatePropertyManager(),
-                       'datetime': QtDateTimePropertyManager(),
-                       'time': QtTimePropertyManager(),
-                       'locale': QtLocalePropertyManager(),
-                       'point': QtPointPropertyManager(),
-                       'pointf': QtPointFPropertyManager(),
-                       'size': QtSizePropertyManager(),
-                       'sizef': QtSizeFPropertyManager(),
-                       'rect': QtRectPropertyManager(),
-                       'rectf': QtRectFPropertyManager(),
-                       'cursor': QtCursorPropertyManager(),
-                       'color': QtColorPropertyManager(),
-                       'font': QtFontPropertyManager(),
-                       'key_sequence': QtKeySequencePropertyManager(),
-                       'size_policy': QtSizePolicyPropertyManager(),
                        }
-        factory_map = {'bool': QtCheckBoxFactory(),
-                       'enum': QtEnumEditorFactory(),
-                       'flag': False,
-                       'int': QtIntEditFactory(),
-                       'int2': QtSpinBoxFactory(),
-                       'int3': QtSliderFactory(),
-                       'int4': QtScrollBarFactory(),
-                       'float': QtDoubleEditFactory(),
-                       'float2': QtDoubleSpinBoxFactory(),
+        factory_map = {Factory.INT_SPIN: QtSpinBoxFactory(),
+                       Factory.INT_EDIT: QtIntEditFactory(),
+                       Factory.INT_SLIDER: QtSliderFactory(),
+                       Factory.INT_SCROLL: QtScrollBarFactory(),
+                       Factory.BOOL: QtCheckBoxFactory(),
+                       Factory.DOUBLE_SPIN: QtDoubleSpinBoxFactory(),
+                       Factory.DOUBLE_EDIT: QtDoubleEditFactory(),
+                       Factory.STRING: QtLineEditFactory(),
+                       Factory.DATE: QtDateEditFactory(),
+                       Factory.TIME: QtTimeEditFactory(),
+                       Factory.DATETIME: QtDateTimeEditFactory(),
+                       Factory.KEY_SEQUENCE: QtKeySequenceEditorFactory(),
+                       Factory.LOCALE: None,
+                       Factory.POINT: None,
+                       Factory.POINTF: None,
+                       Factory.SIZE: None,
+                       Factory.SIZEF: None,
+                       Factory.RECT: None,
+                       Factory.RECTF: None,
+                       Factory.ENUM: QtEnumEditorFactory(),
+                       Factory.FLAG: None,
+                       Factory.SIZE_POLICY: None,
+                       Factory.FONT: QtFontEditorFactory(),
+                       Factory.COLOR: QtColorEditorFactory(),
+                       Factory.CURSOR: QtCursorEditorFactory(),
                        #'complex': QtComplexEditFactory(),
                        #'array': QtArrayEditFactory(),
-                       'str': QtLineEditFactory(),
                        #'tb_file': QtFileEditorFactory(),
                        #'file': QtFileEditorFactory(),
-                       'date': QtDateEditFactory(),
-                       'datetime': QtDateTimeEditFactory(),
-                       'time': QtTimeEditFactory(),
-                       'locale': None,
-                       'point': None,
-                       'pointf': None,
-                       'size': None,
-                       'sizef': None,
-                       'rect': None,
-                       'rectf': None,
-                       'cursor': QtCursorEditorFactory(),
-                       'color': QtColorEditorFactory(),
-                       'font': QtFontEditorFactory(),
-                       'key_sequence': QtKeySequenceEditorFactory(),
-                       'size_policy': None,
                        }
 
-        # bool
-        manager_map['bool'].valueChanged.connect(set_value)
-        property_ = manager_map['bool'].addProperty("bool")
-        property_.propertyManager().setValue(property_, False)
-        tree_browser.setFactoryForManager(manager_map['bool'], factory_map['bool'])
-        box_browser.setFactoryForManager(manager_map['bool'], factory_map['bool'])
-        button_browser.setFactoryForManager(manager_map['bool'], factory_map['bool'])
+        # int_spin_rw
+        manager_map[Manager.INT_SPIN].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.INT_SPIN].addProperty("int_spinbox_rw")
+        property_.propertyManager().setReadOnly(property_, False)
+        property_.propertyManager().setUnit(property_, "V")
+        property_.propertyManager().setMinimum(property_, 0)
+        property_.propertyManager().setMaximum(property_, 2)
+        property_.propertyManager().setValue(property_, 3)
+        tree_browser.setFactoryForManager(manager_map[Manager.INT_SPIN], factory_map[Factory.INT_SPIN])
+        box_browser.setFactoryForManager(manager_map[Manager.INT_SPIN], factory_map[Factory.INT_SPIN])
+        button_browser.setFactoryForManager(manager_map[Manager.INT_SPIN], factory_map[Factory.INT_SPIN])
         browser_item = tree_browser.addProperty(property_)
         tree_browser.setExpanded(browser_item, False)
         browser_item = box_browser.addProperty(property_)
         browser_item = button_browser.addProperty(property_)
         button_browser.setExpanded(browser_item, False)
 
-        # int_read
-        manager_map['int'].valueChanged.connect(set_value)
-        property_ = manager_map['int'].addProperty("int_read")
+        # int_edit_r
+        manager_map[Manager.INT_EDIT].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.INT_EDIT].addProperty("int_edit_r")
         property_.propertyManager().setReadOnly(property_, True)
         property_.propertyManager().setUnit(property_, "V")
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
         property_.propertyManager().setValue(property_, 3)
-        tree_browser.setFactoryForManager(manager_map['int'], factory_map['int'])
-        box_browser.setFactoryForManager(manager_map['int'], factory_map['int'])
-        button_browser.setFactoryForManager(manager_map['int'], factory_map['int'])
+        tree_browser.setFactoryForManager(manager_map[Manager.INT_EDIT], factory_map[Factory.INT_EDIT])
+        box_browser.setFactoryForManager(manager_map[Manager.INT_EDIT], factory_map[Factory.INT_EDIT])
+        button_browser.setFactoryForManager(manager_map[Manager.INT_EDIT], factory_map[Factory.INT_EDIT])
         browser_item = tree_browser.addProperty(property_)
         tree_browser.setExpanded(browser_item, False)
         browser_item = box_browser.addProperty(property_)
         browser_item = button_browser.addProperty(property_)
         button_browser.setExpanded(browser_item, False)
 
-        # int_read_write
-        manager_map['int'].valueChanged.connect(set_value)
-        property_ = manager_map['int'].addProperty("int_read_write")
+        # int_edit_rw
+        manager_map[Manager.INT_EDIT].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.INT_EDIT].addProperty("int_edit_rw")
+        property_.propertyManager().setReadOnly(property_, False)
+        property_.propertyManager().setUnit(property_, "V")
+        property_.propertyManager().setMinimum(property_, 0)
+        property_.propertyManager().setMaximum(property_, 2)
+        property_.propertyManager().setValue(property_, 3)
+        tree_browser.setFactoryForManager(manager_map[Manager.INT_EDIT], factory_map[Factory.INT_EDIT])
+        box_browser.setFactoryForManager(manager_map[Manager.INT_EDIT], factory_map[Factory.INT_EDIT])
+        button_browser.setFactoryForManager(manager_map[Manager.INT_EDIT], factory_map[Factory.INT_EDIT])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # int_slider_rw
+        manager_map[Manager.INT_SLIDER].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.INT_SLIDER].addProperty("int_slider_rw")
         property_.propertyManager().setReadOnly(property_, False)
         property_.propertyManager().setUnit(property_, "V")
 
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
         property_.propertyManager().setValue(property_, 3)
-        tree_browser.setFactoryForManager(manager_map['int'], factory_map['int'])
-        box_browser.setFactoryForManager(manager_map['int'], factory_map['int'])
-        button_browser.setFactoryForManager(manager_map['int'], factory_map['int'])
+        tree_browser.setFactoryForManager(manager_map[Manager.INT_SLIDER], factory_map[Factory.INT_SLIDER])
+        box_browser.setFactoryForManager(manager_map[Manager.INT_SLIDER], factory_map[Factory.INT_SLIDER])
+        button_browser.setFactoryForManager(manager_map[Manager.INT_SLIDER], factory_map[Factory.INT_SLIDER])
         browser_item = tree_browser.addProperty(property_)
         tree_browser.setExpanded(browser_item, False)
         browser_item = box_browser.addProperty(property_)
         browser_item = button_browser.addProperty(property_)
         button_browser.setExpanded(browser_item, False)
 
-        # int_read_write spinbox
-        manager_map['int2'].valueChanged.connect(set_value)
-        property_ = manager_map['int2'].addProperty("int_spinbox")
+        # int_scroll_rw
+        manager_map[Manager.INT_SCROLL].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.INT_SCROLL].addProperty("int_scroll_rw")
         property_.propertyManager().setReadOnly(property_, False)
         property_.propertyManager().setUnit(property_, "V")
-
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
         property_.propertyManager().setValue(property_, 3)
-        tree_browser.setFactoryForManager(manager_map['int2'], factory_map['int2'])
-        box_browser.setFactoryForManager(manager_map['int2'], factory_map['int2'])
-        button_browser.setFactoryForManager(manager_map['int2'], factory_map['int2'])
+        tree_browser.setFactoryForManager(manager_map[Manager.INT_SCROLL], factory_map[Factory.INT_SCROLL])
+        box_browser.setFactoryForManager(manager_map[Manager.INT_SCROLL], factory_map[Factory.INT_SCROLL])
+        button_browser.setFactoryForManager(manager_map[Manager.INT_SCROLL], factory_map[Factory.INT_SCROLL])
         browser_item = tree_browser.addProperty(property_)
         tree_browser.setExpanded(browser_item, False)
         browser_item = box_browser.addProperty(property_)
         browser_item = button_browser.addProperty(property_)
         button_browser.setExpanded(browser_item, False)
 
-        # int_read_write slider
-        manager_map['int3'].valueChanged.connect(set_value)
-        property_ = manager_map['int3'].addProperty("int_slider")
+        # bool
+        manager_map[Manager.BOOL].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.BOOL].addProperty("bool")
+        property_.propertyManager().setValue(property_, False)
+        tree_browser.setFactoryForManager(manager_map[Manager.BOOL], factory_map[Factory.BOOL])
+        box_browser.setFactoryForManager(manager_map[Manager.BOOL], factory_map[Factory.BOOL])
+        button_browser.setFactoryForManager(manager_map[Manager.BOOL], factory_map[Factory.BOOL])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # double_spin_rw
+        manager_map[Manager.DOUBLE_SPIN].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.DOUBLE_SPIN].addProperty("double_spin_rw")
         property_.propertyManager().setReadOnly(property_, False)
         property_.propertyManager().setUnit(property_, "V")
-
+        property_.propertyManager().setPrecision(property_, 2)
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
-        property_.propertyManager().setValue(property_, 3)
-        tree_browser.setFactoryForManager(manager_map['int3'], factory_map['int3'])
-        box_browser.setFactoryForManager(manager_map['int3'], factory_map['int3'])
-        button_browser.setFactoryForManager(manager_map['int3'], factory_map['int3'])
+        property_.propertyManager().setValue(property_, 3.14)
+        tree_browser.setFactoryForManager(manager_map[Manager.DOUBLE_SPIN], factory_map[Factory.DOUBLE_SPIN])
+        box_browser.setFactoryForManager(manager_map[Manager.DOUBLE_SPIN], factory_map[Factory.DOUBLE_SPIN])
+        button_browser.setFactoryForManager(manager_map[Manager.DOUBLE_SPIN], factory_map[Factory.DOUBLE_SPIN])
         browser_item = tree_browser.addProperty(property_)
         tree_browser.setExpanded(browser_item, False)
         browser_item = box_browser.addProperty(property_)
         browser_item = button_browser.addProperty(property_)
         button_browser.setExpanded(browser_item, False)
 
-        # int_read_write scroll
-        manager_map['int4'].valueChanged.connect(set_value)
-        property_ = manager_map['int4'].addProperty("int_scroll")
-        property_.propertyManager().setReadOnly(property_, False)
-        property_.propertyManager().setUnit(property_, "V")
-
-        property_.propertyManager().setMinimum(property_, 0)
-        property_.propertyManager().setMaximum(property_, 2)
-        property_.propertyManager().setValue(property_, 3)
-        tree_browser.setFactoryForManager(manager_map['int4'], factory_map['int4'])
-        box_browser.setFactoryForManager(manager_map['int4'], factory_map['int4'])
-        button_browser.setFactoryForManager(manager_map['int4'], factory_map['int4'])
-        browser_item = tree_browser.addProperty(property_)
-        tree_browser.setExpanded(browser_item, False)
-        browser_item = box_browser.addProperty(property_)
-        browser_item = button_browser.addProperty(property_)
-        button_browser.setExpanded(browser_item, False)
-
-        # float_read
-        manager_map['float'].valueChanged.connect(set_value)
-        property_ = manager_map['float'].addProperty("float_read")
+        # double_edit_r
+        manager_map[Manager.DOUBLE_EDIT].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.DOUBLE_EDIT].addProperty("double_edit_r")
         property_.propertyManager().setReadOnly(property_, True)
         property_.propertyManager().setScale(property_, Scale.K)
         property_.propertyManager().setUnit(property_, "V")
@@ -243,27 +317,339 @@ if __name__ == "__main__":
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
         property_.propertyManager().setValue(property_, 3.14)
-        tree_browser.setFactoryForManager(manager_map['float'], factory_map['float'])
-        box_browser.setFactoryForManager(manager_map['float'], factory_map['float'])
-        button_browser.setFactoryForManager(manager_map['float'], factory_map['float'])
+        tree_browser.setFactoryForManager(manager_map[Manager.DOUBLE_EDIT], factory_map[Factory.DOUBLE_EDIT])
+        box_browser.setFactoryForManager(manager_map[Manager.DOUBLE_EDIT], factory_map[Factory.DOUBLE_EDIT])
+        button_browser.setFactoryForManager(manager_map[Manager.DOUBLE_EDIT], factory_map[Factory.DOUBLE_EDIT])
         browser_item = tree_browser.addProperty(property_)
         tree_browser.setExpanded(browser_item, False)
         browser_item = box_browser.addProperty(property_)
         browser_item = button_browser.addProperty(property_)
         button_browser.setExpanded(browser_item, False)
 
-        # float_read_write
-        manager_map['float'].valueChanged.connect(set_value)
-        property_ = manager_map['float'].addProperty("float_read_write")
+        # double_edit_rw
+        manager_map[Manager.DOUBLE_EDIT].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.DOUBLE_EDIT].addProperty("double_edit_rw")
         property_.propertyManager().setReadOnly(property_, False)
         property_.propertyManager().setUnit(property_, "V")
         property_.propertyManager().setPrecision(property_, 2)
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
         property_.propertyManager().setValue(property_, 3.14)
-        tree_browser.setFactoryForManager(manager_map['float'], factory_map['float'])
-        box_browser.setFactoryForManager(manager_map['float'], factory_map['float'])
-        button_browser.setFactoryForManager(manager_map['float'], factory_map['float'])
+        tree_browser.setFactoryForManager(manager_map[Manager.DOUBLE_EDIT], factory_map[Factory.DOUBLE_EDIT])
+        box_browser.setFactoryForManager(manager_map[Manager.DOUBLE_EDIT], factory_map[Factory.DOUBLE_EDIT])
+        button_browser.setFactoryForManager(manager_map[Manager.DOUBLE_EDIT], factory_map[Factory.DOUBLE_EDIT])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # str
+        manager_map[Manager.STRING].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.STRING].addProperty("str")
+        property_.propertyManager().setValue(property_, "Hello World")
+        tree_browser.setFactoryForManager(manager_map[Manager.STRING], factory_map[Factory.STRING])
+        box_browser.setFactoryForManager(manager_map[Manager.STRING], factory_map[Factory.STRING])
+        button_browser.setFactoryForManager(manager_map[Manager.STRING], factory_map[Factory.STRING])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # date
+        manager_map[Manager.DATE].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.DATE].addProperty("date")
+        property_.propertyManager().setValue(property_, QDate.currentDate())
+        tree_browser.setFactoryForManager(manager_map[Manager.DATE], factory_map[Factory.DATE])
+        box_browser.setFactoryForManager(manager_map[Manager.DATE], factory_map[Factory.DATE])
+        button_browser.setFactoryForManager(manager_map[Manager.DATE], factory_map[Factory.DATE])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # time
+        manager_map[Manager.TIME].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.TIME].addProperty("time")
+        property_.propertyManager().setValue(property_, QTime.currentTime())
+        tree_browser.setFactoryForManager(manager_map[Manager.TIME], factory_map[Factory.TIME])
+        box_browser.setFactoryForManager(manager_map[Manager.TIME], factory_map[Factory.TIME])
+        button_browser.setFactoryForManager(manager_map[Manager.TIME], factory_map[Factory.TIME])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # datetime
+        manager_map[Manager.DATETIME].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.DATETIME].addProperty("datetime")
+        property_.propertyManager().setValue(property_, QDateTime.currentDateTime())
+        tree_browser.setFactoryForManager(manager_map[Manager.DATETIME], factory_map[Factory.DATETIME])
+        box_browser.setFactoryForManager(manager_map[Manager.DATETIME], factory_map[Factory.DATETIME])
+        button_browser.setFactoryForManager(manager_map[Manager.DATETIME], factory_map[Factory.DATETIME])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # locale
+        manager_map[Manager.LOCALE].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.LOCALE].addProperty("locale")
+        property_.propertyManager().setValue(property_, QLocale(QLocale.English, QLocale.Canada))
+        tree_browser.setFactoryForManager(manager_map[Manager.LOCALE].subEnumPropertyManager(),
+                                          factory_map[Factory.ENUM])
+        box_browser.setFactoryForManager(manager_map[Manager.LOCALE].subEnumPropertyManager(),
+                                         factory_map[Factory.ENUM])
+        button_browser.setFactoryForManager(manager_map[Manager.LOCALE].subEnumPropertyManager(),
+                                            factory_map[Factory.ENUM])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # point
+        manager_map[Manager.POINT].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.POINT].addProperty("point")
+        property_.propertyManager().setValue(property_, QPoint(1, 3))
+        tree_browser.setFactoryForManager(manager_map[Manager.POINT].subIntPropertyManager(),
+                                          factory_map[Factory.INT_EDIT])
+        box_browser.setFactoryForManager(manager_map[Manager.POINT].subIntPropertyManager(),
+                                         factory_map[Factory.INT_EDIT])
+        button_browser.setFactoryForManager(manager_map[Manager.POINT].subIntPropertyManager(),
+                                            factory_map[Factory.INT_EDIT])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # pointf
+        manager_map[Manager.POINTF].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.POINTF].addProperty("pointf")
+        property_.propertyManager().setValue(property_, QPointF(1.23, 3.21))
+        tree_browser.setFactoryForManager(manager_map[Manager.POINTF].subDoublePropertyManager(),
+                                          factory_map[Factory.DOUBLE_EDIT])
+        box_browser.setFactoryForManager(manager_map[Manager.POINTF].subDoublePropertyManager(),
+                                         factory_map[Factory.DOUBLE_EDIT])
+        button_browser.setFactoryForManager(manager_map[Manager.POINTF].subDoublePropertyManager(),
+                                            factory_map[Factory.DOUBLE_EDIT])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # size_r
+        manager_map[Manager.SIZE].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.SIZE].addProperty("size_r")
+        property_.propertyManager().setReadOnly(property_, True)
+        property_.propertyManager().setMinimum(property_, QSize(0, 0))
+        property_.propertyManager().setMaximum(property_, QSize(2, 2))
+        property_.propertyManager().setValue(property_, QSize(-1, 3))
+        tree_browser.setFactoryForManager(manager_map[Manager.SIZE].subIntPropertyManager(),
+                                          factory_map[Factory.INT_EDIT])
+        box_browser.setFactoryForManager(manager_map[Manager.SIZE].subIntPropertyManager(),
+                                         factory_map[Factory.INT_EDIT])
+        button_browser.setFactoryForManager(manager_map[Manager.SIZE].subIntPropertyManager(),
+                                            factory_map[Factory.INT_EDIT])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # size_rw
+        manager_map[Manager.SIZE].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.SIZE].addProperty("size_rw")
+        property_.propertyManager().setReadOnly(property_, False)
+        property_.propertyManager().setMinimum(property_, QSize(0, 0))
+        property_.propertyManager().setMaximum(property_, QSize(255, 255))
+        property_.propertyManager().setValue(property_, QSize(-1, 3))
+        tree_browser.setFactoryForManager(manager_map[Manager.SIZE].subIntPropertyManager(),
+                                          factory_map[Factory.INT_EDIT])
+        box_browser.setFactoryForManager(manager_map[Manager.SIZE].subIntPropertyManager(),
+                                         factory_map[Factory.INT_EDIT])
+        button_browser.setFactoryForManager(manager_map[Manager.SIZE].subIntPropertyManager(),
+                                            factory_map[Factory.INT_EDIT])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # sizef_r
+        manager_map[Manager.SIZEF].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.SIZEF].addProperty("sizef_r")
+        property_.propertyManager().setReadOnly(property_, True)
+        property_.propertyManager().setMinimum(property_, QSize(0, 0))
+        property_.propertyManager().setMaximum(property_, QSize(2, 2))
+        property_.propertyManager().setValue(property_, QSizeF(-1.23, 3.21))
+        tree_browser.setFactoryForManager(manager_map[Manager.SIZEF].subDoublePropertyManager(),
+                                          factory_map[Factory.DOUBLE_EDIT])
+        box_browser.setFactoryForManager(manager_map[Manager.SIZEF].subDoublePropertyManager(),
+                                         factory_map[Factory.DOUBLE_EDIT])
+        button_browser.setFactoryForManager(manager_map[Manager.SIZEF].subDoublePropertyManager(),
+                                            factory_map[Factory.DOUBLE_EDIT])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # sizef_rw
+        manager_map[Manager.SIZEF].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.SIZEF].addProperty("sizef_rw")
+        property_.propertyManager().setReadOnly(property_, False)
+        property_.propertyManager().setMinimum(property_, QSize(0, 0))
+        property_.propertyManager().setMaximum(property_, QSize(2, 2))
+        property_.propertyManager().setValue(property_, QSizeF(-1.23, 3.21))
+        tree_browser.setFactoryForManager(manager_map[Manager.SIZEF].subDoublePropertyManager(),
+                                          factory_map[Factory.DOUBLE_EDIT])
+        box_browser.setFactoryForManager(manager_map[Manager.SIZEF].subDoublePropertyManager(),
+                                         factory_map[Factory.DOUBLE_EDIT])
+        button_browser.setFactoryForManager(manager_map[Manager.SIZEF].subDoublePropertyManager(),
+                                            factory_map[Factory.DOUBLE_EDIT])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # rect
+        manager_map[Manager.RECT].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.RECT].addProperty("rect")
+        property_.propertyManager().setValue(property_, QRect(0, 1, 2, 3))
+        tree_browser.setFactoryForManager(manager_map[Manager.RECT].subIntPropertyManager(),
+                                          factory_map[Factory.INT_EDIT])
+        box_browser.setFactoryForManager(manager_map[Manager.RECT].subIntPropertyManager(),
+                                         factory_map[Factory.INT_EDIT])
+        button_browser.setFactoryForManager(manager_map[Manager.RECT].subIntPropertyManager(),
+                                            factory_map[Factory.INT_EDIT])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # rectf
+        manager_map[Manager.RECTF].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.RECTF].addProperty("rectf")
+        property_.propertyManager().setValue(property_, QRectF(0.12, 1.23, 2.34, 3.45))
+        tree_browser.setFactoryForManager(manager_map[Manager.RECTF].subDoublePropertyManager(),
+                                          factory_map[Factory.DOUBLE_EDIT])
+        box_browser.setFactoryForManager(manager_map[Manager.RECTF].subDoublePropertyManager(),
+                                         factory_map[Factory.DOUBLE_EDIT])
+        button_browser.setFactoryForManager(manager_map[Manager.RECTF].subDoublePropertyManager(),
+                                            factory_map[Factory.DOUBLE_EDIT])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # enum
+        value = Color.RED
+        manager_map[Manager.ENUM].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.ENUM].addProperty("enum")
+        items = sorted(value.__class__.__members__.items(), key=lambda t: t[1].value)
+        names = [k for k, v in items]
+        manager_map[Manager.ENUM].setEnumNames(property_, names)
+        try:
+            manager_map[Manager.ENUM].setValue(property_, value.value)
+        except AttributeError:
+            manager_map[Manager.ENUM].setValue(property_, value)
+        tree_browser.setFactoryForManager(manager_map[Manager.ENUM], factory_map[Factory.ENUM])
+        box_browser.setFactoryForManager(manager_map[Manager.ENUM], factory_map[Factory.ENUM])
+        button_browser.setFactoryForManager(manager_map[Manager.ENUM], factory_map[Factory.ENUM])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # flags
+        value = ColorCombiner.PURPLE
+        manager_map[Manager.FLAG].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.FLAG].addProperty("flag")
+        items = value.__class__.__members__.items()
+        names = [k for ind, (k, v) in enumerate(items) if (v.value & (v.value - 1)) == 0 and v.value != 0]
+        manager_map[Manager.FLAG].setFlagNames(property_, names)
+        try:
+            manager_map[Manager.FLAG].setValue(property_, value.value)
+        except AttributeError:
+            manager_map[Manager.FLAG].setValue(property_, value)
+        tree_browser.setFactoryForManager(manager_map[Manager.FLAG].subBoolPropertyManager(),
+                                          factory_map[Factory.BOOL])
+        box_browser.setFactoryForManager(manager_map[Manager.FLAG].subBoolPropertyManager(),
+                                         factory_map[Factory.BOOL])
+        button_browser.setFactoryForManager(manager_map[Manager.FLAG].subBoolPropertyManager(),
+                                            factory_map[Factory.BOOL])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # size_policy
+        manager_map[Manager.SIZE_POLICY].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.SIZE_POLICY].addProperty("size_policy")
+        property_.propertyManager().setValue(property_, QSizePolicy())
+        tree_browser.setFactoryForManager(manager_map[Manager.SIZE_POLICY].subEnumPropertyManager(),
+                                          factory_map[Factory.ENUM])
+        tree_browser.setFactoryForManager(manager_map[Manager.SIZE_POLICY].subIntPropertyManager(),
+                                          factory_map[Factory.INT_EDIT])
+        box_browser.setFactoryForManager(manager_map[Manager.SIZE_POLICY].subEnumPropertyManager(),
+                                         factory_map[Factory.ENUM])
+        box_browser.setFactoryForManager(manager_map[Manager.SIZE_POLICY].subIntPropertyManager(),
+                                         factory_map[Factory.INT_EDIT])
+        button_browser.setFactoryForManager(manager_map[Manager.SIZE_POLICY].subEnumPropertyManager(),
+                                            factory_map[Factory.ENUM])
+        button_browser.setFactoryForManager(manager_map[Manager.SIZE_POLICY].subIntPropertyManager(),
+                                            factory_map[Factory.INT_EDIT])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # font
+        manager_map[Manager.FONT].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.FONT].addProperty("font")
+        property_.propertyManager().setValue(property_, QFont())
+        tree_browser.setFactoryForManager(manager_map[Manager.FONT], factory_map[Factory.FONT])
+        box_browser.setFactoryForManager(manager_map[Manager.FONT], factory_map[Factory.FONT])
+        button_browser.setFactoryForManager(manager_map[Manager.FONT], factory_map[Factory.FONT])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # color
+        manager_map[Manager.COLOR].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.COLOR].addProperty("color")
+        property_.propertyManager().setValue(property_, QColor())
+        tree_browser.setFactoryForManager(manager_map[Manager.COLOR], factory_map[Factory.COLOR])
+        box_browser.setFactoryForManager(manager_map[Manager.COLOR], factory_map[Factory.COLOR])
+        button_browser.setFactoryForManager(manager_map[Manager.COLOR], factory_map[Factory.COLOR])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # cursor
+        manager_map[Manager.CURSOR].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.CURSOR].addProperty("cursor")
+        property_.propertyManager().setValue(property_, QCursor())
+        tree_browser.setFactoryForManager(manager_map[Manager.CURSOR], factory_map[Factory.CURSOR])
+        box_browser.setFactoryForManager(manager_map[Manager.CURSOR], factory_map[Factory.CURSOR])
+        button_browser.setFactoryForManager(manager_map[Manager.CURSOR], factory_map[Factory.CURSOR])
         browser_item = tree_browser.addProperty(property_)
         tree_browser.setExpanded(browser_item, False)
         browser_item = box_browser.addProperty(property_)
@@ -302,59 +688,6 @@ if __name__ == "__main__":
         #browser_item = button_browser.addProperty(property_)
         #button_browser.setExpanded(browser_item, False)
 
-        # enum
-        value = Color.RED
-        manager_map['enum'].valueChanged.connect(set_value)
-        property_ = manager_map['enum'].addProperty("enum")
-        items = sorted(value.__class__.__members__.items(), key=lambda t: t[1].value)
-        names = [k for k, v in items]
-        manager_map['enum'].setEnumNames(property_, names)
-        try:
-            manager_map["flag"].setValue(property_, value.value)
-        except AttributeError:
-            manager_map["flag"].setValue(property_, value)
-        tree_browser.setFactoryForManager(manager_map['enum'], factory_map['enum'])
-        box_browser.setFactoryForManager(manager_map['enum'], factory_map['enum'])
-        button_browser.setFactoryForManager(manager_map['enum'], factory_map['enum'])
-        browser_item = tree_browser.addProperty(property_)
-        tree_browser.setExpanded(browser_item, False)
-        browser_item = box_browser.addProperty(property_)
-        browser_item = button_browser.addProperty(property_)
-        button_browser.setExpanded(browser_item, False)
-
-        # flags
-        value = ColorCombiner.PURPLE
-        manager_map['flag'].valueChanged.connect(set_value)
-        property_ = manager_map['flag'].addProperty("flag")
-        items = value.__class__.__members__.items()
-        names = [k for ind, (k, v) in enumerate(items) if (v.value & (v.value - 1)) == 0 and v.value != 0]
-        manager_map['flag'].setFlagNames(property_, names)
-        try:
-            manager_map["flag"].setValue(property_, value.value)
-        except AttributeError:
-            manager_map["flag"].setValue(property_, value)
-        tree_browser.setFactoryForManager(manager_map['flag'].subBoolPropertyManager(), factory_map['bool'])
-        box_browser.setFactoryForManager(manager_map['flag'].subBoolPropertyManager(), factory_map['bool'])
-        button_browser.setFactoryForManager(manager_map['flag'].subBoolPropertyManager(), factory_map['bool'])
-        browser_item = tree_browser.addProperty(property_)
-        tree_browser.setExpanded(browser_item, False)
-        browser_item = box_browser.addProperty(property_)
-        browser_item = button_browser.addProperty(property_)
-        button_browser.setExpanded(browser_item, False)
-
-        # str
-        manager_map['str'].valueChanged.connect(set_value)
-        property_ = manager_map['str'].addProperty("str")
-        property_.propertyManager().setValue(property_, "Hello World")
-        tree_browser.setFactoryForManager(manager_map['str'], factory_map['str'])
-        box_browser.setFactoryForManager(manager_map['str'], factory_map['str'])
-        button_browser.setFactoryForManager(manager_map['str'], factory_map['str'])
-        browser_item = tree_browser.addProperty(property_)
-        tree_browser.setExpanded(browser_item, False)
-        browser_item = box_browser.addProperty(property_)
-        browser_item = button_browser.addProperty(property_)
-        button_browser.setExpanded(browser_item, False)
-
         # file
         # manager_map['int'].valueChanged.connect(set_value)
         #value = open("temp.txt", mode="w")
@@ -367,229 +700,6 @@ if __name__ == "__main__":
         #box_browser.setExpanded(browser_item, False)
         #browser_item = button_browser.addProperty(property_)
         #button_browser.setExpanded(browser_item, False)
-
-        # date
-        manager_map['date'].valueChanged.connect(set_value)
-        property_ = manager_map['date'].addProperty("date")
-        property_.propertyManager().setValue(property_, QDate.currentDate())
-        tree_browser.setFactoryForManager(manager_map['date'], factory_map['date'])
-        box_browser.setFactoryForManager(manager_map['date'], factory_map['date'])
-        button_browser.setFactoryForManager(manager_map['date'], factory_map['date'])
-        browser_item = tree_browser.addProperty(property_)
-        tree_browser.setExpanded(browser_item, False)
-        browser_item = box_browser.addProperty(property_)
-        browser_item = button_browser.addProperty(property_)
-        button_browser.setExpanded(browser_item, False)
-
-        # datetime
-        manager_map['datetime'].valueChanged.connect(set_value)
-        property_ = manager_map['datetime'].addProperty("datetime")
-        property_.propertyManager().setValue(property_, QDateTime.currentDateTime())
-        tree_browser.setFactoryForManager(manager_map['datetime'], factory_map['datetime'])
-        box_browser.setFactoryForManager(manager_map['datetime'], factory_map['datetime'])
-        button_browser.setFactoryForManager(manager_map['datetime'], factory_map['datetime'])
-        browser_item = tree_browser.addProperty(property_)
-        tree_browser.setExpanded(browser_item, False)
-        browser_item = box_browser.addProperty(property_)
-        browser_item = button_browser.addProperty(property_)
-        button_browser.setExpanded(browser_item, False)
-
-        # time
-        manager_map['time'].valueChanged.connect(set_value)
-        property_ = manager_map['time'].addProperty("time")
-        property_.propertyManager().setValue(property_, QTime.currentTime())
-        tree_browser.setFactoryForManager(manager_map['time'], factory_map['time'])
-        box_browser.setFactoryForManager(manager_map['time'], factory_map['time'])
-        button_browser.setFactoryForManager(manager_map['time'], factory_map['time'])
-        browser_item = tree_browser.addProperty(property_)
-        tree_browser.setExpanded(browser_item, False)
-        browser_item = box_browser.addProperty(property_)
-        browser_item = button_browser.addProperty(property_)
-        button_browser.setExpanded(browser_item, False)
-    
-        # locale
-        manager_map['locale'].valueChanged.connect(set_value)
-        property_ = manager_map['locale'].addProperty("locale")
-        property_.propertyManager().setValue(property_, QLocale(QLocale.English, QLocale.Canada))
-        tree_browser.setFactoryForManager(manager_map['locale'].subEnumPropertyManager(), factory_map['enum'])
-        box_browser.setFactoryForManager(manager_map['locale'].subEnumPropertyManager(), factory_map['enum'])
-        button_browser.setFactoryForManager(manager_map['locale'].subEnumPropertyManager(), factory_map['enum'])
-        browser_item = tree_browser.addProperty(property_)
-        tree_browser.setExpanded(browser_item, False)
-        browser_item = box_browser.addProperty(property_)
-        browser_item = button_browser.addProperty(property_)
-        button_browser.setExpanded(browser_item, False)
-
-        # point
-        manager_map['point'].valueChanged.connect(set_value)
-        property_ = manager_map['point'].addProperty("point")
-        property_.propertyManager().setValue(property_, QPoint(1, 3))
-        tree_browser.setFactoryForManager(manager_map['point'].subIntPropertyManager(), factory_map['int'])
-        box_browser.setFactoryForManager(manager_map['point'].subIntPropertyManager(), factory_map['int'])
-        button_browser.setFactoryForManager(manager_map['point'].subIntPropertyManager(), factory_map['int'])
-        browser_item = tree_browser.addProperty(property_)
-        tree_browser.setExpanded(browser_item, False)
-        browser_item = box_browser.addProperty(property_)
-        browser_item = button_browser.addProperty(property_)
-        button_browser.setExpanded(browser_item, False)
-
-        # pointf
-        manager_map['pointf'].valueChanged.connect(set_value)
-        property_ = manager_map['pointf'].addProperty("pointf")
-        property_.propertyManager().setValue(property_, QPointF(1.23, 3.21))
-        tree_browser.setFactoryForManager(manager_map['pointf'].subDoublePropertyManager(), factory_map['float'])
-        box_browser.setFactoryForManager(manager_map['pointf'].subDoublePropertyManager(), factory_map['float'])
-        button_browser.setFactoryForManager(manager_map['pointf'].subDoublePropertyManager(), factory_map['float'])
-        browser_item = tree_browser.addProperty(property_)
-        tree_browser.setExpanded(browser_item, False)
-        browser_item = box_browser.addProperty(property_)
-        browser_item = button_browser.addProperty(property_)
-        button_browser.setExpanded(browser_item, False)
-
-        # size_read
-        manager_map['size'].valueChanged.connect(set_value)
-        property_ = manager_map['size'].addProperty("size_read")
-        property_.propertyManager().setReadOnly(property_, True)
-        property_.propertyManager().setMinimum(property_, QSize(0, 0))
-        property_.propertyManager().setMaximum(property_, QSize(2, 2))
-        property_.propertyManager().setValue(property_, QSize(-1, 3))
-        tree_browser.setFactoryForManager(manager_map['size'].subIntPropertyManager(), factory_map['int'])
-        box_browser.setFactoryForManager(manager_map['size'].subIntPropertyManager(), factory_map['int'])
-        button_browser.setFactoryForManager(manager_map['size'].subIntPropertyManager(), factory_map['int'])
-        browser_item = tree_browser.addProperty(property_)
-        tree_browser.setExpanded(browser_item, False)
-        browser_item = box_browser.addProperty(property_)
-        browser_item = button_browser.addProperty(property_)
-        button_browser.setExpanded(browser_item, False)
-
-        # size_read_write
-        manager_map['size'].valueChanged.connect(set_value)
-        property_ = manager_map['size'].addProperty("size_read")
-        property_.propertyManager().setReadOnly(property_, False)
-        property_.propertyManager().setMinimum(property_, QSize(0, 0))
-        property_.propertyManager().setMaximum(property_, QSize(255, 255))
-        property_.propertyManager().setValue(property_, QSize(-1, 3))
-        tree_browser.setFactoryForManager(manager_map['size'].subIntPropertyManager(), factory_map['int'])
-        box_browser.setFactoryForManager(manager_map['size'].subIntPropertyManager(), factory_map['int'])
-        button_browser.setFactoryForManager(manager_map['size'].subIntPropertyManager(), factory_map['int'])
-        browser_item = tree_browser.addProperty(property_)
-        tree_browser.setExpanded(browser_item, False)
-        browser_item = box_browser.addProperty(property_)
-        browser_item = button_browser.addProperty(property_)
-        button_browser.setExpanded(browser_item, False)
-
-        # sizef_read
-        manager_map['sizef'].valueChanged.connect(set_value)
-        property_ = manager_map['sizef'].addProperty("sizef")
-        property_.propertyManager().setReadOnly(property_, True)
-        property_.propertyManager().setMinimum(property_, QSize(0, 0))
-        property_.propertyManager().setMaximum(property_, QSize(2, 2))
-        property_.propertyManager().setValue(property_, QSizeF(-1.23, 3.21))
-        tree_browser.setFactoryForManager(manager_map['sizef'].subDoublePropertyManager(), factory_map['float'])
-        box_browser.setFactoryForManager(manager_map['sizef'].subDoublePropertyManager(), factory_map['float'])
-        button_browser.setFactoryForManager(manager_map['sizef'].subDoublePropertyManager(), factory_map['float'])
-        browser_item = tree_browser.addProperty(property_)
-        tree_browser.setExpanded(browser_item, False)
-        browser_item = box_browser.addProperty(property_)
-        browser_item = button_browser.addProperty(property_)
-        button_browser.setExpanded(browser_item, False)
-
-        # sizef_read_write
-        manager_map['sizef'].valueChanged.connect(set_value)
-        property_ = manager_map['sizef'].addProperty("sizef")
-        property_.propertyManager().setReadOnly(property_, False)
-        property_.propertyManager().setMinimum(property_, QSize(0, 0))
-        property_.propertyManager().setMaximum(property_, QSize(2, 2))
-        property_.propertyManager().setValue(property_, QSizeF(-1.23, 3.21))
-        tree_browser.setFactoryForManager(manager_map['sizef'].subDoublePropertyManager(), factory_map['float'])
-        box_browser.setFactoryForManager(manager_map['sizef'].subDoublePropertyManager(), factory_map['float'])
-        button_browser.setFactoryForManager(manager_map['sizef'].subDoublePropertyManager(), factory_map['float'])
-        browser_item = tree_browser.addProperty(property_)
-        tree_browser.setExpanded(browser_item, False)
-        browser_item = box_browser.addProperty(property_)
-        browser_item = button_browser.addProperty(property_)
-        button_browser.setExpanded(browser_item, False)
-
-        # rect
-        manager_map['rect'].valueChanged.connect(set_value)
-        property_ = manager_map['rect'].addProperty("rect")
-        property_.propertyManager().setValue(property_, QRect(0, 1, 2, 3))
-        tree_browser.setFactoryForManager(manager_map['rect'].subIntPropertyManager(), factory_map['int'])
-        box_browser.setFactoryForManager(manager_map['rect'].subIntPropertyManager(), factory_map['int'])
-        button_browser.setFactoryForManager(manager_map['rect'].subIntPropertyManager(), factory_map['int'])
-        browser_item = tree_browser.addProperty(property_)
-        tree_browser.setExpanded(browser_item, False)
-        browser_item = box_browser.addProperty(property_)
-        browser_item = button_browser.addProperty(property_)
-        button_browser.setExpanded(browser_item, False)
-
-        # rectf
-        manager_map['rectf'].valueChanged.connect(set_value)
-        property_ = manager_map['rectf'].addProperty("rectf")
-        property_.propertyManager().setValue(property_, QRectF(0.12, 1.23, 2.34, 3.45))
-        tree_browser.setFactoryForManager(manager_map['rectf'].subDoublePropertyManager(), factory_map['float'])
-        box_browser.setFactoryForManager(manager_map['rectf'].subDoublePropertyManager(), factory_map['float'])
-        button_browser.setFactoryForManager(manager_map['rectf'].subDoublePropertyManager(), factory_map['float'])
-        browser_item = tree_browser.addProperty(property_)
-        tree_browser.setExpanded(browser_item, False)
-        browser_item = box_browser.addProperty(property_)
-        browser_item = button_browser.addProperty(property_)
-        button_browser.setExpanded(browser_item, False)
-
-        # cursor
-        manager_map['cursor'].valueChanged.connect(set_value)
-        property_ = manager_map['cursor'].addProperty("cursor")
-        property_.propertyManager().setValue(property_, QCursor())
-        tree_browser.setFactoryForManager(manager_map['cursor'], factory_map['cursor'])
-        box_browser.setFactoryForManager(manager_map['cursor'], factory_map['cursor'])
-        button_browser.setFactoryForManager(manager_map['cursor'], factory_map['cursor'])
-        browser_item = tree_browser.addProperty(property_)
-        tree_browser.setExpanded(browser_item, False)
-        browser_item = box_browser.addProperty(property_)
-        browser_item = button_browser.addProperty(property_)
-        button_browser.setExpanded(browser_item, False)
-
-        # color
-        manager_map['color'].valueChanged.connect(set_value)
-        property_ = manager_map['color'].addProperty("color")
-        property_.propertyManager().setValue(property_, QColor())
-        tree_browser.setFactoryForManager(manager_map['color'], factory_map['color'])
-        box_browser.setFactoryForManager(manager_map['color'], factory_map['color'])
-        button_browser.setFactoryForManager(manager_map['color'], factory_map['color'])
-        browser_item = tree_browser.addProperty(property_)
-        tree_browser.setExpanded(browser_item, False)
-        browser_item = box_browser.addProperty(property_)
-        browser_item = button_browser.addProperty(property_)
-        button_browser.setExpanded(browser_item, False)
-
-        # font
-        manager_map['font'].valueChanged.connect(set_value)
-        property_ = manager_map['font'].addProperty("font")
-        property_.propertyManager().setValue(property_, QFont())
-        tree_browser.setFactoryForManager(manager_map['font'], factory_map['font'])
-        box_browser.setFactoryForManager(manager_map['font'], factory_map['font'])
-        button_browser.setFactoryForManager(manager_map['font'], factory_map['font'])
-        browser_item = tree_browser.addProperty(property_)
-        tree_browser.setExpanded(browser_item, False)
-        browser_item = box_browser.addProperty(property_)
-        browser_item = button_browser.addProperty(property_)
-        button_browser.setExpanded(browser_item, False)
-
-        # size_policy
-        manager_map['size_policy'].valueChanged.connect(set_value)
-        property_ = manager_map['size_policy'].addProperty("size_policy")
-        property_.propertyManager().setValue(property_, QSizePolicy())
-        tree_browser.setFactoryForManager(manager_map['size_policy'].subEnumPropertyManager(), factory_map['enum'])
-        tree_browser.setFactoryForManager(manager_map['size_policy'].subIntPropertyManager(), factory_map['int'])
-        box_browser.setFactoryForManager(manager_map['size_policy'].subEnumPropertyManager(), factory_map['enum'])
-        box_browser.setFactoryForManager(manager_map['size_policy'].subIntPropertyManager(), factory_map['int'])
-        button_browser.setFactoryForManager(manager_map['size_policy'].subEnumPropertyManager(), factory_map['enum'])
-        button_browser.setFactoryForManager(manager_map['size_policy'].subIntPropertyManager(), factory_map['int'])
-        browser_item = tree_browser.addProperty(property_)
-        tree_browser.setExpanded(browser_item, False)
-        browser_item = box_browser.addProperty(property_)
-        browser_item = button_browser.addProperty(property_)
-        button_browser.setExpanded(browser_item, False)
 
     tree_browser.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
     tree_scroll_area.setWidgetResizable(True)
