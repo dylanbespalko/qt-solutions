@@ -20,6 +20,7 @@ HEADERS += \
     qtpropertybrowser/qtintpropertymanager_wrapper.h \
     qtpropertybrowser/qtboolpropertymanager_wrapper.h \
     qtpropertybrowser/qtdoublepropertymanager_wrapper.h \
+    qtpropertybrowser/qtcomplexpropertymanager_wrapper.h \
     qtpropertybrowser/qtstringpropertymanager_wrapper.h \
     qtpropertybrowser/qtfilepropertymanager_wrapper.h \
     qtpropertybrowser/qtdatepropertymanager_wrapper.h \
@@ -42,7 +43,6 @@ HEADERS += \
     qtpropertybrowser/qtcursorpropertymanager_wrapper.h \
     qtpropertybrowser/qtcursorpropertymanager_wrapper.h \
     qtpropertybrowser/qtvariantpropertymanager_wrapper.h \
-    #qtpropertybrowser/qtcomplexpropertymanager_wrapper.h \
     #qtpropertybrowser/qtcomplexarraypropertymanager_wrapper.h \
     \
     qtpropertybrowser/qtabstracteditorfactorybase_wrapper.h \
@@ -83,6 +83,7 @@ SOURCES += \
     qtpropertybrowser/qtintpropertymanager_wrapper.cpp \
     qtpropertybrowser/qtboolpropertymanager_wrapper.cpp \
     qtpropertybrowser/qtdoublepropertymanager_wrapper.cpp \
+    qtpropertybrowser/qtcomplexpropertymanager_wrapper.cpp \
     qtpropertybrowser/qtstringpropertymanager_wrapper.cpp \
     qtpropertybrowser/qtfilepropertymanager_wrapper.cpp \
     qtpropertybrowser/qtdatepropertymanager_wrapper.cpp \
@@ -104,7 +105,6 @@ SOURCES += \
     qtpropertybrowser/qtcolorpropertymanager_wrapper.cpp \
     qtpropertybrowser/qtcursorpropertymanager_wrapper.cpp \
     qtpropertybrowser/qtvariantpropertymanager_wrapper.cpp \
-    #qtpropertybrowser/qtcomplexpropertymanager_wrapper.cpp \
     #qtpropertybrowser/qtcomplexarraypropertymanager_wrapper.cpp \
     \
     qtpropertybrowser/qtabstracteditorfactorybase_wrapper.cpp \

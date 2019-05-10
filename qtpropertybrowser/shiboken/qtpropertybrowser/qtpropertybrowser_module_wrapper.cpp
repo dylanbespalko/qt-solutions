@@ -58,7 +58,6 @@ void init_QtCheckBoxFactory(PyObject* module);
 void init_QtCharEditorFactory(PyObject* module);
 void init_QtBrowserItem(PyObject* module);
 void init_QtAbstractPropertyManager(PyObject* module);
-void init_QtFlagPropertyManager(PyObject* module);
 void init_QtFilePropertyManager(PyObject* module);
 void init_QtEnumPropertyManager(PyObject* module);
 void init_QtDoublePropertyManager(PyObject* module);
@@ -67,14 +66,15 @@ void init_QtVariantPropertyManager(PyObject* module);
 void init_QtDatePropertyManager(PyObject* module);
 void init_QtCursorPropertyManager(PyObject* module);
 void init_QtTimePropertyManager(PyObject* module);
-void init_QtColorPropertyManager(PyObject* module);
+void init_QtComplexPropertyManager(PyObject* module);
 void init_QtStringPropertyManager(PyObject* module);
-void init_QtCharPropertyManager(PyObject* module);
+void init_QtColorPropertyManager(PyObject* module);
 void init_QtSizePropertyManager(PyObject* module);
+void init_QtCharPropertyManager(PyObject* module);
 void init_QtSizePolicyPropertyManager(PyObject* module);
 void init_QtSizeFPropertyManager(PyObject* module);
-void init_QtBoolPropertyManager(PyObject* module);
 void init_QtRectPropertyManager(PyObject* module);
+void init_QtBoolPropertyManager(PyObject* module);
 void init_QtRectFPropertyManager(PyObject* module);
 void init_QtPointPropertyManager(PyObject* module);
 void init_QtPointFPropertyManager(PyObject* module);
@@ -83,11 +83,12 @@ void init_QtKeySequencePropertyManager(PyObject* module);
 void init_QtIntPropertyManager(PyObject* module);
 void init_QtGroupPropertyManager(PyObject* module);
 void init_QtFontPropertyManager(PyObject* module);
+void init_QtFlagPropertyManager(PyObject* module);
 void init_QtAbstractEditorFactoryBase(PyObject* module);
 void init_QtAbstractPropertyBrowser(PyObject* module);
-void init_QtTreePropertyBrowser(PyObject* module);
 void init_QtGroupBoxPropertyBrowser(PyObject* module);
 void init_QtButtonPropertyBrowser(PyObject* module);
+void init_QtTreePropertyBrowser(PyObject* module);
 
 // Enum definitions ------------------------------------------------------------
 static void Attribute_PythonToCpp_Attribute(PyObject* pyIn, void* cppOut) {
@@ -179,6 +180,31 @@ PyTypeObject** SbkPySide2_QtWidgetsTypes;
 SbkConverter** SbkPySide2_QtWidgetsTypeConverters;
 
 // Module initialization ------------------------------------------------------------
+
+// Primitive Type converters.
+
+// C++ to Python conversion for type 'QComplex'.
+static PyObject* QComplex_CppToPython_QComplex(const void* cppIn) {
+    ::QComplex& cppInRef = *((::QComplex*)cppIn);
+
+                    return PyComplex_FromDoubles(cppInRef.real(), cppInRef.imag());
+
+}
+// Python to C++ conversions for type 'QComplex'.
+static void PyComplex_PythonToCpp_QComplex(PyObject* pyIn, void* cppOut) {
+
+    double real = PyComplex_RealAsDouble(pyIn);
+    double imag = PyComplex_ImagAsDouble(pyIn);
+    *((::QComplex*)cppOut) = QComplex(real, imag);
+
+}
+static PythonToCppFunc is_PyComplex_PythonToCpp_QComplex_Convertible(PyObject* pyIn) {
+    if (PyComplex_Check(pyIn))
+        return PyComplex_PythonToCpp_QComplex;
+    return {};
+}
+
+
 // Container Type converters.
 
 // C++ to Python conversion for type 'const QList<QObject* > &'.
@@ -669,7 +695,6 @@ SBK_MODULE_INIT_FUNCTION_BEGIN(qtpropertybrowser)
     init_QtCharEditorFactory(module);
     init_QtBrowserItem(module);
     init_QtAbstractPropertyManager(module);
-    init_QtFlagPropertyManager(module);
     init_QtFilePropertyManager(module);
     init_QtEnumPropertyManager(module);
     init_QtDoublePropertyManager(module);
@@ -678,14 +703,15 @@ SBK_MODULE_INIT_FUNCTION_BEGIN(qtpropertybrowser)
     init_QtDatePropertyManager(module);
     init_QtCursorPropertyManager(module);
     init_QtTimePropertyManager(module);
-    init_QtColorPropertyManager(module);
+    init_QtComplexPropertyManager(module);
     init_QtStringPropertyManager(module);
-    init_QtCharPropertyManager(module);
+    init_QtColorPropertyManager(module);
     init_QtSizePropertyManager(module);
+    init_QtCharPropertyManager(module);
     init_QtSizePolicyPropertyManager(module);
     init_QtSizeFPropertyManager(module);
-    init_QtBoolPropertyManager(module);
     init_QtRectPropertyManager(module);
+    init_QtBoolPropertyManager(module);
     init_QtRectFPropertyManager(module);
     init_QtPointPropertyManager(module);
     init_QtPointFPropertyManager(module);
@@ -694,11 +720,21 @@ SBK_MODULE_INIT_FUNCTION_BEGIN(qtpropertybrowser)
     init_QtIntPropertyManager(module);
     init_QtGroupPropertyManager(module);
     init_QtFontPropertyManager(module);
+    init_QtFlagPropertyManager(module);
     init_QtAbstractEditorFactoryBase(module);
     init_QtAbstractPropertyBrowser(module);
-    init_QtTreePropertyBrowser(module);
     init_QtGroupBoxPropertyBrowser(module);
     init_QtButtonPropertyBrowser(module);
+    init_QtTreePropertyBrowser(module);
+
+    // Register converter for type 'qtpropertybrowser.QComplex'.
+    SbkqtpropertybrowserTypeConverters[SBK_QCOMPLEX_IDX] = Shiboken::Conversions::createConverter(&PyComplex_Type, QComplex_CppToPython_QComplex);
+    Shiboken::Conversions::registerConverterName(SbkqtpropertybrowserTypeConverters[SBK_QCOMPLEX_IDX], "QComplex");
+    // Add user defined implicit conversions to type converter.
+    Shiboken::Conversions::addPythonToCppValueConversion(SbkqtpropertybrowserTypeConverters[SBK_QCOMPLEX_IDX],
+        PyComplex_PythonToCpp_QComplex,
+        is_PyComplex_PythonToCpp_QComplex_Convertible);
+
 
     // Register converter for type 'const QList<QObject*>&'.
     SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QLIST_QOBJECTPTR_IDX] = Shiboken::Conversions::createConverter(&PyList_Type, _constQList_QObjectPTR_REF_CppToPython__constQList_QObjectPTR_REF);

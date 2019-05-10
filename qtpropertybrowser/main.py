@@ -9,7 +9,7 @@ from PySide2.QtWidgets import QApplication, QDialog, QLabel, QGridLayout, QScrol
 
 from qtpropertybrowser import QtTreePropertyBrowser, QtGroupBoxPropertyBrowser, QtButtonPropertyBrowser
 from qtpropertybrowser import QtIntPropertyManager, QtBoolPropertyManager
-from qtpropertybrowser import QtDoublePropertyManager  #, QtComplexPropertyManager, QtComplexArrayPropertyManager
+from qtpropertybrowser import QtDoublePropertyManager, QtComplexPropertyManager  # QtComplexArrayPropertyManager
 from qtpropertybrowser import QtStringPropertyManager, QtFilePropertyManager
 from qtpropertybrowser import QtDatePropertyManager, QtTimePropertyManager, QtDateTimePropertyManager
 from qtpropertybrowser import QtCharPropertyManager, QtKeySequencePropertyManager
@@ -39,6 +39,7 @@ class Manager(Enum):
     BOOL = auto()
     DOUBLE_SPIN = auto()
     DOUBLE_EDIT = auto()
+    COMPLEX_EDIT = auto()
     STRING = auto()
     FILE = auto()
     DATE = auto()
@@ -69,6 +70,7 @@ class Factory(Enum):
     BOOL = auto()
     DOUBLE_SPIN = auto()
     DOUBLE_EDIT = auto()
+    COMPLEX_EDIT = auto()
     STRING = auto()
     FILE = auto()
     DATE = auto()
@@ -138,6 +140,7 @@ if __name__ == "__main__":
                        Manager.BOOL: QtBoolPropertyManager(),
                        Manager.DOUBLE_SPIN: QtDoublePropertyManager(), # todo: Does not support Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT
                        Manager.DOUBLE_EDIT: QtDoublePropertyManager(),
+                       Manager.COMPLEX_EDIT: QtComplexPropertyManager(),
                        Manager.STRING: QtStringPropertyManager(),
                        Manager.FILE: QtFilePropertyManager(),
                        Manager.DATE: QtDatePropertyManager(),
@@ -170,6 +173,7 @@ if __name__ == "__main__":
                        Factory.BOOL: QtCheckBoxFactory(),
                        Factory.DOUBLE_SPIN: QtDoubleSpinBoxFactory(),
                        Factory.DOUBLE_EDIT: QtDoubleEditFactory(),
+                       Factory.COMPLEX_EDIT: None,
                        Factory.STRING: QtLineEditFactory(),
                        Factory.FILE: QtFileEditorFactory(),
                        Factory.DATE: QtDateEditFactory(),
@@ -344,6 +348,42 @@ if __name__ == "__main__":
         tree_browser.setFactoryForManager(manager_map[Manager.DOUBLE_EDIT], factory_map[Factory.DOUBLE_EDIT])
         box_browser.setFactoryForManager(manager_map[Manager.DOUBLE_EDIT], factory_map[Factory.DOUBLE_EDIT])
         button_browser.setFactoryForManager(manager_map[Manager.DOUBLE_EDIT], factory_map[Factory.DOUBLE_EDIT])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # complex_edit_r
+        manager_map[Manager.COMPLEX_EDIT].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.COMPLEX_EDIT].addProperty("complex_edit_r")
+        property_.propertyManager().setReadOnly(property_, True)
+        property_.propertyManager().setUnit(property_, "V")
+        property_.propertyManager().setPrecision(property_, 2)
+        property_.propertyManager().setMinimum(property_, 0)
+        property_.propertyManager().setMaximum(property_, 2)
+        property_.propertyManager().setValue(property_, 2 + 2j)
+        tree_browser.setFactoryForManager(manager_map[Manager.COMPLEX_EDIT], factory_map[Factory.COMPLEX_EDIT])
+        box_browser.setFactoryForManager(manager_map[Manager.COMPLEX_EDIT], factory_map[Factory.COMPLEX_EDIT])
+        button_browser.setFactoryForManager(manager_map[Manager.COMPLEX_EDIT], factory_map[Factory.COMPLEX_EDIT])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # complex_edit_rw
+        manager_map[Manager.COMPLEX_EDIT].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.COMPLEX_EDIT].addProperty("complex_edit_rw")
+        property_.propertyManager().setReadOnly(property_, False)
+        property_.propertyManager().setUnit(property_, "V")
+        property_.propertyManager().setPrecision(property_, 2)
+        property_.propertyManager().setMinimum(property_, 0)
+        property_.propertyManager().setMaximum(property_, 2)
+        property_.propertyManager().setValue(property_, 2 + 2j)
+        tree_browser.setFactoryForManager(manager_map[Manager.COMPLEX_EDIT], factory_map[Factory.COMPLEX_EDIT])
+        box_browser.setFactoryForManager(manager_map[Manager.COMPLEX_EDIT], factory_map[Factory.COMPLEX_EDIT])
+        button_browser.setFactoryForManager(manager_map[Manager.COMPLEX_EDIT], factory_map[Factory.COMPLEX_EDIT])
         browser_item = tree_browser.addProperty(property_)
         tree_browser.setExpanded(browser_item, False)
         browser_item = box_browser.addProperty(property_)

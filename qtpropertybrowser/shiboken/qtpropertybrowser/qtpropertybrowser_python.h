@@ -20,6 +20,7 @@
 #include <qteditorfactory.h>
 #include <qtpropertybrowser.h>
 // Conversion Includes - Primitive Types
+#include <complex>
 #include <qabstractitemmodel.h>
 #include <QString>
 #include <QStringList>
@@ -50,55 +51,56 @@ enum : int {
     SBK_QTCHECKBOXFACTORY_IDX                                = 12,
     SBK_QTCOLOREDITORFACTORY_IDX                             = 13,
     SBK_QTCOLORPROPERTYMANAGER_IDX                           = 14,
-    SBK_QTCURSOREDITORFACTORY_IDX                            = 15,
-    SBK_QTCURSORPROPERTYMANAGER_IDX                          = 16,
-    SBK_QTDATEEDITFACTORY_IDX                                = 17,
-    SBK_QTDATEPROPERTYMANAGER_IDX                            = 18,
-    SBK_QTDATETIMEEDITFACTORY_IDX                            = 19,
-    SBK_QTDATETIMEPROPERTYMANAGER_IDX                        = 20,
-    SBK_QTDOUBLEEDITFACTORY_IDX                              = 21,
-    SBK_QTDOUBLEPROPERTYMANAGER_IDX                          = 22,
-    SBK_QTDOUBLESPINBOXFACTORY_IDX                           = 23,
-    SBK_QTENUMEDITORFACTORY_IDX                              = 24,
-    SBK_QTENUMPROPERTYMANAGER_IDX                            = 25,
-    SBK_QTFILEEDITORFACTORY_IDX                              = 26,
-    SBK_QTFILEPROPERTYMANAGER_IDX                            = 27,
-    SBK_QTFLAGPROPERTYMANAGER_IDX                            = 28,
-    SBK_QTFONTEDITORFACTORY_IDX                              = 29,
-    SBK_QTFONTPROPERTYMANAGER_IDX                            = 30,
-    SBK_QTGROUPBOXPROPERTYBROWSER_IDX                        = 31,
-    SBK_QTGROUPPROPERTYMANAGER_IDX                           = 32,
-    SBK_QTINTEDITFACTORY_IDX                                 = 33,
-    SBK_QTINTPROPERTYMANAGER_IDX                             = 34,
-    SBK_QTKEYSEQUENCEEDITORFACTORY_IDX                       = 35,
-    SBK_QTKEYSEQUENCEPROPERTYMANAGER_IDX                     = 36,
-    SBK_QTLINEEDITFACTORY_IDX                                = 37,
-    SBK_QTLOCALEPROPERTYMANAGER_IDX                          = 38,
-    SBK_QTPOINTFPROPERTYMANAGER_IDX                          = 39,
-    SBK_QTPOINTPROPERTYMANAGER_IDX                           = 40,
-    SBK_QTPROPERTY_IDX                                       = 41,
-    SBK_QTRECTFPROPERTYMANAGER_IDX                           = 42,
-    SBK_QTRECTPROPERTYMANAGER_IDX                            = 43,
-    SBK_QTSCROLLBARFACTORY_IDX                               = 44,
-    SBK_QTSIZEFPROPERTYMANAGER_IDX                           = 45,
-    SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX                      = 46,
-    SBK_QTSIZEPROPERTYMANAGER_IDX                            = 47,
-    SBK_QTSLIDERFACTORY_IDX                                  = 48,
-    SBK_QTSPINBOXFACTORY_IDX                                 = 49,
-    SBK_QTSTRINGPROPERTYMANAGER_IDX                          = 50,
-    SBK_QTTIMEEDITFACTORY_IDX                                = 51,
-    SBK_QTTIMEPROPERTYMANAGER_IDX                            = 52,
-    SBK_QTTREEPROPERTYBROWSER_IDX                            = 53,
-    SBK_QTTREEPROPERTYBROWSER_RESIZEMODE_IDX                 = 54,
-    SBK_QTVARIANTEDITORFACTORY_IDX                           = 55,
-    SBK_QTVARIANTPROPERTY_IDX                                = 56,
-    SBK_QTVARIANTPROPERTYMANAGER_IDX                         = 57,
+    SBK_QTCOMPLEXPROPERTYMANAGER_IDX                         = 15,
+    SBK_QTCURSOREDITORFACTORY_IDX                            = 16,
+    SBK_QTCURSORPROPERTYMANAGER_IDX                          = 17,
+    SBK_QTDATEEDITFACTORY_IDX                                = 18,
+    SBK_QTDATEPROPERTYMANAGER_IDX                            = 19,
+    SBK_QTDATETIMEEDITFACTORY_IDX                            = 20,
+    SBK_QTDATETIMEPROPERTYMANAGER_IDX                        = 21,
+    SBK_QTDOUBLEEDITFACTORY_IDX                              = 22,
+    SBK_QTDOUBLEPROPERTYMANAGER_IDX                          = 23,
+    SBK_QTDOUBLESPINBOXFACTORY_IDX                           = 24,
+    SBK_QTENUMEDITORFACTORY_IDX                              = 25,
+    SBK_QTENUMPROPERTYMANAGER_IDX                            = 26,
+    SBK_QTFILEEDITORFACTORY_IDX                              = 27,
+    SBK_QTFILEPROPERTYMANAGER_IDX                            = 28,
+    SBK_QTFLAGPROPERTYMANAGER_IDX                            = 29,
+    SBK_QTFONTEDITORFACTORY_IDX                              = 30,
+    SBK_QTFONTPROPERTYMANAGER_IDX                            = 31,
+    SBK_QTGROUPBOXPROPERTYBROWSER_IDX                        = 32,
+    SBK_QTGROUPPROPERTYMANAGER_IDX                           = 33,
+    SBK_QTINTEDITFACTORY_IDX                                 = 34,
+    SBK_QTINTPROPERTYMANAGER_IDX                             = 35,
+    SBK_QTKEYSEQUENCEEDITORFACTORY_IDX                       = 36,
+    SBK_QTKEYSEQUENCEPROPERTYMANAGER_IDX                     = 37,
+    SBK_QTLINEEDITFACTORY_IDX                                = 38,
+    SBK_QTLOCALEPROPERTYMANAGER_IDX                          = 39,
+    SBK_QTPOINTFPROPERTYMANAGER_IDX                          = 40,
+    SBK_QTPOINTPROPERTYMANAGER_IDX                           = 41,
+    SBK_QTPROPERTY_IDX                                       = 42,
+    SBK_QTRECTFPROPERTYMANAGER_IDX                           = 43,
+    SBK_QTRECTPROPERTYMANAGER_IDX                            = 44,
+    SBK_QTSCROLLBARFACTORY_IDX                               = 45,
+    SBK_QTSIZEFPROPERTYMANAGER_IDX                           = 46,
+    SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX                      = 47,
+    SBK_QTSIZEPROPERTYMANAGER_IDX                            = 48,
+    SBK_QTSLIDERFACTORY_IDX                                  = 49,
+    SBK_QTSPINBOXFACTORY_IDX                                 = 50,
+    SBK_QTSTRINGPROPERTYMANAGER_IDX                          = 51,
+    SBK_QTTIMEEDITFACTORY_IDX                                = 52,
+    SBK_QTTIMEPROPERTYMANAGER_IDX                            = 53,
+    SBK_QTTREEPROPERTYBROWSER_IDX                            = 54,
+    SBK_QTTREEPROPERTYBROWSER_RESIZEMODE_IDX                 = 55,
+    SBK_QTVARIANTEDITORFACTORY_IDX                           = 56,
+    SBK_QTVARIANTPROPERTY_IDX                                = 57,
+    SBK_QTVARIANTPROPERTYMANAGER_IDX                         = 58,
     SBK_ATTRIBUTE_IDX                                        = 0,
     SBK_DOMAIN_IDX                                           = 1,
     SBK_FORMAT_IDX                                           = 2,
     SBK_PKAVG_IDX                                            = 3,
-    SBK_SCALE_IDX                                            = 58,
-    SBK_qtpropertybrowser_IDX_COUNT                          = 59
+    SBK_SCALE_IDX                                            = 59,
+    SBK_qtpropertybrowser_IDX_COUNT                          = 60
 };
 // This variable stores all Python types exported by this module.
 extern PyTypeObject** SbkqtpropertybrowserTypes;
@@ -111,18 +113,19 @@ extern SbkConverter** SbkqtpropertybrowserTypeConverters;
 
 // Converter indices
 enum : int {
-    SBK_QTPROPERTYBROWSER_QLIST_QOBJECTPTR_IDX               = 0, // const QList<QObject* > &
-    SBK_QTPROPERTYBROWSER_QLIST_QBYTEARRAY_IDX               = 1, // QList<QByteArray >
-    SBK_QTPROPERTYBROWSER_QLIST_QACTIONPTR_IDX               = 2, // QList<QAction* >
-    SBK_QTPROPERTYBROWSER_QLIST_QTBROWSERITEMPTR_IDX         = 3, // QList<QtBrowserItem* >
-    SBK_QTPROPERTYBROWSER_QLIST_QTPROPERTYPTR_IDX            = 4, // QList<QtProperty* >
-    SBK_QTPROPERTYBROWSER_QSET_QTPROPERTYPTR_IDX             = 5, // QSet<QtProperty* >
-    SBK_QTPROPERTYBROWSER_QLIST_ATTRIBUTE_IDX                = 6, // QList<Attribute >
-    SBK_QTPROPERTYBROWSER_QMAP_INT_QICON_IDX                 = 7, // QMap<int,QIcon >
-    SBK_QTPROPERTYBROWSER_QLIST_QVARIANT_IDX                 = 8, // QList<QVariant >
-    SBK_QTPROPERTYBROWSER_QLIST_QSTRING_IDX                  = 9, // QList<QString >
-    SBK_QTPROPERTYBROWSER_QMAP_QSTRING_QVARIANT_IDX          = 10, // QMap<QString,QVariant >
-    SBK_qtpropertybrowser_CONVERTERS_IDX_COUNT               = 11
+    SBK_QCOMPLEX_IDX                                         = 0,
+    SBK_QTPROPERTYBROWSER_QLIST_QOBJECTPTR_IDX               = 1, // const QList<QObject* > &
+    SBK_QTPROPERTYBROWSER_QLIST_QBYTEARRAY_IDX               = 2, // QList<QByteArray >
+    SBK_QTPROPERTYBROWSER_QLIST_QACTIONPTR_IDX               = 3, // QList<QAction* >
+    SBK_QTPROPERTYBROWSER_QLIST_QTBROWSERITEMPTR_IDX         = 4, // QList<QtBrowserItem* >
+    SBK_QTPROPERTYBROWSER_QLIST_QTPROPERTYPTR_IDX            = 5, // QList<QtProperty* >
+    SBK_QTPROPERTYBROWSER_QSET_QTPROPERTYPTR_IDX             = 6, // QSet<QtProperty* >
+    SBK_QTPROPERTYBROWSER_QLIST_ATTRIBUTE_IDX                = 7, // QList<Attribute >
+    SBK_QTPROPERTYBROWSER_QMAP_INT_QICON_IDX                 = 8, // QMap<int,QIcon >
+    SBK_QTPROPERTYBROWSER_QLIST_QVARIANT_IDX                 = 9, // QList<QVariant >
+    SBK_QTPROPERTYBROWSER_QLIST_QSTRING_IDX                  = 10, // QList<QString >
+    SBK_QTPROPERTYBROWSER_QMAP_QSTRING_QVARIANT_IDX          = 11, // QMap<QString,QVariant >
+    SBK_qtpropertybrowser_CONVERTERS_IDX_COUNT               = 12
 };
 // Macros for type check
 
@@ -146,6 +149,7 @@ template<> inline PyTypeObject* SbkType< ::QtCharPropertyManager >() { return re
 template<> inline PyTypeObject* SbkType< ::QtCheckBoxFactory >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTCHECKBOXFACTORY_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtColorEditorFactory >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTCOLOREDITORFACTORY_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtColorPropertyManager >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTCOLORPROPERTYMANAGER_IDX]); }
+template<> inline PyTypeObject* SbkType< ::QtComplexPropertyManager >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTCOMPLEXPROPERTYMANAGER_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtCursorEditorFactory >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTCURSOREDITORFACTORY_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtCursorPropertyManager >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTCURSORPROPERTYMANAGER_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtDateEditFactory >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTDATEEDITFACTORY_IDX]); }

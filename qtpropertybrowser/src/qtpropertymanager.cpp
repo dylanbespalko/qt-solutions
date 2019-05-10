@@ -121,6 +121,28 @@ static void setSimpleMaximumData(PrivateData *data, const Value &maxVal)
 }
 
 template <class PrivateData, class Value>
+static void setComplexMinimumData(PrivateData *data, const Value &minVal)
+{
+    data->minVal = minVal;
+    if (data->maxVal < data->minVal)
+        data->maxVal = data->minVal;
+
+    if (std::abs(data->val) < data->minVal)
+        data->val = QComplex(std::polar(data->minVal, std::arg(data->val)));
+}
+
+template <class PrivateData, class Value>
+static void setComplexMaximumData(PrivateData *data, const Value &maxVal)
+{
+    data->maxVal = maxVal;
+    if (data->minVal > data->maxVal)
+        data->minVal = data->maxVal;
+
+    if (std::abs(data->val) > data->maxVal)
+        data->val = QComplex(std::polar(data->maxVal, std::arg(data->val)));
+}
+
+template <class PrivateData, class Value>
 static void setSizeMinimumData(PrivateData *data, const Value &newMinVal)
 {
     data->minVal = newMinVal;
@@ -158,6 +180,13 @@ static void setSizeMaximumData(PrivateData *data, const Value &newMaxVal)
     }
 }
 
+QComplex qBound(double minVal, const QComplex val, double maxVal)
+{
+    double rho = qBound(minVal, std::abs(val), maxVal);
+    double theta = std::arg(val);
+    return  QComplex(std::polar(rho, theta));
+}
+
 template <class SizeValue>
 static SizeValue qBoundSize(const SizeValue &minVal, const SizeValue &val, const SizeValue &maxVal)
 {
@@ -173,6 +202,18 @@ static SizeValue qBoundSize(const SizeValue &minVal, const SizeValue &val, const
         croppedVal.setHeight(maxVal.height());
 
     return croppedVal;
+}
+
+template <class PrivateData, class Value>
+static void setSoftComplexVal(PrivateData *data, const Value &val)
+{
+    data->val = val;
+    data->foreground.setColor(Qt::black);
+    if (std::abs(data->val) < data->minVal)
+        data->foreground.setColor(Qt::blue);
+
+    if (std::abs(data->val) > data->maxVal)
+        data->foreground.setColor(Qt::red);
 }
 
 QSize qBound(QSize minVal, QSize val, QSize maxVal)
@@ -192,6 +233,17 @@ QColor qSoftBound(Value minVal, Value val, Value maxVal)
     if (val <= minVal)
         color = QColor(Qt::blue);
     if (val >= maxVal)
+        color = QColor(Qt::red);
+    return color;
+}
+
+QColor qSoftBound(double minVal, const QComplex val, double maxVal)
+{
+    double rho = std::abs(val);
+    QColor color = QColor(Qt::black);
+    if (rho <= minVal)
+        color = QColor(Qt::blue);
+    if (rho >= maxVal)
         color = QColor(Qt::red);
     return color;
 }
@@ -221,6 +273,16 @@ QColor qSoftBound(QSize minVal, QSize val, QSize maxVal)
 QColor qSoftBound(QSizeF minVal, QSizeF val, QSizeF maxVal)
 {
     return qSoftBoundSize(minVal, val, maxVal);
+}
+
+// Matches the Python isclose() function in PEP 0485 and Boost Weak Approach
+template <class FloatType>
+bool isclose(FloatType a, FloatType b, FloatType abs_tol, FloatType rel_tol)
+{
+    if (std::abs(a-b) <= std::max( rel_tol * std::max(std::abs(a), std::abs(b)), abs_tol))
+        return true;
+    else
+        return false;
 }
 
 namespace {
@@ -7575,6 +7637,810 @@ void QtFilePropertyManager::initializeProperty(QtProperty *property)
  \reimp
  */
 void QtFilePropertyManager::uninitializeProperty(QtProperty *property)
+{
+    d_ptr->m_values.remove(property);
+}
+
+// QtComplexPropertyManager
+
+class QtComplexPropertyManagerPrivate
+{
+    QtComplexPropertyManager *q_ptr;
+    Q_DECLARE_PUBLIC(QtComplexPropertyManager)
+public:
+
+    struct Data
+    {
+        Data()
+            : val(0.0,0.0), absTol(std::numeric_limits<double>::epsilon()), relTol(std::numeric_limits<double>::epsilon()), minVal(0), maxVal(LONG_MAX),
+              singleStep(1), precision(2), scale(Scale::_), unit(QString()), pkAvg(PkAvg::PK),
+              format(Format::RE_IM), readOnly(false), foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
+        QComplex val;
+        double absTol;
+        double relTol;
+        double minVal;
+        double maxVal;
+        QComplex singleStep;
+        int precision;
+        Scale scale;
+        QString unit;
+        PkAvg pkAvg;
+        Format format;
+        bool readOnly;
+        QBrush foreground;
+        void setVal(QComplex newVal) { setSoftComplexVal(this, newVal); }
+
+        double minimumValue() const { return minVal; }
+        double maximumValue() const { return maxVal; }
+        void setMinimumValue(double newMinVal) { setComplexMinimumData(this, newMinVal); }
+        void setMaximumValue(double newMaxVal) { setComplexMaximumData(this, newMaxVal); }
+    };
+
+    typedef QMap<const QtProperty *, Data> PropertyValueMap;
+    PropertyValueMap m_values;
+};
+
+/*!
+ \class QtComplexPropertyManager
+
+ \brief The QtComplexPropertyManager provides and manages complex properties.
+
+ A complex property has a current value, and a range specifying the
+ valid values. The range is defined by a minimum and a maximum
+ magnitude value.
+
+ The property's value and range can be retrieved using the value(),
+ minimum() and maximum() functions, and can be set using the
+ setValue(), setMinimum() and setMaximum() slots.
+ Alternatively, the range can be defined in one go using the
+ setRange() slot.
+
+ In addition, QtComplexPropertyManager provides the valueChanged() signal
+ which is emitted whenever a property created by this manager
+ changes, and the rangeChanged() signal which is emitted whenever
+ such a property changes its range of valid values.
+
+ \sa QtAbstractPropertyManager, QtComplexSpinBoxFactory
+ */
+
+/*!
+ \fn void QtComplexPropertyManager::valueChanged(QtProperty *property, QComplex value)
+
+ This signal is emitted whenever a property created by this manager
+ changes its value, passing a pointer to the \a property and the new
+ \a value as parameters.
+
+ \sa setValue()
+ */
+
+/*!
+ \fn void QtComplexPropertyManager::rangeChanged(QtProperty *property, double minimum, double maximum)
+
+ This signal is emitted whenever a property created by this manager
+ changes its range of valid values, passing a pointer to the
+ \a property and the new \a minimum and \a maximum values
+
+ \sa setRange()
+ */
+
+/*!
+ \fn void QtComplexPropertyManager::precisionChanged(QtProperty *property, int prec)
+
+ This signal is emitted whenever a property created by this manager
+ changes its precision of value, passing a pointer to the
+ \a property and the new \a prec value
+
+ \sa setPrecision()
+ */
+
+/*!
+ \fn void QtComplexPropertyManager::singleStepChanged(QtProperty *property, double step)
+
+ This signal is emitted whenever a property created by this manager
+ changes its single step property, passing a pointer to the
+ \a property and the new \a step value
+
+ \sa setSingleStep()
+ */
+
+/*!
+ Creates a manager with the given \a parent.
+ */
+QtComplexPropertyManager::QtComplexPropertyManager(QObject *parent)
+: QtAbstractPropertyManager(parent)
+{
+    d_ptr = new QtComplexPropertyManagerPrivate;
+    d_ptr->q_ptr = this;
+}
+
+/*!
+ Destroys  this manager, and all the properties it has created.
+ */
+QtComplexPropertyManager::~QtComplexPropertyManager()
+{
+    clear();
+    delete d_ptr;
+}
+
+/*!
+ Returns the given \a property's value.
+
+ If the given property is not managed by this manager, this
+ function returns 0.
+
+ \sa setValue()
+ */
+QComplex QtComplexPropertyManager::value(const QtProperty *property) const
+{
+    return getValue<QComplex >(d_ptr->m_values, property,QComplex(0.0,0.0));
+}
+
+/*!
+ Returns the given \a property's absTol value.
+
+ \sa relTol()
+ */
+double QtComplexPropertyManager::absTol(const QtProperty *property) const
+{
+    return getData<double>(d_ptr->m_values, &QtComplexPropertyManagerPrivate::Data::absTol, property, std::numeric_limits<double>::epsilon());
+}
+
+/*!
+ Returns the given \a property's relTol value.
+
+ \sa absTol()
+ */
+double QtComplexPropertyManager::relTol(const QtProperty *property) const
+{
+    return getData<double>(d_ptr->m_values, &QtComplexPropertyManagerPrivate::Data::relTol, property, std::numeric_limits<double>::epsilon());
+}
+
+/*!
+ Returns the given \a property's minimum value.
+
+ \sa maximum(), setRange()
+ */
+double QtComplexPropertyManager::minimum(const QtProperty *property) const
+{
+    return getMinimum<double>(d_ptr->m_values, property, 0.0);
+}
+
+/*!
+ Returns the given \a property's maximum value.
+
+ \sa minimum(), setRange()
+ */
+double QtComplexPropertyManager::maximum(const QtProperty *property) const
+{
+    return getMaximum<double>(d_ptr->m_values, property, 0.0);
+}
+
+/*!
+ Returns the given \a property's step value.
+
+ The step is typically used to increment or decrement a property value while pressing an arrow key.
+
+ \sa setSingleStep()
+ */
+QComplex QtComplexPropertyManager::singleStep(const QtProperty *property) const
+{
+    return getData<QComplex >(d_ptr->m_values, &QtComplexPropertyManagerPrivate::Data::singleStep, property, QComplex(0.0,0.0));
+}
+
+/*!
+ Returns the given \a property's precision, in decimals.
+
+ \sa setPrecision()
+ */
+int QtComplexPropertyManager::precision(const QtProperty *property) const
+{
+    return getData<int>(d_ptr->m_values, &QtComplexPropertyManagerPrivate::Data::precision, property, 0);
+}
+
+/*!
+ Returns the given \a property's scale, as a Scale.
+
+ \sa setScale()
+ */
+Scale QtComplexPropertyManager::scale(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtComplexPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return Scale::_;
+    return it.value().scale;
+}
+
+/*!
+ Returns the given \a property's unit, as a QString.
+
+ \sa setUnit()
+ */
+QString QtComplexPropertyManager::unit(const QtProperty *property) const
+{
+    return getData<QString>(d_ptr->m_values, &QtComplexPropertyManagerPrivate::Data::unit, property, "");
+}
+
+/*!
+ Returns the given \a property's PkAvg setting, as a PkAvg.
+
+ \sa setPkAvg()
+ */
+PkAvg QtComplexPropertyManager::pkAvg(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtComplexPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return PkAvg::PK;
+    return it.value().pkAvg;
+}
+
+/*!
+ Returns the given \a property's format setting, as a Format.
+
+ \sa setFormat()
+ */
+Format QtComplexPropertyManager::format(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtComplexPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return Format::RE_IM;
+    return it.value().format;
+}
+
+/*!
+ Returns read-only status of the property.
+
+ When property is read-only it's value can be selected and copied from editor but not modified.
+
+ \sa QtComplexPropertyManager::setReadOnly
+ */
+bool QtComplexPropertyManager::isReadOnly(const QtProperty *property) const
+{
+    return getData<bool>(d_ptr->m_values, &QtComplexPropertyManagerPrivate::Data::readOnly, property, false);
+}
+
+/*Returns the given \a property's foreground brush.
+
+The foreground brush consists of the color and style of the text
+
+\sa setForeground()
+*/
+QBrush QtComplexPropertyManager::foreground(const QtProperty *property) const
+{
+    return getData<QBrush>(d_ptr->m_values, &QtComplexPropertyManagerPrivate::Data::foreground, property, QBrush(Qt::black, Qt::SolidPattern));
+}
+
+/*!
+ \reimp
+ */
+QString QtComplexPropertyManager::valueText(const QtProperty *property) const
+{
+    const QtComplexPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return QString();
+
+    QtComplexPropertyManagerPrivate::Data  data = it.value();
+    return QComplexEdit::num2str(data.val, data.scale, data.format, data.precision);
+}
+
+/*!
+ \reimp
+ */
+QString QtComplexPropertyManager::minimumText(const QtProperty *property) const
+{
+    const QtComplexPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+    return QString();
+
+    QtComplexPropertyManagerPrivate::Data  data = it.value();
+    return QComplexEdit::num2str(QComplex(data.minVal, 0), data.scale, data.format, data.precision);
+}
+
+/*!
+ \reimp
+ */
+QString QtComplexPropertyManager::maximumText(const QtProperty *property) const
+{
+    const QtComplexPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+    return QString();
+
+    QtComplexPropertyManagerPrivate::Data  data = it.value();
+    return QComplexEdit::num2str(QComplex(data.maxVal, 0), data.scale, data.format, data.precision);
+}
+
+/*!
+ \reimp
+ */
+QString QtComplexPropertyManager::unitText(const QtProperty *property) const
+{
+    if (!attributesEditable())
+        return QString();
+    const QtComplexPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return QString();
+
+    switch (it.value().format) {
+        case Format::LOG_DEG:
+            return QString("dB") + it.value().scale + it.value().unit;
+        case Format::RE:
+        case Format::RE_IM:
+        case Format::LIN_DEG:
+        default:
+            return it.value().scale + it.value().unit;
+    }
+}
+
+/*!
+ \reimp
+ */
+QString QtComplexPropertyManager::pkAvgText(const QtProperty *property) const
+{
+    if (!attributesEditable())
+        return QString();
+    const QtComplexPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return QString();
+
+    switch (it.value().pkAvg) {
+        case PkAvg::PK:
+            return QString("pk");
+        case PkAvg::AVG:
+        default:
+            return QString("avg");
+    }
+}
+
+/*!
+ \reimp
+ */
+QString QtComplexPropertyManager::formatText(const QtProperty *property) const
+{
+    if (!attributesEditable())
+    return QString();
+    const QtComplexPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+    return QString();
+
+    switch (it.value().format) {
+        case Format::RE:
+            return QString("Re");
+        case Format::RE_IM:
+            return QString("Re+Imj");
+        case Format::LOG_DEG:
+            return QString("Log") + QString(QChar(0x2220)) + QString("Deg");
+        case Format::LIN_DEG:
+        default:
+            return QString("Lin") + QString(QChar(0x2220)) + QString("Deg");
+    }
+}
+
+/*!
+ \reimp
+ */
+QIcon QtComplexPropertyManager::checkIcon(const QtProperty *property) const
+{
+    if (!attributesEditable())
+        return QIcon();
+
+    return property->check() ? drawCheckBox(true) : drawCheckBox(false);
+}
+
+/*!
+ \fn void QtComplexPropertyManager::setValue(QtProperty *property, double value)
+
+ Sets the value of the given \a property to \a value.
+
+ If the specified \a value is not valid according to the given
+ \a property's range, the \a value is adjusted to the nearest valid value
+ within the range.
+
+ \sa value(), setRange(), valueChanged()
+ */
+void QtComplexPropertyManager::setValue(QtProperty *property, const QComplex& val)
+{
+    const QtComplexPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtComplexPropertyManagerPrivate::Data data = it.value();
+
+    if (isclose<double>(std::real(data.val), std::real(val), data.absTol, data.relTol) &&
+        isclose<double>(std::imag(data.val), std::imag(val), data.absTol, data.relTol)){
+        return;
+    }
+
+    data.setVal(val);
+
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit valueChanged(property, data.val);
+}
+
+/*!
+ Sets the step value for the given \a property to \a step.
+
+ The step is typically used to increment or decrement a property value while pressing an arrow key.
+
+ \sa singleStep()
+ */
+void QtComplexPropertyManager::setSingleStep(QtProperty *property, const QComplex& step)
+{
+    const QtComplexPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtComplexPropertyManagerPrivate::Data data = it.value();
+
+    if (isclose<double>(std::real(data.singleStep), std::real(step), data.absTol, data.relTol) &&
+        isclose<double>(std::imag(data.singleStep), std::imag(step), data.absTol, data.relTol)){
+        return;
+    }
+
+    data.singleStep = step;
+
+    it.value() = data;
+
+    emit singleStepChanged(property, data.singleStep);
+}
+
+/*!
+ Sets read-only status of the property.
+
+ \sa QtComplexPropertyManager::setReadOnly
+ */
+void QtComplexPropertyManager::setReadOnly(QtProperty *property, bool readOnly)
+{
+    const QtComplexPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtComplexPropertyManagerPrivate::Data data = it.value();
+
+    if (data.readOnly == readOnly)
+        return;
+
+    data.readOnly = readOnly;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit readOnlyChanged(property, data.readOnly);
+}
+
+/*!
+ \fn void QtComplexPropertyManager::setPrecision(QtProperty *property, int prec)
+
+ Sets the precision of the given \a property to \a prec.
+
+ The valid decimal range is 0-13. The default is 2.
+
+ \sa precision()
+ */
+void QtComplexPropertyManager::setPrecision(QtProperty *property, int prec)
+{
+    const QtComplexPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtComplexPropertyManagerPrivate::Data data = it.value();
+    if (prec > 13)
+        prec = 13;
+    else if (prec < 0)
+        prec = 0;
+
+    if (data.precision == prec)
+        return;
+
+    data.precision = prec;
+
+    it.value() = data;
+
+    emit precisionChanged(property, data.precision);
+}
+
+/*!
+ Sets the absolute tollerance value for the given \a property to \a absTol.
+
+ \sa relTol(), setAbsTol(), setRelTol()
+ */
+void QtComplexPropertyManager::setAbsTol(QtProperty *property, double absTol)
+{
+    typedef QMap<const QtProperty *, QtComplexPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::iterator PropertyToDataIterator;
+    const PropertyToDataIterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+    return;
+
+    QtComplexPropertyManagerPrivate::Data &data = it.value();
+
+    data.absTol = absTol;
+
+    it.value() = data;
+
+    emit propertyChanged(property);
+}
+
+/*!
+ Sets the relative tollerance value for the given \a property to \a relTol.
+
+ \sa absTol(), setRelTol(), setAbsTol()
+ */
+void QtComplexPropertyManager::setRelTol(QtProperty *property, double relTol)
+{
+    typedef QMap<const QtProperty *, QtComplexPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::iterator PropertyToDataIterator;
+    const PropertyToDataIterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+    return;
+
+    QtComplexPropertyManagerPrivate::Data &data = it.value();
+
+    data.relTol = relTol;
+
+    it.value() = data;
+
+    emit propertyChanged(property);
+}
+
+/*!
+ Sets the minimum value for the given \a property to \a minVal.
+
+ When setting the minimum value, the maximum and current values are
+ adjusted if necessary (ensuring that the range remains valid and
+ that the current value is within in the range).
+
+ \sa minimum(), setRange(), rangeChanged()
+ */
+void QtComplexPropertyManager::setMinimum(QtProperty *property, double minVal)
+{
+    void (QtComplexPropertyManagerPrivate::*setSubPropertyRange)(QtProperty *,
+                                                            double, double, QComplex) = 0;
+
+    typedef QMap<const QtProperty *, QtComplexPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::iterator PropertyToDataIterator;
+    const PropertyToDataIterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtComplexPropertyManagerPrivate::Data &data = it.value();
+
+    if (isclose<double>(data.minVal, minVal, data.absTol, data.relTol)){
+        return;
+    }
+
+    const QComplex oldVal = data.val;
+
+    data.setMinimumValue(minVal);
+
+    emit (this->rangeChanged)(property, data.minVal, data.maxVal);
+
+    if (setSubPropertyRange)
+        (d_ptr->*setSubPropertyRange)(property, data.minVal, data.maxVal, data.val);
+
+    emit propertyChanged(property);
+    if (data.val == oldVal)
+        return;
+    emit valueChanged(property, data.val);
+}
+
+/*!
+ Sets the maximum value for the given \a property to \a maxVal.
+
+ When setting the maximum value, the minimum and current values are
+ adjusted if necessary (ensuring that the range remains valid and
+ that the current value is within in the range).
+
+ \sa maximum(), setRange(), rangeChanged()
+ */
+void QtComplexPropertyManager::setMaximum(QtProperty *property, double maxVal)
+{
+    void (QtComplexPropertyManagerPrivate::*setSubPropertyRange)(QtProperty *,
+                                                                 double, double, QComplex) = 0;
+
+    typedef QMap<const QtProperty *, QtComplexPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::iterator PropertyToDataIterator;
+    const PropertyToDataIterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtComplexPropertyManagerPrivate::Data &data = it.value();
+
+    if (isclose<double>(data.maxVal, maxVal, data.absTol, data.relTol)){
+        return;
+    }
+
+    const QComplex oldVal = data.val;
+
+    data.setMaximumValue(maxVal);
+
+    emit (this->rangeChanged)(property, data.minVal, data.maxVal);
+
+    if (setSubPropertyRange)
+        (d_ptr->*setSubPropertyRange)(property, data.minVal, data.maxVal, data.val);
+
+    emit propertyChanged(property);
+    if (data.val == oldVal)
+        return;
+    emit valueChanged(property, data.val);
+}
+
+/*!
+ \fn void QtComplexPropertyManager::setRange(QtProperty *property, double minimum, double maximum)
+
+ Sets the range of valid values.
+
+ This is a convenience function defining the range of valid values
+ in one go; setting the \a minimum and \a maximum values for the
+ given \a property with a single function call.
+
+ When setting a new range, the current value is adjusted if
+ necessary (ensuring that the value remains within range).
+
+ \sa setMinimum(), setMaximum(), rangeChanged()
+ */
+void QtComplexPropertyManager::setRange(QtProperty *property, double minVal, double maxVal)
+{
+    void (QtComplexPropertyManagerPrivate::*setSubPropertyRange)(QtProperty *, double, double, QComplex) = 0;
+
+    typedef QtComplexPropertyManagerPrivate::Data PrivateData;
+    typedef QMap<const QtProperty *, PrivateData> PropertyToData;
+    typedef PropertyToData::iterator PropertyToDataIterator;
+    const PropertyToDataIterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    double fromVal = minVal;
+    double toVal = maxVal;
+    orderBorders(fromVal, toVal);
+
+    PrivateData &data = it.value();
+
+    if (isclose<double>(data.minVal, minVal, data.absTol, data.relTol) &&
+        isclose<double>(data.maxVal, maxVal, data.absTol, data.relTol)){
+        return;
+    }
+
+    const QComplex oldVal = data.val;
+
+    data.setMinimumValue(fromVal);
+    data.setMaximumValue(toVal);
+
+    emit rangeChanged(property, data.minVal, data.maxVal);
+
+    if (setSubPropertyRange)
+        (d_ptr->*setSubPropertyRange)(property, data.minVal, data.maxVal, data.val);
+
+    emit propertyChanged(property);
+    if (isclose<double>(std::real(data.val), std::real(oldVal), data.absTol, data.relTol) &&
+        isclose<double>(std::imag(data.val), std::imag(oldVal), data.absTol, data.relTol)){
+        return;
+    }
+    emit valueChanged(property, data.val);
+}
+
+/*!
+ \fn void QtComplexPropertyManager::setScale(QtProperty *property, Scale scale)
+
+ Sets the scale of the given \a property to \a Scale.
+
+ \sa scale(), scaleChanged()
+ */
+void QtComplexPropertyManager::setScale(QtProperty *property, Scale scale)
+{
+    const QtComplexPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtComplexPropertyManagerPrivate::Data data = it.value();
+
+    if (data.scale == scale)
+        return;
+
+    data.scale = scale;
+
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit scaleChanged(property, data.scale);
+}
+
+/*!
+ \fn void QtComplexPropertyManager::setUnit(QtProperty *property, QString unit)
+
+ Sets the unit of the given \a property to \a unit.
+
+ \sa unit(), unitChanged()
+ */
+void QtComplexPropertyManager::setUnit(QtProperty *property, const QString& unit)
+{
+    const QtComplexPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtComplexPropertyManagerPrivate::Data data = it.value();
+
+    if (data.unit == unit)
+        return;
+
+    data.unit = unit;
+
+    it.value() = data;
+
+
+    emit propertyChanged(property);
+    emit unitChanged(property, data.unit);
+}
+
+/*!
+ \fn void QtComplexPropertyManager::setPkAvg(QtProperty *property, PkAvg pkAvg)
+
+ Sets the PkAvg of the given \a property to \a pkAvg.
+
+ \sa pkAvg(), pkAvgChanged()
+ */
+void QtComplexPropertyManager::setPkAvg(QtProperty *property, PkAvg pkAvg)
+{
+    const QtComplexPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtComplexPropertyManagerPrivate::Data data = it.value();
+
+    if (data.pkAvg == pkAvg)
+        return;
+
+    data.pkAvg = pkAvg;
+
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit pkAvgChanged(property, data.pkAvg);
+}
+
+/*!
+ \fn void QtComplexPropertyManager::setFormat(QtProperty *property, Format format_)
+
+ Sets the format of the given \a property to \a format_.
+
+ \sa format(), formatChanged()
+ */
+void QtComplexPropertyManager::setFormat(QtProperty *property, Format format_)
+{
+    const QtComplexPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtComplexPropertyManagerPrivate::Data data = it.value();
+
+    if (data.format == format_)
+        return;
+
+    data.format = format_;
+
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit formatChanged(property, data.format);
+}
+
+/*!
+ \reimp
+ */
+void QtComplexPropertyManager::initializeProperty(QtProperty *property)
+{
+    d_ptr->m_values[property] = QtComplexPropertyManagerPrivate::Data();
+}
+
+/*!
+ \reimp
+ */
+void QtComplexPropertyManager::uninitializeProperty(QtProperty *property)
 {
     d_ptr->m_values.remove(property);
 }

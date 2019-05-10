@@ -14,7 +14,7 @@
     <enum-type name="Domain"/>
     <enum-type name="Attribute"/>
  	   
-    <!--    Complex Conversion
+    <!--    Complex Conversion  -->
     <primitive-type name="QComplex" target-lang-api-name="PyComplex">
         <include file-name="complex" location="global"/>
         <conversion-rule>
@@ -29,7 +29,7 @@
                 </add-conversion>
             </target-to-native>
         </conversion-rule>
-    </primitive-type> -->
+    </primitive-type>
 
     <!--    Qt Properties-->
     <object-type name="QtProperty"/>
@@ -41,6 +41,7 @@
     <object-type name="QtIntPropertyManager"/>
     <object-type name="QtBoolPropertyManager" default-superclass="QtAbstractPropertyManager"/>
     <object-type name="QtDoublePropertyManager"/>	
+    <object-type name="QtComplexPropertyManager"/>
     <object-type name="QtStringPropertyManager"/>
     <object-type name="QtFilePropertyManager"/>
     <object-type name="QtDatePropertyManager"/>
@@ -62,7 +63,6 @@
     <object-type name="QtColorPropertyManager"/>
     <object-type name="QtCursorPropertyManager"/>
     <object-type name="QtVariantPropertyManager"/>
-    <!--    <object-type name="QtComplexPropertyManager"/> -->
     <!--    <object-type name="QtComplexArrayPropertyManager"/> -->
     
     <!--    Qt Editor Factories-->
