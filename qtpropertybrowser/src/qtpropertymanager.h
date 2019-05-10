@@ -917,6 +917,79 @@ private:
     Q_DISABLE_COPY(QtComplexPropertyManager)
 };
 
+class QtComplexArrayPropertyManagerPrivate;
+
+class QT_QTPROPERTYBROWSER_EXPORT QtComplexArrayPropertyManager : public QtAbstractPropertyManager
+{
+    Q_OBJECT
+public:
+    QtComplexArrayPropertyManager(QObject *parent = 0);
+    ~QtComplexArrayPropertyManager();
+    void connect_signals() const;
+    void disconnect_signals() const;
+
+    QtComplexPropertyManager *subComplexPropertyManager() const;
+
+    QVector<QComplex> value(const QtProperty *property) const;
+    QVector<double> absTol(const QtProperty *property) const;
+    QVector<double> relTol(const QtProperty *property) const;
+    QVector<double> minimum(const QtProperty *property) const;
+    QVector<double> maximum(const QtProperty *property) const;
+    QVector<QComplex> singleStep(const QtProperty *property) const;
+    int precision(const QtProperty *property) const;
+    Scale scale(const QtProperty *property) const;
+    QString unit(const QtProperty *property) const;
+    PkAvg pkAvg(const QtProperty *property) const;
+    Format format(const QtProperty *property) const;
+    QString equation(const QtProperty *property) const;
+    bool isReadOnly(const QtProperty *property) const;
+    QBrush foreground(const QtProperty *property) const;
+
+public Q_SLOTS:
+    void setValue(QtProperty *property, const QVector<QComplex>& val);
+    void setAbsTol(QtProperty *property, const QVector<double>& absTol);
+    void setRelTol(QtProperty *property, const QVector<double>& relTol);
+    void setMinimum(QtProperty *property, const QVector<double>& minVal);
+    void setMaximum(QtProperty *property, const QVector<double>& maxVal);
+    void setRange(QtProperty *property, const QVector<double>& minVal, const QVector<double>& maxVal);
+    void setSingleStep(QtProperty *property, const QVector<QComplex>& step);
+    void setPrecision(QtProperty *property, int prec);
+    void setScale(QtProperty *property, Scale scale_);
+    void setUnit(QtProperty *property, QString unit);
+    void setPkAvg(QtProperty *property,PkAvg pkAvg);
+    void setFormat(QtProperty *property,Format format_);
+    void setEquation(QtProperty *property, const QString& equation);
+    void setReadOnly(QtProperty *property, bool readOnly);
+Q_SIGNALS:
+    void valueChanged(QtProperty *property, const QVector<QComplex>& val);
+    void precisionChanged(QtProperty *property, int prec);
+    void rangeChanged(QtProperty *property, const QVector<double>& minVal, const QVector<double>& maxVal);
+    void singleStepChanged(QtProperty *property, const QVector<QComplex>& step);
+    void scaleChanged(QtProperty *property, Scale scale);
+    void unitChanged(QtProperty *property, const QString& unit);
+    void pkAvgChanged(QtProperty *property,PkAvg pkAvg);
+    void formatChanged(QtProperty *property,Format format_);
+    void equationChanged(QtProperty *property, const QString& equation);
+    void readOnlyChanged(QtProperty *property, bool readOnly);
+protected:
+    QString valueText(const QtProperty *property) const;
+    QString unitText(const QtProperty *property) const;
+    QString pkAvgText(const QtProperty *property) const;
+    QString formatText(const QtProperty *property) const;
+    QIcon checkIcon(const QtProperty *property) const;
+
+    virtual void initializeProperty(QtProperty *property);
+    virtual void reinitializeProperty(QtProperty *property);
+    virtual void uninitializeProperty(QtProperty *property);
+private:
+    QtComplexArrayPropertyManagerPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QtComplexArrayPropertyManager)
+    Q_DISABLE_COPY(QtComplexArrayPropertyManager)
+    Q_PRIVATE_SLOT(d_func(), void slotComplexChanged(QtProperty *, const QComplex&))
+    Q_PRIVATE_SLOT(d_func(), void slotRangeChanged(QtProperty *, const double, const double))
+    Q_PRIVATE_SLOT(d_func(), void slotPropertyDestroyed(QtProperty *))
+};
+
 #if QT_VERSION >= 0x040400
 QT_END_NAMESPACE
 #endif

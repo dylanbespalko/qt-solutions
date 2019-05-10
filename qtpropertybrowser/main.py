@@ -9,7 +9,7 @@ from PySide2.QtWidgets import QApplication, QDialog, QLabel, QGridLayout, QScrol
 
 from qtpropertybrowser import QtTreePropertyBrowser, QtGroupBoxPropertyBrowser, QtButtonPropertyBrowser
 from qtpropertybrowser import QtIntPropertyManager, QtBoolPropertyManager
-from qtpropertybrowser import QtDoublePropertyManager, QtComplexPropertyManager  # QtComplexArrayPropertyManager
+from qtpropertybrowser import QtDoublePropertyManager, QtComplexPropertyManager, QtComplexArrayPropertyManager
 from qtpropertybrowser import QtStringPropertyManager, QtFilePropertyManager
 from qtpropertybrowser import QtDatePropertyManager, QtTimePropertyManager, QtDateTimePropertyManager
 from qtpropertybrowser import QtCharPropertyManager, QtKeySequencePropertyManager
@@ -21,7 +21,7 @@ from qtpropertybrowser import QtEnumPropertyManager, QtFlagPropertyManager
 from qtpropertybrowser import QtSizePolicyPropertyManager
 from qtpropertybrowser import QtFontPropertyManager, QtColorPropertyManager, QtCursorPropertyManager
 from qtpropertybrowser import QtIntEditFactory, QtSpinBoxFactory, QtSliderFactory, QtScrollBarFactory, QtCheckBoxFactory
-from qtpropertybrowser import QtDoubleEditFactory, QtDoubleSpinBoxFactory, QtComplexEditFactory #, QtArrayEditFactory
+from qtpropertybrowser import QtDoubleEditFactory, QtDoubleSpinBoxFactory, QtComplexEditFactory, QtArrayEditFactory
 from qtpropertybrowser import QtLineEditFactory, QtFileEditorFactory
 from qtpropertybrowser import QtDateEditFactory, QtTimeEditFactory, QtDateTimeEditFactory
 from qtpropertybrowser import QtKeySequenceEditorFactory, QtCharEditorFactory
@@ -40,6 +40,7 @@ class Manager(Enum):
     DOUBLE_SPIN = auto()
     DOUBLE_EDIT = auto()
     COMPLEX_EDIT = auto()
+    COMPLEX_VECTOR = auto()
     STRING = auto()
     FILE = auto()
     DATE = auto()
@@ -71,6 +72,7 @@ class Factory(Enum):
     DOUBLE_SPIN = auto()
     DOUBLE_EDIT = auto()
     COMPLEX_EDIT = auto()
+    COMPLEX_VECTOR = auto()
     STRING = auto()
     FILE = auto()
     DATE = auto()
@@ -115,6 +117,7 @@ class ColorCombiner(Flag):
 def set_value(property_, value):
     print("Set Value of: %s" % (property_.propertyManager(),))
 
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     dialog = QDialog()
@@ -141,6 +144,7 @@ if __name__ == "__main__":
                        Manager.DOUBLE_SPIN: QtDoublePropertyManager(), # todo: Does not support Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT
                        Manager.DOUBLE_EDIT: QtDoublePropertyManager(),
                        Manager.COMPLEX_EDIT: QtComplexPropertyManager(),
+                       Manager.COMPLEX_VECTOR: QtComplexArrayPropertyManager(),
                        Manager.STRING: QtStringPropertyManager(),
                        Manager.FILE: QtFilePropertyManager(),
                        Manager.DATE: QtDatePropertyManager(),
@@ -161,9 +165,6 @@ if __name__ == "__main__":
                        Manager.FONT: QtFontPropertyManager(),
                        Manager.COLOR: QtColorPropertyManager(),
                        Manager.CURSOR: QtCursorPropertyManager(),
-                       #'array': QtComplexArrayPropertyManager(),
-                       #'tb_file': QtFilePathManager(),
-                       #'file': QtFilePathManager(),
                        }
         factory_map = {Factory.INT_SPIN: QtSpinBoxFactory(),
                        Factory.INT_EDIT: QtIntEditFactory(),
@@ -173,6 +174,7 @@ if __name__ == "__main__":
                        Factory.DOUBLE_SPIN: QtDoubleSpinBoxFactory(),
                        Factory.DOUBLE_EDIT: QtDoubleEditFactory(),
                        Factory.COMPLEX_EDIT: QtComplexEditFactory(),
+                       Factory.COMPLEX_VECTOR: QtArrayEditFactory(),
                        Factory.STRING: QtLineEditFactory(),
                        Factory.FILE: QtFileEditorFactory(),
                        Factory.DATE: QtDateEditFactory(),
@@ -193,9 +195,6 @@ if __name__ == "__main__":
                        Factory.FONT: QtFontEditorFactory(),
                        Factory.COLOR: QtColorEditorFactory(),
                        Factory.CURSOR: QtCursorEditorFactory(),
-                       #'array': QtArrayEditFactory(),
-                       #'tb_file': QtFileEditorFactory(),
-                       #'file': QtFileEditorFactory(),
                        }
 
         # int_spin_rw
@@ -382,6 +381,45 @@ if __name__ == "__main__":
         tree_browser.setFactoryForManager(manager_map[Manager.COMPLEX_EDIT], factory_map[Factory.COMPLEX_EDIT])
         box_browser.setFactoryForManager(manager_map[Manager.COMPLEX_EDIT], factory_map[Factory.COMPLEX_EDIT])
         button_browser.setFactoryForManager(manager_map[Manager.COMPLEX_EDIT], factory_map[Factory.COMPLEX_EDIT])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # complex_vector_r
+        manager_map[Manager.COMPLEX_VECTOR].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.COMPLEX_VECTOR].addProperty("complex_vector_r")
+        property_.propertyManager().setReadOnly(property_, True)
+        property_.propertyManager().setUnit(property_, "V")
+        property_.propertyManager().setPrecision(property_, 2)
+        property_.propertyManager().setMinimum(property_, [0, 0])
+        property_.propertyManager().setMaximum(property_, [2, 2])
+        property_.propertyManager().setValue(property_, [2 + 2j, 2 + 2j])
+        tree_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR], factory_map[Factory.COMPLEX_VECTOR])
+        box_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR], factory_map[Factory.COMPLEX_VECTOR])
+        button_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR], factory_map[Factory.COMPLEX_VECTOR])
+        browser_item = tree_browser.addProperty(property_)
+        tree_browser.setExpanded(browser_item, False)
+        browser_item = box_browser.addProperty(property_)
+        browser_item = button_browser.addProperty(property_)
+        button_browser.setExpanded(browser_item, False)
+
+        # complex_vector_rw
+        manager_map[Manager.COMPLEX_VECTOR].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.COMPLEX_VECTOR].addProperty("complex_vector_rw")
+        property_.propertyManager().setReadOnly(property_, False)
+        property_.propertyManager().setUnit(property_, "V")
+        property_.propertyManager().setPrecision(property_, 2)
+        property_.propertyManager().setMinimum(property_, [0, 0])
+        property_.propertyManager().setMaximum(property_, [2, 2])
+        property_.propertyManager().setValue(property_, [2 + 2j, 2 + 2j])
+        tree_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR].subComplexPropertyManager(),
+                                          factory_map[Factory.COMPLEX_EDIT])
+        box_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR].subComplexPropertyManager(),
+                                         factory_map[Factory.COMPLEX_EDIT])
+        button_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR].subComplexPropertyManager,
+                                            factory_map[Factory.COMPLEX_EDIT])
         browser_item = tree_browser.addProperty(property_)
         tree_browser.setExpanded(browser_item, False)
         browser_item = box_browser.addProperty(property_)

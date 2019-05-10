@@ -5172,6 +5172,231 @@ void QtComplexEditFactory::disconnectPropertyManager(QtComplexPropertyManager *m
                this, SLOT(slotReadOnlyChanged(QtProperty *, bool)));
 }
 
+// QtArrayEditFactory
+
+class QtArrayEditFactoryPrivate : public EditorFactoryPrivate<QComplexEdit>
+{
+    QtArrayEditFactory *q_ptr;
+    Q_DECLARE_PUBLIC(QtArrayEditFactory)
+public:
+
+    void slotPropertyChanged(QtProperty *property, const QComplex& value);
+    void slotSetScale(int scaleSelection);
+    void slotSetPkAvg(int formatSelection);
+    void slotSetFormat(int formatSelection);
+    void slotSetCheck(bool check);
+};
+
+void QtArrayEditFactoryPrivate::slotPropertyChanged(QtProperty *property, const QComplex& value)
+{
+    QList<QComplexEdit *> editors = m_createdEditors[property];
+    QListIterator<QComplexEdit *> itEditor(m_createdEditors[property]);
+    while (itEditor.hasNext()) {
+        QComplexEdit *editor = itEditor.next();
+        if (editor->value() != value) {
+            editor->blockSignals(true);
+            editor->setValue(value);
+            editor->blockSignals(false);
+        }
+    }
+}
+
+void QtArrayEditFactoryPrivate::slotSetScale(int scaleSelection)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QComboBox *, QtProperty *>::ConstIterator itcend = m_unitAttributeEditorToProperty.constEnd();
+    for (QMap<QComboBox *, QtProperty *>::ConstIterator itEditor = m_unitAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            QtComplexArrayPropertyManager *manager = q_ptr->propertyManager(property);
+            if (!manager)
+                return;
+            manager->setScale(property, Scale(scaleSelection));
+            return;
+        }
+    }
+}
+
+void QtArrayEditFactoryPrivate::slotSetPkAvg(int pkAvgSelection)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QComboBox *, QtProperty *>::ConstIterator itcend = m_pkAvgAttributeEditorToProperty.constEnd();
+    for (QMap<QComboBox *, QtProperty *>::ConstIterator itEditor = m_pkAvgAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            QtComplexArrayPropertyManager *manager = q_ptr->propertyManager(property);
+            if (!manager)
+                return;
+            manager->setPkAvg(property, PkAvg(pkAvgSelection));
+            return;
+        }
+    }
+}
+
+void QtArrayEditFactoryPrivate::slotSetFormat(int formatSelection)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QComboBox *, QtProperty *>::ConstIterator itcend = m_formatAttributeEditorToProperty.constEnd();
+    for (QMap<QComboBox *, QtProperty *>::ConstIterator itEditor = m_formatAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            QtComplexArrayPropertyManager *manager = q_ptr->propertyManager(property);
+            if (!manager)
+                return;
+            manager->setFormat(property, Format(formatSelection));
+            return;
+        }
+    }
+}
+
+void QtArrayEditFactoryPrivate::slotSetCheck(bool check)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
+    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            property->setCheck(check);
+            return;
+        }
+    }
+}
+
+/*! \class QtArrayEditFactory
+
+ \brief The QtArrayEditFactory class provides QComplexEdit
+ widgets for properties created by QtDoublePropertyManager objects.
+
+ \sa QtAbstractEditorFactory, QtDoublePropertyManager
+ */
+
+/*!
+ Creates a factory with the given \a parent.
+ */
+QtArrayEditFactory::QtArrayEditFactory(QObject *parent)
+: QtAbstractEditorFactory<QtComplexArrayPropertyManager>(parent)
+{
+    d_ptr = new QtArrayEditFactoryPrivate();
+    d_ptr->q_ptr = this;
+
+}
+
+/*!
+ Destroys this factory, and all the widgets it has created.
+ */
+QtArrayEditFactory::~QtArrayEditFactory()
+{
+    qDeleteAll(d_ptr->m_editorToProperty.keys());
+    qDeleteAll(d_ptr->m_unitAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_pkAvgAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_formatAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_minimumAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_maximumAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
+    delete d_ptr;
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+void QtArrayEditFactory::connectPropertyManager(QtComplexArrayPropertyManager *manager)
+{
+
+    Q_UNUSED(manager);
+    return;
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+QWidget *QtArrayEditFactory::createEditor(QtComplexArrayPropertyManager *manager,
+                                            QtProperty *property, QWidget *parent)
+{
+    Q_UNUSED(manager);
+    Q_UNUSED(property);
+    Q_UNUSED(parent);
+    return 0;
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+QWidget *QtArrayEditFactory::createAttributeEditor(QtComplexArrayPropertyManager *manager,
+                                                     QtProperty *property, QWidget *parent, Attribute attribute)
+{
+    if (attribute == Attribute::UNIT)
+        {
+            QComboBox *editor = d_ptr->createUnitAttributeEditor(property, parent);
+
+            QString prefix;
+            Scale currentScale = manager->scale(property);
+            QString unit = manager->unit(property);
+            QStringList enumNames;
+            manager->format(property) == LOG_DEG? prefix = "dB" : "";
+            QMap<Scale, QString>::iterator i;
+            for (i = ScaleNameMap.begin(); i != ScaleNameMap.end(); ++i) {
+                enumNames << prefix + i.value() + unit;
+            }
+            editor->addItems(enumNames);
+            editor->setCurrentIndex((int)currentScale);
+
+            connect(editor, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetScale(int)));
+            connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotUnitAttributeEditorDestroyed(QObject *)));
+            return editor;
+        }
+    else if (attribute == Attribute::PKAVG)
+    {
+        QComboBox *editor = d_ptr->createPkAvgAttributeEditor(property, parent);
+
+        QStringList enumNames;
+        enumNames << "pk"<<"avg";
+        editor->addItems(enumNames);
+        editor->setCurrentIndex(manager->pkAvg(property));
+
+        connect(editor, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetPkAvg(int)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotComboBoxAttributeEditorDestroyed(QObject *)));
+        return editor;
+    }
+    else if (attribute == Attribute::FORMAT)
+    {
+        QComboBox *editor = d_ptr->createFormatAttributeEditor(property, parent);
+
+        editor->clear();
+        editor->addItems(FormatNameMap.values());
+        editor->setCurrentIndex(manager->format(property));
+
+        connect(editor, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetFormat(int)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotFormatAttributeEditorDestroyed(QObject *)));
+        return editor;
+    }
+    else if (attribute == Attribute::CHECK)
+    {
+        QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
+
+        connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
+        return editor;
+    }
+    return NULL;
+
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+void QtArrayEditFactory::disconnectPropertyManager(QtComplexArrayPropertyManager *manager)
+{
+    Q_UNUSED(manager);
+    return;
+}
 
 #if QT_VERSION >= 0x040400
 QT_END_NAMESPACE
