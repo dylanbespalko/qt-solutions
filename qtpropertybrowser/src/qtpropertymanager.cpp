@@ -8044,23 +8044,11 @@ QIcon QtComplexPropertyManager::checkIcon(const QtProperty *property) const
  */
 void QtComplexPropertyManager::setValue(QtProperty *property, const QComplex& val)
 {
-    const QtComplexPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
-    if (it == d_ptr->m_values.end())
-        return;
-
-    QtComplexPropertyManagerPrivate::Data data = it.value();
-
-    if (isclose<double>(std::real(data.val), std::real(val), data.absTol, data.relTol) &&
-        isclose<double>(std::imag(data.val), std::imag(val), data.absTol, data.relTol)){
-        return;
-    }
-
-    data.setVal(val);
-
-    it.value() = data;
-
-    emit propertyChanged(property);
-    emit valueChanged(property, data.val);
+    void (QtComplexPropertyManagerPrivate::*setSubPropertyValue)(QtProperty *, const QComplex&) = 0;
+        setValueInRange<const QComplex&, QtComplexPropertyManagerPrivate, QtComplexPropertyManager, const QComplex>(this, d_ptr,
+                    &QtComplexPropertyManager::propertyChanged,
+                    &QtComplexPropertyManager::valueChanged,
+                    property, val, setSubPropertyValue);
 }
 
 /*!
@@ -8217,6 +8205,7 @@ void QtComplexPropertyManager::setMinimum(QtProperty *property, double minVal)
     const QComplex oldVal = data.val;
 
     data.setMinimumValue(minVal);
+    data.foreground = qSoftBound(data.minVal, data.val, data.maxVal);
 
     emit (this->rangeChanged)(property, data.minVal, data.maxVal);
 
@@ -8258,6 +8247,7 @@ void QtComplexPropertyManager::setMaximum(QtProperty *property, double maxVal)
     const QComplex oldVal = data.val;
 
     data.setMaximumValue(maxVal);
+    data.foreground = qSoftBound(data.minVal, data.val, data.maxVal);
 
     emit (this->rangeChanged)(property, data.minVal, data.maxVal);
 
@@ -8310,6 +8300,7 @@ void QtComplexPropertyManager::setRange(QtProperty *property, double minVal, dou
 
     data.setMinimumValue(fromVal);
     data.setMaximumValue(toVal);
+    data.foreground = qSoftBound(data.minVal, data.val, data.maxVal);
 
     emit rangeChanged(property, data.minVal, data.maxVal);
 

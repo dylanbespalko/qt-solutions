@@ -2332,7 +2332,6 @@ QtDoubleEditFactory::~QtDoubleEditFactory()
 {
     qDeleteAll(d_ptr->m_editorToProperty.keys());
     qDeleteAll(d_ptr->m_unitAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_pkAvgAttributeEditorToProperty.keys());
     qDeleteAll(d_ptr->m_formatAttributeEditorToProperty.keys());
     qDeleteAll(d_ptr->m_minimumAttributeEditorToProperty.keys());
     qDeleteAll(d_ptr->m_maximumAttributeEditorToProperty.keys());
@@ -4594,209 +4593,9 @@ void QtFontEditorFactory::disconnectPropertyManager(QtFontPropertyManager *manag
     disconnect(manager, SIGNAL(valueChanged(QtProperty*,QFont)), this, SLOT(slotPropertyChanged(QtProperty*,QFont)));
 }
 
-// FileEditWidget
-class FileEditWidget : public QWidget {
-    Q_OBJECT
-
-public:
-    FileEditWidget(QWidget *parent);
-    ~FileEditWidget();
-
-    bool eventFilter(QObject *obj, QEvent *ev);
-
-    bool fileExists(QString path) const;
-    bool validExtension(QString path) const;
-
-    public Q_SLOTS:
-    void setValue(const QString &value);
-    void setFilter(const QString &filter);
-    void setFileMode(const QFileDialog::FileMode mode);
-    void setReadOnly(const bool readOnly);
-
-Q_SIGNALS:
-    void valueChanged(const QString &value);
-    void destroyed(QObject *obj);
-protected:
-    void paintEvent(QPaintEvent *);
-
-private Q_SLOTS:
-    void slotEditFinished();
-    void slotButtonClicked();
-
-private:
-    QString m_fileName;
-    QString m_filter;
-    QFileDialog::FileMode m_fileMode;
-    bool m_readOnly;
-    QLineEdit *m_edit;
-    QToolButton *m_button;
-};
-
-FileEditWidget::FileEditWidget(QWidget *parent) :
-QWidget(parent),
-m_edit(new QLineEdit),
-m_button(new QToolButton)
-{
-    m_fileName = QString();
-    m_filter = QString();
-    m_fileMode = QFileDialog::AnyFile;
-    m_readOnly = false;
-
-    QHBoxLayout *lt = new QHBoxLayout(this);
-    setupTreeViewEditorMargin(lt);
-    lt->setSpacing(0);
-    lt->addWidget(m_edit);
-    lt->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Ignored));
-
-    m_button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Ignored);
-    m_button->setFixedWidth(20);
-    setFocusProxy(m_button);
-    setFocusPolicy(m_button->focusPolicy());
-    m_button->setText(tr("..."));
-    m_button->installEventFilter(this);
-
-    connect(m_button, SIGNAL(clicked()), this, SLOT(slotButtonClicked()));
-    connect(m_edit, SIGNAL(editingFinished()), this, SLOT(slotEditFinished()));
-
-    lt->addWidget(m_button);
-    m_edit->setText(m_fileName);
-}
-
-FileEditWidget::~FileEditWidget()
-{
-    emit destroyed(this);
-}
-
-bool FileEditWidget::fileExists(QString path) const{
-    QFileInfo checkFile(path);
-    // check if file exists and if yes: Is it really a file and no directory?
-    if (checkFile.exists() && m_fileMode != QFileDialog::Directory && checkFile.isFile())
-        return true;
-    else if (checkFile.exists() && m_fileMode == QFileDialog::Directory && checkFile.isDir())
-        return true;
-    else
-        return false;
-}
-
-bool FileEditWidget::validExtension(QString path) const{
-    QFileInfo fileInfo = QFileInfo(path);
-    QString ext = fileInfo.completeSuffix();
-    QRegExp regExp = QRegExp("\\*(?:[\\.\\w\\d]+)?");
-    QString match;
-    int pos = 0;
-
-    if (m_fileMode == QFileDialog::Directory){
-        if (ext.isEmpty())
-            return true;
-        else
-            return false;
-    }
-    else{
-        if (ext.isEmpty())
-            return false;
-        while ((pos = regExp.indexIn(m_filter, pos)) != -1) {
-            match = regExp.cap(0);
-            pos += regExp.matchedLength();
-            if (match == QString("*."+ext) || match == "*")
-                return true;
-        }
-    }
-    return false;
-
-}
-
-void FileEditWidget::setValue(const QString &fileName)
-{
-    if (fileExists(fileName) && validExtension(fileName) && fileName != m_fileName) {
-        m_fileName = fileName;
-        m_edit->setText(fileName);
-        emit valueChanged(fileName);
-    }
-}
-void FileEditWidget::setFilter(const QString &filter)
-{
-    if (m_filter != filter) {
-        m_filter = filter;
-    }
-}
-
-void FileEditWidget::setFileMode(const QFileDialog::FileMode mode)
-{
-    if (m_fileMode != mode) {
-        m_fileMode = mode;
-    }
-}
-
-void FileEditWidget::setReadOnly(const bool readOnly)
-{
-    if (m_readOnly != readOnly) {
-        m_edit->setReadOnly(readOnly);
-    }
-}
-
-void FileEditWidget::slotEditFinished()
-{
-    QString fileName = m_edit->text();
-    setValue(fileName);
-}
-
-void FileEditWidget::slotButtonClicked()
-{
-//    QString fileName = QFileDialog::getOpenFileName(this,
-//                                                    tr("QFileDialog::getOpenFileName()"),
-//                                                    m_fileName,
-//                                                    m_filter);
-    QStringList fileNames;
-    QFileDialog dialog(this);
-    if (m_fileMode != QFileDialog::Directory)
-        dialog.setNameFilter(m_filter);
-    dialog.setFileMode(m_fileMode);
-    dialog.setViewMode(QFileDialog::Detail);
-
-
-    if (dialog.exec())
-        fileNames = dialog.selectedFiles();
-
-    if ((!fileNames.isEmpty()) && (fileNames.at(0) != m_fileName)){
-        setValue(fileNames.at(0));
-    }
-}
-
-bool FileEditWidget::eventFilter(QObject *obj, QEvent *ev)
-{
-    if (obj == m_button) {
-        switch (ev->type()) {
-            case QEvent::KeyPress:
-            case QEvent::KeyRelease: { // Prevent the QToolButton from handling Enter/Escape meant control the delegate
-                switch (static_cast<const QKeyEvent*>(ev)->key()) {
-                    case Qt::Key_Escape:
-                    case Qt::Key_Enter:
-                    case Qt::Key_Return:
-                        ev->ignore();
-                        return true;
-                    default:
-                        break;
-                }
-            }
-                break;
-            default:
-                break;
-        }
-    }
-    return QWidget::eventFilter(obj, ev);
-}
-
-void FileEditWidget::paintEvent(QPaintEvent *)
-{
-    QStyleOption opt;
-    opt.init(this);
-    QPainter p(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-}
-
 // QtFileEditorFactoryPrivate
 
-class QtFileEditorFactoryPrivate : public EditorFactoryPrivate<FileEditWidget>
+class QtFileEditorFactoryPrivate : public EditorFactoryPrivate<QFileEdit>
 {
     QtFileEditorFactory *q_ptr;
     Q_DECLARE_PUBLIC(QtFileEditorFactory)
@@ -4813,7 +4612,7 @@ void QtFileEditorFactoryPrivate::slotPropertyChanged(QtProperty *property, const
     const PropertyToEditorListMap::iterator it = m_createdEditors.find(property);
     if (it == m_createdEditors.end())
         return;
-    QListIterator<FileEditWidget *> itEditor(it.value());
+    QListIterator<QFileEdit *> itEditor(it.value());
 
     while (itEditor.hasNext())
         itEditor.next()->setValue(value);
@@ -4839,7 +4638,7 @@ void QtFileEditorFactoryPrivate::slotFilterChanged(QtProperty *property, const Q
     const PropertyToEditorListMap::iterator it = m_createdEditors.find(property);
     if (it == m_createdEditors.end())
         return;
-    QListIterator<FileEditWidget *> itEditor(it.value());
+    QListIterator<QFileEdit *> itEditor(it.value());
 
     while (itEditor.hasNext())
         itEditor.next()->setValue(value);
@@ -4854,9 +4653,9 @@ void QtFileEditorFactoryPrivate::slotReadOnlyChanged( QtProperty *property, bool
     if (!manager)
         return;
 
-    QListIterator<FileEditWidget *> itEditor(m_createdEditors[property]);
+    QListIterator<QFileEdit *> itEditor(m_createdEditors[property]);
     while (itEditor.hasNext()) {
-        FileEditWidget *editor = itEditor.next();
+        QFileEdit *editor = itEditor.next();
         editor->blockSignals(true);
         editor->setReadOnly(readOnly);
         editor->blockSignals(false);
@@ -4925,7 +4724,7 @@ void QtFileEditorFactory::connectPropertyManager(QtFilePropertyManager *manager)
  */
 QWidget *QtFileEditorFactory::createEditor(QtFilePropertyManager *manager, QtProperty *property, QWidget *parent)
 {
-    FileEditWidget *editor = d_ptr->createEditor(property, parent);
+    QFileEdit *editor = d_ptr->createEditor(property, parent);
     editor->setFilter(manager->filter(property));
     editor->setFileMode(manager->fileMode(property));
     editor->setValue(manager->value(property));
@@ -4970,6 +4769,409 @@ void QtFileEditorFactory::disconnectPropertyManager(QtFilePropertyManager *manag
     disconnect(manager, SIGNAL(filterChanged(QtProperty *,const QString &)),
             this, SLOT(slotFilterChanged(QtProperty *,const QString &)));
 }
+
+// QtComplexEditFactory
+
+class QtComplexEditFactoryPrivate : public EditorFactoryPrivate<QComplexEdit>
+{
+    QtComplexEditFactory *q_ptr;
+    Q_DECLARE_PUBLIC(QtComplexEditFactory)
+public:
+
+    void slotPropertyChanged(QtProperty *property, const QComplex& value);
+    void slotRangeChanged(QtProperty *property, double min, double max);
+    void slotSingleStepChanged(QtProperty *property, const QComplex& step);
+    void slotPrecisionChanged(QtProperty *property, int prec);
+    void slotReadOnlyChanged(QtProperty *property, bool readOnly);
+    void slotSetValue(const QComplex& value);
+    void slotSetScale(int scaleSelection);
+    void slotSetPkAvg(int slotSetPkAvg);
+    void slotSetFormat(int formatSelection);
+    void slotSetMinimum(double minVal);
+    void slotSetMaximum(double maxVal);
+    void slotSetCheck(bool check);
+};
+
+void QtComplexEditFactoryPrivate::slotPropertyChanged(QtProperty *property, const QComplex& value)
+{
+    QtComplexPropertyManager *manager = q_ptr->propertyManager(property);
+    QList<QComplexEdit *> editors = m_createdEditors[property];
+    QListIterator<QComplexEdit *> itEditor(m_createdEditors[property]);
+    while (itEditor.hasNext()) {
+        QComplexEdit *editor = itEditor.next();
+        editor->setScale(manager->scale(property));
+        editor->setFormat(manager->format(property));
+        if (editor->value() != value) {
+            editor->blockSignals(true);
+            editor->setValue(value);
+            editor->blockSignals(false);
+        }
+    }
+}
+
+void QtComplexEditFactoryPrivate::slotRangeChanged(QtProperty *property,
+                                                     double min, double max)
+{
+    if (!m_createdEditors.contains(property))
+        return;
+
+    QtComplexPropertyManager *manager = q_ptr->propertyManager(property);
+    if (!manager)
+        return;
+
+    QList<QComplexEdit *> editors = m_createdEditors[property];
+    QListIterator<QComplexEdit *> itEditor(editors);
+    while (itEditor.hasNext()) {
+        QComplexEdit *editor = itEditor.next();
+        editor->blockSignals(true);
+        editor->setRange(min, max);
+        editor->setValue(manager->value(property));
+        editor->blockSignals(false);
+    }
+}
+
+void QtComplexEditFactoryPrivate::slotSingleStepChanged(QtProperty *property, const QComplex& step)
+{
+    if (!m_createdEditors.contains(property))
+        return;
+
+    QtComplexPropertyManager *manager = q_ptr->propertyManager(property);
+    if (!manager)
+        return;
+
+    QList<QComplexEdit *> editors = m_createdEditors[property];
+    QListIterator<QComplexEdit *> itEditor(editors);
+    while (itEditor.hasNext()) {
+        QComplexEdit *editor = itEditor.next();
+        editor->blockSignals(true);
+        //editor->setSingleStep(step);
+        editor->blockSignals(false);
+    }
+}
+
+void QtComplexEditFactoryPrivate::slotReadOnlyChanged( QtProperty *property, bool readOnly)
+{
+    if (!m_createdEditors.contains(property))
+        return;
+
+    QtComplexPropertyManager *manager = q_ptr->propertyManager(property);
+    if (!manager)
+        return;
+
+    QListIterator<QComplexEdit *> itEditor(m_createdEditors[property]);
+    while (itEditor.hasNext()) {
+        QComplexEdit *editor = itEditor.next();
+        editor->blockSignals(true);
+        editor->setReadOnly(readOnly);
+        editor->blockSignals(false);
+    }
+}
+
+void QtComplexEditFactoryPrivate::slotPrecisionChanged(QtProperty *property, int prec)
+{
+    if (!m_createdEditors.contains(property))
+        return;
+
+    QtComplexPropertyManager *manager = q_ptr->propertyManager(property);
+    if (!manager)
+        return;
+
+    QList<QComplexEdit *> editors = m_createdEditors[property];
+    QListIterator<QComplexEdit *> itEditor(editors);
+    while (itEditor.hasNext()) {
+        QComplexEdit *editor = itEditor.next();
+        editor->blockSignals(true);
+        editor->setPrecision(prec);
+        editor->setValue(manager->value(property));
+        editor->blockSignals(false);
+    }
+}
+
+void QtComplexEditFactoryPrivate::slotSetValue(const QComplex& value)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QComplexEdit *, QtProperty *>::ConstIterator itcend = m_editorToProperty.constEnd();
+    for (QMap<QComplexEdit *, QtProperty *>::ConstIterator itEditor = m_editorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            QtComplexPropertyManager *manager = q_ptr->propertyManager(property);
+            if (!manager)
+                return;
+            manager->setValue(property, value);
+            return;
+        }
+    }
+}
+
+void QtComplexEditFactoryPrivate::slotSetScale(int scaleSelection)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QComboBox *, QtProperty *>::ConstIterator itcend = m_unitAttributeEditorToProperty.constEnd();
+    for (QMap<QComboBox *, QtProperty *>::ConstIterator itEditor = m_unitAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            QtComplexPropertyManager *manager = q_ptr->propertyManager(property);
+            if (!manager)
+                return;
+            manager->setScale(property, Scale(scaleSelection));
+            slotPropertyChanged(property, manager->value(property));
+            return;
+        }
+    }
+}
+
+void QtComplexEditFactoryPrivate::slotSetPkAvg(int pkAvgSelection)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QComboBox *, QtProperty *>::ConstIterator itcend = m_pkAvgAttributeEditorToProperty.constEnd();
+    for (QMap<QComboBox *, QtProperty *>::ConstIterator itEditor = m_pkAvgAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            QtComplexPropertyManager *manager = q_ptr->propertyManager(property);
+            if (!manager)
+                return;
+            manager->setPkAvg(property, PkAvg(pkAvgSelection));
+            slotPropertyChanged(property, manager->value(property));
+            return;
+        }
+    }
+}
+
+void QtComplexEditFactoryPrivate::slotSetFormat(int formatSelection)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QComboBox *, QtProperty *>::ConstIterator itcend = m_formatAttributeEditorToProperty.constEnd();
+    for (QMap<QComboBox *, QtProperty *>::ConstIterator itEditor = m_formatAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            QtComplexPropertyManager *manager = q_ptr->propertyManager(property);
+            if (!manager)
+                return;
+            manager->setFormat(property, Format(formatSelection));
+            slotPropertyChanged(property, manager->value(property));
+            return;
+        }
+    }
+}
+
+void QtComplexEditFactoryPrivate::slotSetMinimum(double minVal)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QDoubleEdit *, QtProperty *>::ConstIterator itcend = m_minimumAttributeEditorToProperty.constEnd();
+    for (QMap<QDoubleEdit *, QtProperty *>::ConstIterator itEditor = m_minimumAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            QtComplexPropertyManager *manager = q_ptr->propertyManager(property);
+            if (!manager)
+                return;
+            manager->setMinimum(property, minVal);
+            return;
+        }
+    }
+}
+
+void QtComplexEditFactoryPrivate::slotSetMaximum(double maxVal)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QDoubleEdit *, QtProperty *>::ConstIterator itcend = m_maximumAttributeEditorToProperty.constEnd();
+    for (QMap<QDoubleEdit *, QtProperty *>::ConstIterator itEditor = m_maximumAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            QtComplexPropertyManager *manager = q_ptr->propertyManager(property);
+            if (!manager)
+                return;
+            manager->setMaximum(property, maxVal);
+            return;
+        }
+    }
+}
+
+void QtComplexEditFactoryPrivate::slotSetCheck(bool check)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
+    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            property->setCheck(check);
+            return;
+        }
+    }
+}
+/*! \class QtComplexEditFactory
+
+ \brief The QtComplexEditFactory class provides QComplexEdit
+ widgets for properties created by QtDoublePropertyManager objects.
+
+ \sa QtAbstractEditorFactory, QtDoublePropertyManager
+ */
+
+/*!
+ Creates a factory with the given \a parent.
+ */
+QtComplexEditFactory::QtComplexEditFactory(QObject *parent)
+: QtAbstractEditorFactory<QtComplexPropertyManager>(parent)
+{
+    d_ptr = new QtComplexEditFactoryPrivate();
+    d_ptr->q_ptr = this;
+
+}
+
+/*!
+ Destroys this factory, and all the widgets it has created.
+ */
+QtComplexEditFactory::~QtComplexEditFactory()
+{
+    qDeleteAll(d_ptr->m_editorToProperty.keys());
+    qDeleteAll(d_ptr->m_unitAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_formatAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_minimumAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_maximumAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
+    delete d_ptr;
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+void QtComplexEditFactory::connectPropertyManager(QtComplexPropertyManager *manager)
+{
+    connect(manager, SIGNAL(valueChanged(QtProperty *, const QComplex&)),
+            this, SLOT(slotPropertyChanged(QtProperty *, const QComplex&)));
+    connect(manager, SIGNAL(rangeChanged(QtProperty *, double, double)),
+            this, SLOT(slotRangeChanged(QtProperty *, double, double)));
+    connect(manager, SIGNAL(singleStepChanged(QtProperty *, const QComplex&)),
+            this, SLOT(slotSingleStepChanged(QtProperty *, const QComplex&)));
+    connect(manager, SIGNAL(precisionChanged(QtProperty *, int)),
+            this, SLOT(slotPrecisionChanged(QtProperty *, int)));
+    connect(manager, SIGNAL(readOnlyChanged(QtProperty *, bool)),
+            this, SLOT(slotReadOnlyChanged(QtProperty *, bool)));
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+QWidget *QtComplexEditFactory::createEditor(QtComplexPropertyManager *manager,
+                                              QtProperty *property, QWidget *parent)
+{
+    QComplexEdit *editor = d_ptr->createEditor(property, parent);
+    //editor->setSingleStep(manager->singleStep(property));
+    editor->setPrecision(manager->precision(property));
+    editor->setRange(manager->minimum(property), manager->maximum(property));
+    editor->setValue(manager->value(property));
+    editor->setFormat(manager->format(property));
+    editor->setScale(manager->scale(property));
+    //editor->setKeyboardTracking(false);
+    editor->setReadOnly(manager->isReadOnly(property));
+
+    connect(editor, SIGNAL(valueChanged(const QComplex&)), this, SLOT(slotSetValue(const QComplex&)));
+    connect(editor, SIGNAL(destroyed(QObject *)),
+            this, SLOT(slotEditorDestroyed(QObject *)));
+    return editor;
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+QWidget *QtComplexEditFactory::createAttributeEditor(QtComplexPropertyManager *manager,
+                                                     QtProperty *property, QWidget *parent, Attribute attribute)
+{
+    if (attribute == Attribute::UNIT)
+    {
+        QComboBox *editor = d_ptr->createUnitAttributeEditor(property, parent);
+
+        QString prefix;
+        Scale currentScale = manager->scale(property);
+        QString unit = manager->unit(property);
+        QStringList enumNames;
+        manager->format(property) == LOG_DEG? prefix = "dB" : "";
+        QMap<Scale, QString>::iterator i;
+        for (i = ScaleNameMap.begin(); i != ScaleNameMap.end(); ++i) {
+            enumNames << prefix + i.value() + unit;
+        }
+        editor->addItems(enumNames);
+        editor->setCurrentIndex((int)currentScale);
+
+        connect(editor, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetScale(int)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotUnitAttributeEditorDestroyed(QObject *)));
+        return editor;
+    }
+    else if (attribute == Attribute::FORMAT)
+    {
+        QComboBox *editor = d_ptr->createFormatAttributeEditor(property, parent);
+
+        editor->clear();
+        editor->addItems(FormatNameMap.values());
+        editor->setCurrentIndex(manager->format(property));
+
+        connect(editor, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetFormat(int)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotFormatAttributeEditorDestroyed(QObject *)));
+        return editor;
+    }
+    else if (attribute == Attribute::MINIMUM)
+    {
+        QDoubleEdit *editor = d_ptr->createMinimumAttributeEditor(property, parent);
+
+        editor->setScale(manager->scale(property));
+        editor->setFormat(manager->format(property));
+        editor->setPrecision(manager->precision(property));
+        editor->setRange(lowest, highest);
+        editor->setValue(manager->minimum(property));
+
+        connect(editor, SIGNAL(valueChanged(double)), this, SLOT(slotSetMinimum(double)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotMinimumAttributeEditorDestroyed(QObject *)));
+        return editor;
+    }
+    else if (attribute == Attribute::MAXIMUM)
+    {
+        QDoubleEdit *editor = d_ptr->createMaximumAttributeEditor(property, parent);
+
+        editor->setScale(manager->scale(property));
+        editor->setFormat(manager->format(property));
+        editor->setPrecision(manager->precision(property));
+        editor->setRange(lowest, highest);
+        editor->setValue(manager->maximum(property));
+
+        connect(editor, SIGNAL(valueChanged(double)), this, SLOT(slotSetMaximum(double)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotMaximumAttributeEditorDestroyed(QObject *)));
+        return editor;
+    }
+    else if (attribute == Attribute::CHECK)
+    {
+        QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
+
+        connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
+        return editor;
+    }
+    return NULL;
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+void QtComplexEditFactory::disconnectPropertyManager(QtComplexPropertyManager *manager)
+{
+    disconnect(manager, SIGNAL(valueChanged(QtProperty *, const QComplex&)),
+               this, SLOT(slotPropertyChanged(QtProperty *, const QComplex&)));
+    disconnect(manager, SIGNAL(rangeChanged(QtProperty *, double, double)),
+               this, SLOT(slotRangeChanged(QtProperty *, double, double)));
+    disconnect(manager, SIGNAL(singleStepChanged(QtProperty *, const QComplex&)),
+               this, SLOT(slotSingleStepChanged(QtProperty *, const QComplex&)));
+    disconnect(manager, SIGNAL(precisionChanged(QtProperty *, int)),
+               this, SLOT(slotPrecisionChanged(QtProperty *, int)));
+    disconnect(manager, SIGNAL(readOnlyChanged(QtProperty *, bool)),
+               this, SLOT(slotReadOnlyChanged(QtProperty *, bool)));
+}
+
 
 #if QT_VERSION >= 0x040400
 QT_END_NAMESPACE

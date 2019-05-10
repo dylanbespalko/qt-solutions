@@ -9,6 +9,9 @@
 #ifndef QCOMPLEXEDIT_H
 #define QCOMPLEXEDIT_H
 
+#include <QToolButton>
+#include <QLineEdit>
+#include <QFileDialog>
 #include <qwidget.h>
 #include <complex>
 #include <qvalidator.h>
@@ -199,7 +202,6 @@ public:
     static double str2num(const QString &text, const Scale scale, const Format format);
 };
 
-
 class QComplexEditPrivate;
 
 class QT_QTPROPERTYBROWSER_EXPORT QComplexEdit : public QWidget
@@ -246,6 +248,43 @@ private:
 public:
     static QString num2str(const QComplex &val, const Scale scale, const Format format, int precision);
     static QComplex str2num(const QString &text, const Scale scale, const Format format);
+};
+
+class QFileEdit : public QWidget {
+    Q_OBJECT
+
+public:
+    QFileEdit(QWidget *parent);
+    ~QFileEdit();
+
+    bool eventFilter(QObject *obj, QEvent *ev);
+
+    bool fileExists(QString path) const;
+    bool validExtension(QString path) const;
+
+    public Q_SLOTS:
+    void setValue(const QString &value);
+    void setFilter(const QString &filter);
+    void setFileMode(const QFileDialog::FileMode mode);
+    void setReadOnly(const bool readOnly);
+
+Q_SIGNALS:
+    void valueChanged(const QString &value);
+    void destroyed(QObject *obj);
+protected:
+    void paintEvent(QPaintEvent *);
+
+private Q_SLOTS:
+    void slotEditFinished();
+    void slotButtonClicked();
+
+private:
+    QString m_fileName;
+    QString m_filter;
+    QFileDialog::FileMode m_fileMode;
+    bool m_readOnly;
+    QLineEdit *m_edit;
+    QToolButton *m_button;
 };
 
 QT_END_NAMESPACE

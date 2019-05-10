@@ -9,6 +9,7 @@
 #include "qcomplexedit.h"
 #include <QHBoxLayout>
 #include <QApplication>
+#include <QKeyEvent>
 
 #include <qlineedit.h>
 #include <qlabel.h>
@@ -640,7 +641,6 @@ QWidget(parent)
     setupTreeViewEditorMargin(lt);
     lt->setSpacing(0);
     lt->addWidget(d_ptr->m_edit);
-    lt->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Ignored));
     this->setFocusProxy(d_ptr->m_edit);
     
     connect(d_ptr->m_edit, SIGNAL(editingFinished()), this, SLOT(setValue()));
@@ -868,5 +868,167 @@ QComplex QComplexEdit::str2num(const QString &text, const Scale scale, const For
         val = 0;
     return val;
 }
+
+
+// FileEditWidget
+QFileEdit::QFileEdit(QWidget *parent) : QWidget(parent),
+m_edit(new QLineEdit), m_button(new QToolButton)
+{
+    m_fileName = QString();
+    m_filter = QString();
+    m_fileMode = QFileDialog::AnyFile;
+    m_readOnly = false;
+
+    QHBoxLayout *lt = new QHBoxLayout(this);
+    setupTreeViewEditorMargin(lt);
+    lt->setSpacing(0);
+    lt->addWidget(m_edit);
+
+    m_button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Ignored);
+    m_button->setFixedWidth(20);
+    setFocusProxy(m_button);
+    setFocusPolicy(m_button->focusPolicy());
+    m_button->setText(tr("..."));
+    m_button->installEventFilter(this);
+
+    connect(m_button, SIGNAL(clicked()), this, SLOT(slotButtonClicked()));
+    connect(m_edit, SIGNAL(editingFinished()), this, SLOT(slotEditFinished()));
+
+    lt->addWidget(m_button);
+    m_edit->setText(m_fileName);
+}
+
+QFileEdit::~QFileEdit()
+{
+    emit destroyed(this);
+}
+
+bool QFileEdit::fileExists(QString path) const{
+    QFileInfo checkFile(path);
+    // check if file exists and if yes: Is it really a file and no directory?
+    if (checkFile.exists() && m_fileMode != QFileDialog::Directory && checkFile.isFile())
+        return true;
+    else if (checkFile.exists() && m_fileMode == QFileDialog::Directory && checkFile.isDir())
+        return true;
+    else
+        return false;
+}
+
+bool QFileEdit::validExtension(QString path) const{
+    QFileInfo fileInfo = QFileInfo(path);
+    QString ext = fileInfo.completeSuffix();
+    QRegExp regExp = QRegExp("\\*(?:[\\.\\w\\d]+)?");
+    QString match;
+    int pos = 0;
+
+    if (m_fileMode == QFileDialog::Directory){
+        if (ext.isEmpty())
+            return true;
+        else
+            return false;
+    }
+    else{
+        if (ext.isEmpty())
+            return false;
+        while ((pos = regExp.indexIn(m_filter, pos)) != -1) {
+            match = regExp.cap(0);
+            pos += regExp.matchedLength();
+            if (match == QString("*."+ext) || match == "*")
+                return true;
+        }
+    }
+    return false;
+
+}
+
+void QFileEdit::setValue(const QString &fileName)
+{
+    if (fileExists(fileName) && validExtension(fileName) && fileName != m_fileName) {
+        m_fileName = fileName;
+        m_edit->setText(fileName);
+        emit valueChanged(fileName);
+    }
+}
+void QFileEdit::setFilter(const QString &filter)
+{
+    if (m_filter != filter) {
+        m_filter = filter;
+    }
+}
+
+void QFileEdit::setFileMode(const QFileDialog::FileMode mode)
+{
+    if (m_fileMode != mode) {
+        m_fileMode = mode;
+    }
+}
+
+void QFileEdit::setReadOnly(const bool readOnly)
+{
+    if (m_readOnly != readOnly) {
+        m_edit->setReadOnly(readOnly);
+    }
+}
+
+void QFileEdit::slotEditFinished()
+{
+    QString fileName = m_edit->text();
+    setValue(fileName);
+}
+
+void QFileEdit::slotButtonClicked()
+{
+//    QString fileName = QFileDialog::getOpenFileName(this,
+//                                                    tr("QFileDialog::getOpenFileName()"),
+//                                                    m_fileName,
+//                                                    m_filter);
+    QStringList fileNames;
+    QFileDialog dialog(this);
+    if (m_fileMode != QFileDialog::Directory)
+        dialog.setNameFilter(m_filter);
+    dialog.setFileMode(m_fileMode);
+    dialog.setViewMode(QFileDialog::Detail);
+
+
+    if (dialog.exec())
+        fileNames = dialog.selectedFiles();
+
+    if ((!fileNames.isEmpty()) && (fileNames.at(0) != m_fileName)){
+        setValue(fileNames.at(0));
+    }
+}
+
+bool QFileEdit::eventFilter(QObject *obj, QEvent *ev)
+{
+    if (obj == m_button) {
+        switch (ev->type()) {
+            case QEvent::KeyPress:
+            case QEvent::KeyRelease: { // Prevent the QToolButton from handling Enter/Escape meant control the delegate
+                switch (static_cast<const QKeyEvent*>(ev)->key()) {
+                    case Qt::Key_Escape:
+                    case Qt::Key_Enter:
+                    case Qt::Key_Return:
+                        ev->ignore();
+                        return true;
+                    default:
+                        break;
+                }
+            }
+                break;
+            default:
+                break;
+        }
+    }
+    return QWidget::eventFilter(obj, ev);
+}
+
+void QFileEdit::paintEvent(QPaintEvent *)
+{
+    QStyleOption opt;
+    opt.init(this);
+    QPainter p(this);
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
 
 QT_END_NAMESPACE

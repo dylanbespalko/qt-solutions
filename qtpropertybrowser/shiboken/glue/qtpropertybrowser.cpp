@@ -49,7 +49,7 @@ static void setFactoryForManager_glue(QtAbstractPropertyBrowser* self, PyObject*
         self->setFactoryForManager(cppManager, cppFactory);
         return;
     }
-    /*pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTCOMPLEXPROPERTYMANAGER_IDX]), pyManager);
+    pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTCOMPLEXPROPERTYMANAGER_IDX]), pyManager);
     if (pythonToCpp) {
         QtComplexPropertyManager* cppManager;
         QtAbstractEditorFactory< QtComplexPropertyManager >* cppFactory;
@@ -63,7 +63,7 @@ static void setFactoryForManager_glue(QtAbstractPropertyBrowser* self, PyObject*
         gil.release();
         self->setFactoryForManager(cppManager, cppFactory);
         return;
-    }*/
+    }
     /*pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTCOMPLEXARRAYPROPERTYMANAGER_IDX]), pyManager);
     if (pythonToCpp) {
         QtComplexArrayPropertyManager* cppManager;

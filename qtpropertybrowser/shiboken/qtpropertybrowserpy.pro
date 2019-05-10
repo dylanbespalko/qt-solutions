@@ -54,6 +54,7 @@ HEADERS += \
     qtpropertybrowser/qtdoublespinboxfactory_wrapper.h \
     qtpropertybrowser/qtdoubleeditfactory_wrapper.h \
     qtpropertybrowser/qtlineeditfactory_wrapper.h \
+    qtpropertybrowser/qtcomplexeditfactory_wrapper.h \
     qtpropertybrowser/qtfileeditorfactory_wrapper.h \
     qtpropertybrowser/qtdateeditfactory_wrapper.h \
     qtpropertybrowser/qttimeeditfactory_wrapper.h \
@@ -115,6 +116,7 @@ SOURCES += \
     qtpropertybrowser/qtcheckboxfactory_wrapper.cpp \
     qtpropertybrowser/qtdoublespinboxfactory_wrapper.cpp \
     qtpropertybrowser/qtdoubleeditfactory_wrapper.cpp \
+    qtpropertybrowser/qtcomplexeditfactory_wrapper.cpp \
     qtpropertybrowser/qtlineeditfactory_wrapper.cpp \
     qtpropertybrowser/qtfileeditorfactory_wrapper.cpp \
     qtpropertybrowser/qtdateeditfactory_wrapper.cpp \
@@ -127,7 +129,6 @@ SOURCES += \
     qtpropertybrowser/qtcoloreditorfactory_wrapper.cpp \
     qtpropertybrowser/qtfonteditorfactory_wrapper.cpp \
     qtpropertybrowser/qtvarianteditorfactory_wrapper.cpp \
-    #qtpropertybrowser/qtcomplexeditfactory_wrapper.cpp \
     #qtpropertybrowser/qtarrayeditfactory_wrapper.cpp \
     #qtpropertybrowser/qtequationeditfactory_wrapper.cpp \
     \

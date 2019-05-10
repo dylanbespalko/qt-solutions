@@ -63,7 +63,7 @@
     <object-type name="QtColorPropertyManager"/>
     <object-type name="QtCursorPropertyManager"/>
     <object-type name="QtVariantPropertyManager"/>
-    <!--    <object-type name="QtComplexArrayPropertyManager"/> -->
+    <object-type name="QtComplexArrayPropertyManager"/>
     
     <!--    Qt Editor Factories-->
     <object-type name="QtAbstractEditorFactoryBase"/>
@@ -87,7 +87,7 @@
     <object-type name="QtColorEditorFactory"/>
     <object-type name="QtFontEditorFactory"/>
     <object-type name="QtVariantEditorFactory"/>
-    <!--    <object-type name="QtComplexEditFactory"/> -->
+    <object-type name="QtComplexEditFactory"/>
     <!--    <object-type name="QtArrayEditFactory"/> -->
     <!--    <object-type name="QtEquationEditFactory"/> -->
     
