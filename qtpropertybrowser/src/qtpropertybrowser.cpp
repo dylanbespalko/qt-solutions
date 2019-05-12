@@ -85,6 +85,7 @@ class QtAbstractPropertyManagerPrivate
     QtAbstractPropertyManager *q_ptr;
     Q_DECLARE_PUBLIC(QtAbstractPropertyManager)
 public:
+    typedef QMap<Attribute, bool> AttributeToEditableMap;
     void propertyDestroyed(QtProperty *property);
     void propertyChanged(QtProperty *property) const;
     void propertyRemoved(QtProperty *property,
@@ -93,6 +94,7 @@ public:
                 QtProperty *afterProperty) const;
 
     QSet<QtProperty *> m_properties;
+    AttributeToEditableMap m_attributeToEditable;
     bool attributesEditable;
 };
 

@@ -213,6 +213,17 @@ QComplex qBound(double minVal, const QComplex val, double maxVal)
     return  QComplex(std::polar(rho, theta));
 }
 
+QVector<QComplex> qBound(const QVector<double> minVal, const QVector<QComplex> val, const QVector<double> maxVal)
+{
+    QVector<QComplex> new_val = QVector<QComplex>(val.size());
+    for(unsigned short index = 0; index < val.size(); index++){
+        double rho = qBound(minVal[index], std::abs(val[index]), maxVal[index]);
+        double theta = std::arg(val[index]);
+        new_val[index] = QComplex(std::polar(rho, theta));
+    }
+    return  new_val;
+}
+
 template <class SizeValue>
 static SizeValue qBoundSize(const SizeValue &minVal, const SizeValue &val, const SizeValue &maxVal)
 {
@@ -236,13 +247,12 @@ static void setSoftComplexArrayVal(PrivateData *data, const Value &val)
     data->val = val;
     data->foreground.setColor(Qt::black);
     for(unsigned short index = 0; index < data->val.size(); index++){
-        if (std::abs(data->val[index]) > data->maxVal[index])
-        {
+        if (std::abs(data->val[index]) <= data->minVal[index])
+            data->foreground.setColor(Qt::blue);
+        if (std::abs(data->val[index]) >= data->maxVal[index]){
             data->foreground.setColor(Qt::red);
             break;
         }
-        if (std::abs(data->val[index]) < data->minVal[index])
-            data->foreground.setColor(Qt::blue);
     }
 }
 
@@ -275,6 +285,22 @@ QColor qSoftBound(double minVal, const QComplex val, double maxVal)
         color = QColor(Qt::blue);
     if (rho >= maxVal)
         color = QColor(Qt::red);
+    return color;
+}
+
+QColor qSoftBound(const QVector<double>& minVal, const QVector<QComplex>& val, const QVector<double>& maxVal)
+{
+    double rho;
+    QColor color = QColor(Qt::black);
+    for(unsigned short index = 0; index < val.size(); index++){
+        rho = std::abs(val[index]);
+        if (rho <= minVal[index])
+            color = QColor(Qt::blue);
+        if (rho >= maxVal[index]){
+            color = QColor(Qt::red);
+            break;
+        }
+    }
     return color;
 }
 
@@ -8031,10 +8057,10 @@ QString QtComplexPropertyManager::pkAvgText(const QtProperty *property) const
 QString QtComplexPropertyManager::formatText(const QtProperty *property) const
 {
     if (!attributesEditable())
-    return QString();
+        return QString();
     const QtComplexPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-    return QString();
+        return QString();
 
     switch (it.value().format) {
         case Format::RE:
