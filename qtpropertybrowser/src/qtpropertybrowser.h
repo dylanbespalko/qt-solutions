@@ -125,7 +125,7 @@ private:
 
 class QtAbstractPropertyManagerPrivate;
 
-class QT_QTPROPERTYBROWSER_EXPORT QtAbstractPropertyManager : public QObject
+class QT_QTPROPERTYBROWSER_EXPORT   QtAbstractPropertyManager : public QObject
 {
     Q_OBJECT
 public:
@@ -139,8 +139,8 @@ public:
     void clear() const;
     virtual bool isReadOnly(const QtProperty *) const{return false;}
     QtProperty *addProperty(const QString &name = QString());
-    bool attributesEditable() const;
-    void setAttributesEditable(bool enable);
+    bool attributesEditable(const Attribute) const;
+    void setAttributesEditable(const Attribute, bool);
 Q_SIGNALS:
 
     void propertyInserted(QtProperty *property,

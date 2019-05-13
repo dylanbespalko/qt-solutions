@@ -8014,7 +8014,7 @@ QString QtComplexPropertyManager::maximumText(const QtProperty *property) const
  */
 QString QtComplexPropertyManager::unitText(const QtProperty *property) const
 {
-    if (!attributesEditable())
+    if (!attributesEditable(Attribute::UNIT))
         return QString();
     const QtComplexPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
@@ -8036,7 +8036,7 @@ QString QtComplexPropertyManager::unitText(const QtProperty *property) const
  */
 QString QtComplexPropertyManager::pkAvgText(const QtProperty *property) const
 {
-    if (!attributesEditable())
+    if (!attributesEditable(Attribute::PKAVG))
         return QString();
     const QtComplexPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
@@ -8056,7 +8056,7 @@ QString QtComplexPropertyManager::pkAvgText(const QtProperty *property) const
  */
 QString QtComplexPropertyManager::formatText(const QtProperty *property) const
 {
-    if (!attributesEditable())
+    if (!attributesEditable(Attribute::FORMAT))
         return QString();
     const QtComplexPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
@@ -8080,7 +8080,7 @@ QString QtComplexPropertyManager::formatText(const QtProperty *property) const
  */
 QIcon QtComplexPropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable())
+    if (!attributesEditable(Attribute::CHECK))
         return QIcon();
 
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
@@ -8657,7 +8657,9 @@ QtComplexArrayPropertyManager::QtComplexArrayPropertyManager(QObject *parent)
     d_ptr->q_ptr = this;
 
     d_ptr->m_complexPropertyManager = new QtComplexPropertyManager(this);
-    d_ptr->m_complexPropertyManager->setAttributesEditable(false);
+    d_ptr->m_complexPropertyManager->setAttributesEditable(Attribute::UNIT, false);
+    d_ptr->m_complexPropertyManager->setAttributesEditable(Attribute::PKAVG, false);
+    d_ptr->m_complexPropertyManager->setAttributesEditable(Attribute::FORMAT, false);
     connect_signals();
 }
 
@@ -8908,7 +8910,7 @@ QString QtComplexArrayPropertyManager::valueText(const QtProperty *property) con
  */
 QString QtComplexArrayPropertyManager::pkAvgText(const QtProperty *property) const
 {
-    if (!attributesEditable())
+    if (!attributesEditable(Attribute::PKAVG))
         return QString();
     const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
@@ -8928,7 +8930,7 @@ QString QtComplexArrayPropertyManager::pkAvgText(const QtProperty *property) con
  */
 QString QtComplexArrayPropertyManager::formatText(const QtProperty *property) const
 {
-    if (!attributesEditable())
+    if (!attributesEditable(Attribute::FORMAT))
         return QString();
     const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
@@ -8952,7 +8954,7 @@ QString QtComplexArrayPropertyManager::formatText(const QtProperty *property) co
  */
 QString QtComplexArrayPropertyManager::unitText(const QtProperty *property) const
 {
-    if (!attributesEditable())
+    if (!attributesEditable(Attribute::UNIT))
         return QString();
     const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())

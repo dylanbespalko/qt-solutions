@@ -973,7 +973,7 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_addProperty(PyObject* self, P
         return {};
 }
 
-static PyObject* Sbk_QtAbstractPropertyManagerFunc_attributesEditable(PyObject* self)
+static PyObject* Sbk_QtAbstractPropertyManagerFunc_attributesEditable(PyObject* self, PyObject* pyArg)
 {
     QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
     SBK_UNUSED(cppSelf)
@@ -981,13 +981,29 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_attributesEditable(PyObject* 
         return {};
     cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
     PyObject* pyResult{};
+    int overloadId = -1;
+    PythonToCppFunc pythonToCpp{};
+    SBK_UNUSED(pythonToCpp)
+
+    // Overloaded function decisor
+    // 0: QtAbstractPropertyManager::attributesEditable(Attribute)const
+    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, (pyArg)))) {
+        overloadId = 0; // attributesEditable(Attribute)const
+    }
+
+    // Function signature not found.
+    if (overloadId == -1) goto Sbk_QtAbstractPropertyManagerFunc_attributesEditable_TypeError;
 
     // Call function/method
     {
+        ::Attribute cppArg0{NONE};
+        pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
-            // attributesEditable()const
-            bool cppResult = const_cast<const ::QtAbstractPropertyManagerWrapper*>(cppSelf)->attributesEditable();
+            // attributesEditable(Attribute)const
+            PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
+            bool cppResult = const_cast<const ::QtAbstractPropertyManagerWrapper*>(cppSelf)->attributesEditable(cppArg0);
+            PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), &cppResult);
         }
     }
@@ -997,6 +1013,10 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_attributesEditable(PyObject* 
         return {};
     }
     return pyResult;
+
+    Sbk_QtAbstractPropertyManagerFunc_attributesEditable_TypeError:
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.attributesEditable");
+        return {};
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_checkIcon(PyObject* self, PyObject* pyArg)
@@ -1658,7 +1678,7 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_properties(PyObject* self)
     return pyResult;
 }
 
-static PyObject* Sbk_QtAbstractPropertyManagerFunc_setAttributesEditable(PyObject* self, PyObject* pyArg)
+static PyObject* Sbk_QtAbstractPropertyManagerFunc_setAttributesEditable(PyObject* self, PyObject* args)
 {
     QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
     SBK_UNUSED(cppSelf)
@@ -1666,13 +1686,24 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_setAttributesEditable(PyObjec
         return {};
     cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
+    int numArgs = PyTuple_GET_SIZE(args);
+    PyObject* pyArgs[] = {0, 0};
+
+    // invalid argument lengths
+
+
+    if (!PyArg_UnpackTuple(args, "setAttributesEditable", 2, 2, &(pyArgs[0]), &(pyArgs[1])))
+        return {};
+
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::setAttributesEditable(bool)
-    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), (pyArg)))) {
-        overloadId = 0; // setAttributesEditable(bool)
+    // 0: QtAbstractPropertyManager::setAttributesEditable(Attribute,bool)
+    if (numArgs == 2
+        && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, (pyArgs[0])))
+        && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppConvertible(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), (pyArgs[1])))) {
+        overloadId = 0; // setAttributesEditable(Attribute,bool)
     }
 
     // Function signature not found.
@@ -1680,13 +1711,15 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_setAttributesEditable(PyObjec
 
     // Call function/method
     {
-        bool cppArg0;
-        pythonToCpp(pyArg, &cppArg0);
+        ::Attribute cppArg0{NONE};
+        pythonToCpp[0](pyArgs[0], &cppArg0);
+        bool cppArg1;
+        pythonToCpp[1](pyArgs[1], &cppArg1);
 
         if (!PyErr_Occurred()) {
-            // setAttributesEditable(bool)
+            // setAttributesEditable(Attribute,bool)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            cppSelf->setAttributesEditable(cppArg0);
+            cppSelf->setAttributesEditable(cppArg0, cppArg1);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -1697,7 +1730,7 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_setAttributesEditable(PyObjec
     Py_RETURN_NONE;
 
     Sbk_QtAbstractPropertyManagerFunc_setAttributesEditable_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.setAttributesEditable");
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtAbstractPropertyManager.setAttributesEditable");
         return {};
 }
 
@@ -1892,7 +1925,7 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_valueText(PyObject* self, PyO
 
 static PyMethodDef Sbk_QtAbstractPropertyManager_methods[] = {
     {"addProperty", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_addProperty, METH_VARARGS|METH_KEYWORDS},
-    {"attributesEditable", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_attributesEditable, METH_NOARGS},
+    {"attributesEditable", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_attributesEditable, METH_O},
     {"checkIcon", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_checkIcon, METH_O},
     {"clear", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_clear, METH_NOARGS},
     {"connect_signals", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_connect_signals, METH_NOARGS},
@@ -1909,7 +1942,7 @@ static PyMethodDef Sbk_QtAbstractPropertyManager_methods[] = {
     {"minimumText", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_minimumText, METH_O},
     {"pkAvgText", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_pkAvgText, METH_O},
     {"properties", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_properties, METH_NOARGS},
-    {"setAttributesEditable", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_setAttributesEditable, METH_O},
+    {"setAttributesEditable", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_setAttributesEditable, METH_VARARGS},
     {"uninitializeProperty", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_uninitializeProperty, METH_O},
     {"unitText", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_unitText, METH_O},
     {"valueIcon", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_valueIcon, METH_O},
@@ -1999,7 +2032,7 @@ static PyObject* QtAbstractPropertyManager_PTR_CppToPython_QtAbstractPropertyMan
 const char QtAbstractPropertyManager_SignaturesString[] = ""
     "qtpropertybrowser.QtAbstractPropertyManager(parent:PySide2.QtCore.QObject=0)\n"
     "qtpropertybrowser.QtAbstractPropertyManager.addProperty(name:QString=QString())->qtpropertybrowser.QtProperty\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.attributesEditable()->bool\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.attributesEditable(arg__1:qtpropertybrowser.Attribute)->bool\n"
     "qtpropertybrowser.QtAbstractPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
     "qtpropertybrowser.QtAbstractPropertyManager.clear()\n"
     "qtpropertybrowser.QtAbstractPropertyManager.connect_signals()\n"
@@ -2016,7 +2049,7 @@ const char QtAbstractPropertyManager_SignaturesString[] = ""
     "qtpropertybrowser.QtAbstractPropertyManager.minimumText(property:qtpropertybrowser.QtProperty)->QString\n"
     "qtpropertybrowser.QtAbstractPropertyManager.pkAvgText(property:qtpropertybrowser.QtProperty)->QString\n"
     "qtpropertybrowser.QtAbstractPropertyManager.properties()->qtpropertybrowser.QtProperty\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.setAttributesEditable(enable:bool)\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.setAttributesEditable(arg__1:qtpropertybrowser.Attribute,arg__2:bool)\n"
     "qtpropertybrowser.QtAbstractPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
     "qtpropertybrowser.QtAbstractPropertyManager.unitText(property:qtpropertybrowser.QtProperty)->QString\n"
     "qtpropertybrowser.QtAbstractPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"

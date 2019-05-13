@@ -129,8 +129,8 @@ if __name__ == "__main__":
         # tree_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
         box_scroll_area = QScrollArea()
         box_browser = QtGroupBoxPropertyBrowser()
-        box_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
-        # box_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
+        # box_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
+        box_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
         button_scroll_area = QScrollArea()
         button_browser = QtButtonPropertyBrowser()
         button_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
@@ -411,9 +411,9 @@ if __name__ == "__main__":
         property_.propertyManager().setReadOnly(property_, False)
         property_.propertyManager().setUnit(property_, "V")
         property_.propertyManager().setPrecision(property_, 2)
-        property_.propertyManager().setMinimum(property_, [0, 0])
-        property_.propertyManager().setMaximum(property_, [2, 2])
-        property_.propertyManager().setValue(property_, [2 + 2j, 2 + 2j])
+        property_.propertyManager().setMinimum(property_, [0, 0, 0])
+        property_.propertyManager().setMaximum(property_, [2, 2, 2])
+        property_.propertyManager().setValue(property_, [2 + 2j, 2 + 2j, 2 + 2j])
         tree_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR].subComplexPropertyManager(),
                                           factory_map[Factory.COMPLEX_EDIT])
         box_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR].subComplexPropertyManager(),

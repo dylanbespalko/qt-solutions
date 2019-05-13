@@ -95,7 +95,6 @@ public:
 
     QSet<QtProperty *> m_properties;
     AttributeToEditableMap m_attributeToEditable;
-    bool attributesEditable;
 };
 
 /*!
@@ -798,6 +797,11 @@ QtAbstractPropertyManager::QtAbstractPropertyManager(QObject *parent)
     : QObject(parent)
 {
     d_ptr = new QtAbstractPropertyManagerPrivate;
+    d_ptr->m_attributeToEditable.insert(Attribute::UNIT, true);
+    d_ptr->m_attributeToEditable.insert(Attribute::PKAVG, true);
+    d_ptr->m_attributeToEditable.insert(Attribute::FORMAT, true);
+    d_ptr->m_attributeToEditable.insert(Attribute::MINIMUM, true);
+    d_ptr->m_attributeToEditable.insert(Attribute::MAXIMUM, true);
     d_ptr->q_ptr = this;
 
 }
@@ -841,9 +845,9 @@ QSet<QtProperty *> QtAbstractPropertyManager::properties() const
 
  \sa attributeEditable()
  */
-bool QtAbstractPropertyManager::attributesEditable() const
+bool QtAbstractPropertyManager::attributesEditable(Attribute attribute) const
 {
-    return d_ptr->attributesEditable;
+    return d_ptr->m_attributeToEditable[attribute];
 }
 
 /*!
@@ -927,9 +931,9 @@ QtProperty *QtAbstractPropertyManager::addProperty(const QString &name)
 
  \sa attributeEditable()
  */
-void QtAbstractPropertyManager::setAttributesEditable(bool enable)
+void QtAbstractPropertyManager::setAttributesEditable(Attribute attribute, bool enable)
 {
-    d_ptr->attributesEditable = enable;
+    d_ptr->m_attributeToEditable[attribute] = enable;
 }
 
 /*!
