@@ -403,7 +403,7 @@ if __name__ == "__main__":
                                           factory_map[Factory.COMPLEX_EDIT])
         box_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR].subComplexPropertyManager(),
                                          factory_map[Factory.COMPLEX_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR].subComplexPropertyManager,
+        button_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR].subComplexPropertyManager(),
                                             factory_map[Factory.COMPLEX_EDIT])
         browser_item = tree_browser.addProperty(property_)
         tree_browser.setExpanded(browser_item, False)
@@ -427,7 +427,7 @@ if __name__ == "__main__":
                                           factory_map[Factory.COMPLEX_EDIT])
         box_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR].subComplexPropertyManager(),
                                          factory_map[Factory.COMPLEX_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR].subComplexPropertyManager,
+        button_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR].subComplexPropertyManager(),
                                             factory_map[Factory.COMPLEX_EDIT])
         browser_item = tree_browser.addProperty(property_)
         tree_browser.setExpanded(browser_item, False)
