@@ -556,18 +556,21 @@ void QtButtonPropertyBrowserPrivate::updateItem(WidgetItem *item)
         font.setUnderline(false);
         item->unit->setFont(font);
         item->unit->setEnabled(property->isEnabled());
+        item->unit->setCurrentText(property->unitText());
     }
     if (item->pkAvg){
         QFont font = item->pkAvg->font();
         font.setUnderline(false);
         item->pkAvg->setFont(font);
         item->pkAvg->setEnabled(property->isEnabled());
+        item->pkAvg->setCurrentText(property->pkAvgText());
     }
     if (item->format){
         QFont font = item->format->font();
         font.setUnderline(false);
         item->format->setFont(font);
         item->format->setEnabled(property->isEnabled());
+        item->format->setCurrentText(property->formatText());
     }
     if (item->minimum){
         QFont font = item->minimum->font();
@@ -583,6 +586,7 @@ void QtButtonPropertyBrowserPrivate::updateItem(WidgetItem *item)
     }
     if (item->check){
         item->check->setEnabled(property->isEnabled());
+        item->check->setChecked(property->check());
     }
 }
 
