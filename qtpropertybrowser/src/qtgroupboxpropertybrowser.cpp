@@ -39,6 +39,7 @@
 ****************************************************************************/
 
 
+#include "qtpropertybrowserutils_p.h"
 #include "qtgroupboxpropertybrowser.h"
 #include <QSet>
 #include <QGridLayout>
@@ -87,7 +88,7 @@ public:
         QComboBox *format;
         QDoubleEdit *minimum;
         QDoubleEdit *maximum;
-        QCheckBox *check;
+        QtBoolEdit *check;
         QGroupBox *groupBox;
         QGridLayout *layout;
         QFrame *line;
@@ -273,6 +274,13 @@ void QtGroupBoxPropertyBrowserPrivate::propertyInserted(QtBrowserItem *index, Qt
                             parentItem->layout->addWidget(parentItem->format, 0, ind + 2, 1, 1);
                         }
                         break;
+                    case Attribute::CHECK:
+                        if (parentItem->check){
+                            l->removeWidget(parentItem->check);
+                            parentItem->check->setParent(parentItem->groupBox);
+                            parentItem->layout->addWidget(parentItem->check, 0, ind + 2, 1, 1, Qt::AlignRight);
+                        }
+                        break;
                     default:
                         break;
                     }
@@ -342,6 +350,11 @@ void QtGroupBoxPropertyBrowserPrivate::propertyInserted(QtBrowserItem *index, Qt
            newItem->maximum = (QDoubleEdit*)createAttributeEditor(index->property(), parentWidget, Attribute::MAXIMUM);
             if (newItem->maximum)
                 layout->addWidget(newItem->maximum, row, ind+2, 1, 1);
+            break;
+        case Attribute::CHECK:
+           newItem->check = (QtBoolEdit*)createAttributeEditor(index->property(), parentWidget, Attribute::CHECK);
+            if (newItem->check)
+                layout->addWidget(newItem->check, row, ind+2, 1, 1, Qt::AlignRight);
             break;
         default:
             break;

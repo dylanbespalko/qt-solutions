@@ -802,6 +802,7 @@ QtAbstractPropertyManager::QtAbstractPropertyManager(QObject *parent)
     d_ptr->m_attributeToEditable.insert(Attribute::FORMAT, true);
     d_ptr->m_attributeToEditable.insert(Attribute::MINIMUM, true);
     d_ptr->m_attributeToEditable.insert(Attribute::MAXIMUM, true);
+    d_ptr->m_attributeToEditable.insert(Attribute::CHECK, true);
     d_ptr->q_ptr = this;
 
 }

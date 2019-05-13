@@ -8660,6 +8660,7 @@ QtComplexArrayPropertyManager::QtComplexArrayPropertyManager(QObject *parent)
     d_ptr->m_complexPropertyManager->setAttributesEditable(Attribute::UNIT, false);
     d_ptr->m_complexPropertyManager->setAttributesEditable(Attribute::PKAVG, false);
     d_ptr->m_complexPropertyManager->setAttributesEditable(Attribute::FORMAT, false);
+    d_ptr->m_complexPropertyManager->setAttributesEditable(Attribute::CHECK, false);
     connect_signals();
 }
 

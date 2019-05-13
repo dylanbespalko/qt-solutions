@@ -38,7 +38,7 @@
 **
 ****************************************************************************/
 
-
+#include "qtpropertybrowserutils_p.h"
 #include "qtbuttonpropertybrowser.h"
 #include <QSet>
 #include <QGridLayout>
@@ -88,7 +88,7 @@ public:
         QComboBox *format;
         QDoubleEdit *minimum;
         QDoubleEdit *maximum;
-        QCheckBox *check;
+        QtBoolEdit *check;
         QToolButton *button; // expandable button for items with children
         QWidget *container; // container which is expanded when the button is clicked
         QGridLayout *layout; // layout in container
@@ -373,6 +373,11 @@ void QtButtonPropertyBrowserPrivate::propertyInserted(QtBrowserItem *index, QtBr
            newItem->maximum = (QDoubleEdit*)createAttributeEditor(index->property(), parentWidget, Attribute::MAXIMUM);
             if (newItem->maximum)
                 layout->addWidget(newItem->maximum, row, ind+2, 1, 1);
+            break;
+        case Attribute::CHECK:
+           newItem->check = (QtBoolEdit*)createAttributeEditor(index->property(), parentWidget, Attribute::CHECK);
+            if (newItem->check)
+                layout->addWidget(newItem->check, row, ind+2, 1, 1, Qt::AlignRight);
             break;
         default:
             break;
