@@ -5387,9 +5387,7 @@ QWidget *QtArrayEditFactory::createEditor(QtComplexArrayPropertyManager *manager
                                             QtProperty *property, QWidget *parent)
 {
     Q_UNUSED(manager);
-    Q_UNUSED(property);
-    Q_UNUSED(parent);
-    return 0;
+    return new QLabel(property->valueText(), parent);
 }
 
 /*!

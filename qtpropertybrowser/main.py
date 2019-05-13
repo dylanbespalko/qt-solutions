@@ -125,16 +125,16 @@ if __name__ == "__main__":
     for count in range(1):
         tree_scroll_area = QScrollArea()
         tree_browser = QtTreePropertyBrowser()
-        tree_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
-        # tree_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
+        # tree_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
+        tree_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
         box_scroll_area = QScrollArea()
         box_browser = QtGroupBoxPropertyBrowser()
         # box_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
         box_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
         button_scroll_area = QScrollArea()
         button_browser = QtButtonPropertyBrowser()
-        button_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
-        # button_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
+        # button_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
+        button_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
 
         manager_map = {Manager.INT_SPIN: QtIntPropertyManager(),  # todo: Does not support Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT
                        Manager.INT_EDIT: QtIntPropertyManager(),
@@ -399,6 +399,12 @@ if __name__ == "__main__":
         tree_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR], factory_map[Factory.COMPLEX_VECTOR])
         box_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR], factory_map[Factory.COMPLEX_VECTOR])
         button_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR], factory_map[Factory.COMPLEX_VECTOR])
+        tree_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR].subComplexPropertyManager(),
+                                          factory_map[Factory.COMPLEX_EDIT])
+        box_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR].subComplexPropertyManager(),
+                                         factory_map[Factory.COMPLEX_EDIT])
+        button_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR].subComplexPropertyManager,
+                                            factory_map[Factory.COMPLEX_EDIT])
         browser_item = tree_browser.addProperty(property_)
         tree_browser.setExpanded(browser_item, False)
         browser_item = box_browser.addProperty(property_)
@@ -407,13 +413,16 @@ if __name__ == "__main__":
 
         # complex_vector_rw
         manager_map[Manager.COMPLEX_VECTOR].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.COMPLEX_VECTOR].addProperty("complex_vector_rw")
+        property_ = manager_map[Manager.COMPLEX_VECTOR].addProperty("complex_vector_rw2")
         property_.propertyManager().setReadOnly(property_, False)
         property_.propertyManager().setUnit(property_, "V")
         property_.propertyManager().setPrecision(property_, 2)
         property_.propertyManager().setMinimum(property_, [0, 0, 0])
         property_.propertyManager().setMaximum(property_, [2, 2, 2])
         property_.propertyManager().setValue(property_, [2 + 2j, 2 + 2j, 2 + 2j])
+        tree_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR], factory_map[Factory.COMPLEX_VECTOR])
+        box_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR], factory_map[Factory.COMPLEX_VECTOR])
+        button_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR], factory_map[Factory.COMPLEX_VECTOR])
         tree_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR].subComplexPropertyManager(),
                                           factory_map[Factory.COMPLEX_EDIT])
         box_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR].subComplexPropertyManager(),

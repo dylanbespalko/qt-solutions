@@ -249,7 +249,28 @@ void QtGroupBoxPropertyBrowserPrivate::propertyInserted(QtBrowserItem *index, Qt
             if (parentItem->widget) {
                 l->removeWidget(parentItem->widget);
                 parentItem->widget->setParent(parentItem->groupBox);
-                parentItem->layout->addWidget(parentItem->widget, 0, 0, 1, m_attributes.count() + 2);
+                parentItem->layout->addWidget(parentItem->widget, 0, 0, 1, 2);
+                for (unsigned short ind = 0; ind < m_attributes.count(); ind++) {
+                    switch (m_attributes.at(ind)) {
+                    case Attribute::UNIT:
+                        parentItem->unit = (QComboBox*)createAttributeEditor(index->parent()->property(), parentItem->groupBox, Attribute::UNIT);
+                        if (parentItem->unit)
+                            parentItem->layout->addWidget(parentItem->unit, 0, ind + 2, 1, 1);
+                        break;
+                    case Attribute::PKAVG:
+                        parentItem->pkAvg = (QComboBox*)createAttributeEditor(index->parent()->property(), parentItem->groupBox, Attribute::PKAVG);
+                        if (parentItem->pkAvg)
+                            parentItem->layout->addWidget(parentItem->pkAvg, 0, ind + 2, 1, 1);
+                        break;
+                    case Attribute::FORMAT:
+                        parentItem->format = (QComboBox*)createAttributeEditor(index->parent()->property(), parentItem->groupBox, Attribute::FORMAT);
+                        if (parentItem->format)
+                            parentItem->layout->addWidget(parentItem->format, 0, ind + 2, 1, 1);
+                        break;
+                    default:
+                        break;
+                    }
+                }
                 parentItem->line = new QFrame(parentItem->groupBox);
             } else if (parentItem->widgetLabel) {
                 l->removeWidget(parentItem->widgetLabel);
@@ -291,21 +312,6 @@ void QtGroupBoxPropertyBrowserPrivate::propertyInserted(QtBrowserItem *index, Qt
     layout->addWidget(newItem->label, row, 0, 1, span);
     for (unsigned short ind = 0; ind < m_attributes.count(); ind++) {
         switch (m_attributes.at(ind)) {
-        case Attribute::UNIT:
-            newItem->unit = (QComboBox*)createAttributeEditor(index->property(), parentWidget, Attribute::UNIT);
-            if (newItem->unit)
-                layout->addWidget(newItem->unit, row, ind+2, 1, 1);
-            break;
-        case Attribute::PKAVG:
-            newItem->pkAvg = (QComboBox*)createAttributeEditor(index->property(), parentWidget, Attribute::PKAVG);
-            if (newItem->pkAvg)
-                layout->addWidget(newItem->pkAvg, row, ind+2, 1, 1);
-            break;
-        case Attribute::FORMAT:
-            newItem->format = (QComboBox*)createAttributeEditor(index->property(), parentWidget, Attribute::FORMAT);
-            if (newItem->format)
-                layout->addWidget(newItem->format, row, ind+2, 1, 1);
-            break;
         case Attribute::MINIMUM:
             newItem->minimum = (QDoubleEdit*)createAttributeEditor(index->property(), parentWidget, Attribute::MINIMUM);
             if (newItem->minimum)

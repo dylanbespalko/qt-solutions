@@ -69,7 +69,7 @@ public:
     QWidget *createEditor(QtProperty *property, QWidget *parent) const
         { return q_ptr->createEditor(property, parent); }
     QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, Attribute attribute) const
-    { return q_ptr->createAttributeEditor(property, parent,attribute); }
+    { return q_ptr->createAttributeEditor(property, parent, attribute); }
 
     void slotEditorDestroyed();
     void slotUpdate();
