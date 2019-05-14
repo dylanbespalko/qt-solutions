@@ -490,8 +490,8 @@ bool QtGroupBoxPropertyBrowserPrivate::hasHeader(WidgetItem *item) const
 void QtGroupBoxPropertyBrowserPrivate::propertyChanged(QtBrowserItem *index)
 {
     WidgetItem *item = m_indexToItem.value(index);
-    updateItem(item);
     WidgetItem *parentItem = item->parent;
+    updateItem(item);
     if (parentItem)
         updateItem(item);
 }
@@ -539,6 +539,7 @@ void QtGroupBoxPropertyBrowserPrivate::updateItem(WidgetItem *item)
         QLabel *label = dynamic_cast<QLabel*>(item->widget);
         if (label){
             label->setText(property->valueText());
+            label->setMaximumWidth(200);
         }
     }
     if (item->unit){

@@ -506,8 +506,10 @@ void QtButtonPropertyBrowserPrivate::removeRow(QGridLayout *layout, int row) con
 void QtButtonPropertyBrowserPrivate::propertyChanged(QtBrowserItem *index)
 {
     WidgetItem *item = m_indexToItem.value(index);
-
+    WidgetItem *parentItem = item->parent;
     updateItem(item);
+    if (parentItem)
+        updateItem(item);
 }
 
 void QtButtonPropertyBrowserPrivate::updateItem(WidgetItem *item)
@@ -550,6 +552,11 @@ void QtButtonPropertyBrowserPrivate::updateItem(WidgetItem *item)
         item->widget->setFont(font);
         item->widget->setEnabled(property->isEnabled());
         item->widget->setToolTip(property->valueText());
+        QLabel *label = dynamic_cast<QLabel*>(item->widget);
+        if (label){
+            label->setText(property->valueText());
+            label->setMaximumWidth(200);
+        }
     }
     if (item->unit){
         QFont font = item->unit->font();
