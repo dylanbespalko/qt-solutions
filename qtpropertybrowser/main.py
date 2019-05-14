@@ -126,15 +126,15 @@ if __name__ == "__main__":
         tree_scroll_area = QScrollArea()
         tree_browser = QtTreePropertyBrowser()
         # tree_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
-        tree_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.MINIMUM, Attribute.MAXIMUM])
+        tree_browser.setAttributes([Attribute.UNIT, Attribute.FORMAT])
         box_scroll_area = QScrollArea()
         box_browser = QtGroupBoxPropertyBrowser()
         # box_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
-        box_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.MINIMUM, Attribute.MAXIMUM])
+        box_browser.setAttributes([Attribute.UNIT, Attribute.FORMAT])
         button_scroll_area = QScrollArea()
         button_browser = QtButtonPropertyBrowser()
         # button_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
-        button_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.MINIMUM, Attribute.MAXIMUM])
+        button_browser.setAttributes([Attribute.UNIT, Attribute.FORMAT])
 
         manager_map = {Manager.INT_SPIN: QtIntPropertyManager(),  # todo: Does not support Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT
                        Manager.INT_EDIT: QtIntPropertyManager(),
@@ -373,6 +373,7 @@ if __name__ == "__main__":
         manager_map[Manager.COMPLEX_EDIT].valueChanged.connect(set_value)
         property_ = manager_map[Manager.COMPLEX_EDIT].addProperty("complex_edit_rw")
         property_.propertyManager().setReadOnly(property_, False)
+        property_.propertyManager().setScale(property_, Scale.K)
         property_.propertyManager().setUnit(property_, "V")
         property_.propertyManager().setPrecision(property_, 2)
         property_.propertyManager().setMinimum(property_, 0)

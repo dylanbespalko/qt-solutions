@@ -292,6 +292,75 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
+class QtComplexEditFactoryPrivate;
+
+class QT_QTPROPERTYBROWSER_EXPORT QtComplexEditFactory : public QtAbstractEditorFactory<QtComplexPropertyManager>
+{
+    Q_OBJECT
+public:
+    QtComplexEditFactory(QObject *parent = 0);
+    ~QtComplexEditFactory();
+protected:
+    void connectPropertyManager(QtComplexPropertyManager *manager);
+    QWidget *createEditor(QtComplexPropertyManager *manager, QtProperty *property,
+                          QWidget *parent);
+    QWidget *createAttributeEditor(QtComplexPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    void disconnectPropertyManager(QtComplexPropertyManager *manager);
+private:
+    QtComplexEditFactoryPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QtComplexEditFactory)
+    Q_DISABLE_COPY(QtComplexEditFactory)
+    Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QComplex&))
+    Q_PRIVATE_SLOT(d_func(), void slotRangeChanged(QtProperty *, double, double))
+    Q_PRIVATE_SLOT(d_func(), void slotSingleStepChanged(QtProperty *, const QComplex&))
+    Q_PRIVATE_SLOT(d_func(), void slotPrecisionChanged(QtProperty *, int))
+    Q_PRIVATE_SLOT(d_func(), void slotReadOnlyChanged(QtProperty *, bool))
+    Q_PRIVATE_SLOT(d_func(), void slotSetValue(const QComplex&))
+    Q_PRIVATE_SLOT(d_func(), void slotSetScale(int))
+    Q_PRIVATE_SLOT(d_func(), void slotSetPkAvg(int))
+    Q_PRIVATE_SLOT(d_func(), void slotSetFormat(int))
+    Q_PRIVATE_SLOT(d_func(), void slotSetMinimum(double))
+    Q_PRIVATE_SLOT(d_func(), void slotSetMaximum(double))
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotUnitAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotFormatAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotMinimumAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotMaximumAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
+};
+
+class QtArrayEditFactoryPrivate;
+
+class QT_QTPROPERTYBROWSER_EXPORT QtArrayEditFactory : public QtAbstractEditorFactory<QtComplexArrayPropertyManager>
+{
+    Q_OBJECT
+public:
+    QtArrayEditFactory(QObject *parent = 0);
+    ~QtArrayEditFactory();
+protected:
+    void connectPropertyManager(QtComplexArrayPropertyManager *manager);
+    QWidget *createEditor(QtComplexArrayPropertyManager *manager, QtProperty *property,
+                          QWidget *parent);
+    QWidget *createAttributeEditor(QtComplexArrayPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    void disconnectPropertyManager(QtComplexArrayPropertyManager *manager);
+private:
+    QtArrayEditFactoryPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QtArrayEditFactory)
+    Q_DISABLE_COPY(QtArrayEditFactory)
+    Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QComplex&))
+    Q_PRIVATE_SLOT(d_func(), void slotSetScale(int))
+    Q_PRIVATE_SLOT(d_func(), void slotSetPkAvg(int))
+    Q_PRIVATE_SLOT(d_func(), void slotSetFormat(int))
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotUnitAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotPkAvgAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotFormatAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotMinimumAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotMaximumAttributeEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
+};
+
 class QtLineEditFactoryPrivate;
 
 class QT_QTPROPERTYBROWSER_EXPORT QtLineEditFactory : public QtAbstractEditorFactory<QtStringPropertyManager>
@@ -573,75 +642,6 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(const QString &))
     Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
-    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
-};
-
-class QtComplexEditFactoryPrivate;
-
-class QT_QTPROPERTYBROWSER_EXPORT QtComplexEditFactory : public QtAbstractEditorFactory<QtComplexPropertyManager>
-{
-    Q_OBJECT
-public:
-    QtComplexEditFactory(QObject *parent = 0);
-    ~QtComplexEditFactory();
-protected:
-    void connectPropertyManager(QtComplexPropertyManager *manager);
-    QWidget *createEditor(QtComplexPropertyManager *manager, QtProperty *property,
-                          QWidget *parent);
-    QWidget *createAttributeEditor(QtComplexPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
-    void disconnectPropertyManager(QtComplexPropertyManager *manager);
-private:
-    QtComplexEditFactoryPrivate *d_ptr;
-    Q_DECLARE_PRIVATE(QtComplexEditFactory)
-    Q_DISABLE_COPY(QtComplexEditFactory)
-    Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QComplex&))
-    Q_PRIVATE_SLOT(d_func(), void slotRangeChanged(QtProperty *, double, double))
-    Q_PRIVATE_SLOT(d_func(), void slotSingleStepChanged(QtProperty *, const QComplex&))
-    Q_PRIVATE_SLOT(d_func(), void slotPrecisionChanged(QtProperty *, int))
-    Q_PRIVATE_SLOT(d_func(), void slotReadOnlyChanged(QtProperty *, bool))
-    Q_PRIVATE_SLOT(d_func(), void slotSetValue(const QComplex&))
-    Q_PRIVATE_SLOT(d_func(), void slotSetScale(int))
-    Q_PRIVATE_SLOT(d_func(), void slotSetPkAvg(int))
-    Q_PRIVATE_SLOT(d_func(), void slotSetFormat(int))
-    Q_PRIVATE_SLOT(d_func(), void slotSetMinimum(double))
-    Q_PRIVATE_SLOT(d_func(), void slotSetMaximum(double))
-    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
-    Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotUnitAttributeEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotFormatAttributeEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotMinimumAttributeEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotMaximumAttributeEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
-};
-
-class QtArrayEditFactoryPrivate;
-
-class QT_QTPROPERTYBROWSER_EXPORT QtArrayEditFactory : public QtAbstractEditorFactory<QtComplexArrayPropertyManager>
-{
-    Q_OBJECT
-public:
-    QtArrayEditFactory(QObject *parent = 0);
-    ~QtArrayEditFactory();
-protected:
-    void connectPropertyManager(QtComplexArrayPropertyManager *manager);
-    QWidget *createEditor(QtComplexArrayPropertyManager *manager, QtProperty *property,
-                          QWidget *parent);
-    QWidget *createAttributeEditor(QtComplexArrayPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
-    void disconnectPropertyManager(QtComplexArrayPropertyManager *manager);
-private:
-    QtArrayEditFactoryPrivate *d_ptr;
-    Q_DECLARE_PRIVATE(QtArrayEditFactory)
-    Q_DISABLE_COPY(QtArrayEditFactory)
-    Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QComplex&))
-    Q_PRIVATE_SLOT(d_func(), void slotSetScale(int))
-    Q_PRIVATE_SLOT(d_func(), void slotSetPkAvg(int))
-    Q_PRIVATE_SLOT(d_func(), void slotSetFormat(int))
-    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
-    Q_PRIVATE_SLOT(d_func(), void slotUnitAttributeEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotPkAvgAttributeEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotFormatAttributeEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotMinimumAttributeEditorDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void slotMaximumAttributeEditorDestroyed(QObject *))
     Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
