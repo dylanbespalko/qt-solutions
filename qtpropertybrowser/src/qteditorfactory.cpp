@@ -2942,24 +2942,19 @@ class QtArrayEditFactoryPrivate : public EditorFactoryPrivate<QComplexEdit>
     Q_DECLARE_PUBLIC(QtArrayEditFactory)
 public:
 
-    void slotPropertyChanged(QtProperty *property, const QComplex& value);
+    void slotPropertyChanged(QtProperty *property, const QVector<QComplex>& value);
     void slotSetScale(int scaleSelection);
     void slotSetPkAvg(int formatSelection);
     void slotSetFormat(int formatSelection);
     void slotSetCheck(bool check);
+    QtComplexEditFactory* m_subFactory;
 };
 
-void QtArrayEditFactoryPrivate::slotPropertyChanged(QtProperty *property, const QComplex& value)
+void QtArrayEditFactoryPrivate::slotPropertyChanged(QtProperty *property, const QVector<QComplex>& value)
 {
-    QList<QComplexEdit *> editors = m_createdEditors[property];
-    QListIterator<QComplexEdit *> itEditor(m_createdEditors[property]);
-    while (itEditor.hasNext()) {
-        QComplexEdit *editor = itEditor.next();
-        if (editor->value() != value) {
-            editor->blockSignals(true);
-            editor->setValue(value);
-            editor->blockSignals(false);
-        }
+    for(int index=0; index < property->subProperties().size(); ++index){
+        QtProperty* subProperty = property->subProperties()[index];
+        m_subFactory->d_ptr->slotPropertyChanged(subProperty, value[index]);
     }
 }
 
@@ -2974,6 +2969,7 @@ void QtArrayEditFactoryPrivate::slotSetScale(int scaleSelection)
             if (!manager)
                 return;
             manager->setScale(property, Scale(scaleSelection));
+            slotPropertyChanged(property, manager->value(property));
             return;
         }
     }
@@ -2990,6 +2986,7 @@ void QtArrayEditFactoryPrivate::slotSetPkAvg(int pkAvgSelection)
             if (!manager)
                 return;
             manager->setPkAvg(property, PkAvg(pkAvgSelection));
+            slotPropertyChanged(property, manager->value(property));
             return;
         }
     }
@@ -3006,6 +3003,7 @@ void QtArrayEditFactoryPrivate::slotSetFormat(int formatSelection)
             if (!manager)
                 return;
             manager->setFormat(property, Format(formatSelection));
+            slotPropertyChanged(property, manager->value(property));
             return;
         }
     }
@@ -3056,6 +3054,16 @@ QtArrayEditFactory::~QtArrayEditFactory()
     qDeleteAll(d_ptr->m_maximumAttributeEditorToProperty.keys());
     qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
     delete d_ptr;
+}
+
+QtComplexEditFactory* QtArrayEditFactory::subFactory() const
+{
+    return d_ptr->m_subFactory;
+}
+
+void QtArrayEditFactory::setSubFactory(QtComplexEditFactory* subFactory)
+{
+    d_ptr->m_subFactory = subFactory;
 }
 
 /*!

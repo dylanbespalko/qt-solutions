@@ -490,8 +490,10 @@ bool QtGroupBoxPropertyBrowserPrivate::hasHeader(WidgetItem *item) const
 void QtGroupBoxPropertyBrowserPrivate::propertyChanged(QtBrowserItem *index)
 {
     WidgetItem *item = m_indexToItem.value(index);
-
     updateItem(item);
+    WidgetItem *parentItem = item->parent;
+    if (parentItem)
+        updateItem(item);
 }
 
 void QtGroupBoxPropertyBrowserPrivate::updateItem(WidgetItem *item)
@@ -534,6 +536,10 @@ void QtGroupBoxPropertyBrowserPrivate::updateItem(WidgetItem *item)
         item->widget->setFont(font);
         item->widget->setEnabled(property->isEnabled());
         item->widget->setToolTip(property->valueText());
+        QLabel *label = dynamic_cast<QLabel*>(item->widget);
+        if (label){
+            label->setText(property->valueText());
+        }
     }
     if (item->unit){
         QFont font = item->unit->font();

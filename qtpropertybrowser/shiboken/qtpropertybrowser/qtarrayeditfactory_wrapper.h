@@ -15,6 +15,8 @@ public:
     QWidget * createEditor(QtComplexArrayPropertyManager * manager, QtProperty * property, QWidget * parent) override;
     inline void disconnectPropertyManager_protected(QtComplexArrayPropertyManager * manager) { QtArrayEditFactory::disconnectPropertyManager(manager); }
     void disconnectPropertyManager(QtComplexArrayPropertyManager * manager) override;
+    inline void setSubFactory_protected(QtComplexEditFactory * subFactory) { QtArrayEditFactory::setSubFactory(subFactory); }
+    inline QtComplexEditFactory * subFactory_protected() const { return QtArrayEditFactory::subFactory(); }
     ~QtArrayEditFactoryWrapper();
     static void pysideInitQtMetaTypes();
 };

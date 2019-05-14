@@ -22,6 +22,7 @@
 
 // Extra includes
 #include <qobject.h>
+#include <qteditorfactory.h>
 #include <qtpropertybrowser.h>
 #include <qtpropertymanager.h>
 #include <qwidget.h>
@@ -505,11 +506,85 @@ static PyObject* Sbk_QtArrayEditFactoryFunc_disconnectPropertyManager(PyObject* 
         return {};
 }
 
+static PyObject* Sbk_QtArrayEditFactoryFunc_setSubFactory(PyObject* self, PyObject* pyArg)
+{
+    QtArrayEditFactoryWrapper* cppSelf = nullptr;
+    SBK_UNUSED(cppSelf)
+    if (!Shiboken::Object::isValid(self))
+        return {};
+    cppSelf = static_cast<QtArrayEditFactoryWrapper *>(reinterpret_cast< ::QtArrayEditFactory *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTARRAYEDITFACTORY_IDX], reinterpret_cast<SbkObject *>(self))));
+    int overloadId = -1;
+    PythonToCppFunc pythonToCpp{};
+    SBK_UNUSED(pythonToCpp)
+
+    // Overloaded function decisor
+    // 0: QtArrayEditFactory::setSubFactory(QtComplexEditFactory*)
+    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTCOMPLEXEDITFACTORY_IDX]), (pyArg)))) {
+        overloadId = 0; // setSubFactory(QtComplexEditFactory*)
+    }
+
+    // Function signature not found.
+    if (overloadId == -1) goto Sbk_QtArrayEditFactoryFunc_setSubFactory_TypeError;
+
+    // Call function/method
+    {
+        if (!Shiboken::Object::isValid(pyArg))
+            return {};
+        ::QtComplexEditFactory* cppArg0;
+        pythonToCpp(pyArg, &cppArg0);
+
+        if (!PyErr_Occurred()) {
+            // setSubFactory(QtComplexEditFactory*)
+            PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
+            ((::QtArrayEditFactoryWrapper*) cppSelf)->QtArrayEditFactoryWrapper::setSubFactory_protected(cppArg0);
+            PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
+        }
+    }
+
+    if (PyErr_Occurred()) {
+        return {};
+    }
+    Py_RETURN_NONE;
+
+    Sbk_QtArrayEditFactoryFunc_setSubFactory_TypeError:
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtArrayEditFactory.setSubFactory");
+        return {};
+}
+
+static PyObject* Sbk_QtArrayEditFactoryFunc_subFactory(PyObject* self)
+{
+    QtArrayEditFactoryWrapper* cppSelf = nullptr;
+    SBK_UNUSED(cppSelf)
+    if (!Shiboken::Object::isValid(self))
+        return {};
+    cppSelf = static_cast<QtArrayEditFactoryWrapper *>(reinterpret_cast< ::QtArrayEditFactory *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTARRAYEDITFACTORY_IDX], reinterpret_cast<SbkObject *>(self))));
+    PyObject* pyResult{};
+
+    // Call function/method
+    {
+
+        if (!PyErr_Occurred()) {
+            // subFactory()const
+            QtComplexEditFactory * cppResult = ((::QtArrayEditFactoryWrapper*) cppSelf)->QtArrayEditFactoryWrapper::subFactory_protected();
+            pyResult = Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTCOMPLEXEDITFACTORY_IDX]), cppResult);
+            Shiboken::Object::setParent(self, pyResult);
+        }
+    }
+
+    if (PyErr_Occurred() || !pyResult) {
+        Py_XDECREF(pyResult);
+        return {};
+    }
+    return pyResult;
+}
+
 static PyMethodDef Sbk_QtArrayEditFactory_methods[] = {
     {"connectPropertyManager", (PyCFunction)Sbk_QtArrayEditFactoryFunc_connectPropertyManager, METH_O},
     {"createAttributeEditor", (PyCFunction)Sbk_QtArrayEditFactoryFunc_createAttributeEditor, METH_VARARGS},
     {"createEditor", (PyCFunction)Sbk_QtArrayEditFactoryFunc_createEditor, METH_VARARGS},
     {"disconnectPropertyManager", (PyCFunction)Sbk_QtArrayEditFactoryFunc_disconnectPropertyManager, METH_O},
+    {"setSubFactory", (PyCFunction)Sbk_QtArrayEditFactoryFunc_setSubFactory, METH_O},
+    {"subFactory", (PyCFunction)Sbk_QtArrayEditFactoryFunc_subFactory, METH_NOARGS},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -606,6 +681,8 @@ const char QtArrayEditFactory_SignaturesString[] = ""
     "qtpropertybrowser.QtArrayEditFactory.createAttributeEditor(manager:qtpropertybrowser.QtComplexArrayPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.Attribute)->PySide2.QtWidgets.QWidget\n"
     "qtpropertybrowser.QtArrayEditFactory.createEditor(manager:qtpropertybrowser.QtComplexArrayPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
     "qtpropertybrowser.QtArrayEditFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtComplexArrayPropertyManager)\n"
+    "qtpropertybrowser.QtArrayEditFactory.setSubFactory(subFactory:qtpropertybrowser.QtComplexEditFactory)\n"
+    "qtpropertybrowser.QtArrayEditFactory.subFactory()->qtpropertybrowser.QtComplexEditFactory\n"
 ;
 
 void init_QtArrayEditFactory(PyObject* module)

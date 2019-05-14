@@ -328,6 +328,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotMinimumAttributeEditorDestroyed(QObject *))
     Q_PRIVATE_SLOT(d_func(), void slotMaximumAttributeEditorDestroyed(QObject *))
     Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
+    friend class QtArrayEditFactoryPrivate;
 };
 
 class QtArrayEditFactoryPrivate;
@@ -344,11 +345,13 @@ protected:
                           QWidget *parent);
     QWidget *createAttributeEditor(QtComplexArrayPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
     void disconnectPropertyManager(QtComplexArrayPropertyManager *manager);
+    QtComplexEditFactory* subFactory() const;
+    void setSubFactory(QtComplexEditFactory* subFactory);
 private:
     QtArrayEditFactoryPrivate *d_ptr;
     Q_DECLARE_PRIVATE(QtArrayEditFactory)
     Q_DISABLE_COPY(QtArrayEditFactory)
-    Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QComplex&))
+    Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QVector<QComplex>& value))
     Q_PRIVATE_SLOT(d_func(), void slotSetScale(int))
     Q_PRIVATE_SLOT(d_func(), void slotSetPkAvg(int))
     Q_PRIVATE_SLOT(d_func(), void slotSetFormat(int))
