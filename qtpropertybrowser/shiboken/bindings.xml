@@ -68,6 +68,7 @@
     <!--    Qt Editor Factories-->
     <object-type name="QtAbstractEditorFactoryBase"/>
 <!--    <object-type name="QtAbstractEditorFactory"/>-->
+    <object-type name="QtGroupEditFactory"/>    
     <object-type name="QtSpinBoxFactory"/>
     <object-type name="QtIntEditFactory"/>
     <object-type name="QtSliderFactory"/>

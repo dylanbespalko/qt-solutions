@@ -46,6 +46,7 @@ HEADERS += \
     qtpropertybrowser/qtvariantpropertymanager_wrapper.h \
     \
     qtpropertybrowser/qtabstracteditorfactorybase_wrapper.h \
+    qtpropertybrowser/qtgroupeditfactory_wrapper.h \
     qtpropertybrowser/qtspinboxfactory_wrapper.h \
     qtpropertybrowser/qtinteditfactory_wrapper.h \
     qtpropertybrowser/qtsliderfactory_wrapper.h \
@@ -109,6 +110,7 @@ SOURCES += \
     qtpropertybrowser/qtvariantpropertymanager_wrapper.cpp \
     \
     qtpropertybrowser/qtabstracteditorfactorybase_wrapper.cpp \
+    qtpropertybrowser/qtgroupeditfactory_wrapper.cpp \
     qtpropertybrowser/qtspinboxfactory_wrapper.cpp \
     qtpropertybrowser/qtinteditfactory_wrapper.cpp \
     qtpropertybrowser/qtsliderfactory_wrapper.cpp \

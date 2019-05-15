@@ -360,6 +360,28 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
+class QtGroupEditFactoryPrivate;
+
+class QT_QTPROPERTYBROWSER_EXPORT QtGroupEditFactory : public QtAbstractEditorFactory<QtAbstractPropertyManager>
+{
+    Q_OBJECT
+public:
+    QtGroupEditFactory(QObject *parent = 0);
+    ~QtGroupEditFactory();
+protected:
+    void connectPropertyManager(QtAbstractPropertyManager *manager);
+    QWidget *createEditor(QtAbstractPropertyManager *manager, QtProperty *property,
+                          QWidget *parent);
+    QWidget *createAttributeEditor(QtAbstractPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    void disconnectPropertyManager(QtAbstractPropertyManager *manager);
+private:
+    QtGroupEditFactoryPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QtGroupEditFactory)
+    Q_DISABLE_COPY(QtGroupEditFactory)
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
+};
+
 class QtLineEditFactoryPrivate;
 
 class QT_QTPROPERTYBROWSER_EXPORT QtLineEditFactory : public QtAbstractEditorFactory<QtStringPropertyManager>

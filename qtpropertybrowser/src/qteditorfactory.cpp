@@ -3097,6 +3097,119 @@ void QtArrayEditFactory::disconnectPropertyManager(QtComplexArrayPropertyManager
     return;
 }
 
+// QtGroupEditFactory
+
+class QtGroupEditFactoryPrivate : public EditorFactoryPrivate<QComplexEdit>
+{
+    QtGroupEditFactory *q_ptr;
+    Q_DECLARE_PUBLIC(QtGroupEditFactory)
+public:
+    void slotSetCheck(bool check);
+};
+
+void QtGroupEditFactoryPrivate::slotSetCheck(bool check)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
+    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            property->setCheck(check);
+            return;
+        }
+    }
+}
+
+/*! \class QtGroupEditFactory
+
+ \brief The QtGroupEditFactory class provides QComplexEdit
+ widgets for properties created by QtAbstractPropertyManager objects.
+
+ \sa QtAbstractEditorFactory, QtAbstractPropertyManager
+ */
+
+/*!
+ Creates a factory with the given \a parent.
+ */
+QtGroupEditFactory::QtGroupEditFactory(QObject *parent)
+: QtAbstractEditorFactory<QtAbstractPropertyManager>(parent)
+{
+    d_ptr = new QtGroupEditFactoryPrivate();
+    d_ptr->q_ptr = this;
+
+}
+
+/*!
+ Destroys this factory, and all the widgets it has created.
+ */
+QtGroupEditFactory::~QtGroupEditFactory()
+{
+    qDeleteAll(d_ptr->m_editorToProperty.keys());
+    qDeleteAll(d_ptr->m_unitAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_pkAvgAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_formatAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_minimumAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_maximumAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
+    delete d_ptr;
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+void QtGroupEditFactory::connectPropertyManager(QtAbstractPropertyManager *manager)
+{
+
+    Q_UNUSED(manager);
+    return;
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+QWidget *QtGroupEditFactory::createEditor(QtAbstractPropertyManager *manager,
+                                            QtProperty *property, QWidget *parent)
+{
+    Q_UNUSED(manager);
+    return new QLabel(property->valueText(), parent);
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+QWidget *QtGroupEditFactory::createAttributeEditor(QtAbstractPropertyManager *manager,
+                                                     QtProperty *property, QWidget *parent, Attribute attribute)
+{
+    if (attribute == Attribute::CHECK)
+    {
+        if (!manager->attributesEditable(Attribute::CHECK))
+            return NULL;
+        QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
+
+        connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
+        return editor;
+    }
+    return NULL;
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+void QtGroupEditFactory::disconnectPropertyManager(QtAbstractPropertyManager *manager)
+{
+    Q_UNUSED(manager);
+    return;
+}
+
 // QtLineEditFactory
 
 class QtLineEditFactoryPrivate : public EditorFactoryPrivate<QLineEdit>

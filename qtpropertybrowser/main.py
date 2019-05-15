@@ -1,7 +1,6 @@
 import sys
 from enum import Enum, Flag, auto, unique
 
-import numpy as np
 from PySide2.QtCore import Qt, QDate, QDateTime, QTime, QLocale, QPoint, QPointF, QSize, QSizeF, QRect, QRectF
 from PySide2.QtGui import QCursor, QColor, QFont, QKeySequence
 from PySide2.QtWidgets import QSizePolicy
@@ -20,6 +19,7 @@ from qtpropertybrowser import QtRectPropertyManager, QtRectFPropertyManager
 from qtpropertybrowser import QtEnumPropertyManager, QtFlagPropertyManager
 from qtpropertybrowser import QtSizePolicyPropertyManager
 from qtpropertybrowser import QtFontPropertyManager, QtColorPropertyManager, QtCursorPropertyManager
+from qtpropertybrowser import QtGroupEditFactory
 from qtpropertybrowser import QtIntEditFactory, QtSpinBoxFactory, QtSliderFactory, QtScrollBarFactory, QtCheckBoxFactory
 from qtpropertybrowser import QtDoubleEditFactory, QtDoubleSpinBoxFactory, QtComplexEditFactory, QtArrayEditFactory
 from qtpropertybrowser import QtLineEditFactory, QtFileEditorFactory
@@ -125,16 +125,16 @@ if __name__ == "__main__":
     for count in range(1):
         tree_scroll_area = QScrollArea()
         tree_browser = QtTreePropertyBrowser()
-        # tree_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
-        tree_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
+        tree_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
+        # tree_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
         box_scroll_area = QScrollArea()
         box_browser = QtGroupBoxPropertyBrowser()
-        # box_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
-        box_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
+        box_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
+        # box_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
         button_scroll_area = QScrollArea()
         button_browser = QtButtonPropertyBrowser()
-        # button_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
-        button_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
+        button_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
+        # button_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
 
         manager_map = {Manager.INT_SPIN: QtIntPropertyManager(),
                        Manager.INT_EDIT: QtIntPropertyManager(),
@@ -182,16 +182,16 @@ if __name__ == "__main__":
                        Factory.DATETIME: QtDateTimeEditFactory(),
                        Factory.KEY_SEQUENCE: QtKeySequenceEditorFactory(),
                        Factory.CHAR: QtCharEditorFactory(),
-                       Factory.LOCALE: None,
-                       Factory.POINT: None,
-                       Factory.POINTF: None,
-                       Factory.SIZE: None,
-                       Factory.SIZEF: None,
-                       Factory.RECT: None,
-                       Factory.RECTF: None,
+                       Factory.LOCALE: QtGroupEditFactory(),
+                       Factory.POINT: QtGroupEditFactory(),
+                       Factory.POINTF: QtGroupEditFactory(),
+                       Factory.SIZE: QtGroupEditFactory(),
+                       Factory.SIZEF: QtGroupEditFactory(),
+                       Factory.RECT: QtGroupEditFactory(),
+                       Factory.RECTF: QtGroupEditFactory(),
                        Factory.ENUM: QtEnumEditorFactory(),
-                       Factory.FLAG: None,
-                       Factory.SIZE_POLICY: None,
+                       Factory.FLAG: QtGroupEditFactory(),
+                       Factory.SIZE_POLICY: QtGroupEditFactory(),
                        Factory.FONT: QtFontEditorFactory(),
                        Factory.COLOR: QtColorEditorFactory(),
                        Factory.CURSOR: QtCursorEditorFactory(),
@@ -541,6 +541,13 @@ if __name__ == "__main__":
         manager_map[Manager.LOCALE].valueChanged.connect(set_value)
         property_ = manager_map[Manager.LOCALE].addProperty("locale")
         property_.propertyManager().setValue(property_, QLocale(QLocale.English, QLocale.Canada))
+        tree_browser.setFactoryForManager(manager_map[Manager.LOCALE], factory_map[Factory.LOCALE])
+        box_browser.setFactoryForManager(manager_map[Manager.LOCALE], factory_map[Factory.LOCALE])
+        button_browser.setFactoryForManager(manager_map[Manager.LOCALE], factory_map[Factory.LOCALE])
+        box_browser.setFactoryForManager(manager_map[Manager.LOCALE].subEnumPropertyManager(),
+                                         factory_map[Factory.ENUM])
+        button_browser.setFactoryForManager(manager_map[Manager.LOCALE].subEnumPropertyManager(),
+                                            factory_map[Factory.ENUM])
         tree_browser.setFactoryForManager(manager_map[Manager.LOCALE].subEnumPropertyManager(),
                                           factory_map[Factory.ENUM])
         box_browser.setFactoryForManager(manager_map[Manager.LOCALE].subEnumPropertyManager(),
@@ -557,6 +564,9 @@ if __name__ == "__main__":
         manager_map[Manager.POINT].valueChanged.connect(set_value)
         property_ = manager_map[Manager.POINT].addProperty("point")
         property_.propertyManager().setValue(property_, QPoint(1, 3))
+        tree_browser.setFactoryForManager(manager_map[Manager.POINT], factory_map[Factory.POINT])
+        box_browser.setFactoryForManager(manager_map[Manager.POINT], factory_map[Factory.POINT])
+        button_browser.setFactoryForManager(manager_map[Manager.POINT], factory_map[Factory.POINT])
         tree_browser.setFactoryForManager(manager_map[Manager.POINT].subIntPropertyManager(),
                                           factory_map[Factory.INT_EDIT])
         box_browser.setFactoryForManager(manager_map[Manager.POINT].subIntPropertyManager(),
@@ -573,6 +583,9 @@ if __name__ == "__main__":
         manager_map[Manager.POINTF].valueChanged.connect(set_value)
         property_ = manager_map[Manager.POINTF].addProperty("pointf")
         property_.propertyManager().setValue(property_, QPointF(1.23, 3.21))
+        tree_browser.setFactoryForManager(manager_map[Manager.POINTF], factory_map[Factory.POINTF])
+        box_browser.setFactoryForManager(manager_map[Manager.POINTF], factory_map[Factory.POINTF])
+        button_browser.setFactoryForManager(manager_map[Manager.POINTF], factory_map[Factory.POINTF])
         tree_browser.setFactoryForManager(manager_map[Manager.POINTF].subDoublePropertyManager(),
                                           factory_map[Factory.DOUBLE_EDIT])
         box_browser.setFactoryForManager(manager_map[Manager.POINTF].subDoublePropertyManager(),
@@ -592,6 +605,9 @@ if __name__ == "__main__":
         property_.propertyManager().setMinimum(property_, QSize(0, 0))
         property_.propertyManager().setMaximum(property_, QSize(2, 2))
         property_.propertyManager().setValue(property_, QSize(-1, 3))
+        tree_browser.setFactoryForManager(manager_map[Manager.SIZE], factory_map[Factory.SIZE])
+        box_browser.setFactoryForManager(manager_map[Manager.SIZE], factory_map[Factory.SIZE])
+        button_browser.setFactoryForManager(manager_map[Manager.SIZE], factory_map[Factory.SIZE])
         tree_browser.setFactoryForManager(manager_map[Manager.SIZE].subIntPropertyManager(),
                                           factory_map[Factory.INT_EDIT])
         box_browser.setFactoryForManager(manager_map[Manager.SIZE].subIntPropertyManager(),
@@ -611,6 +627,9 @@ if __name__ == "__main__":
         property_.propertyManager().setMinimum(property_, QSize(0, 0))
         property_.propertyManager().setMaximum(property_, QSize(255, 255))
         property_.propertyManager().setValue(property_, QSize(-1, 3))
+        tree_browser.setFactoryForManager(manager_map[Manager.SIZE], factory_map[Factory.SIZE])
+        box_browser.setFactoryForManager(manager_map[Manager.SIZE], factory_map[Factory.SIZE])
+        button_browser.setFactoryForManager(manager_map[Manager.SIZE], factory_map[Factory.SIZE])
         tree_browser.setFactoryForManager(manager_map[Manager.SIZE].subIntPropertyManager(),
                                           factory_map[Factory.INT_EDIT])
         box_browser.setFactoryForManager(manager_map[Manager.SIZE].subIntPropertyManager(),
@@ -630,6 +649,9 @@ if __name__ == "__main__":
         property_.propertyManager().setMinimum(property_, QSize(0, 0))
         property_.propertyManager().setMaximum(property_, QSize(2, 2))
         property_.propertyManager().setValue(property_, QSizeF(-1.23, 3.21))
+        tree_browser.setFactoryForManager(manager_map[Manager.SIZEF], factory_map[Factory.SIZEF])
+        box_browser.setFactoryForManager(manager_map[Manager.SIZEF], factory_map[Factory.SIZEF])
+        button_browser.setFactoryForManager(manager_map[Manager.SIZEF], factory_map[Factory.SIZEF])
         tree_browser.setFactoryForManager(manager_map[Manager.SIZEF].subDoublePropertyManager(),
                                           factory_map[Factory.DOUBLE_EDIT])
         box_browser.setFactoryForManager(manager_map[Manager.SIZEF].subDoublePropertyManager(),
@@ -649,6 +671,9 @@ if __name__ == "__main__":
         property_.propertyManager().setMinimum(property_, QSize(0, 0))
         property_.propertyManager().setMaximum(property_, QSize(2, 2))
         property_.propertyManager().setValue(property_, QSizeF(-1.23, 3.21))
+        tree_browser.setFactoryForManager(manager_map[Manager.SIZEF], factory_map[Factory.SIZEF])
+        box_browser.setFactoryForManager(manager_map[Manager.SIZEF], factory_map[Factory.SIZEF])
+        button_browser.setFactoryForManager(manager_map[Manager.SIZEF], factory_map[Factory.SIZEF])
         tree_browser.setFactoryForManager(manager_map[Manager.SIZEF].subDoublePropertyManager(),
                                           factory_map[Factory.DOUBLE_EDIT])
         box_browser.setFactoryForManager(manager_map[Manager.SIZEF].subDoublePropertyManager(),
@@ -665,6 +690,9 @@ if __name__ == "__main__":
         manager_map[Manager.RECT].valueChanged.connect(set_value)
         property_ = manager_map[Manager.RECT].addProperty("rect")
         property_.propertyManager().setValue(property_, QRect(0, 1, 2, 3))
+        tree_browser.setFactoryForManager(manager_map[Manager.RECT], factory_map[Factory.RECT])
+        box_browser.setFactoryForManager(manager_map[Manager.RECT], factory_map[Factory.RECT])
+        button_browser.setFactoryForManager(manager_map[Manager.RECT], factory_map[Factory.RECT])
         tree_browser.setFactoryForManager(manager_map[Manager.RECT].subIntPropertyManager(),
                                           factory_map[Factory.INT_EDIT])
         box_browser.setFactoryForManager(manager_map[Manager.RECT].subIntPropertyManager(),
@@ -681,6 +709,9 @@ if __name__ == "__main__":
         manager_map[Manager.RECTF].valueChanged.connect(set_value)
         property_ = manager_map[Manager.RECTF].addProperty("rectf")
         property_.propertyManager().setValue(property_, QRectF(0.12, 1.23, 2.34, 3.45))
+        tree_browser.setFactoryForManager(manager_map[Manager.RECTF], factory_map[Factory.RECTF])
+        box_browser.setFactoryForManager(manager_map[Manager.RECTF], factory_map[Factory.RECTF])
+        button_browser.setFactoryForManager(manager_map[Manager.RECTF], factory_map[Factory.RECTF])
         tree_browser.setFactoryForManager(manager_map[Manager.RECTF].subDoublePropertyManager(),
                                           factory_map[Factory.DOUBLE_EDIT])
         box_browser.setFactoryForManager(manager_map[Manager.RECTF].subDoublePropertyManager(),
@@ -724,6 +755,9 @@ if __name__ == "__main__":
             manager_map[Manager.FLAG].setValue(property_, value.value)
         except AttributeError:
             manager_map[Manager.FLAG].setValue(property_, value)
+        tree_browser.setFactoryForManager(manager_map[Manager.FLAG], factory_map[Factory.FLAG])
+        box_browser.setFactoryForManager(manager_map[Manager.FLAG], factory_map[Factory.FLAG])
+        button_browser.setFactoryForManager(manager_map[Manager.FLAG], factory_map[Factory.FLAG])
         tree_browser.setFactoryForManager(manager_map[Manager.FLAG].subBoolPropertyManager(),
                                           factory_map[Factory.BOOL])
         box_browser.setFactoryForManager(manager_map[Manager.FLAG].subBoolPropertyManager(),
@@ -740,6 +774,9 @@ if __name__ == "__main__":
         manager_map[Manager.SIZE_POLICY].valueChanged.connect(set_value)
         property_ = manager_map[Manager.SIZE_POLICY].addProperty("size_policy")
         property_.propertyManager().setValue(property_, QSizePolicy())
+        tree_browser.setFactoryForManager(manager_map[Manager.SIZE_POLICY], factory_map[Factory.SIZE_POLICY])
+        box_browser.setFactoryForManager(manager_map[Manager.SIZE_POLICY], factory_map[Factory.SIZE_POLICY])
+        button_browser.setFactoryForManager(manager_map[Manager.SIZE_POLICY], factory_map[Factory.SIZE_POLICY])
         tree_browser.setFactoryForManager(manager_map[Manager.SIZE_POLICY].subEnumPropertyManager(),
                                           factory_map[Factory.ENUM])
         tree_browser.setFactoryForManager(manager_map[Manager.SIZE_POLICY].subIntPropertyManager(),
