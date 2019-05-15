@@ -125,23 +125,23 @@ if __name__ == "__main__":
     for count in range(1):
         tree_scroll_area = QScrollArea()
         tree_browser = QtTreePropertyBrowser()
-        tree_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
-        # tree_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
+        # tree_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
+        tree_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
         box_scroll_area = QScrollArea()
         box_browser = QtGroupBoxPropertyBrowser()
-        box_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
-        # box_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
+        # box_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
+        box_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
         button_scroll_area = QScrollArea()
         button_browser = QtButtonPropertyBrowser()
-        button_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
-        # button_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
+        # button_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
+        button_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
 
-        manager_map = {Manager.INT_SPIN: QtIntPropertyManager(),  # todo: Does not support Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT
+        manager_map = {Manager.INT_SPIN: QtIntPropertyManager(),
                        Manager.INT_EDIT: QtIntPropertyManager(),
                        Manager.INT_SLIDER: QtIntPropertyManager(),
                        Manager.INT_SCROLL: QtIntPropertyManager(),
                        Manager.BOOL: QtBoolPropertyManager(),
-                       Manager.DOUBLE_SPIN: QtDoublePropertyManager(), # todo: Does not support Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT
+                       Manager.DOUBLE_SPIN: QtDoublePropertyManager(),
                        Manager.DOUBLE_EDIT: QtDoublePropertyManager(),
                        Manager.COMPLEX_EDIT: QtComplexPropertyManager(),
                        Manager.COMPLEX_VECTOR: QtComplexArrayPropertyManager(),
