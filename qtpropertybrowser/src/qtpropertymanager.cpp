@@ -143,32 +143,6 @@ static void setComplexMaximumData(PrivateData *data, const Value &maxVal)
 }
 
 template <class PrivateData, class Value>
-static void setComplexVectorMinimumData(PrivateData *data, const Value &minVal)
-{
-    data->minVal = minVal;
-    for(unsigned short index = 0; index < data->val.size(); index++){
-        if (data->maxVal[index] < data->minVal[index])
-            data->maxVal[index] = data->minVal[index];
-
-        if (std::abs(data->val[index]) < data->minVal[index])
-            data->val[index] = QComplex(std::polar(data->minVal[index], std::arg(data->val[index])));
-    }
-}
-
-template <class PrivateData, class Value>
-static void setComplexVectorMaximumData(PrivateData *data, const Value &maxVal)
-{
-    data->maxVal = maxVal;
-    for(unsigned short index = 0; index < data->val.size(); index++){
-        if (data->minVal[index] > data->maxVal[index])
-            data->minVal[index] = data->maxVal[index];
-
-        if (std::abs(data->val[index]) > data->maxVal[index])
-            data->val[index] = QComplex(std::polar(data->maxVal[index], std::arg(data->val[index])));
-    }
-}
-
-template <class PrivateData, class Value>
 static void setSizeMinimumData(PrivateData *data, const Value &newMinVal)
 {
     data->minVal = newMinVal;
@@ -213,17 +187,6 @@ QComplex qBound(double minVal, const QComplex val, double maxVal)
     return  QComplex(std::polar(rho, theta));
 }
 
-QVector<QComplex> qBound(const QVector<double> minVal, const QVector<QComplex> val, const QVector<double> maxVal)
-{
-    QVector<QComplex> new_val = QVector<QComplex>(val.size());
-    for(unsigned short index = 0; index < val.size(); index++){
-        double rho = qBound(minVal[index], std::abs(val[index]), maxVal[index]);
-        double theta = std::arg(val[index]);
-        new_val[index] = QComplex(std::polar(rho, theta));
-    }
-    return  new_val;
-}
-
 template <class SizeValue>
 static SizeValue qBoundSize(const SizeValue &minVal, const SizeValue &val, const SizeValue &maxVal)
 {
@@ -239,21 +202,6 @@ static SizeValue qBoundSize(const SizeValue &minVal, const SizeValue &val, const
         croppedVal.setHeight(maxVal.height());
 
     return croppedVal;
-}
-
-template <class PrivateData, class Value>
-static void setSoftComplexArrayVal(PrivateData *data, const Value &val)
-{
-    data->val = val;
-    data->foreground.setColor(Qt::black);
-    for(unsigned short index = 0; index < data->val.size(); index++){
-        if (std::abs(data->val[index]) <= data->minVal[index])
-            data->foreground.setColor(Qt::blue);
-        if (std::abs(data->val[index]) >= data->maxVal[index]){
-            data->foreground.setColor(Qt::red);
-            break;
-        }
-    }
 }
 
 QSize qBound(QSize minVal, QSize val, QSize maxVal)
@@ -288,36 +236,10 @@ QColor qSoftBound(double minVal, const QComplex val, double maxVal)
     return color;
 }
 
-QColor qSoftBound(const QVector<double>& minVal, const QVector<QComplex>& val, const QVector<double>& maxVal)
-{
-    double rho;
-    QColor color = QColor(Qt::black);
-    for(unsigned short index = 0; index < val.size(); index++){
-        rho = std::abs(val[index]);
-        if (rho <= minVal[index])
-            color = QColor(Qt::blue);
-        if (rho >= maxVal[index]){
-            color = QColor(Qt::red);
-            break;
-        }
-    }
-    return color;
-}
-
 template <class SizeValue>
 QColor qSoftBoundSize(SizeValue minVal, SizeValue val, SizeValue maxVal)
 {
     QColor color = QColor(Qt::black);
-    /*SizeValue croppedVal = val;
-    if (minVal.width() >= val.width())
-        color = QColor(Qt::red);
-    else if (maxVal.width() <= val.width())
-        color = QColor(Qt::red);
-
-    if (minVal.height() >= val.height())
-        color = QColor(Qt::red);
-    else if (maxVal.height() <= val.height())
-        color = QColor(Qt::red);*/
     return color;
 }
 
@@ -2725,12 +2647,6 @@ public:
         QString equation;
         bool readOnly;
         QBrush foreground;
-        void setVal(QVector<QComplex> newVal) { setSoftComplexArrayVal(this, newVal); }
-
-        QVector<double> minimumValue() const { return minVal; }
-        QVector<double> maximumValue() const { return maxVal; }
-        void setMinimumValue(const QVector<double>& newMinVal) { setComplexVectorMinimumData(this, newMinVal); }
-        void setMaximumValue(const QVector<double>& newMaxVal) { setComplexVectorMaximumData(this, newMaxVal); }
 
         std::vector<QtProperty *> subProperties;
     };
@@ -3196,7 +3112,6 @@ QIcon QtComplexArrayPropertyManager::checkIcon(const QtProperty *property) const
  */
 void QtComplexArrayPropertyManager::setValue(QtProperty *property, const QVector<QComplex> &val)
 {
-    bool equals = true;
     const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
@@ -3210,20 +3125,11 @@ void QtComplexArrayPropertyManager::setValue(QtProperty *property, const QVector
         data = it.value();
     }
 
-    for (unsigned short index=0; index < it.value().val.size(); index++){
-        if (!(isclose<double>(std::real(data.val[index]), std::real(val[index]), data.absTol[index], data.relTol[index]) &&
-            isclose<double>(std::imag(data.val[index]), std::imag(val[index]), data.absTol[index], data.relTol[index]))){
-            equals = false;
-            break;
-        }
-    }
-    if (equals)
-        return;
-
-    data.setVal(val);
     disconnect_signals();
     for (unsigned short index=0; index < it.value().val.size(); index++) {
-        d_ptr->m_complexPropertyManager->setValue(it.value().subProperties[index],val[index]);
+        QtProperty *subProperty = it.value().subProperties[index];
+        d_ptr->m_complexPropertyManager->setValue(subProperty, val[index]);
+        data.val[index] = d_ptr->m_complexPropertyManager->value(subProperty);
     }
     connect_signals();
     it.value() = data;
@@ -3241,7 +3147,6 @@ void QtComplexArrayPropertyManager::setValue(QtProperty *property, const QVector
  */
 void QtComplexArrayPropertyManager::setSingleStep(QtProperty *property, const QVector<QComplex>& step)
 {
-    bool equals = true;
     const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
@@ -3258,19 +3163,11 @@ void QtComplexArrayPropertyManager::setSingleStep(QtProperty *property, const QV
         data = it.value();
     }
 
-    for (unsigned short index=0; index < it.value().val.size(); index++){
-        if (!(isclose<double>(std::real(data.singleStep[index]), std::real(step[index]), data.absTol[index], data.relTol[index]) &&
-              isclose<double>(std::imag(data.singleStep[index]), std::imag(step[index]), data.absTol[index], data.relTol[index]))){
-            equals = false;
-            break;
-        }
-    }
-    if (equals)
-        return;
-
-    data.singleStep = step;
     for (unsigned short index=0; index < it.value().val.size(); index++) {
-        d_ptr->m_complexPropertyManager->setSingleStep(it.value().subProperties[index],step[index]);
+        QtProperty *subProperty = it.value().subProperties[index];
+        d_ptr->m_complexPropertyManager->setSingleStep(subProperty, step[index]);
+        data.val[index] = d_ptr->m_complexPropertyManager->value(subProperty);
+        data.singleStep[index] = d_ptr->m_complexPropertyManager->singleStep(subProperty);
     }
     it.value() = data;
 
@@ -3418,7 +3315,6 @@ void QtComplexArrayPropertyManager::setRelTol(QtProperty *property, const QVecto
  */
 void QtComplexArrayPropertyManager::setMinimum(QtProperty *property, const QVector<double>& minVal)
 {
-    bool equals = true;
     typedef QMap<const QtProperty *, QtComplexArrayPropertyManagerPrivate::Data> PropertyToData;
     typedef PropertyToData::iterator PropertyToDataIterator;
     const PropertyToDataIterator it = d_ptr->m_values.find(property);
@@ -3437,24 +3333,15 @@ void QtComplexArrayPropertyManager::setMinimum(QtProperty *property, const QVect
         data = it.value();
     }
 
-    for (unsigned short index=0; index < it.value().val.size(); index++){
-        if (!isclose<double>(data.minVal[index], minVal[index], data.absTol[index], data.relTol[index])){
-            equals = false;
-            break;
-        }
-    }
-    if (equals)
-        return;
-
     QVector<QComplex> oldVal = data.val;
-    data.setMinimumValue(minVal);
+    for (unsigned short index=0; index < it.value().val.size(); index++) {
+        QtProperty *subProperty = it.value().subProperties[index];
+        d_ptr->m_complexPropertyManager->setMinimum(subProperty, minVal[index]);
+        data.val[index] = d_ptr->m_complexPropertyManager->value(subProperty);
+        data.minVal[index] = d_ptr->m_complexPropertyManager->minimum(subProperty);
+    }
 
     emit rangeChanged(property, data.minVal, data.maxVal);
-
-    for (unsigned short index=0; index < it.value().val.size(); index++) {
-        d_ptr->m_complexPropertyManager->setMinimum(it.value().subProperties[index],data.minVal[index]);
-    }
-
     emit propertyChanged(property);
     if (data.val == oldVal)
         return;
@@ -3472,7 +3359,6 @@ void QtComplexArrayPropertyManager::setMinimum(QtProperty *property, const QVect
  */
 void QtComplexArrayPropertyManager::setMaximum(QtProperty *property, const QVector<double>& maxVal)
 {
-    bool equals = true;
     typedef QMap<const QtProperty *, QtComplexArrayPropertyManagerPrivate::Data> PropertyToData;
     typedef PropertyToData::iterator PropertyToDataIterator;
     const PropertyToDataIterator it = d_ptr->m_values.find(property);
@@ -3491,24 +3377,15 @@ void QtComplexArrayPropertyManager::setMaximum(QtProperty *property, const QVect
         data = it.value();
     }
 
-    for (unsigned short index=0; index < it.value().val.size(); index++){
-        if (!isclose<double>(data.maxVal[index], maxVal[index], data.absTol[index], data.relTol[index])){
-            equals = false;
-            break;
-        }
-    }
-    if (equals)
-        return;
-
     const QVector<QComplex> oldVal = data.val;
-    data.setMaximumValue(maxVal);
+    for (unsigned short index=0; index < it.value().val.size(); index++) {
+        QtProperty *subProperty = it.value().subProperties[index];
+        d_ptr->m_complexPropertyManager->setMaximum(subProperty,maxVal[index]);
+        data.val[index] = d_ptr->m_complexPropertyManager->value(subProperty);
+        data.maxVal[index] = d_ptr->m_complexPropertyManager->maximum(subProperty);
+    }
 
     emit rangeChanged(property, data.minVal, data.maxVal);
-
-    for (unsigned short index=0; index < it.value().val.size(); index++) {
-        d_ptr->m_complexPropertyManager->setMaximum(it.value().subProperties[index],data.maxVal[index]);
-    }
-
     emit propertyChanged(property);
     if (data.val == oldVal)
         return;
@@ -3531,7 +3408,6 @@ void QtComplexArrayPropertyManager::setMaximum(QtProperty *property, const QVect
  */
 void QtComplexArrayPropertyManager::setRange(QtProperty *property, const QVector<double>& minVal, const QVector<double>& maxVal)
 {
-    bool equals = true;
     typedef QtComplexArrayPropertyManagerPrivate::Data PrivateData;
     typedef QMap<const QtProperty *, PrivateData> PropertyToData;
     typedef PropertyToData::iterator PropertyToDataIterator;
@@ -3555,26 +3431,16 @@ void QtComplexArrayPropertyManager::setRange(QtProperty *property, const QVector
         data = it.value();
     }
 
-    for (unsigned short index=0; index < it.value().val.size(); index++){
-        if (!(isclose<double>(data.minVal[index], minVal[index], data.absTol[index], data.relTol[index]) &&
-            isclose<double>(data.maxVal[index], maxVal[index], data.absTol[index], data.relTol[index]))){
-            equals = false;
-            break;
-        }
-    }
-    if (equals)
-        return;
-
     const QVector<QComplex> oldVal = data.val;
-    data.setMinimumValue(fromVal);
-    data.setMaximumValue(toVal);
+    for (unsigned short index=0; index < it.value().val.size(); index++) {
+        QtProperty *subProperty = it.value().subProperties[index];
+        d_ptr->m_complexPropertyManager->setRange(subProperty, minVal[index], maxVal[index]);
+        data.val[index] = d_ptr->m_complexPropertyManager->value(subProperty);
+        data.minVal[index] = d_ptr->m_complexPropertyManager->minimum(subProperty);
+        data.maxVal[index] = d_ptr->m_complexPropertyManager->maximum(subProperty);
+    }
 
     emit rangeChanged(property, data.minVal, data.maxVal);
-
-    for (unsigned short index=0; index < it.value().val.size(); index++) {
-        d_ptr->m_complexPropertyManager->setRange(it.value().subProperties[index],data.minVal[index],data.maxVal[index]);
-    }
-
     emit propertyChanged(property);
     if (data.val == oldVal)
         return;
