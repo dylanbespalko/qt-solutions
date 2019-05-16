@@ -40,6 +40,7 @@
 
 #include "qtpropertybrowserutils_p.h"
 #include "qtbuttonpropertybrowser.h"
+
 #include <QSet>
 #include <QGridLayout>
 #include <QLabel>
@@ -548,48 +549,59 @@ void QtButtonPropertyBrowserPrivate::updateItem(WidgetItem *item)
     }
     if (item->widget) {
         QFont font = item->widget->font();
+        QFontMetrics metrics(item->widget->fontMetrics());
         font.setUnderline(false);
         item->widget->setFont(font);
         item->widget->setEnabled(property->isEnabled());
         item->widget->setToolTip(property->valueText());
+        item->widget->setMaximumWidth(metrics.width("12.34<-180.00"));
         QLabel *label = dynamic_cast<QLabel*>(item->widget);
         if (label){
             label->setText(property->valueText());
-            label->setMaximumWidth(200);
         }
     }
     if (item->unit){
         QFont font = item->unit->font();
+        QFontMetrics metrics(item->unit->fontMetrics());
         font.setUnderline(false);
         item->unit->setFont(font);
         item->unit->setEnabled(property->isEnabled());
         item->unit->setCurrentText(property->unitText());
+        item->unit->setMaximumWidth(40+metrics.width("dBmrW"));
     }
     if (item->pkAvg){
         QFont font = item->pkAvg->font();
+        QFontMetrics metrics(item->pkAvg->fontMetrics());
         font.setUnderline(false);
         item->pkAvg->setFont(font);
         item->pkAvg->setEnabled(property->isEnabled());
         item->pkAvg->setCurrentText(property->pkAvgText());
+        item->pkAvg->setMaximumWidth(40+metrics.width("avg"));
     }
     if (item->format){
         QFont font = item->format->font();
+        QFontMetrics metrics(item->format->fontMetrics());
         font.setUnderline(false);
         item->format->setFont(font);
         item->format->setEnabled(property->isEnabled());
         item->format->setCurrentText(property->formatText());
+        item->format->setMaximumWidth(45+metrics.width("Log<Deg"));
     }
     if (item->minimum){
         QFont font = item->minimum->font();
+        QFontMetrics metrics(item->minimum->fontMetrics());
         font.setUnderline(false);
         item->minimum->setFont(font);
         item->minimum->setEnabled(property->isEnabled());
+        item->minimum->setMaximumWidth(metrics.width("-12.3e10"));
     }
     if (item->maximum){
         QFont font = item->maximum->font();
+        QFontMetrics metrics(item->maximum->fontMetrics());
         font.setUnderline(false);
         item->maximum->setFont(font);
         item->maximum->setEnabled(property->isEnabled());
+        item->maximum->setMaximumWidth(metrics.width("+12.3e10"));
     }
     if (item->check){
         item->check->setEnabled(property->isEnabled());

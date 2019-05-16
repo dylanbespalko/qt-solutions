@@ -1,64 +1,64 @@
-#ifndef SBK_QTCOMPLEXARRAYPROPERTYMANAGERWRAPPER_H
-#define SBK_QTCOMPLEXARRAYPROPERTYMANAGERWRAPPER_H
+#ifndef SBK_QTTFTENSORPROPERTYMANAGERWRAPPER_H
+#define SBK_QTTFTENSORPROPERTYMANAGERWRAPPER_H
 
 #include <qtpropertymanager.h>
 
 namespace PySide { class DynamicQMetaObject; }
 
-class QtComplexArrayPropertyManagerWrapper : public QtComplexArrayPropertyManager
+class QtTFTensorPropertyManagerWrapper : public QtTFTensorPropertyManager
 {
 public:
-    QtComplexArrayPropertyManagerWrapper(QObject * parent = 0);
-    inline QIcon checkIcon_protected(const QtProperty * property) const { return QtComplexArrayPropertyManager::checkIcon(property); }
+    QtTFTensorPropertyManagerWrapper(QObject * parent = 0);
+    inline QIcon checkIcon_protected(const QtProperty * property) const { return QtTFTensorPropertyManager::checkIcon(property); }
     QIcon checkIcon(const QtProperty * property) const override;
-    inline void childEvent_protected(QChildEvent * event) { QtComplexArrayPropertyManager::childEvent(event); }
+    inline void childEvent_protected(QChildEvent * event) { QtTFTensorPropertyManager::childEvent(event); }
     void childEvent(QChildEvent * event) override;
-    inline void connectNotify_protected(const QMetaMethod & signal) { QtComplexArrayPropertyManager::connectNotify(signal); }
+    inline void connectNotify_protected(const QMetaMethod & signal) { QtTFTensorPropertyManager::connectNotify(signal); }
     void connectNotify(const QMetaMethod & signal) override;
-    inline QtProperty * createProperty_protected() { return QtComplexArrayPropertyManager::createProperty(); }
+    inline QtProperty * createProperty_protected() { return QtTFTensorPropertyManager::createProperty(); }
     QtProperty * createProperty() override;
-    inline void customEvent_protected(QEvent * event) { QtComplexArrayPropertyManager::customEvent(event); }
+    inline void customEvent_protected(QEvent * event) { QtTFTensorPropertyManager::customEvent(event); }
     void customEvent(QEvent * event) override;
-    inline void disconnectNotify_protected(const QMetaMethod & signal) { QtComplexArrayPropertyManager::disconnectNotify(signal); }
+    inline void disconnectNotify_protected(const QMetaMethod & signal) { QtTFTensorPropertyManager::disconnectNotify(signal); }
     void disconnectNotify(const QMetaMethod & signal) override;
-    inline QString displayText_protected(const QtProperty * property) const { return QtComplexArrayPropertyManager::displayText(property); }
+    inline QString displayText_protected(const QtProperty * property) const { return QtTFTensorPropertyManager::displayText(property); }
     QString displayText(const QtProperty * property) const override;
-    inline QLineEdit::EchoMode echoMode_protected(const QtProperty * arg__1) const { return QtComplexArrayPropertyManager::echoMode(arg__1); }
+    inline QLineEdit::EchoMode echoMode_protected(const QtProperty * arg__1) const { return QtTFTensorPropertyManager::echoMode(arg__1); }
     QLineEdit::EchoMode echoMode(const QtProperty * arg__1) const override;
     bool event(QEvent * event) override;
     bool eventFilter(QObject * watched, QEvent * event) override;
     QBrush foreground(const QtProperty * property) const override;
-    inline QString formatText_protected(const QtProperty * property) const { return QtComplexArrayPropertyManager::formatText(property); }
+    inline QString formatText_protected(const QtProperty * property) const { return QtTFTensorPropertyManager::formatText(property); }
     QString formatText(const QtProperty * property) const override;
-    inline bool hasValue_protected(const QtProperty * property) const { return QtComplexArrayPropertyManager::hasValue(property); }
+    inline bool hasValue_protected(const QtProperty * property) const { return QtTFTensorPropertyManager::hasValue(property); }
     bool hasValue(const QtProperty * property) const override;
-    inline void initializeProperty_protected(QtProperty * property) { QtComplexArrayPropertyManager::initializeProperty(property); }
+    inline void initializeProperty_protected(QtProperty * property) { QtTFTensorPropertyManager::initializeProperty(property); }
     void initializeProperty(QtProperty * property) override;
     bool isReadOnly(const QtProperty * property) const override;
-    inline bool isSignalConnected_protected(const QMetaMethod & signal) const { return QtComplexArrayPropertyManager::isSignalConnected(signal); }
-    inline QString maximumText_protected(const QtProperty * property) const { return QtComplexArrayPropertyManager::maximumText(property); }
+    inline bool isSignalConnected_protected(const QMetaMethod & signal) const { return QtTFTensorPropertyManager::isSignalConnected(signal); }
+    inline QString maximumText_protected(const QtProperty * property) const { return QtTFTensorPropertyManager::maximumText(property); }
     QString maximumText(const QtProperty * property) const override;
     const QMetaObject * metaObject() const override;
-    inline QString minimumText_protected(const QtProperty * property) const { return QtComplexArrayPropertyManager::minimumText(property); }
+    inline QString minimumText_protected(const QtProperty * property) const { return QtTFTensorPropertyManager::minimumText(property); }
     QString minimumText(const QtProperty * property) const override;
-    inline QString pkAvgText_protected(const QtProperty * property) const { return QtComplexArrayPropertyManager::pkAvgText(property); }
+    inline QString pkAvgText_protected(const QtProperty * property) const { return QtTFTensorPropertyManager::pkAvgText(property); }
     QString pkAvgText(const QtProperty * property) const override;
-    inline int receivers_protected(const char * signal) const { return QtComplexArrayPropertyManager::receivers(signal); }
-    inline void reinitializeProperty_protected(QtProperty * property) { QtComplexArrayPropertyManager::reinitializeProperty(property); }
+    inline int receivers_protected(const char * signal) const { return QtTFTensorPropertyManager::receivers(signal); }
+    inline void reinitializeProperty_protected(QtProperty * property) { QtTFTensorPropertyManager::reinitializeProperty(property); }
     void reinitializeProperty(QtProperty * property) override;
-    inline QObject * sender_protected() const { return QtComplexArrayPropertyManager::sender(); }
-    inline int senderSignalIndex_protected() const { return QtComplexArrayPropertyManager::senderSignalIndex(); }
-    inline void timerEvent_protected(QTimerEvent * event) { QtComplexArrayPropertyManager::timerEvent(event); }
+    inline QObject * sender_protected() const { return QtTFTensorPropertyManager::sender(); }
+    inline int senderSignalIndex_protected() const { return QtTFTensorPropertyManager::senderSignalIndex(); }
+    inline void timerEvent_protected(QTimerEvent * event) { QtTFTensorPropertyManager::timerEvent(event); }
     void timerEvent(QTimerEvent * event) override;
-    inline void uninitializeProperty_protected(QtProperty * property) { QtComplexArrayPropertyManager::uninitializeProperty(property); }
+    inline void uninitializeProperty_protected(QtProperty * property) { QtTFTensorPropertyManager::uninitializeProperty(property); }
     void uninitializeProperty(QtProperty * property) override;
-    inline QString unitText_protected(const QtProperty * property) const { return QtComplexArrayPropertyManager::unitText(property); }
+    inline QString unitText_protected(const QtProperty * property) const { return QtTFTensorPropertyManager::unitText(property); }
     QString unitText(const QtProperty * property) const override;
-    inline QIcon valueIcon_protected(const QtProperty * property) const { return QtComplexArrayPropertyManager::valueIcon(property); }
+    inline QIcon valueIcon_protected(const QtProperty * property) const { return QtTFTensorPropertyManager::valueIcon(property); }
     QIcon valueIcon(const QtProperty * property) const override;
-    inline QString valueText_protected(const QtProperty * property) const { return QtComplexArrayPropertyManager::valueText(property); }
+    inline QString valueText_protected(const QtProperty * property) const { return QtTFTensorPropertyManager::valueText(property); }
     QString valueText(const QtProperty * property) const override;
-    ~QtComplexArrayPropertyManagerWrapper();
+    ~QtTFTensorPropertyManagerWrapper();
 public:
     int qt_metacall(QMetaObject::Call call, int id, void** args) override;
     void* qt_metacast(const char* _clname) override;
@@ -164,5 +164,5 @@ public:
 
 #  endif // SBK_QOBJECTWRAPPER_H
 
-#endif // SBK_QTCOMPLEXARRAYPROPERTYMANAGERWRAPPER_H
+#endif // SBK_QTTFTENSORPROPERTYMANAGERWRAPPER_H
 

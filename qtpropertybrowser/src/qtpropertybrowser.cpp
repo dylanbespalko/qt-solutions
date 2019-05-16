@@ -38,8 +38,8 @@
 **
 ****************************************************************************/
 
-
 #include "qtpropertybrowser.h"
+
 #include <QSet>
 #include <QMap>
 #include <QIcon>

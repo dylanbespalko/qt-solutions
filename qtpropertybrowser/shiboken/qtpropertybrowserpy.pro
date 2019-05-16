@@ -21,7 +21,7 @@ HEADERS += \
     qtpropertybrowser/qtboolpropertymanager_wrapper.h \
     qtpropertybrowser/qtdoublepropertymanager_wrapper.h \
     qtpropertybrowser/qtcomplexpropertymanager_wrapper.h \
-    qtpropertybrowser/qtcomplexarraypropertymanager_wrapper.h \
+    qtpropertybrowser/qttftensorpropertymanager_wrapper.h \
     qtpropertybrowser/qtstringpropertymanager_wrapper.h \
     qtpropertybrowser/qtfilepropertymanager_wrapper.h \
     qtpropertybrowser/qtdatepropertymanager_wrapper.h \
@@ -46,7 +46,7 @@ HEADERS += \
     qtpropertybrowser/qtvariantpropertymanager_wrapper.h \
     \
     qtpropertybrowser/qtabstracteditorfactorybase_wrapper.h \
-    qtpropertybrowser/qtgroupeditfactory_wrapper.h \
+    qtpropertybrowser/qtgroupeditorfactory_wrapper.h \
     qtpropertybrowser/qtspinboxfactory_wrapper.h \
     qtpropertybrowser/qtinteditfactory_wrapper.h \
     qtpropertybrowser/qtsliderfactory_wrapper.h \
@@ -54,7 +54,7 @@ HEADERS += \
     qtpropertybrowser/qtcheckboxfactory_wrapper.h \
     qtpropertybrowser/qtdoublespinboxfactory_wrapper.h \
     qtpropertybrowser/qtdoubleeditfactory_wrapper.h \
-    qtpropertybrowser/qtarrayeditfactory_wrapper.h \
+    qtpropertybrowser/qttftensoreditfactory_wrapper.h \
     qtpropertybrowser/qtlineeditfactory_wrapper.h \
     qtpropertybrowser/qtcomplexeditfactory_wrapper.h \
     qtpropertybrowser/qtfileeditorfactory_wrapper.h \
@@ -67,7 +67,6 @@ HEADERS += \
     qtpropertybrowser/qtcoloreditorfactory_wrapper.h \
     qtpropertybrowser/qtfonteditorfactory_wrapper.h \
     qtpropertybrowser/qtvarianteditorfactory_wrapper.h \
-    #qtpropertybrowser/qtequationeditfactory_wrapper.h \
     \
     qtpropertybrowser/qtabstractpropertybrowser_wrapper.h \
     qtpropertybrowser/qttreepropertybrowser_wrapper.h \
@@ -86,7 +85,7 @@ SOURCES += \
     qtpropertybrowser/qtboolpropertymanager_wrapper.cpp \
     qtpropertybrowser/qtdoublepropertymanager_wrapper.cpp \
     qtpropertybrowser/qtcomplexpropertymanager_wrapper.cpp \
-    qtpropertybrowser/qtcomplexarraypropertymanager_wrapper.cpp \
+    qtpropertybrowser/qttftensorpropertymanager_wrapper.cpp \
     qtpropertybrowser/qtstringpropertymanager_wrapper.cpp \
     qtpropertybrowser/qtfilepropertymanager_wrapper.cpp \
     qtpropertybrowser/qtdatepropertymanager_wrapper.cpp \
@@ -110,7 +109,7 @@ SOURCES += \
     qtpropertybrowser/qtvariantpropertymanager_wrapper.cpp \
     \
     qtpropertybrowser/qtabstracteditorfactorybase_wrapper.cpp \
-    qtpropertybrowser/qtgroupeditfactory_wrapper.cpp \
+    qtpropertybrowser/qtgroupeditorfactory_wrapper.cpp \
     qtpropertybrowser/qtspinboxfactory_wrapper.cpp \
     qtpropertybrowser/qtinteditfactory_wrapper.cpp \
     qtpropertybrowser/qtsliderfactory_wrapper.cpp \
@@ -119,7 +118,7 @@ SOURCES += \
     qtpropertybrowser/qtdoublespinboxfactory_wrapper.cpp \
     qtpropertybrowser/qtdoubleeditfactory_wrapper.cpp \
     qtpropertybrowser/qtcomplexeditfactory_wrapper.cpp \
-    qtpropertybrowser/qtarrayeditfactory_wrapper.cpp \
+    qtpropertybrowser/qttftensoreditfactory_wrapper.cpp \
     qtpropertybrowser/qtlineeditfactory_wrapper.cpp \
     qtpropertybrowser/qtfileeditorfactory_wrapper.cpp \
     qtpropertybrowser/qtdateeditfactory_wrapper.cpp \
@@ -132,7 +131,6 @@ SOURCES += \
     qtpropertybrowser/qtcoloreditorfactory_wrapper.cpp \
     qtpropertybrowser/qtfonteditorfactory_wrapper.cpp \
     qtpropertybrowser/qtvarianteditorfactory_wrapper.cpp \
-    #qtpropertybrowser/qtequationeditfactory_wrapper.cpp \
     \
     qtpropertybrowser/qtabstractpropertybrowser_wrapper.cpp \
     qtpropertybrowser/qttreepropertybrowser_wrapper.cpp \

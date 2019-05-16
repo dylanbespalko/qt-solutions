@@ -42,11 +42,12 @@
 #ifndef QTPROPERTYBROWSER_H
 #define QTPROPERTYBROWSER_H
 
+#include "qcomplexedit.h"
+
 #include <QWidget>
 #include <QSet>
 #include <QLineEdit>
 #include <QIcon>
-#include "qcomplexedit.h"
 
 #if QT_VERSION >= 0x040400
 QT_BEGIN_NAMESPACE

@@ -38,10 +38,10 @@
 **
 ****************************************************************************/
 
-
 #include "qcomplexedit.h"
 #include "qtpropertymanager.h"
 #include "qtpropertybrowserutils_p.h"
+
 #include <QDateTime>
 #include <QLocale>
 #include <QMap>
@@ -2620,10 +2620,10 @@ void QtComplexPropertyManager::uninitializeProperty(QtProperty *property)
 
 // QtComplexArrayPropertyManager
 
-class QtComplexArrayPropertyManagerPrivate
+class QtTFTensorPropertyManagerPrivate
 {
-    QtComplexArrayPropertyManager *q_ptr;
-    Q_DECLARE_PUBLIC(QtComplexArrayPropertyManager)
+    QtTFTensorPropertyManager *q_ptr;
+    Q_DECLARE_PUBLIC(QtTFTensorPropertyManager)
 public:
     void slotComplexChanged(QtProperty *property, const QComplex& value);
     void slotRangeChanged(QtProperty *sub_property, const double min, const double max);
@@ -2660,10 +2660,10 @@ public:
     QMap<const QtProperty *, QtProperty *> m_subToProperty;
 };
 
-void QtComplexArrayPropertyManagerPrivate::slotComplexChanged(QtProperty *sub_property, const QComplex& value)
+void QtTFTensorPropertyManagerPrivate::slotComplexChanged(QtProperty *sub_property, const QComplex& value)
 {
     QtProperty *property = m_subToProperty.value(sub_property);
-    const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::iterator it =m_values.find(property);
+    const QtTFTensorPropertyManagerPrivate::PropertyValueMap::iterator it =m_values.find(property);
     if (it == m_values.end())
         return;
 
@@ -2677,10 +2677,10 @@ void QtComplexArrayPropertyManagerPrivate::slotComplexChanged(QtProperty *sub_pr
     }
 }
 
-void QtComplexArrayPropertyManagerPrivate::slotRangeChanged(QtProperty *sub_property, const double min, const double max)
+void QtTFTensorPropertyManagerPrivate::slotRangeChanged(QtProperty *sub_property, const double min, const double max)
 {
     QtProperty *property = m_subToProperty.value(sub_property);
-    const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::iterator it =m_values.find(property);
+    const QtTFTensorPropertyManagerPrivate::PropertyValueMap::iterator it =m_values.find(property);
     if (it == m_values.end())
         return;
 
@@ -2696,10 +2696,10 @@ void QtComplexArrayPropertyManagerPrivate::slotRangeChanged(QtProperty *sub_prop
     }
 }
 
-void QtComplexArrayPropertyManagerPrivate::slotPropertyDestroyed(QtProperty *sub_property)
+void QtTFTensorPropertyManagerPrivate::slotPropertyDestroyed(QtProperty *sub_property)
 {
     QtProperty *property = m_subToProperty.value(sub_property);
-    const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::iterator it =m_values.find(property);
+    const QtTFTensorPropertyManagerPrivate::PropertyValueMap::iterator it =m_values.find(property);
     if (it == m_values.end())
         return;
 
@@ -2771,10 +2771,10 @@ void QtComplexArrayPropertyManagerPrivate::slotPropertyDestroyed(QtProperty *sub
 /*!
  Creates a manager with the given \a parent.
  */
-QtComplexArrayPropertyManager::QtComplexArrayPropertyManager(QObject *parent)
+QtTFTensorPropertyManager::QtTFTensorPropertyManager(QObject *parent)
 : QtAbstractPropertyManager(parent)
 {
-    d_ptr = new QtComplexArrayPropertyManagerPrivate;
+    d_ptr = new QtTFTensorPropertyManagerPrivate;
     d_ptr->q_ptr = this;
 
     d_ptr->m_complexPropertyManager = new QtComplexPropertyManager(this);
@@ -2788,7 +2788,7 @@ QtComplexArrayPropertyManager::QtComplexArrayPropertyManager(QObject *parent)
 /*!
  Destroys this manager, and all the properties it has created.
  */
-QtComplexArrayPropertyManager::~QtComplexArrayPropertyManager()
+QtTFTensorPropertyManager::~QtTFTensorPropertyManager()
 {
     clear();
     delete d_ptr;
@@ -2799,7 +2799,7 @@ QtComplexArrayPropertyManager::~QtComplexArrayPropertyManager()
 
  \sa connect_signals()
  */
-void QtComplexArrayPropertyManager::connect_signals() const
+void QtTFTensorPropertyManager::connect_signals() const
 {
     connect(d_ptr->m_complexPropertyManager, SIGNAL(valueChanged(QtProperty *, QComplex)),
             this, SLOT(slotComplexChanged(QtProperty *, QComplex)));
@@ -2814,7 +2814,7 @@ void QtComplexArrayPropertyManager::connect_signals() const
 
  \sa disconnect_signals()
  */
-void QtComplexArrayPropertyManager::disconnect_signals() const
+void QtTFTensorPropertyManager::disconnect_signals() const
 {
     disconnect(d_ptr->m_complexPropertyManager, SIGNAL(valueChanged(QtProperty *, QComplex)),
             this, SLOT(slotComplexChanged(QtProperty *, QComplex)));
@@ -2834,7 +2834,7 @@ void QtComplexArrayPropertyManager::disconnect_signals() const
 
  \sa QtAbstractPropertyBrowser::setFactoryForManager()
  */
-QtComplexPropertyManager *QtComplexArrayPropertyManager::subComplexPropertyManager() const
+QtComplexPropertyManager *QtTFTensorPropertyManager::subComplexPropertyManager() const
 {
     return d_ptr->m_complexPropertyManager;
 }
@@ -2847,9 +2847,9 @@ QtComplexPropertyManager *QtComplexArrayPropertyManager::subComplexPropertyManag
 
  \sa setValue(), constraint()
  */
-QVector<QComplex> QtComplexArrayPropertyManager::value(const QtProperty *property) const
+QVector<QComplex> QtTFTensorPropertyManager::value(const QtProperty *property) const
 {
-    return getData<QVector<QComplex> >(d_ptr->m_values, &QtComplexArrayPropertyManagerPrivate::Data::val, property, QVector<QComplex>(0));
+    return getData<QVector<QComplex> >(d_ptr->m_values, &QtTFTensorPropertyManagerPrivate::Data::val, property, QVector<QComplex>(0));
 }
 
 /*!
@@ -2857,9 +2857,9 @@ QVector<QComplex> QtComplexArrayPropertyManager::value(const QtProperty *propert
 
  \sa absTol()
  */
-QVector<double> QtComplexArrayPropertyManager::absTol(const QtProperty *property) const
+QVector<double> QtTFTensorPropertyManager::absTol(const QtProperty *property) const
 {
-    return getData<QVector<double> >(d_ptr->m_values, &QtComplexArrayPropertyManagerPrivate::Data::absTol, property, QVector<double>(std::numeric_limits<double>::epsilon()));
+    return getData<QVector<double> >(d_ptr->m_values, &QtTFTensorPropertyManagerPrivate::Data::absTol, property, QVector<double>(std::numeric_limits<double>::epsilon()));
 }
 
 /*!
@@ -2867,9 +2867,9 @@ QVector<double> QtComplexArrayPropertyManager::absTol(const QtProperty *property
 
  \sa relTol()
  */
-QVector<double> QtComplexArrayPropertyManager::relTol(const QtProperty *property) const
+QVector<double> QtTFTensorPropertyManager::relTol(const QtProperty *property) const
 {
-    return getData<QVector<double> >(d_ptr->m_values, &QtComplexArrayPropertyManagerPrivate::Data::relTol, property, QVector<double>(std::numeric_limits<double>::epsilon()));
+    return getData<QVector<double> >(d_ptr->m_values, &QtTFTensorPropertyManagerPrivate::Data::relTol, property, QVector<double>(std::numeric_limits<double>::epsilon()));
 }
 
 /*!
@@ -2877,7 +2877,7 @@ QVector<double> QtComplexArrayPropertyManager::relTol(const QtProperty *property
 
  \sa maximum(), setRange()
  */
-QVector<double> QtComplexArrayPropertyManager::minimum(const QtProperty *property) const
+QVector<double> QtTFTensorPropertyManager::minimum(const QtProperty *property) const
 {
     return getMinimum<QVector<double> >(d_ptr->m_values, property, QVector<double>(0.0));
 }
@@ -2887,7 +2887,7 @@ QVector<double> QtComplexArrayPropertyManager::minimum(const QtProperty *propert
 
  \sa minimum(), setRange()
  */
-QVector<double> QtComplexArrayPropertyManager::maximum(const QtProperty *property) const
+QVector<double> QtTFTensorPropertyManager::maximum(const QtProperty *property) const
 {
     return getMaximum<QVector<double> >(d_ptr->m_values, property, QVector<double>(0.0));
 }
@@ -2899,9 +2899,9 @@ QVector<double> QtComplexArrayPropertyManager::maximum(const QtProperty *propert
 
  \sa setSingleStep()
  */
-QVector<QComplex> QtComplexArrayPropertyManager::singleStep(const QtProperty *property) const
+QVector<QComplex> QtTFTensorPropertyManager::singleStep(const QtProperty *property) const
 {
-    return getData<QVector<QComplex> >(d_ptr->m_values, &QtComplexArrayPropertyManagerPrivate::Data::singleStep, property, QVector<QComplex>(0));
+    return getData<QVector<QComplex> >(d_ptr->m_values, &QtTFTensorPropertyManagerPrivate::Data::singleStep, property, QVector<QComplex>(0));
 }
 
 /*!
@@ -2909,9 +2909,9 @@ QVector<QComplex> QtComplexArrayPropertyManager::singleStep(const QtProperty *pr
 
  \sa setPrecision()
  */
-int QtComplexArrayPropertyManager::precision(const QtProperty *property) const
+int QtTFTensorPropertyManager::precision(const QtProperty *property) const
 {
-    return getData<int>(d_ptr->m_values, &QtComplexArrayPropertyManagerPrivate::Data::precision, property, 0);
+    return getData<int>(d_ptr->m_values, &QtTFTensorPropertyManagerPrivate::Data::precision, property, 0);
 }
 
 /*!
@@ -2919,9 +2919,9 @@ int QtComplexArrayPropertyManager::precision(const QtProperty *property) const
 
  \sa setScale()
  */
-Scale QtComplexArrayPropertyManager::scale(const QtProperty *property) const
+Scale QtTFTensorPropertyManager::scale(const QtProperty *property) const
 {
-    typedef QMap<const QtProperty *, QtComplexArrayPropertyManagerPrivate::Data> PropertyToData;
+    typedef QMap<const QtProperty *, QtTFTensorPropertyManagerPrivate::Data> PropertyToData;
     typedef PropertyToData::const_iterator PropertyToDataConstIterator;
     const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
@@ -2934,9 +2934,9 @@ Scale QtComplexArrayPropertyManager::scale(const QtProperty *property) const
 
  \sa setUnit()
  */
-QString QtComplexArrayPropertyManager::unit(const QtProperty *property) const
+QString QtTFTensorPropertyManager::unit(const QtProperty *property) const
 {
-    return getData<QString>(d_ptr->m_values, &QtComplexArrayPropertyManagerPrivate::Data::unit, property, "");
+    return getData<QString>(d_ptr->m_values, &QtTFTensorPropertyManagerPrivate::Data::unit, property, "");
 }
 
 /*!
@@ -2944,9 +2944,9 @@ QString QtComplexArrayPropertyManager::unit(const QtProperty *property) const
 
  \sa setPkAvg()
  */
-PkAvg QtComplexArrayPropertyManager::pkAvg(const QtProperty *property) const
+PkAvg QtTFTensorPropertyManager::pkAvg(const QtProperty *property) const
 {
-    typedef QMap<const QtProperty *, QtComplexArrayPropertyManagerPrivate::Data> PropertyToData;
+    typedef QMap<const QtProperty *, QtTFTensorPropertyManagerPrivate::Data> PropertyToData;
     typedef PropertyToData::const_iterator PropertyToDataConstIterator;
     const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
@@ -2959,9 +2959,9 @@ PkAvg QtComplexArrayPropertyManager::pkAvg(const QtProperty *property) const
 
  \sa setFormat()
  */
-Format QtComplexArrayPropertyManager::format(const QtProperty *property) const
+Format QtTFTensorPropertyManager::format(const QtProperty *property) const
 {
-    typedef QMap<const QtProperty *, QtComplexArrayPropertyManagerPrivate::Data> PropertyToData;
+    typedef QMap<const QtProperty *, QtTFTensorPropertyManagerPrivate::Data> PropertyToData;
     typedef PropertyToData::const_iterator PropertyToDataConstIterator;
     const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
@@ -2974,9 +2974,9 @@ Format QtComplexArrayPropertyManager::format(const QtProperty *property) const
 
  \sa setEquation()
  */
-QString QtComplexArrayPropertyManager::equation(const QtProperty *property) const
+QString QtTFTensorPropertyManager::equation(const QtProperty *property) const
 {
-    typedef QMap<const QtProperty *, QtComplexArrayPropertyManagerPrivate::Data> PropertyToData;
+    typedef QMap<const QtProperty *, QtTFTensorPropertyManagerPrivate::Data> PropertyToData;
     typedef PropertyToData::const_iterator PropertyToDataConstIterator;
     const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
@@ -2991,9 +2991,9 @@ QString QtComplexArrayPropertyManager::equation(const QtProperty *property) cons
 
  \sa QtComplexArrayPropertyManager::setReadOnly
  */
-bool QtComplexArrayPropertyManager::isReadOnly(const QtProperty *property) const
+bool QtTFTensorPropertyManager::isReadOnly(const QtProperty *property) const
 {
-    return getData<bool>(d_ptr->m_values, &QtComplexArrayPropertyManagerPrivate::Data::readOnly, property, false);
+    return getData<bool>(d_ptr->m_values, &QtTFTensorPropertyManagerPrivate::Data::readOnly, property, false);
 }
 
 /*Returns the given \a property's foreground brush.
@@ -3002,22 +3002,22 @@ bool QtComplexArrayPropertyManager::isReadOnly(const QtProperty *property) const
 
  \sa setForeground()
  */
-QBrush QtComplexArrayPropertyManager::foreground(const QtProperty *property) const
+QBrush QtTFTensorPropertyManager::foreground(const QtProperty *property) const
 {
-    return getData<QBrush>(d_ptr->m_values, &QtComplexArrayPropertyManagerPrivate::Data::foreground, property, QBrush(Qt::black, Qt::SolidPattern));
+    return getData<QBrush>(d_ptr->m_values, &QtTFTensorPropertyManagerPrivate::Data::foreground, property, QBrush(Qt::black, Qt::SolidPattern));
 }
 
 /*!
  \reimp
  */
-QString QtComplexArrayPropertyManager::valueText(const QtProperty *property) const
+QString QtTFTensorPropertyManager::valueText(const QtProperty *property) const
 {
     QString text = QString("");
-    const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const QtTFTensorPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
 
-    QtComplexArrayPropertyManagerPrivate::Data  data = it.value();
+    QtTFTensorPropertyManagerPrivate::Data  data = it.value();
     for (unsigned short idx=0; idx < data.val.size(); idx++) {
         text += QComplexEdit::num2str(data.val[idx],data.scale,data.format, data.precision);
         if (idx != data.val.size()-1)
@@ -3030,11 +3030,11 @@ QString QtComplexArrayPropertyManager::valueText(const QtProperty *property) con
 /*!
  \reimp
  */
-QString QtComplexArrayPropertyManager::pkAvgText(const QtProperty *property) const
+QString QtTFTensorPropertyManager::pkAvgText(const QtProperty *property) const
 {
     if (!attributesEditable(Attribute::PKAVG))
         return QString();
-    const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const QtTFTensorPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
 
@@ -3050,11 +3050,11 @@ QString QtComplexArrayPropertyManager::pkAvgText(const QtProperty *property) con
 /*!
  \reimp
  */
-QString QtComplexArrayPropertyManager::formatText(const QtProperty *property) const
+QString QtTFTensorPropertyManager::formatText(const QtProperty *property) const
 {
     if (!attributesEditable(Attribute::FORMAT))
         return QString();
-    const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const QtTFTensorPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
 
@@ -3074,11 +3074,11 @@ QString QtComplexArrayPropertyManager::formatText(const QtProperty *property) co
 /*!
  \reimp
  */
-QString QtComplexArrayPropertyManager::unitText(const QtProperty *property) const
+QString QtTFTensorPropertyManager::unitText(const QtProperty *property) const
 {
     if (!attributesEditable(Attribute::UNIT))
         return QString();
-    const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const QtTFTensorPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
 
@@ -3096,7 +3096,7 @@ QString QtComplexArrayPropertyManager::unitText(const QtProperty *property) cons
 /*!
  \reimp
  */
-QIcon QtComplexArrayPropertyManager::checkIcon(const QtProperty *property) const
+QIcon QtTFTensorPropertyManager::checkIcon(const QtProperty *property) const
 {
     if (!attributesEditable(Attribute::CHECK))
         return QIcon();
@@ -3115,13 +3115,13 @@ QIcon QtComplexArrayPropertyManager::checkIcon(const QtProperty *property) const
 
  \sa value(), setConstraint(), valueChanged()
  */
-void QtComplexArrayPropertyManager::setValue(QtProperty *property, const QVector<QComplex> &val)
+void QtTFTensorPropertyManager::setValue(QtProperty *property, const QVector<QComplex> &val)
 {
-    const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const QtTFTensorPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
-    QtComplexArrayPropertyManagerPrivate::Data data = it.value();
+    QtTFTensorPropertyManagerPrivate::Data data = it.value();
 
     if (data.val.size() == 0){
         data.val = val;
@@ -3150,13 +3150,13 @@ void QtComplexArrayPropertyManager::setValue(QtProperty *property, const QVector
 
  \sa singleStep()
  */
-void QtComplexArrayPropertyManager::setSingleStep(QtProperty *property, const QVector<QComplex>& step)
+void QtTFTensorPropertyManager::setSingleStep(QtProperty *property, const QVector<QComplex>& step)
 {
-    const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const QtTFTensorPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
-    QtComplexArrayPropertyManagerPrivate::Data data = it.value();
+    QtTFTensorPropertyManagerPrivate::Data data = it.value();
 
     if (data.val.size() == 0){
         data.val = QVector<QComplex>(step.size());
@@ -3184,13 +3184,13 @@ void QtComplexArrayPropertyManager::setSingleStep(QtProperty *property, const QV
 
  \sa QtComplexArrayPropertyManager::setReadOnly
  */
-void QtComplexArrayPropertyManager::setReadOnly(QtProperty *property, bool readOnly)
+void QtTFTensorPropertyManager::setReadOnly(QtProperty *property, bool readOnly)
 {
-    const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const QtTFTensorPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
-    QtComplexArrayPropertyManagerPrivate::Data data = it.value();
+    QtTFTensorPropertyManagerPrivate::Data data = it.value();
 
     if (data.readOnly == readOnly)
         return;
@@ -3214,13 +3214,13 @@ void QtComplexArrayPropertyManager::setReadOnly(QtProperty *property, bool readO
 
  \sa precision()
  */
-void QtComplexArrayPropertyManager::setPrecision(QtProperty *property, int prec)
+void QtTFTensorPropertyManager::setPrecision(QtProperty *property, int prec)
 {
-    const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const QtTFTensorPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
-    QtComplexArrayPropertyManagerPrivate::Data data = it.value();
+    QtTFTensorPropertyManagerPrivate::Data data = it.value();
 
     if (prec > 13)
         prec = 13;
@@ -3244,15 +3244,15 @@ void QtComplexArrayPropertyManager::setPrecision(QtProperty *property, int prec)
 
  \sa relTol(), setAbsTol(), setRelTol()
  */
-void QtComplexArrayPropertyManager::setAbsTol(QtProperty *property, const QVector<double>& absTol)
+void QtTFTensorPropertyManager::setAbsTol(QtProperty *property, const QVector<double>& absTol)
 {
-    typedef QMap<const QtProperty *, QtComplexArrayPropertyManagerPrivate::Data> PropertyToData;
+    typedef QMap<const QtProperty *, QtTFTensorPropertyManagerPrivate::Data> PropertyToData;
     typedef PropertyToData::iterator PropertyToDataIterator;
     const PropertyToDataIterator it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
     return;
 
-    QtComplexArrayPropertyManagerPrivate::Data &data = it.value();
+    QtTFTensorPropertyManagerPrivate::Data &data = it.value();
 
     if (data.val.size() == 0){
         data.val = QVector<QComplex>(absTol.size());
@@ -3279,15 +3279,15 @@ void QtComplexArrayPropertyManager::setAbsTol(QtProperty *property, const QVecto
 
  \sa absTol(), setRelTol(), setAbsTol()
  */
-void QtComplexArrayPropertyManager::setRelTol(QtProperty *property, const QVector<double>& relTol)
+void QtTFTensorPropertyManager::setRelTol(QtProperty *property, const QVector<double>& relTol)
 {
-    typedef QMap<const QtProperty *, QtComplexArrayPropertyManagerPrivate::Data> PropertyToData;
+    typedef QMap<const QtProperty *, QtTFTensorPropertyManagerPrivate::Data> PropertyToData;
     typedef PropertyToData::iterator PropertyToDataIterator;
     const PropertyToDataIterator it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
     return;
 
-    QtComplexArrayPropertyManagerPrivate::Data &data = it.value();
+    QtTFTensorPropertyManagerPrivate::Data &data = it.value();
 
     if (data.val.size() == 0){
         data.val = QVector<QComplex>(relTol.size());
@@ -3318,15 +3318,15 @@ void QtComplexArrayPropertyManager::setRelTol(QtProperty *property, const QVecto
 
  \sa minimum(), setRange(), rangeChanged()
  */
-void QtComplexArrayPropertyManager::setMinimum(QtProperty *property, const QVector<double>& minVal)
+void QtTFTensorPropertyManager::setMinimum(QtProperty *property, const QVector<double>& minVal)
 {
-    typedef QMap<const QtProperty *, QtComplexArrayPropertyManagerPrivate::Data> PropertyToData;
+    typedef QMap<const QtProperty *, QtTFTensorPropertyManagerPrivate::Data> PropertyToData;
     typedef PropertyToData::iterator PropertyToDataIterator;
     const PropertyToDataIterator it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
-    QtComplexArrayPropertyManagerPrivate::Data &data = it.value();
+    QtTFTensorPropertyManagerPrivate::Data &data = it.value();
 
     if (data.val.size() == 0){
         data.val = QVector<QComplex>(minVal.size());
@@ -3362,15 +3362,15 @@ void QtComplexArrayPropertyManager::setMinimum(QtProperty *property, const QVect
 
  \sa maximum(), setRange(), rangeChanged()
  */
-void QtComplexArrayPropertyManager::setMaximum(QtProperty *property, const QVector<double>& maxVal)
+void QtTFTensorPropertyManager::setMaximum(QtProperty *property, const QVector<double>& maxVal)
 {
-    typedef QMap<const QtProperty *, QtComplexArrayPropertyManagerPrivate::Data> PropertyToData;
+    typedef QMap<const QtProperty *, QtTFTensorPropertyManagerPrivate::Data> PropertyToData;
     typedef PropertyToData::iterator PropertyToDataIterator;
     const PropertyToDataIterator it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
-    QtComplexArrayPropertyManagerPrivate::Data &data = it.value();
+    QtTFTensorPropertyManagerPrivate::Data &data = it.value();
 
     if (data.val.size() == 0){
         data.val = QVector<QComplex>(maxVal.size());
@@ -3411,9 +3411,9 @@ void QtComplexArrayPropertyManager::setMaximum(QtProperty *property, const QVect
 
  \sa setMinimum(), setMaximum(), rangeChanged()
  */
-void QtComplexArrayPropertyManager::setRange(QtProperty *property, const QVector<double>& minVal, const QVector<double>& maxVal)
+void QtTFTensorPropertyManager::setRange(QtProperty *property, const QVector<double>& minVal, const QVector<double>& maxVal)
 {
-    typedef QtComplexArrayPropertyManagerPrivate::Data PrivateData;
+    typedef QtTFTensorPropertyManagerPrivate::Data PrivateData;
     typedef QMap<const QtProperty *, PrivateData> PropertyToData;
     typedef PropertyToData::iterator PropertyToDataIterator;
     const PropertyToDataIterator it = d_ptr->m_values.find(property);
@@ -3459,13 +3459,13 @@ void QtComplexArrayPropertyManager::setRange(QtProperty *property, const QVector
 
  \sa scale(), scaleChanged()
  */
-void QtComplexArrayPropertyManager::setScale(QtProperty *property, Scale scale)
+void QtTFTensorPropertyManager::setScale(QtProperty *property, Scale scale)
 {
-    const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const QtTFTensorPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
-    QtComplexArrayPropertyManagerPrivate::Data data = it.value();
+    QtTFTensorPropertyManagerPrivate::Data data = it.value();
 
     if (data.scale == scale)
         return;
@@ -3487,13 +3487,13 @@ void QtComplexArrayPropertyManager::setScale(QtProperty *property, Scale scale)
 
  \sa unit(), unitChanged()
  */
-void QtComplexArrayPropertyManager::setUnit(QtProperty *property, QString unit)
+void QtTFTensorPropertyManager::setUnit(QtProperty *property, QString unit)
 {
-    const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const QtTFTensorPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
-    QtComplexArrayPropertyManagerPrivate::Data data = it.value();
+    QtTFTensorPropertyManagerPrivate::Data data = it.value();
 
     if (data.unit == unit)
         return;
@@ -3514,13 +3514,13 @@ void QtComplexArrayPropertyManager::setUnit(QtProperty *property, QString unit)
 
  \sa pkAvg(), pkAvgChanged()
  */
-void QtComplexArrayPropertyManager::setPkAvg(QtProperty *property, PkAvg pkAvg)
+void QtTFTensorPropertyManager::setPkAvg(QtProperty *property, PkAvg pkAvg)
 {
-    const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const QtTFTensorPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
-    QtComplexArrayPropertyManagerPrivate::Data data = it.value();
+    QtTFTensorPropertyManagerPrivate::Data data = it.value();
 
     if (data.pkAvg == pkAvg)
         return;
@@ -3542,13 +3542,13 @@ void QtComplexArrayPropertyManager::setPkAvg(QtProperty *property, PkAvg pkAvg)
 
  \sa format(), formatChanged()
  */
-void QtComplexArrayPropertyManager::setFormat(QtProperty *property, Format format_)
+void QtTFTensorPropertyManager::setFormat(QtProperty *property, Format format_)
 {
-    const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const QtTFTensorPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
-    QtComplexArrayPropertyManagerPrivate::Data data = it.value();
+    QtTFTensorPropertyManagerPrivate::Data data = it.value();
 
     if (data.format == format_)
         return;
@@ -3570,13 +3570,13 @@ void QtComplexArrayPropertyManager::setFormat(QtProperty *property, Format forma
 
  \sa equation(), equationChanged()
  */
-void QtComplexArrayPropertyManager::setEquation(QtProperty *property, const QString& equation)
+void QtTFTensorPropertyManager::setEquation(QtProperty *property, const QString& equation)
 {
-    const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const QtTFTensorPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
-    QtComplexArrayPropertyManagerPrivate::Data data = it.value();
+    QtTFTensorPropertyManagerPrivate::Data data = it.value();
 
     if (data.equation == equation)
         return;
@@ -3591,13 +3591,13 @@ void QtComplexArrayPropertyManager::setEquation(QtProperty *property, const QStr
 /*!
  \reimp
  */
-void QtComplexArrayPropertyManager::reinitializeProperty(QtProperty *property)
+void QtTFTensorPropertyManager::reinitializeProperty(QtProperty *property)
 {
-    const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const QtTFTensorPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
-    QtComplexArrayPropertyManagerPrivate::Data data = it.value();
+    QtTFTensorPropertyManagerPrivate::Data data = it.value();
 
     data.absTol = QVector<double>(data.val.size());
     data.relTol = QVector<double>(data.val.size());
@@ -3629,17 +3629,17 @@ void QtComplexArrayPropertyManager::reinitializeProperty(QtProperty *property)
 /*!
  \reimp
  */
-void QtComplexArrayPropertyManager::initializeProperty(QtProperty *property)
+void QtTFTensorPropertyManager::initializeProperty(QtProperty *property)
 {
-    d_ptr->m_values[property] = QtComplexArrayPropertyManagerPrivate::Data();
+    d_ptr->m_values[property] = QtTFTensorPropertyManagerPrivate::Data();
 }
 
 /*!
  \reimp
  */
-void QtComplexArrayPropertyManager::uninitializeProperty(QtProperty *property)
+void QtTFTensorPropertyManager::uninitializeProperty(QtProperty *property)
 {
-    const QtComplexArrayPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const QtTFTensorPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 

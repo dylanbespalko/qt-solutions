@@ -7,21 +7,21 @@
 //
 
 #include "qcomplexedit.h"
+
 #include <QHBoxLayout>
 #include <QApplication>
 #include <QKeyEvent>
+#include <QLineEdit>
+#include <QtGlobal>
+#include <QLocale>
+#include <QStyleOption>
+#include <QPainter>
 
-#include <qlineedit.h>
-#include <qlabel.h>
-#include <qlocale.h>
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <float.h>
 #include <complex>
 #include <stdio.h>
-
-#include <QStyleOption>
-#include <QPainter>
 
 #ifdef Q_CC_MSVC
     #define isnan(x) _isnan(x)

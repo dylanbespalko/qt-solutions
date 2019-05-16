@@ -9,7 +9,8 @@ from PySide2.QtWidgets import QApplication, QDialog, QLabel, QGridLayout, QScrol
 from qtpropertybrowser import QtTreePropertyBrowser, QtGroupBoxPropertyBrowser, QtButtonPropertyBrowser
 from qtpropertybrowser import QtGroupPropertyManager
 from qtpropertybrowser import QtIntPropertyManager, QtBoolPropertyManager
-from qtpropertybrowser import QtDoublePropertyManager, QtComplexPropertyManager, QtComplexArrayPropertyManager
+from qtpropertybrowser import QtDoublePropertyManager, QtComplexPropertyManager
+from qtpropertybrowser import QtTFTensorPropertyManager
 from qtpropertybrowser import QtStringPropertyManager, QtFilePropertyManager
 from qtpropertybrowser import QtDatePropertyManager, QtTimePropertyManager, QtDateTimePropertyManager
 from qtpropertybrowser import QtCharPropertyManager, QtKeySequencePropertyManager
@@ -20,9 +21,10 @@ from qtpropertybrowser import QtRectPropertyManager, QtRectFPropertyManager
 from qtpropertybrowser import QtEnumPropertyManager, QtFlagPropertyManager
 from qtpropertybrowser import QtSizePolicyPropertyManager
 from qtpropertybrowser import QtFontPropertyManager, QtColorPropertyManager, QtCursorPropertyManager
-from qtpropertybrowser import QtGroupEditFactory
+from qtpropertybrowser import QtGroupEditorFactory
 from qtpropertybrowser import QtIntEditFactory, QtSpinBoxFactory, QtSliderFactory, QtScrollBarFactory, QtCheckBoxFactory
-from qtpropertybrowser import QtDoubleEditFactory, QtDoubleSpinBoxFactory, QtComplexEditFactory, QtArrayEditFactory
+from qtpropertybrowser import QtDoubleEditFactory, QtDoubleSpinBoxFactory, QtComplexEditFactory
+from qtpropertybrowser import QtTFTensorEditFactory
 from qtpropertybrowser import QtLineEditFactory, QtFileEditorFactory
 from qtpropertybrowser import QtDateEditFactory, QtTimeEditFactory, QtDateTimeEditFactory
 from qtpropertybrowser import QtKeySequenceEditorFactory, QtCharEditorFactory
@@ -42,7 +44,7 @@ class Manager(Enum):
     DOUBLE_SPIN = auto()
     DOUBLE_EDIT = auto()
     COMPLEX_EDIT = auto()
-    COMPLEX_VECTOR = auto()
+    TF_EDIT = auto()
     STRING = auto()
     FILE = auto()
     DATE = auto()
@@ -75,7 +77,7 @@ class Factory(Enum):
     DOUBLE_SPIN = auto()
     DOUBLE_EDIT = auto()
     COMPLEX_EDIT = auto()
-    COMPLEX_VECTOR = auto()
+    TF_EDIT = auto()
     STRING = auto()
     FILE = auto()
     DATE = auto()
@@ -129,16 +131,16 @@ if __name__ == "__main__":
 
     tree_scroll_area = QScrollArea()
     tree_browser = QtTreePropertyBrowser()
-    tree_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
-    # tree_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
+    # tree_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
+    tree_browser.setAttributes([Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
     box_scroll_area = QScrollArea()
     box_browser = QtGroupBoxPropertyBrowser()
-    box_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
-    # box_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
+    # box_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
+    box_browser.setAttributes([Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
     button_scroll_area = QScrollArea()
     button_browser = QtButtonPropertyBrowser()
-    button_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
-    # button_browser.setAttributes([Attribute.PKAVG, Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
+    # button_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
+    button_browser.setAttributes([Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
 
     manager_map = {Manager.GROUP: QtGroupPropertyManager(),
                    Manager.INT_SPIN: QtIntPropertyManager(),
@@ -149,7 +151,7 @@ if __name__ == "__main__":
                    Manager.DOUBLE_SPIN: QtDoublePropertyManager(),
                    Manager.DOUBLE_EDIT: QtDoublePropertyManager(),
                    Manager.COMPLEX_EDIT: QtComplexPropertyManager(),
-                   Manager.COMPLEX_VECTOR: QtComplexArrayPropertyManager(),
+                   Manager.TF_EDIT: QtTFTensorPropertyManager(),
                    Manager.STRING: QtStringPropertyManager(),
                    Manager.FILE: QtFilePropertyManager(),
                    Manager.DATE: QtDatePropertyManager(),
@@ -171,7 +173,7 @@ if __name__ == "__main__":
                    Manager.COLOR: QtColorPropertyManager(),
                    Manager.CURSOR: QtCursorPropertyManager(),
                    }
-    factory_map = {Factory.GROUP: QtGroupEditFactory(),
+    factory_map = {Factory.GROUP: QtGroupEditorFactory(),
                    Factory.INT_SPIN: QtSpinBoxFactory(),
                    Factory.INT_EDIT: QtIntEditFactory(),
                    Factory.INT_SLIDER: QtSliderFactory(),
@@ -180,7 +182,7 @@ if __name__ == "__main__":
                    Factory.DOUBLE_SPIN: QtDoubleSpinBoxFactory(),
                    Factory.DOUBLE_EDIT: QtDoubleEditFactory(),
                    Factory.COMPLEX_EDIT: QtComplexEditFactory(),
-                   Factory.COMPLEX_VECTOR: QtArrayEditFactory(),
+                   Factory.TF_EDIT: QtTFTensorEditFactory(),
                    Factory.STRING: QtLineEditFactory(),
                    Factory.FILE: QtFileEditorFactory(),
                    Factory.DATE: QtDateEditFactory(),
@@ -188,24 +190,24 @@ if __name__ == "__main__":
                    Factory.DATETIME: QtDateTimeEditFactory(),
                    Factory.KEY_SEQUENCE: QtKeySequenceEditorFactory(),
                    Factory.CHAR: QtCharEditorFactory(),
-                   Factory.LOCALE: QtGroupEditFactory(),
-                   Factory.POINT: QtGroupEditFactory(),
-                   Factory.POINTF: QtGroupEditFactory(),
-                   Factory.SIZE: QtGroupEditFactory(),
-                   Factory.SIZEF: QtGroupEditFactory(),
-                   Factory.RECT: QtGroupEditFactory(),
-                   Factory.RECTF: QtGroupEditFactory(),
+                   Factory.LOCALE: QtGroupEditorFactory(),
+                   Factory.POINT: QtGroupEditorFactory(),
+                   Factory.POINTF: QtGroupEditorFactory(),
+                   Factory.SIZE: QtGroupEditorFactory(),
+                   Factory.SIZEF: QtGroupEditorFactory(),
+                   Factory.RECT: QtGroupEditorFactory(),
+                   Factory.RECTF: QtGroupEditorFactory(),
                    Factory.ENUM: QtEnumEditorFactory(),
-                   Factory.FLAG: QtGroupEditFactory(),
-                   Factory.SIZE_POLICY: QtGroupEditFactory(),
+                   Factory.FLAG: QtGroupEditorFactory(),
+                   Factory.SIZE_POLICY: QtGroupEditorFactory(),
                    Factory.FONT: QtFontEditorFactory(),
                    Factory.COLOR: QtColorEditorFactory(),
                    Factory.CURSOR: QtCursorEditorFactory(),
                    }
 
-    factory_map[Factory.COMPLEX_VECTOR].setSubFactory(factory_map[Factory.COMPLEX_EDIT])
+    factory_map[Factory.TF_EDIT].setSubFactory(factory_map[Factory.COMPLEX_EDIT])
     print(factory_map[Factory.COMPLEX_EDIT])
-    print(factory_map[Factory.COMPLEX_VECTOR].subFactory())
+    print(factory_map[Factory.TF_EDIT].subFactory())
 
     for count in range(len(group)):
         # group
@@ -350,7 +352,7 @@ if __name__ == "__main__":
         property_ = manager_map[Manager.COMPLEX_EDIT].addProperty("complex_edit_rw_%d" % (count + 1,))
         property_.propertyManager().setReadOnly(property_, False)
         property_.propertyManager().setScale(property_, Scale.K)
-        property_.propertyManager().setUnit(property_, "V")
+        property_.propertyManager().setUnit(property_, "rW")
         property_.propertyManager().setPrecision(property_, 2)
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
@@ -360,43 +362,43 @@ if __name__ == "__main__":
         button_browser.setFactoryForManager(manager_map[Manager.COMPLEX_EDIT], factory_map[Factory.COMPLEX_EDIT])
         group[count].addSubProperty(property_)
 
-        # complex_vector_r
-        manager_map[Manager.COMPLEX_VECTOR].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.COMPLEX_VECTOR].addProperty("complex_vector_r_%d" % (count + 1,))
+        # tf_tensor_r
+        manager_map[Manager.TF_EDIT].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.TF_EDIT].addProperty("tf_tensor_r_%d" % (count + 1,))
         property_.propertyManager().setReadOnly(property_, True)
         property_.propertyManager().setUnit(property_, "V")
         property_.propertyManager().setPrecision(property_, 2)
         property_.propertyManager().setMinimum(property_, [0, 0])
         property_.propertyManager().setMaximum(property_, [2, 2])
         property_.propertyManager().setValue(property_, [2 + 2j, 2 + 2j])
-        tree_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR], factory_map[Factory.COMPLEX_VECTOR])
-        box_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR], factory_map[Factory.COMPLEX_VECTOR])
-        button_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR], factory_map[Factory.COMPLEX_VECTOR])
-        tree_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR].subComplexPropertyManager(),
+        tree_browser.setFactoryForManager(manager_map[Manager.TF_EDIT], factory_map[Factory.TF_EDIT])
+        box_browser.setFactoryForManager(manager_map[Manager.TF_EDIT], factory_map[Factory.TF_EDIT])
+        button_browser.setFactoryForManager(manager_map[Manager.TF_EDIT], factory_map[Factory.TF_EDIT])
+        tree_browser.setFactoryForManager(manager_map[Manager.TF_EDIT].subComplexPropertyManager(),
                                           factory_map[Factory.COMPLEX_EDIT])
-        box_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR].subComplexPropertyManager(),
+        box_browser.setFactoryForManager(manager_map[Manager.TF_EDIT].subComplexPropertyManager(),
                                          factory_map[Factory.COMPLEX_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR].subComplexPropertyManager(),
+        button_browser.setFactoryForManager(manager_map[Manager.TF_EDIT].subComplexPropertyManager(),
                                             factory_map[Factory.COMPLEX_EDIT])
         group[count].addSubProperty(property_)
 
-        # complex_vector_rw
-        manager_map[Manager.COMPLEX_VECTOR].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.COMPLEX_VECTOR].addProperty("complex_vector_rw2_%d" % (count + 1,))
+        # tf_tensor_rw
+        manager_map[Manager.TF_EDIT].valueChanged.connect(set_value)
+        property_ = manager_map[Manager.TF_EDIT].addProperty("tf_tensor_rw_%d" % (count + 1,))
         property_.propertyManager().setReadOnly(property_, False)
         property_.propertyManager().setUnit(property_, "V")
         property_.propertyManager().setPrecision(property_, 2)
         property_.propertyManager().setMinimum(property_, [0, 0, 0, 0, 0])
         property_.propertyManager().setMaximum(property_, [2, 2, 2, 2, 2])
         property_.propertyManager().setValue(property_, [2 + 2j, 2 + 2j, 2 + 2j, 2 + 2j, 2 + 2j])
-        tree_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR], factory_map[Factory.COMPLEX_VECTOR])
-        box_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR], factory_map[Factory.COMPLEX_VECTOR])
-        button_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR], factory_map[Factory.COMPLEX_VECTOR])
-        tree_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR].subComplexPropertyManager(),
+        tree_browser.setFactoryForManager(manager_map[Manager.TF_EDIT], factory_map[Factory.TF_EDIT])
+        box_browser.setFactoryForManager(manager_map[Manager.TF_EDIT], factory_map[Factory.TF_EDIT])
+        button_browser.setFactoryForManager(manager_map[Manager.TF_EDIT], factory_map[Factory.TF_EDIT])
+        tree_browser.setFactoryForManager(manager_map[Manager.TF_EDIT].subComplexPropertyManager(),
                                           factory_map[Factory.COMPLEX_EDIT])
-        box_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR].subComplexPropertyManager(),
+        box_browser.setFactoryForManager(manager_map[Manager.TF_EDIT].subComplexPropertyManager(),
                                          factory_map[Factory.COMPLEX_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.COMPLEX_VECTOR].subComplexPropertyManager(),
+        button_browser.setFactoryForManager(manager_map[Manager.TF_EDIT].subComplexPropertyManager(),
                                             factory_map[Factory.COMPLEX_EDIT])
         group[count].addSubProperty(property_)
 

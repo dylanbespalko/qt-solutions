@@ -38,8 +38,8 @@
 **
 ****************************************************************************/
 
-
 #include "qtpropertybrowserutils_p.h"
+
 #include <QApplication>
 #include <QPainter>
 #include <QHBoxLayout>

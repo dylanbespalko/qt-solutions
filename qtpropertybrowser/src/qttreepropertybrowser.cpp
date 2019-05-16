@@ -38,8 +38,8 @@
 **
 ****************************************************************************/
 
-
 #include "qttreepropertybrowser.h"
+
 #include <QSet>
 #include <QIcon>
 #include <QTreeWidget>
@@ -538,7 +538,9 @@ void QtTreePropertyBrowserPrivate::updateAttributes()
     }
     if (m_treeWidget->columnCount() > 1){
         m_treeWidget->header()->setStretchLastSection(false);
-        m_treeWidget->header()->setResizeMode(1, QHeaderView::Stretch);
+        m_treeWidget->header()->setResizeMode(1, QHeaderView::Interactive); // QHeaderView::Stretch
+        attributeWidth = metrics.width("12.34<-180.00");
+        m_treeWidget->header()->resizeSection(1, attributeWidth);
     }
     for (unsigned short index=0; index < m_attributes.size(); index++) {
         switch (m_attributes.at(index)) {
@@ -547,7 +549,7 @@ void QtTreePropertyBrowserPrivate::updateAttributes()
                 m_treeWidget->setColumnCount(2+index+1);
                 labels.append(QCoreApplication::translate("QtTreePropertyBrowser",
                                                           attributeNames.at(index).toAscii()));
-                attributeWidth = 10+metrics.width("dBmrW");
+                attributeWidth = 40+metrics.width("dBmrW");
                 m_treeWidget->header()->resizeSection(2+index, attributeWidth);
                 break;
             case Attribute::PKAVG:
@@ -555,7 +557,7 @@ void QtTreePropertyBrowserPrivate::updateAttributes()
                 m_treeWidget->setColumnCount(2+index+1);
                 labels.append(QCoreApplication::translate("QtTreePropertyBrowser",
                                                           attributeNames.at(index).toAscii()));
-                attributeWidth = 10+metrics.width("PkAvg");
+                attributeWidth = 40+metrics.width("avg");
                 m_treeWidget->header()->resizeSection(2+index, attributeWidth);
                 break;
             case Attribute::FORMAT:
@@ -563,7 +565,7 @@ void QtTreePropertyBrowserPrivate::updateAttributes()
                 m_treeWidget->setColumnCount(2+index+1);
                 labels.append(QCoreApplication::translate("QtTreePropertyBrowser",
                                                           attributeNames.at(index).toAscii()));
-                attributeWidth = 10+metrics.width("dBm<Log");
+                attributeWidth = 45+metrics.width("Log<Deg");
                 m_treeWidget->header()->resizeSection(2+index, attributeWidth);
                 break;
             case Attribute::MINIMUM:
@@ -571,7 +573,7 @@ void QtTreePropertyBrowserPrivate::updateAttributes()
                 m_treeWidget->setColumnCount(2+index+1);
                 labels.append(QCoreApplication::translate("QtTreePropertyBrowser",
                                                           attributeNames.at(index).toAscii()));
-                attributeWidth = 10+metrics.width("12.345");
+                attributeWidth = metrics.width("-12.3e10");
                 m_treeWidget->header()->resizeSection(2+index, attributeWidth);
                 break;
             case Attribute::MAXIMUM:
@@ -579,15 +581,15 @@ void QtTreePropertyBrowserPrivate::updateAttributes()
                 m_treeWidget->setColumnCount(2+index+1);
                 labels.append(QCoreApplication::translate("QtTreePropertyBrowser",
                                                           attributeNames.at(index).toAscii()));
-                attributeWidth = 10+metrics.width("12.345");
+                attributeWidth = metrics.width("+12.3e10");
                 m_treeWidget->header()->resizeSection(2+index, attributeWidth);
                 break;
             case Attribute::CHECK:
-                attributeNames << "Check";
+                attributeNames << "?";
                 m_treeWidget->setColumnCount(2+index+1);
                 labels.append(QCoreApplication::translate("QtTreePropertyBrowser",
                                                           attributeNames.at(index).toAscii()));
-                attributeWidth = 10+metrics.width("Check");
+                attributeWidth = metrics.width("?");
                 m_treeWidget->header()->resizeSection(2+index, attributeWidth);
                 break;
             default:

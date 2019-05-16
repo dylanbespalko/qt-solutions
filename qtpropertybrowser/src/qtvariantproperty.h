@@ -43,6 +43,7 @@
 #define QTVARIANTPROPERTY_H
 
 #include "qtpropertybrowser.h"
+
 #include <QVariant>
 #include <QIcon>
 

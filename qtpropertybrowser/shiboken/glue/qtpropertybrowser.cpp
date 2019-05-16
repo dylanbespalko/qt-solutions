@@ -64,17 +64,17 @@ static void setFactoryForManager_glue(QtAbstractPropertyBrowser* self, PyObject*
         self->setFactoryForManager(cppManager, cppFactory);
         return;
     }
-    pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTCOMPLEXARRAYPROPERTYMANAGER_IDX]), pyManager);
+    pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTTFTENSORPROPERTYMANAGER_IDX]), pyManager);
     if (pythonToCpp) {
-        QtComplexArrayPropertyManager* cppManager;
-        QtAbstractEditorFactory< QtComplexArrayPropertyManager >* cppFactory;
+        QtTFTensorPropertyManager* cppManager;
+        QtAbstractEditorFactory< QtTFTensorPropertyManager >* cppFactory;
         pythonToCpp( pyManager, &cppManager);
         if (pyFactory == Py_None)
             cppFactory = 0;
         shiboType = reinterpret_cast<SbkObjectType*>(pyFactory->ob_type);
         if (Shiboken::ObjectType::hasCast(shiboType))
-            cppFactory = reinterpret_cast<QtAbstractEditorFactory< QtComplexArrayPropertyManager >*>(Shiboken::ObjectType::cast(shiboType, reinterpret_cast<SbkObject*>(pyFactory), Shiboken::SbkType<QtAbstractEditorFactory< QtComplexArrayPropertyManager >>()));
-        cppFactory = (QtAbstractEditorFactory< QtComplexArrayPropertyManager >*) Shiboken::Object::cppPointer(reinterpret_cast<SbkObject*>(pyFactory), Shiboken::SbkType<QtAbstractEditorFactory< QtComplexArrayPropertyManager >>());
+            cppFactory = reinterpret_cast<QtAbstractEditorFactory< QtTFTensorPropertyManager >*>(Shiboken::ObjectType::cast(shiboType, reinterpret_cast<SbkObject*>(pyFactory), Shiboken::SbkType<QtAbstractEditorFactory< QtTFTensorPropertyManager >>()));
+        cppFactory = (QtAbstractEditorFactory< QtTFTensorPropertyManager >*) Shiboken::Object::cppPointer(reinterpret_cast<SbkObject*>(pyFactory), Shiboken::SbkType<QtAbstractEditorFactory< QtTFTensorPropertyManager >>());
         gil.release();
         self->setFactoryForManager(cppManager, cppFactory);
         return;

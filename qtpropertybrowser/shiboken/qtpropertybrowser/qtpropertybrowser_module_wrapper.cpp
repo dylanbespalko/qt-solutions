@@ -37,6 +37,7 @@ static PyMethodDef qtpropertybrowser_methods[] = {
 // Classes initialization functions ------------------------------------------------------------
 void init_QtVariantEditorFactory(PyObject* module);
 void init_QtTimeEditFactory(PyObject* module);
+void init_QtTFTensorEditFactory(PyObject* module);
 void init_QtSpinBoxFactory(PyObject* module);
 void init_QtSliderFactory(PyObject* module);
 void init_QtScrollBarFactory(PyObject* module);
@@ -45,7 +46,7 @@ void init_QtVariantProperty(PyObject* module);
 void init_QtLineEditFactory(PyObject* module);
 void init_QtKeySequenceEditorFactory(PyObject* module);
 void init_QtIntEditFactory(PyObject* module);
-void init_QtGroupEditFactory(PyObject* module);
+void init_QtGroupEditorFactory(PyObject* module);
 void init_QtFontEditorFactory(PyObject* module);
 void init_QtFileEditorFactory(PyObject* module);
 void init_QtEnumEditorFactory(PyObject* module);
@@ -59,26 +60,25 @@ void init_QtColorEditorFactory(PyObject* module);
 void init_QtCheckBoxFactory(PyObject* module);
 void init_QtCharEditorFactory(PyObject* module);
 void init_QtBrowserItem(PyObject* module);
-void init_QtArrayEditFactory(PyObject* module);
 void init_QtAbstractPropertyManager(PyObject* module);
-void init_QtDoublePropertyManager(PyObject* module);
 void init_QtVariantPropertyManager(PyObject* module);
+void init_QtDoublePropertyManager(PyObject* module);
 void init_QtDateTimePropertyManager(PyObject* module);
-void init_QtDatePropertyManager(PyObject* module);
 void init_QtTimePropertyManager(PyObject* module);
+void init_QtDatePropertyManager(PyObject* module);
+void init_QtTFTensorPropertyManager(PyObject* module);
 void init_QtCursorPropertyManager(PyObject* module);
 void init_QtStringPropertyManager(PyObject* module);
 void init_QtComplexPropertyManager(PyObject* module);
-void init_QtComplexArrayPropertyManager(PyObject* module);
-void init_QtSizePropertyManager(PyObject* module);
 void init_QtColorPropertyManager(PyObject* module);
+void init_QtSizePropertyManager(PyObject* module);
 void init_QtSizePolicyPropertyManager(PyObject* module);
 void init_QtSizeFPropertyManager(PyObject* module);
 void init_QtCharPropertyManager(PyObject* module);
 void init_QtRectPropertyManager(PyObject* module);
 void init_QtRectFPropertyManager(PyObject* module);
-void init_QtPointPropertyManager(PyObject* module);
 void init_QtBoolPropertyManager(PyObject* module);
+void init_QtPointPropertyManager(PyObject* module);
 void init_QtPointFPropertyManager(PyObject* module);
 void init_QtLocalePropertyManager(PyObject* module);
 void init_QtKeySequencePropertyManager(PyObject* module);
@@ -90,9 +90,9 @@ void init_QtFilePropertyManager(PyObject* module);
 void init_QtEnumPropertyManager(PyObject* module);
 void init_QtAbstractEditorFactoryBase(PyObject* module);
 void init_QtAbstractPropertyBrowser(PyObject* module);
+void init_QtGroupBoxPropertyBrowser(PyObject* module);
 void init_QtButtonPropertyBrowser(PyObject* module);
 void init_QtTreePropertyBrowser(PyObject* module);
-void init_QtGroupBoxPropertyBrowser(PyObject* module);
 
 // Enum definitions ------------------------------------------------------------
 static void Attribute_PythonToCpp_Attribute(PyObject* pyIn, void* cppOut) {
@@ -456,6 +456,48 @@ static PythonToCppFunc is__QList_Attribute__PythonToCpp__QList_Attribute__Conver
     return {};
 }
 
+// C++ to Python conversion for type 'QMap<int,QIcon >'.
+static PyObject* _QMap_int_QIcon__CppToPython__QMap_int_QIcon_(const void* cppIn) {
+    ::QMap<int,QIcon >& cppInRef = *((::QMap<int,QIcon >*)cppIn);
+
+                // TEMPLATE - cppmap_to_pymap_conversion - START
+          PyObject *pyOut = PyDict_New();
+          for (::QMap<int,QIcon >::const_iterator it = cppInRef.begin(), end = cppInRef.end(); it != end; ++it) {
+              int key = it.key();
+              ::QIcon value = it.value();
+              PyObject *pyKey = Shiboken::Conversions::copyToPython(Shiboken::Conversions::PrimitiveTypeConverter<int>(), &key);
+              PyObject *pyValue = Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtGuiTypes[SBK_QICON_IDX]), &value);
+              PyDict_SetItem(pyOut, pyKey, pyValue);
+              Py_DECREF(pyKey);
+              Py_DECREF(pyValue);
+          }
+          return pyOut;
+    // TEMPLATE - cppmap_to_pymap_conversion - END
+
+}
+static void _QMap_int_QIcon__PythonToCpp__QMap_int_QIcon_(PyObject* pyIn, void* cppOut) {
+    ::QMap<int,QIcon >& cppOutRef = *((::QMap<int,QIcon >*)cppOut);
+
+                // TEMPLATE - pydict_to_cppmap_conversion - START
+      PyObject *key;
+      PyObject *value;
+      Py_ssize_t pos = 0;
+      while (PyDict_Next(pyIn, &pos, &key, &value)) {
+          int cppKey;
+        Shiboken::Conversions::pythonToCppCopy(Shiboken::Conversions::PrimitiveTypeConverter<int>(), key, &(cppKey));
+          ::QIcon cppValue;
+        Shiboken::Conversions::pythonToCppCopy(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtGuiTypes[SBK_QICON_IDX]), value, &(cppValue));
+          cppOutRef.insert(cppKey, cppValue);
+      }
+    // TEMPLATE - pydict_to_cppmap_conversion - END
+
+}
+static PythonToCppFunc is__QMap_int_QIcon__PythonToCpp__QMap_int_QIcon__Convertible(PyObject* pyIn) {
+    if (Shiboken::Conversions::convertibleDictTypes(Shiboken::Conversions::PrimitiveTypeConverter<int>(), false, *PepType_SGTP(SbkPySide2_QtGuiTypes[SBK_QICON_IDX])->converter, false, pyIn))
+        return _QMap_int_QIcon__PythonToCpp__QMap_int_QIcon_;
+    return {};
+}
+
 // C++ to Python conversion for type 'QVector<double >'.
 static PyObject* _QVector_double__CppToPython__QVector_double_(const void* cppIn) {
     ::QVector<double >& cppInRef = *((::QVector<double >*)cppIn);
@@ -525,48 +567,6 @@ static void _constQVector_QComplex_REF_PythonToCpp__constQVector_QComplex_REF(Py
 static PythonToCppFunc is__constQVector_QComplex_REF_PythonToCpp__constQVector_QComplex_REF_Convertible(PyObject* pyIn) {
     if (Shiboken::Conversions::convertibleSequenceTypes(SbkqtpropertybrowserTypeConverters[SBK_QCOMPLEX_IDX], pyIn))
         return _constQVector_QComplex_REF_PythonToCpp__constQVector_QComplex_REF;
-    return {};
-}
-
-// C++ to Python conversion for type 'QMap<int,QIcon >'.
-static PyObject* _QMap_int_QIcon__CppToPython__QMap_int_QIcon_(const void* cppIn) {
-    ::QMap<int,QIcon >& cppInRef = *((::QMap<int,QIcon >*)cppIn);
-
-                // TEMPLATE - cppmap_to_pymap_conversion - START
-          PyObject *pyOut = PyDict_New();
-          for (::QMap<int,QIcon >::const_iterator it = cppInRef.begin(), end = cppInRef.end(); it != end; ++it) {
-              int key = it.key();
-              ::QIcon value = it.value();
-              PyObject *pyKey = Shiboken::Conversions::copyToPython(Shiboken::Conversions::PrimitiveTypeConverter<int>(), &key);
-              PyObject *pyValue = Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtGuiTypes[SBK_QICON_IDX]), &value);
-              PyDict_SetItem(pyOut, pyKey, pyValue);
-              Py_DECREF(pyKey);
-              Py_DECREF(pyValue);
-          }
-          return pyOut;
-    // TEMPLATE - cppmap_to_pymap_conversion - END
-
-}
-static void _QMap_int_QIcon__PythonToCpp__QMap_int_QIcon_(PyObject* pyIn, void* cppOut) {
-    ::QMap<int,QIcon >& cppOutRef = *((::QMap<int,QIcon >*)cppOut);
-
-                // TEMPLATE - pydict_to_cppmap_conversion - START
-      PyObject *key;
-      PyObject *value;
-      Py_ssize_t pos = 0;
-      while (PyDict_Next(pyIn, &pos, &key, &value)) {
-          int cppKey;
-        Shiboken::Conversions::pythonToCppCopy(Shiboken::Conversions::PrimitiveTypeConverter<int>(), key, &(cppKey));
-          ::QIcon cppValue;
-        Shiboken::Conversions::pythonToCppCopy(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtGuiTypes[SBK_QICON_IDX]), value, &(cppValue));
-          cppOutRef.insert(cppKey, cppValue);
-      }
-    // TEMPLATE - pydict_to_cppmap_conversion - END
-
-}
-static PythonToCppFunc is__QMap_int_QIcon__PythonToCpp__QMap_int_QIcon__Convertible(PyObject* pyIn) {
-    if (Shiboken::Conversions::convertibleDictTypes(Shiboken::Conversions::PrimitiveTypeConverter<int>(), false, *PepType_SGTP(SbkPySide2_QtGuiTypes[SBK_QICON_IDX])->converter, false, pyIn))
-        return _QMap_int_QIcon__PythonToCpp__QMap_int_QIcon_;
     return {};
 }
 
@@ -750,6 +750,7 @@ SBK_MODULE_INIT_FUNCTION_BEGIN(qtpropertybrowser)
     // Initialize classes in the type system
     init_QtVariantEditorFactory(module);
     init_QtTimeEditFactory(module);
+    init_QtTFTensorEditFactory(module);
     init_QtSpinBoxFactory(module);
     init_QtSliderFactory(module);
     init_QtScrollBarFactory(module);
@@ -758,7 +759,7 @@ SBK_MODULE_INIT_FUNCTION_BEGIN(qtpropertybrowser)
     init_QtLineEditFactory(module);
     init_QtKeySequenceEditorFactory(module);
     init_QtIntEditFactory(module);
-    init_QtGroupEditFactory(module);
+    init_QtGroupEditorFactory(module);
     init_QtFontEditorFactory(module);
     init_QtFileEditorFactory(module);
     init_QtEnumEditorFactory(module);
@@ -772,26 +773,25 @@ SBK_MODULE_INIT_FUNCTION_BEGIN(qtpropertybrowser)
     init_QtCheckBoxFactory(module);
     init_QtCharEditorFactory(module);
     init_QtBrowserItem(module);
-    init_QtArrayEditFactory(module);
     init_QtAbstractPropertyManager(module);
-    init_QtDoublePropertyManager(module);
     init_QtVariantPropertyManager(module);
+    init_QtDoublePropertyManager(module);
     init_QtDateTimePropertyManager(module);
-    init_QtDatePropertyManager(module);
     init_QtTimePropertyManager(module);
+    init_QtDatePropertyManager(module);
+    init_QtTFTensorPropertyManager(module);
     init_QtCursorPropertyManager(module);
     init_QtStringPropertyManager(module);
     init_QtComplexPropertyManager(module);
-    init_QtComplexArrayPropertyManager(module);
-    init_QtSizePropertyManager(module);
     init_QtColorPropertyManager(module);
+    init_QtSizePropertyManager(module);
     init_QtSizePolicyPropertyManager(module);
     init_QtSizeFPropertyManager(module);
     init_QtCharPropertyManager(module);
     init_QtRectPropertyManager(module);
     init_QtRectFPropertyManager(module);
-    init_QtPointPropertyManager(module);
     init_QtBoolPropertyManager(module);
+    init_QtPointPropertyManager(module);
     init_QtPointFPropertyManager(module);
     init_QtLocalePropertyManager(module);
     init_QtKeySequencePropertyManager(module);
@@ -803,9 +803,9 @@ SBK_MODULE_INIT_FUNCTION_BEGIN(qtpropertybrowser)
     init_QtEnumPropertyManager(module);
     init_QtAbstractEditorFactoryBase(module);
     init_QtAbstractPropertyBrowser(module);
+    init_QtGroupBoxPropertyBrowser(module);
     init_QtButtonPropertyBrowser(module);
     init_QtTreePropertyBrowser(module);
-    init_QtGroupBoxPropertyBrowser(module);
 
     // Register converter for type 'qtpropertybrowser.QComplex'.
     SbkqtpropertybrowserTypeConverters[SBK_QCOMPLEX_IDX] = Shiboken::Conversions::createConverter(&PyComplex_Type, QComplex_CppToPython_QComplex);
@@ -866,6 +866,13 @@ SBK_MODULE_INIT_FUNCTION_BEGIN(qtpropertybrowser)
         _QList_Attribute__PythonToCpp__QList_Attribute_,
         is__QList_Attribute__PythonToCpp__QList_Attribute__Convertible);
 
+    // Register converter for type 'QMap<int,QIcon>'.
+    SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QMAP_INT_QICON_IDX] = Shiboken::Conversions::createConverter(&PyDict_Type, _QMap_int_QIcon__CppToPython__QMap_int_QIcon_);
+    Shiboken::Conversions::registerConverterName(SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QMAP_INT_QICON_IDX], "QMap<int,QIcon>");
+    Shiboken::Conversions::addPythonToCppValueConversion(SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QMAP_INT_QICON_IDX],
+        _QMap_int_QIcon__PythonToCpp__QMap_int_QIcon_,
+        is__QMap_int_QIcon__PythonToCpp__QMap_int_QIcon__Convertible);
+
     // Register converter for type 'QVector<double>'.
     SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QVECTOR_DOUBLE_IDX] = Shiboken::Conversions::createConverter(&PyList_Type, _QVector_double__CppToPython__QVector_double_);
     Shiboken::Conversions::registerConverterName(SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QVECTOR_DOUBLE_IDX], "QVector<double>");
@@ -880,13 +887,6 @@ SBK_MODULE_INIT_FUNCTION_BEGIN(qtpropertybrowser)
     Shiboken::Conversions::addPythonToCppValueConversion(SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QVECTOR_QCOMPLEX_IDX],
         _constQVector_QComplex_REF_PythonToCpp__constQVector_QComplex_REF,
         is__constQVector_QComplex_REF_PythonToCpp__constQVector_QComplex_REF_Convertible);
-
-    // Register converter for type 'QMap<int,QIcon>'.
-    SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QMAP_INT_QICON_IDX] = Shiboken::Conversions::createConverter(&PyDict_Type, _QMap_int_QIcon__CppToPython__QMap_int_QIcon_);
-    Shiboken::Conversions::registerConverterName(SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QMAP_INT_QICON_IDX], "QMap<int,QIcon>");
-    Shiboken::Conversions::addPythonToCppValueConversion(SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QMAP_INT_QICON_IDX],
-        _QMap_int_QIcon__PythonToCpp__QMap_int_QIcon_,
-        is__QMap_int_QIcon__PythonToCpp__QMap_int_QIcon__Convertible);
 
     // Register converter for type 'QList<QVariant>'.
     SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QLIST_QVARIANT_IDX] = Shiboken::Conversions::createConverter(&PyList_Type, _QList_QVariant__CppToPython__QList_QVariant_);

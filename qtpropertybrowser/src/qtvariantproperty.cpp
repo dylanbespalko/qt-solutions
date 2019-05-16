@@ -42,6 +42,7 @@
 #include "qtvariantproperty.h"
 #include "qtpropertymanager.h"
 #include "qteditorfactory.h"
+
 #include <QVariant>
 #include <QIcon>
 #include <QDate>

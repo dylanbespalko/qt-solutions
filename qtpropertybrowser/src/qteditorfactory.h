@@ -324,29 +324,29 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotMinimumAttributeEditorDestroyed(QObject *))
     Q_PRIVATE_SLOT(d_func(), void slotMaximumAttributeEditorDestroyed(QObject *))
     Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
-    friend class QtArrayEditFactoryPrivate;
+    friend class QtTFTensorEditFactoryPrivate;
 };
 
-class QtArrayEditFactoryPrivate;
+class QtTFTensorEditFactoryPrivate;
 
-class QT_QTPROPERTYBROWSER_EXPORT QtArrayEditFactory : public QtAbstractEditorFactory<QtComplexArrayPropertyManager>
+class QT_QTPROPERTYBROWSER_EXPORT QtTFTensorEditFactory : public QtAbstractEditorFactory<QtTFTensorPropertyManager>
 {
     Q_OBJECT
 public:
-    QtArrayEditFactory(QObject *parent = 0);
-    ~QtArrayEditFactory();
+    QtTFTensorEditFactory(QObject *parent = 0);
+    ~QtTFTensorEditFactory();
 protected:
-    void connectPropertyManager(QtComplexArrayPropertyManager *manager);
-    QWidget *createEditor(QtComplexArrayPropertyManager *manager, QtProperty *property,
+    void connectPropertyManager(QtTFTensorPropertyManager *manager);
+    QWidget *createEditor(QtTFTensorPropertyManager *manager, QtProperty *property,
                           QWidget *parent);
-    QWidget *createAttributeEditor(QtComplexArrayPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
-    void disconnectPropertyManager(QtComplexArrayPropertyManager *manager);
+    QWidget *createAttributeEditor(QtTFTensorPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    void disconnectPropertyManager(QtTFTensorPropertyManager *manager);
     QtComplexEditFactory* subFactory() const;
     void setSubFactory(QtComplexEditFactory* subFactory);
 private:
-    QtArrayEditFactoryPrivate *d_ptr;
-    Q_DECLARE_PRIVATE(QtArrayEditFactory)
-    Q_DISABLE_COPY(QtArrayEditFactory)
+    QtTFTensorEditFactoryPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QtTFTensorEditFactory)
+    Q_DISABLE_COPY(QtTFTensorEditFactory)
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QVector<QComplex>& value))
     Q_PRIVATE_SLOT(d_func(), void slotSetScale(int))
     Q_PRIVATE_SLOT(d_func(), void slotSetPkAvg(int))
@@ -360,14 +360,14 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
-class QtGroupEditFactoryPrivate;
+class QtGroupEditorFactoryPrivate;
 
-class QT_QTPROPERTYBROWSER_EXPORT QtGroupEditFactory : public QtAbstractEditorFactory<QtAbstractPropertyManager>
+class QT_QTPROPERTYBROWSER_EXPORT QtGroupEditorFactory : public QtAbstractEditorFactory<QtAbstractPropertyManager>
 {
     Q_OBJECT
 public:
-    QtGroupEditFactory(QObject *parent = 0);
-    ~QtGroupEditFactory();
+    QtGroupEditorFactory(QObject *parent = 0);
+    ~QtGroupEditorFactory();
 protected:
     void connectPropertyManager(QtAbstractPropertyManager *manager);
     QWidget *createEditor(QtAbstractPropertyManager *manager, QtProperty *property,
@@ -375,9 +375,9 @@ protected:
     QWidget *createAttributeEditor(QtAbstractPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
     void disconnectPropertyManager(QtAbstractPropertyManager *manager);
 private:
-    QtGroupEditFactoryPrivate *d_ptr;
-    Q_DECLARE_PRIVATE(QtGroupEditFactory)
-    Q_DISABLE_COPY(QtGroupEditFactory)
+    QtGroupEditorFactoryPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QtGroupEditorFactory)
+    Q_DISABLE_COPY(QtGroupEditorFactory)
     Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
     Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };

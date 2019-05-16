@@ -12,7 +12,8 @@
 #include <QToolButton>
 #include <QLineEdit>
 #include <QFileDialog>
-#include <qwidget.h>
+#include <QWidget>
+
 #include <complex>
 #include <qvalidator.h>
 

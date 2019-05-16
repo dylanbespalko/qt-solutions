@@ -43,9 +43,10 @@
 #define QTPROPERTYMANAGER_H
 
 #include "qtpropertybrowser.h"
+#include "qcomplexedit.h"
+
 #include <QLineEdit>
 #include <QFileDialog>
-#include "qcomplexedit.h"
 
 #if QT_VERSION >= 0x040400
 QT_BEGIN_NAMESPACE
@@ -273,14 +274,14 @@ private:
     Q_DISABLE_COPY(QtComplexPropertyManager)
 };
 
-class QtComplexArrayPropertyManagerPrivate;
+class QtTFTensorPropertyManagerPrivate;
 
-class QT_QTPROPERTYBROWSER_EXPORT QtComplexArrayPropertyManager : public QtAbstractPropertyManager
+class QT_QTPROPERTYBROWSER_EXPORT QtTFTensorPropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    QtComplexArrayPropertyManager(QObject *parent = 0);
-    ~QtComplexArrayPropertyManager();
+    QtTFTensorPropertyManager(QObject *parent = 0);
+    ~QtTFTensorPropertyManager();
     void connect_signals() const;
     void disconnect_signals() const;
 
@@ -338,9 +339,9 @@ protected:
     virtual void reinitializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
 private:
-    QtComplexArrayPropertyManagerPrivate *d_ptr;
-    Q_DECLARE_PRIVATE(QtComplexArrayPropertyManager)
-    Q_DISABLE_COPY(QtComplexArrayPropertyManager)
+    QtTFTensorPropertyManagerPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QtTFTensorPropertyManager)
+    Q_DISABLE_COPY(QtTFTensorPropertyManager)
     Q_PRIVATE_SLOT(d_func(), void slotComplexChanged(QtProperty *, const QComplex&))
     Q_PRIVATE_SLOT(d_func(), void slotRangeChanged(QtProperty *, const double, const double))
     Q_PRIVATE_SLOT(d_func(), void slotPropertyDestroyed(QtProperty *))

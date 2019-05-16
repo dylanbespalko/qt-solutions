@@ -38,10 +38,8 @@
 **
 ****************************************************************************/
 
-
-#include "qteditorfactory.h"
-#include "qtpropertybrowserutils_p.h"
 #include "qcomplexedit.h"
+
 #include <QSpinBox>
 #include <QScrollBar>
 #include <QComboBox>
@@ -61,7 +59,9 @@
 #include <QStyleOption>
 #include <QPainter>
 #include <QMap>
-#include <iostream>
+
+#include "qteditorfactory.h"
+#include "qtpropertybrowserutils_p.h"
 
 #if defined(Q_CC_MSVC)
 #    pragma warning(disable: 4786) /* MS VS 6: truncating debug info after 255 characters */
@@ -429,6 +429,119 @@ void EditorFactoryPrivate<Editor>::slotCheckAttributeEditorDestroyed(QObject *ob
             return;
         }
     }
+}
+
+// QtGroupEditFactory
+
+class QtGroupEditorFactoryPrivate : public EditorFactoryPrivate<QComplexEdit>
+{
+    QtGroupEditorFactory *q_ptr;
+    Q_DECLARE_PUBLIC(QtGroupEditorFactory)
+public:
+    void slotSetCheck(bool check);
+};
+
+void QtGroupEditorFactoryPrivate::slotSetCheck(bool check)
+{
+    QObject *object = q_ptr->sender();
+    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
+    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
+        if (itEditor.key() == object) {
+            QtProperty *property = itEditor.value();
+            property->setCheck(check);
+            return;
+        }
+    }
+}
+
+/*! \class QtGroupEditFactory
+
+ \brief The QtGroupEditFactory class provides QComplexEdit
+ widgets for properties created by QtAbstractPropertyManager objects.
+
+ \sa QtAbstractEditorFactory, QtAbstractPropertyManager
+ */
+
+/*!
+ Creates a factory with the given \a parent.
+ */
+QtGroupEditorFactory::QtGroupEditorFactory(QObject *parent)
+: QtAbstractEditorFactory<QtAbstractPropertyManager>(parent)
+{
+    d_ptr = new QtGroupEditorFactoryPrivate();
+    d_ptr->q_ptr = this;
+
+}
+
+/*!
+ Destroys this factory, and all the widgets it has created.
+ */
+QtGroupEditorFactory::~QtGroupEditorFactory()
+{
+    qDeleteAll(d_ptr->m_editorToProperty.keys());
+    qDeleteAll(d_ptr->m_unitAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_pkAvgAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_formatAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_minimumAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_maximumAttributeEditorToProperty.keys());
+    qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
+    delete d_ptr;
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+void QtGroupEditorFactory::connectPropertyManager(QtAbstractPropertyManager *manager)
+{
+
+    Q_UNUSED(manager);
+    return;
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+QWidget *QtGroupEditorFactory::createEditor(QtAbstractPropertyManager *manager,
+                                            QtProperty *property, QWidget *parent)
+{
+    Q_UNUSED(manager);
+    return new QLabel(property->valueText(), parent);
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+QWidget *QtGroupEditorFactory::createAttributeEditor(QtAbstractPropertyManager *manager,
+                                                     QtProperty *property, QWidget *parent, Attribute attribute)
+{
+    if (attribute == Attribute::CHECK)
+    {
+        if (!manager->attributesEditable(Attribute::CHECK))
+            return NULL;
+        QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
+
+        connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
+        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
+        return editor;
+    }
+    return NULL;
+}
+
+/*!
+ \internal
+
+ Reimplemented from the QtAbstractEditorFactory class.
+ */
+void QtGroupEditorFactory::disconnectPropertyManager(QtAbstractPropertyManager *manager)
+{
+    Q_UNUSED(manager);
+    return;
 }
 
 // ------------ QtSpinBoxFactory
@@ -2860,10 +2973,10 @@ void QtComplexEditFactory::disconnectPropertyManager(QtComplexPropertyManager *m
 
 // QtArrayEditFactory
 
-class QtArrayEditFactoryPrivate : public EditorFactoryPrivate<QComplexEdit>
+class QtTFTensorEditFactoryPrivate : public EditorFactoryPrivate<QComplexEdit>
 {
-    QtArrayEditFactory *q_ptr;
-    Q_DECLARE_PUBLIC(QtArrayEditFactory)
+    QtTFTensorEditFactory *q_ptr;
+    Q_DECLARE_PUBLIC(QtTFTensorEditFactory)
 public:
 
     void slotPropertyChanged(QtProperty *property, const QVector<QComplex>& value);
@@ -2874,7 +2987,7 @@ public:
     QtComplexEditFactory* m_subFactory;
 };
 
-void QtArrayEditFactoryPrivate::slotPropertyChanged(QtProperty *property, const QVector<QComplex>& value)
+void QtTFTensorEditFactoryPrivate::slotPropertyChanged(QtProperty *property, const QVector<QComplex>& value)
 {
     for(int index=0; index < property->subProperties().size(); ++index){
         QtProperty* subProperty = property->subProperties()[index];
@@ -2882,14 +2995,14 @@ void QtArrayEditFactoryPrivate::slotPropertyChanged(QtProperty *property, const 
     }
 }
 
-void QtArrayEditFactoryPrivate::slotSetScale(int scaleSelection)
+void QtTFTensorEditFactoryPrivate::slotSetScale(int scaleSelection)
 {
     QObject *object = q_ptr->sender();
     const QMap<QComboBox *, QtProperty *>::ConstIterator itcend = m_unitAttributeEditorToProperty.constEnd();
     for (QMap<QComboBox *, QtProperty *>::ConstIterator itEditor = m_unitAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
         if (itEditor.key() == object) {
             QtProperty *property = itEditor.value();
-            QtComplexArrayPropertyManager *manager = q_ptr->propertyManager(property);
+            QtTFTensorPropertyManager *manager = q_ptr->propertyManager(property);
             if (!manager)
                 return;
             manager->setScale(property, Scale(scaleSelection));
@@ -2899,14 +3012,14 @@ void QtArrayEditFactoryPrivate::slotSetScale(int scaleSelection)
     }
 }
 
-void QtArrayEditFactoryPrivate::slotSetPkAvg(int pkAvgSelection)
+void QtTFTensorEditFactoryPrivate::slotSetPkAvg(int pkAvgSelection)
 {
     QObject *object = q_ptr->sender();
     const QMap<QComboBox *, QtProperty *>::ConstIterator itcend = m_pkAvgAttributeEditorToProperty.constEnd();
     for (QMap<QComboBox *, QtProperty *>::ConstIterator itEditor = m_pkAvgAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
         if (itEditor.key() == object) {
             QtProperty *property = itEditor.value();
-            QtComplexArrayPropertyManager *manager = q_ptr->propertyManager(property);
+            QtTFTensorPropertyManager *manager = q_ptr->propertyManager(property);
             if (!manager)
                 return;
             manager->setPkAvg(property, PkAvg(pkAvgSelection));
@@ -2916,14 +3029,14 @@ void QtArrayEditFactoryPrivate::slotSetPkAvg(int pkAvgSelection)
     }
 }
 
-void QtArrayEditFactoryPrivate::slotSetFormat(int formatSelection)
+void QtTFTensorEditFactoryPrivate::slotSetFormat(int formatSelection)
 {
     QObject *object = q_ptr->sender();
     const QMap<QComboBox *, QtProperty *>::ConstIterator itcend = m_formatAttributeEditorToProperty.constEnd();
     for (QMap<QComboBox *, QtProperty *>::ConstIterator itEditor = m_formatAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
         if (itEditor.key() == object) {
             QtProperty *property = itEditor.value();
-            QtComplexArrayPropertyManager *manager = q_ptr->propertyManager(property);
+            QtTFTensorPropertyManager *manager = q_ptr->propertyManager(property);
             if (!manager)
                 return;
             manager->setFormat(property, Format(formatSelection));
@@ -2933,7 +3046,7 @@ void QtArrayEditFactoryPrivate::slotSetFormat(int formatSelection)
     }
 }
 
-void QtArrayEditFactoryPrivate::slotSetCheck(bool check)
+void QtTFTensorEditFactoryPrivate::slotSetCheck(bool check)
 {
     QObject *object = q_ptr->sender();
     const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
@@ -2957,10 +3070,10 @@ void QtArrayEditFactoryPrivate::slotSetCheck(bool check)
 /*!
  Creates a factory with the given \a parent.
  */
-QtArrayEditFactory::QtArrayEditFactory(QObject *parent)
-: QtAbstractEditorFactory<QtComplexArrayPropertyManager>(parent)
+QtTFTensorEditFactory::QtTFTensorEditFactory(QObject *parent)
+: QtAbstractEditorFactory<QtTFTensorPropertyManager>(parent)
 {
-    d_ptr = new QtArrayEditFactoryPrivate();
+    d_ptr = new QtTFTensorEditFactoryPrivate();
     d_ptr->q_ptr = this;
 
 }
@@ -2968,7 +3081,7 @@ QtArrayEditFactory::QtArrayEditFactory(QObject *parent)
 /*!
  Destroys this factory, and all the widgets it has created.
  */
-QtArrayEditFactory::~QtArrayEditFactory()
+QtTFTensorEditFactory::~QtTFTensorEditFactory()
 {
     qDeleteAll(d_ptr->m_editorToProperty.keys());
     qDeleteAll(d_ptr->m_unitAttributeEditorToProperty.keys());
@@ -2980,12 +3093,12 @@ QtArrayEditFactory::~QtArrayEditFactory()
     delete d_ptr;
 }
 
-QtComplexEditFactory* QtArrayEditFactory::subFactory() const
+QtComplexEditFactory* QtTFTensorEditFactory::subFactory() const
 {
     return d_ptr->m_subFactory;
 }
 
-void QtArrayEditFactory::setSubFactory(QtComplexEditFactory* subFactory)
+void QtTFTensorEditFactory::setSubFactory(QtComplexEditFactory* subFactory)
 {
     d_ptr->m_subFactory = subFactory;
 }
@@ -2995,7 +3108,7 @@ void QtArrayEditFactory::setSubFactory(QtComplexEditFactory* subFactory)
 
  Reimplemented from the QtAbstractEditorFactory class.
  */
-void QtArrayEditFactory::connectPropertyManager(QtComplexArrayPropertyManager *manager)
+void QtTFTensorEditFactory::connectPropertyManager(QtTFTensorPropertyManager *manager)
 {
 
     Q_UNUSED(manager);
@@ -3007,7 +3120,7 @@ void QtArrayEditFactory::connectPropertyManager(QtComplexArrayPropertyManager *m
 
  Reimplemented from the QtAbstractEditorFactory class.
  */
-QWidget *QtArrayEditFactory::createEditor(QtComplexArrayPropertyManager *manager,
+QWidget *QtTFTensorEditFactory::createEditor(QtTFTensorPropertyManager *manager,
                                             QtProperty *property, QWidget *parent)
 {
     Q_UNUSED(manager);
@@ -3019,7 +3132,7 @@ QWidget *QtArrayEditFactory::createEditor(QtComplexArrayPropertyManager *manager
 
  Reimplemented from the QtAbstractEditorFactory class.
  */
-QWidget *QtArrayEditFactory::createAttributeEditor(QtComplexArrayPropertyManager *manager,
+QWidget *QtTFTensorEditFactory::createAttributeEditor(QtTFTensorPropertyManager *manager,
                                                      QtProperty *property, QWidget *parent, Attribute attribute)
 {
     if (attribute == Attribute::UNIT)
@@ -3091,120 +3204,7 @@ QWidget *QtArrayEditFactory::createAttributeEditor(QtComplexArrayPropertyManager
 
  Reimplemented from the QtAbstractEditorFactory class.
  */
-void QtArrayEditFactory::disconnectPropertyManager(QtComplexArrayPropertyManager *manager)
-{
-    Q_UNUSED(manager);
-    return;
-}
-
-// QtGroupEditFactory
-
-class QtGroupEditFactoryPrivate : public EditorFactoryPrivate<QComplexEdit>
-{
-    QtGroupEditFactory *q_ptr;
-    Q_DECLARE_PUBLIC(QtGroupEditFactory)
-public:
-    void slotSetCheck(bool check);
-};
-
-void QtGroupEditFactoryPrivate::slotSetCheck(bool check)
-{
-    QObject *object = q_ptr->sender();
-    const QMap<QtBoolEdit *, QtProperty *>::ConstIterator itcend = m_checkAttributeEditorToProperty.constEnd();
-    for (QMap<QtBoolEdit *, QtProperty *>::ConstIterator itEditor = m_checkAttributeEditorToProperty.constBegin(); itEditor != itcend; ++itEditor) {
-        if (itEditor.key() == object) {
-            QtProperty *property = itEditor.value();
-            property->setCheck(check);
-            return;
-        }
-    }
-}
-
-/*! \class QtGroupEditFactory
-
- \brief The QtGroupEditFactory class provides QComplexEdit
- widgets for properties created by QtAbstractPropertyManager objects.
-
- \sa QtAbstractEditorFactory, QtAbstractPropertyManager
- */
-
-/*!
- Creates a factory with the given \a parent.
- */
-QtGroupEditFactory::QtGroupEditFactory(QObject *parent)
-: QtAbstractEditorFactory<QtAbstractPropertyManager>(parent)
-{
-    d_ptr = new QtGroupEditFactoryPrivate();
-    d_ptr->q_ptr = this;
-
-}
-
-/*!
- Destroys this factory, and all the widgets it has created.
- */
-QtGroupEditFactory::~QtGroupEditFactory()
-{
-    qDeleteAll(d_ptr->m_editorToProperty.keys());
-    qDeleteAll(d_ptr->m_unitAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_pkAvgAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_formatAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_minimumAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_maximumAttributeEditorToProperty.keys());
-    qDeleteAll(d_ptr->m_checkAttributeEditorToProperty.keys());
-    delete d_ptr;
-}
-
-/*!
- \internal
-
- Reimplemented from the QtAbstractEditorFactory class.
- */
-void QtGroupEditFactory::connectPropertyManager(QtAbstractPropertyManager *manager)
-{
-
-    Q_UNUSED(manager);
-    return;
-}
-
-/*!
- \internal
-
- Reimplemented from the QtAbstractEditorFactory class.
- */
-QWidget *QtGroupEditFactory::createEditor(QtAbstractPropertyManager *manager,
-                                            QtProperty *property, QWidget *parent)
-{
-    Q_UNUSED(manager);
-    return new QLabel(property->valueText(), parent);
-}
-
-/*!
- \internal
-
- Reimplemented from the QtAbstractEditorFactory class.
- */
-QWidget *QtGroupEditFactory::createAttributeEditor(QtAbstractPropertyManager *manager,
-                                                     QtProperty *property, QWidget *parent, Attribute attribute)
-{
-    if (attribute == Attribute::CHECK)
-    {
-        if (!manager->attributesEditable(Attribute::CHECK))
-            return NULL;
-        QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
-
-        connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
-        connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
-        return editor;
-    }
-    return NULL;
-}
-
-/*!
- \internal
-
- Reimplemented from the QtAbstractEditorFactory class.
- */
-void QtGroupEditFactory::disconnectPropertyManager(QtAbstractPropertyManager *manager)
+void QtTFTensorEditFactory::disconnectPropertyManager(QtTFTensorPropertyManager *manager)
 {
     Q_UNUSED(manager);
     return;

@@ -43,55 +43,55 @@ enum : int {
     SBK_QTABSTRACTEDITORFACTORYBASE_IDX                      = 4,
     SBK_QTABSTRACTPROPERTYBROWSER_IDX                        = 5,
     SBK_QTABSTRACTPROPERTYMANAGER_IDX                        = 6,
-    SBK_QTARRAYEDITFACTORY_IDX                               = 7,
-    SBK_QTBOOLPROPERTYMANAGER_IDX                            = 8,
-    SBK_QTBROWSERITEM_IDX                                    = 9,
-    SBK_QTBUTTONPROPERTYBROWSER_IDX                          = 10,
-    SBK_QTCHAREDITORFACTORY_IDX                              = 11,
-    SBK_QTCHARPROPERTYMANAGER_IDX                            = 12,
-    SBK_QTCHECKBOXFACTORY_IDX                                = 13,
-    SBK_QTCOLOREDITORFACTORY_IDX                             = 14,
-    SBK_QTCOLORPROPERTYMANAGER_IDX                           = 15,
-    SBK_QTCOMPLEXARRAYPROPERTYMANAGER_IDX                    = 16,
-    SBK_QTCOMPLEXEDITFACTORY_IDX                             = 17,
-    SBK_QTCOMPLEXPROPERTYMANAGER_IDX                         = 18,
-    SBK_QTCURSOREDITORFACTORY_IDX                            = 19,
-    SBK_QTCURSORPROPERTYMANAGER_IDX                          = 20,
-    SBK_QTDATEEDITFACTORY_IDX                                = 21,
-    SBK_QTDATEPROPERTYMANAGER_IDX                            = 22,
-    SBK_QTDATETIMEEDITFACTORY_IDX                            = 23,
-    SBK_QTDATETIMEPROPERTYMANAGER_IDX                        = 24,
-    SBK_QTDOUBLEEDITFACTORY_IDX                              = 25,
-    SBK_QTDOUBLEPROPERTYMANAGER_IDX                          = 26,
-    SBK_QTDOUBLESPINBOXFACTORY_IDX                           = 27,
-    SBK_QTENUMEDITORFACTORY_IDX                              = 28,
-    SBK_QTENUMPROPERTYMANAGER_IDX                            = 29,
-    SBK_QTFILEEDITORFACTORY_IDX                              = 30,
-    SBK_QTFILEPROPERTYMANAGER_IDX                            = 31,
-    SBK_QTFLAGPROPERTYMANAGER_IDX                            = 32,
-    SBK_QTFONTEDITORFACTORY_IDX                              = 33,
-    SBK_QTFONTPROPERTYMANAGER_IDX                            = 34,
-    SBK_QTGROUPBOXPROPERTYBROWSER_IDX                        = 35,
-    SBK_QTGROUPEDITFACTORY_IDX                               = 36,
-    SBK_QTGROUPPROPERTYMANAGER_IDX                           = 37,
-    SBK_QTINTEDITFACTORY_IDX                                 = 38,
-    SBK_QTINTPROPERTYMANAGER_IDX                             = 39,
-    SBK_QTKEYSEQUENCEEDITORFACTORY_IDX                       = 40,
-    SBK_QTKEYSEQUENCEPROPERTYMANAGER_IDX                     = 41,
-    SBK_QTLINEEDITFACTORY_IDX                                = 42,
-    SBK_QTLOCALEPROPERTYMANAGER_IDX                          = 43,
-    SBK_QTPOINTFPROPERTYMANAGER_IDX                          = 44,
-    SBK_QTPOINTPROPERTYMANAGER_IDX                           = 45,
-    SBK_QTPROPERTY_IDX                                       = 46,
-    SBK_QTRECTFPROPERTYMANAGER_IDX                           = 47,
-    SBK_QTRECTPROPERTYMANAGER_IDX                            = 48,
-    SBK_QTSCROLLBARFACTORY_IDX                               = 49,
-    SBK_QTSIZEFPROPERTYMANAGER_IDX                           = 50,
-    SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX                      = 51,
-    SBK_QTSIZEPROPERTYMANAGER_IDX                            = 52,
-    SBK_QTSLIDERFACTORY_IDX                                  = 53,
-    SBK_QTSPINBOXFACTORY_IDX                                 = 54,
-    SBK_QTSTRINGPROPERTYMANAGER_IDX                          = 55,
+    SBK_QTBOOLPROPERTYMANAGER_IDX                            = 7,
+    SBK_QTBROWSERITEM_IDX                                    = 8,
+    SBK_QTBUTTONPROPERTYBROWSER_IDX                          = 9,
+    SBK_QTCHAREDITORFACTORY_IDX                              = 10,
+    SBK_QTCHARPROPERTYMANAGER_IDX                            = 11,
+    SBK_QTCHECKBOXFACTORY_IDX                                = 12,
+    SBK_QTCOLOREDITORFACTORY_IDX                             = 13,
+    SBK_QTCOLORPROPERTYMANAGER_IDX                           = 14,
+    SBK_QTCOMPLEXEDITFACTORY_IDX                             = 15,
+    SBK_QTCOMPLEXPROPERTYMANAGER_IDX                         = 16,
+    SBK_QTCURSOREDITORFACTORY_IDX                            = 17,
+    SBK_QTCURSORPROPERTYMANAGER_IDX                          = 18,
+    SBK_QTDATEEDITFACTORY_IDX                                = 19,
+    SBK_QTDATEPROPERTYMANAGER_IDX                            = 20,
+    SBK_QTDATETIMEEDITFACTORY_IDX                            = 21,
+    SBK_QTDATETIMEPROPERTYMANAGER_IDX                        = 22,
+    SBK_QTDOUBLEEDITFACTORY_IDX                              = 23,
+    SBK_QTDOUBLEPROPERTYMANAGER_IDX                          = 24,
+    SBK_QTDOUBLESPINBOXFACTORY_IDX                           = 25,
+    SBK_QTENUMEDITORFACTORY_IDX                              = 26,
+    SBK_QTENUMPROPERTYMANAGER_IDX                            = 27,
+    SBK_QTFILEEDITORFACTORY_IDX                              = 28,
+    SBK_QTFILEPROPERTYMANAGER_IDX                            = 29,
+    SBK_QTFLAGPROPERTYMANAGER_IDX                            = 30,
+    SBK_QTFONTEDITORFACTORY_IDX                              = 31,
+    SBK_QTFONTPROPERTYMANAGER_IDX                            = 32,
+    SBK_QTGROUPBOXPROPERTYBROWSER_IDX                        = 33,
+    SBK_QTGROUPEDITORFACTORY_IDX                             = 34,
+    SBK_QTGROUPPROPERTYMANAGER_IDX                           = 35,
+    SBK_QTINTEDITFACTORY_IDX                                 = 36,
+    SBK_QTINTPROPERTYMANAGER_IDX                             = 37,
+    SBK_QTKEYSEQUENCEEDITORFACTORY_IDX                       = 38,
+    SBK_QTKEYSEQUENCEPROPERTYMANAGER_IDX                     = 39,
+    SBK_QTLINEEDITFACTORY_IDX                                = 40,
+    SBK_QTLOCALEPROPERTYMANAGER_IDX                          = 41,
+    SBK_QTPOINTFPROPERTYMANAGER_IDX                          = 42,
+    SBK_QTPOINTPROPERTYMANAGER_IDX                           = 43,
+    SBK_QTPROPERTY_IDX                                       = 44,
+    SBK_QTRECTFPROPERTYMANAGER_IDX                           = 45,
+    SBK_QTRECTPROPERTYMANAGER_IDX                            = 46,
+    SBK_QTSCROLLBARFACTORY_IDX                               = 47,
+    SBK_QTSIZEFPROPERTYMANAGER_IDX                           = 48,
+    SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX                      = 49,
+    SBK_QTSIZEPROPERTYMANAGER_IDX                            = 50,
+    SBK_QTSLIDERFACTORY_IDX                                  = 51,
+    SBK_QTSPINBOXFACTORY_IDX                                 = 52,
+    SBK_QTSTRINGPROPERTYMANAGER_IDX                          = 53,
+    SBK_QTTFTENSOREDITFACTORY_IDX                            = 54,
+    SBK_QTTFTENSORPROPERTYMANAGER_IDX                        = 55,
     SBK_QTTIMEEDITFACTORY_IDX                                = 56,
     SBK_QTTIMEPROPERTYMANAGER_IDX                            = 57,
     SBK_QTTREEPROPERTYBROWSER_IDX                            = 58,
@@ -125,9 +125,9 @@ enum : int {
     SBK_QTPROPERTYBROWSER_QLIST_QTPROPERTYPTR_IDX            = 5, // QList<QtProperty* >
     SBK_QTPROPERTYBROWSER_QSET_QTPROPERTYPTR_IDX             = 6, // QSet<QtProperty* >
     SBK_QTPROPERTYBROWSER_QLIST_ATTRIBUTE_IDX                = 7, // QList<Attribute >
-    SBK_QTPROPERTYBROWSER_QVECTOR_DOUBLE_IDX                 = 8, // QVector<double >
-    SBK_QTPROPERTYBROWSER_QVECTOR_QCOMPLEX_IDX               = 9, // const QVector<QComplex > &
-    SBK_QTPROPERTYBROWSER_QMAP_INT_QICON_IDX                 = 10, // QMap<int,QIcon >
+    SBK_QTPROPERTYBROWSER_QMAP_INT_QICON_IDX                 = 8, // QMap<int,QIcon >
+    SBK_QTPROPERTYBROWSER_QVECTOR_DOUBLE_IDX                 = 9, // QVector<double >
+    SBK_QTPROPERTYBROWSER_QVECTOR_QCOMPLEX_IDX               = 10, // const QVector<QComplex > &
     SBK_QTPROPERTYBROWSER_QLIST_QVARIANT_IDX                 = 11, // QList<QVariant >
     SBK_QTPROPERTYBROWSER_QLIST_QSTRING_IDX                  = 12, // QList<QString >
     SBK_QTPROPERTYBROWSER_QMAP_QSTRING_QVARIANT_IDX          = 13, // QMap<QString,QVariant >
@@ -147,7 +147,6 @@ template<> inline PyTypeObject* SbkType< ::Scale >() { return Sbkqtpropertybrows
 template<> inline PyTypeObject* SbkType< ::QtAbstractEditorFactoryBase >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTEDITORFACTORYBASE_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtAbstractPropertyBrowser >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtAbstractPropertyManager >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]); }
-template<> inline PyTypeObject* SbkType< ::QtArrayEditFactory >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTARRAYEDITFACTORY_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtBoolPropertyManager >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTBOOLPROPERTYMANAGER_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtBrowserItem >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTBROWSERITEM_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtButtonPropertyBrowser >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX]); }
@@ -156,7 +155,6 @@ template<> inline PyTypeObject* SbkType< ::QtCharPropertyManager >() { return re
 template<> inline PyTypeObject* SbkType< ::QtCheckBoxFactory >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTCHECKBOXFACTORY_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtColorEditorFactory >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTCOLOREDITORFACTORY_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtColorPropertyManager >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTCOLORPROPERTYMANAGER_IDX]); }
-template<> inline PyTypeObject* SbkType< ::QtComplexArrayPropertyManager >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTCOMPLEXARRAYPROPERTYMANAGER_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtComplexEditFactory >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTCOMPLEXEDITFACTORY_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtComplexPropertyManager >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTCOMPLEXPROPERTYMANAGER_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtCursorEditorFactory >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTCURSOREDITORFACTORY_IDX]); }
@@ -176,7 +174,7 @@ template<> inline PyTypeObject* SbkType< ::QtFlagPropertyManager >() { return re
 template<> inline PyTypeObject* SbkType< ::QtFontEditorFactory >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTFONTEDITORFACTORY_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtFontPropertyManager >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTFONTPROPERTYMANAGER_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtGroupBoxPropertyBrowser >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTGROUPBOXPROPERTYBROWSER_IDX]); }
-template<> inline PyTypeObject* SbkType< ::QtGroupEditFactory >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTGROUPEDITFACTORY_IDX]); }
+template<> inline PyTypeObject* SbkType< ::QtGroupEditorFactory >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTGROUPEDITORFACTORY_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtGroupPropertyManager >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTGROUPPROPERTYMANAGER_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtIntEditFactory >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTINTEDITFACTORY_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtIntPropertyManager >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTINTPROPERTYMANAGER_IDX]); }
@@ -196,6 +194,8 @@ template<> inline PyTypeObject* SbkType< ::QtSizePropertyManager >() { return re
 template<> inline PyTypeObject* SbkType< ::QtSliderFactory >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTSLIDERFACTORY_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtSpinBoxFactory >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTSPINBOXFACTORY_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtStringPropertyManager >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTSTRINGPROPERTYMANAGER_IDX]); }
+template<> inline PyTypeObject* SbkType< ::QtTFTensorEditFactory >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTTFTENSOREDITFACTORY_IDX]); }
+template<> inline PyTypeObject* SbkType< ::QtTFTensorPropertyManager >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTTFTENSORPROPERTYMANAGER_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtTimeEditFactory >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTTIMEEDITFACTORY_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtTimePropertyManager >() { return reinterpret_cast<PyTypeObject*>(SbkqtpropertybrowserTypes[SBK_QTTIMEPROPERTYMANAGER_IDX]); }
 template<> inline PyTypeObject* SbkType< ::QtTreePropertyBrowser::ResizeMode >() { return SbkqtpropertybrowserTypes[SBK_QTTREEPROPERTYBROWSER_RESIZEMODE_IDX]; }

@@ -16,7 +16,7 @@
 #include "qtpropertybrowser_python.h"
 
 // main header
-#include "qtgroupeditfactory_wrapper.h"
+#include "qtgroupeditorfactory_wrapper.h"
 
 // inner classes
 
@@ -55,15 +55,15 @@ static const char *typeNameOf(const T &t)
 
 // Native ---------------------------------------------------------
 
-void QtGroupEditFactoryWrapper::pysideInitQtMetaTypes()
+void QtGroupEditorFactoryWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtGroupEditFactoryWrapper::QtGroupEditFactoryWrapper(QObject * parent) : QtGroupEditFactory(parent) {
+QtGroupEditorFactoryWrapper::QtGroupEditorFactoryWrapper(QObject * parent) : QtGroupEditorFactory(parent) {
     // ... middle
 }
 
-void QtGroupEditFactoryWrapper::connectPropertyManager(QtAbstractPropertyManager * manager)
+void QtGroupEditorFactoryWrapper::connectPropertyManager(QtAbstractPropertyManager * manager)
 {
     Shiboken::GilState gil;
     if (PyErr_Occurred())
@@ -71,7 +71,7 @@ void QtGroupEditFactoryWrapper::connectPropertyManager(QtAbstractPropertyManager
     Shiboken::AutoDecRef pyOverride(Shiboken::BindingManager::instance().getOverride(this, "connectPropertyManager"));
     if (pyOverride.isNull()) {
         gil.release();
-        this->::QtGroupEditFactory::connectPropertyManager(manager);
+        this->::QtGroupEditorFactory::connectPropertyManager(manager);
         return;
     }
 
@@ -87,7 +87,7 @@ void QtGroupEditFactoryWrapper::connectPropertyManager(QtAbstractPropertyManager
     }
 }
 
-QWidget * QtGroupEditFactoryWrapper::createAttributeEditor(QtAbstractPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute)
+QWidget * QtGroupEditorFactoryWrapper::createAttributeEditor(QtAbstractPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute)
 {
     Shiboken::GilState gil;
     if (PyErr_Occurred())
@@ -95,7 +95,7 @@ QWidget * QtGroupEditFactoryWrapper::createAttributeEditor(QtAbstractPropertyMan
     Shiboken::AutoDecRef pyOverride(Shiboken::BindingManager::instance().getOverride(this, "createAttributeEditor"));
     if (pyOverride.isNull()) {
         gil.release();
-        return this->::QtGroupEditFactory::createAttributeEditor(manager, property, parent, attribute);
+        return this->::QtGroupEditorFactory::createAttributeEditor(manager, property, parent, attribute);
     }
 
     Shiboken::AutoDecRef pyArgs(Py_BuildValue("(NNNN)",
@@ -114,7 +114,7 @@ QWidget * QtGroupEditFactoryWrapper::createAttributeEditor(QtAbstractPropertyMan
     // Check return type
     PythonToCppFunc pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), pyResult);
     if (!pythonToCpp) {
-        Shiboken::warning(PyExc_RuntimeWarning, 2, "Invalid return value in function %s, expected %s, got %s.", "QtGroupEditFactory.createAttributeEditor", reinterpret_cast<PyTypeObject *>(Shiboken::SbkType< QWidget >())->tp_name, Py_TYPE(pyResult)->tp_name);
+        Shiboken::warning(PyExc_RuntimeWarning, 2, "Invalid return value in function %s, expected %s, got %s.", "QtGroupEditorFactory.createAttributeEditor", reinterpret_cast<PyTypeObject *>(Shiboken::SbkType< QWidget >())->tp_name, Py_TYPE(pyResult)->tp_name);
         return nullptr;
     }
     ::QWidget* cppResult;
@@ -122,7 +122,7 @@ QWidget * QtGroupEditFactoryWrapper::createAttributeEditor(QtAbstractPropertyMan
     return cppResult;
 }
 
-QWidget * QtGroupEditFactoryWrapper::createEditor(QtAbstractPropertyManager * manager, QtProperty * property, QWidget * parent)
+QWidget * QtGroupEditorFactoryWrapper::createEditor(QtAbstractPropertyManager * manager, QtProperty * property, QWidget * parent)
 {
     Shiboken::GilState gil;
     if (PyErr_Occurred())
@@ -130,7 +130,7 @@ QWidget * QtGroupEditFactoryWrapper::createEditor(QtAbstractPropertyManager * ma
     Shiboken::AutoDecRef pyOverride(Shiboken::BindingManager::instance().getOverride(this, "createEditor"));
     if (pyOverride.isNull()) {
         gil.release();
-        return this->::QtGroupEditFactory::createEditor(manager, property, parent);
+        return this->::QtGroupEditorFactory::createEditor(manager, property, parent);
     }
 
     Shiboken::AutoDecRef pyArgs(Py_BuildValue("(NNN)",
@@ -148,7 +148,7 @@ QWidget * QtGroupEditFactoryWrapper::createEditor(QtAbstractPropertyManager * ma
     // Check return type
     PythonToCppFunc pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), pyResult);
     if (!pythonToCpp) {
-        Shiboken::warning(PyExc_RuntimeWarning, 2, "Invalid return value in function %s, expected %s, got %s.", "QtGroupEditFactory.createEditor", reinterpret_cast<PyTypeObject *>(Shiboken::SbkType< QWidget >())->tp_name, Py_TYPE(pyResult)->tp_name);
+        Shiboken::warning(PyExc_RuntimeWarning, 2, "Invalid return value in function %s, expected %s, got %s.", "QtGroupEditorFactory.createEditor", reinterpret_cast<PyTypeObject *>(Shiboken::SbkType< QWidget >())->tp_name, Py_TYPE(pyResult)->tp_name);
         return nullptr;
     }
     ::QWidget* cppResult;
@@ -156,7 +156,7 @@ QWidget * QtGroupEditFactoryWrapper::createEditor(QtAbstractPropertyManager * ma
     return cppResult;
 }
 
-void QtGroupEditFactoryWrapper::disconnectPropertyManager(QtAbstractPropertyManager * manager)
+void QtGroupEditorFactoryWrapper::disconnectPropertyManager(QtAbstractPropertyManager * manager)
 {
     Shiboken::GilState gil;
     if (PyErr_Occurred())
@@ -164,7 +164,7 @@ void QtGroupEditFactoryWrapper::disconnectPropertyManager(QtAbstractPropertyMana
     Shiboken::AutoDecRef pyOverride(Shiboken::BindingManager::instance().getOverride(this, "disconnectPropertyManager"));
     if (pyOverride.isNull()) {
         gil.release();
-        this->::QtGroupEditFactory::disconnectPropertyManager(manager);
+        this->::QtGroupEditorFactory::disconnectPropertyManager(manager);
         return;
     }
 
@@ -180,7 +180,7 @@ void QtGroupEditFactoryWrapper::disconnectPropertyManager(QtAbstractPropertyMana
     }
 }
 
-QtGroupEditFactoryWrapper::~QtGroupEditFactoryWrapper()
+QtGroupEditorFactoryWrapper::~QtGroupEditorFactoryWrapper()
 {
     SbkObject* wrapper = Shiboken::BindingManager::instance().retrieveWrapper(this);
     Shiboken::Object::destroy(wrapper, this);
@@ -190,13 +190,13 @@ QtGroupEditFactoryWrapper::~QtGroupEditFactoryWrapper()
 
 extern "C" {
 static int
-Sbk_QtGroupEditFactory_Init(PyObject* self, PyObject* args, PyObject* kwds)
+Sbk_QtGroupEditorFactory_Init(PyObject* self, PyObject* args, PyObject* kwds)
 {
     SbkObject* sbkSelf = reinterpret_cast<SbkObject*>(self);
-    if (Shiboken::Object::isUserType(self) && !Shiboken::ObjectType::canCallConstructor(self->ob_type, Shiboken::SbkType< ::QtGroupEditFactory >()))
+    if (Shiboken::Object::isUserType(self) && !Shiboken::ObjectType::canCallConstructor(self->ob_type, Shiboken::SbkType< ::QtGroupEditorFactory >()))
         return -1;
 
-    ::QtGroupEditFactoryWrapper* cptr{};
+    ::QtGroupEditorFactoryWrapper* cptr{};
     int overloadId = -1;
     PythonToCppFunc pythonToCpp[] = { nullptr };
     SBK_UNUSED(pythonToCpp)
@@ -206,36 +206,36 @@ Sbk_QtGroupEditFactory_Init(PyObject* self, PyObject* args, PyObject* kwds)
 
     // invalid argument lengths
     if (numArgs + numNamedArgs > 1) {
-        PyErr_SetString(PyExc_TypeError, "qtpropertybrowser.QtGroupEditFactory(): too many arguments");
+        PyErr_SetString(PyExc_TypeError, "qtpropertybrowser.QtGroupEditorFactory(): too many arguments");
         return -1;
     }
 
-    if (!PyArg_ParseTuple(args, "|O:QtGroupEditFactory", &(pyArgs[0])))
+    if (!PyArg_ParseTuple(args, "|O:QtGroupEditorFactory", &(pyArgs[0])))
         return -1;
 
 
     // Overloaded function decisor
-    // 0: QtGroupEditFactory::QtGroupEditFactory(QObject*)
+    // 0: QtGroupEditorFactory::QtGroupEditorFactory(QObject*)
     if (numArgs == 0) {
-        overloadId = 0; // QtGroupEditFactory(QObject*)
+        overloadId = 0; // QtGroupEditorFactory(QObject*)
     } else if ((pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtCoreTypes[SBK_QOBJECT_IDX]), (pyArgs[0])))) {
-        overloadId = 0; // QtGroupEditFactory(QObject*)
+        overloadId = 0; // QtGroupEditorFactory(QObject*)
     }
 
     // Function signature not found.
-    if (overloadId == -1) goto Sbk_QtGroupEditFactory_Init_TypeError;
+    if (overloadId == -1) goto Sbk_QtGroupEditorFactory_Init_TypeError;
 
     // Call function/method
     {
         if (kwds) {
             PyObject* value = PyDict_GetItemString(kwds, "parent");
             if (value && pyArgs[0]) {
-                PyErr_SetString(PyExc_TypeError, "qtpropertybrowser.QtGroupEditFactory(): got multiple values for keyword argument 'parent'.");
+                PyErr_SetString(PyExc_TypeError, "qtpropertybrowser.QtGroupEditorFactory(): got multiple values for keyword argument 'parent'.");
                 return -1;
             } else if (value) {
                 pyArgs[0] = value;
                 if (!(pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtCoreTypes[SBK_QOBJECT_IDX]), (pyArgs[0]))))
-                    goto Sbk_QtGroupEditFactory_Init_TypeError;
+                    goto Sbk_QtGroupEditorFactory_Init_TypeError;
             }
         }
         if (!Shiboken::Object::isValid(pyArgs[0]))
@@ -244,19 +244,19 @@ Sbk_QtGroupEditFactory_Init(PyObject* self, PyObject* args, PyObject* kwds)
         if (pythonToCpp[0]) pythonToCpp[0](pyArgs[0], &cppArg0);
 
         if (!PyErr_Occurred()) {
-            // QtGroupEditFactory(QObject*)
+            // QtGroupEditorFactory(QObject*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            cptr = new ::QtGroupEditFactoryWrapper(cppArg0);
+            cptr = new ::QtGroupEditorFactoryWrapper(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             Shiboken::Object::setParent(pyArgs[0], self);
         }
     }
 
-    if (PyErr_Occurred() || !Shiboken::Object::setCppPointer(sbkSelf, Shiboken::SbkType< ::QtGroupEditFactory >(), cptr)) {
+    if (PyErr_Occurred() || !Shiboken::Object::setCppPointer(sbkSelf, Shiboken::SbkType< ::QtGroupEditorFactory >(), cptr)) {
         delete cptr;
         return -1;
     }
-    if (!cptr) goto Sbk_QtGroupEditFactory_Init_TypeError;
+    if (!cptr) goto Sbk_QtGroupEditorFactory_Init_TypeError;
 
     Shiboken::Object::setValidCpp(sbkSelf, true);
     Shiboken::Object::setHasCppWrapper(sbkSelf, true);
@@ -268,30 +268,30 @@ Sbk_QtGroupEditFactory_Init(PyObject* self, PyObject* args, PyObject* kwds)
 
     return 1;
 
-    Sbk_QtGroupEditFactory_Init_TypeError:
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtGroupEditFactory");
+    Sbk_QtGroupEditorFactory_Init_TypeError:
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtGroupEditorFactory");
         return -1;
 }
 
-static PyObject* Sbk_QtGroupEditFactoryFunc_connectPropertyManager(PyObject* self, PyObject* pyArg)
+static PyObject* Sbk_QtGroupEditorFactoryFunc_connectPropertyManager(PyObject* self, PyObject* pyArg)
 {
-    QtGroupEditFactoryWrapper* cppSelf = nullptr;
+    QtGroupEditorFactoryWrapper* cppSelf = nullptr;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
         return {};
-    cppSelf = static_cast<QtGroupEditFactoryWrapper *>(reinterpret_cast< ::QtGroupEditFactory *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTGROUPEDITFACTORY_IDX], reinterpret_cast<SbkObject *>(self))));
+    cppSelf = static_cast<QtGroupEditorFactoryWrapper *>(reinterpret_cast< ::QtGroupEditorFactory *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTGROUPEDITORFACTORY_IDX], reinterpret_cast<SbkObject *>(self))));
     int overloadId = -1;
     PythonToCppFunc pythonToCpp{};
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtGroupEditFactory::connectPropertyManager(QtAbstractPropertyManager*)
+    // 0: QtGroupEditorFactory::connectPropertyManager(QtAbstractPropertyManager*)
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]), (pyArg)))) {
         overloadId = 0; // connectPropertyManager(QtAbstractPropertyManager*)
     }
 
     // Function signature not found.
-    if (overloadId == -1) goto Sbk_QtGroupEditFactoryFunc_connectPropertyManager_TypeError;
+    if (overloadId == -1) goto Sbk_QtGroupEditorFactoryFunc_connectPropertyManager_TypeError;
 
     // Call function/method
     {
@@ -303,7 +303,7 @@ static PyObject* Sbk_QtGroupEditFactoryFunc_connectPropertyManager(PyObject* sel
         if (!PyErr_Occurred()) {
             // connectPropertyManager(QtAbstractPropertyManager*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtGroupEditFactoryWrapper*) cppSelf)->QtGroupEditFactoryWrapper::connectPropertyManager_protected(cppArg0);
+            ((::QtGroupEditorFactoryWrapper*) cppSelf)->QtGroupEditorFactoryWrapper::connectPropertyManager_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -313,18 +313,18 @@ static PyObject* Sbk_QtGroupEditFactoryFunc_connectPropertyManager(PyObject* sel
     }
     Py_RETURN_NONE;
 
-    Sbk_QtGroupEditFactoryFunc_connectPropertyManager_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtGroupEditFactory.connectPropertyManager");
+    Sbk_QtGroupEditorFactoryFunc_connectPropertyManager_TypeError:
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtGroupEditorFactory.connectPropertyManager");
         return {};
 }
 
-static PyObject* Sbk_QtGroupEditFactoryFunc_createAttributeEditor(PyObject* self, PyObject* args)
+static PyObject* Sbk_QtGroupEditorFactoryFunc_createAttributeEditor(PyObject* self, PyObject* args)
 {
-    QtGroupEditFactoryWrapper* cppSelf = nullptr;
+    QtGroupEditorFactoryWrapper* cppSelf = nullptr;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
         return {};
-    cppSelf = static_cast<QtGroupEditFactoryWrapper *>(reinterpret_cast< ::QtGroupEditFactory *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTGROUPEDITFACTORY_IDX], reinterpret_cast<SbkObject *>(self))));
+    cppSelf = static_cast<QtGroupEditorFactoryWrapper *>(reinterpret_cast< ::QtGroupEditorFactory *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTGROUPEDITORFACTORY_IDX], reinterpret_cast<SbkObject *>(self))));
     PyObject* pyResult{};
     int overloadId = -1;
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr, nullptr, nullptr };
@@ -340,7 +340,7 @@ static PyObject* Sbk_QtGroupEditFactoryFunc_createAttributeEditor(PyObject* self
 
 
     // Overloaded function decisor
-    // 0: QtGroupEditFactory::createAttributeEditor(QtAbstractPropertyManager*,QtProperty*,QWidget*,Attribute)
+    // 0: QtGroupEditorFactory::createAttributeEditor(QtAbstractPropertyManager*,QtProperty*,QWidget*,Attribute)
     if (numArgs == 4
         && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]), (pyArgs[0])))
         && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[1])))
@@ -350,7 +350,7 @@ static PyObject* Sbk_QtGroupEditFactoryFunc_createAttributeEditor(PyObject* self
     }
 
     // Function signature not found.
-    if (overloadId == -1) goto Sbk_QtGroupEditFactoryFunc_createAttributeEditor_TypeError;
+    if (overloadId == -1) goto Sbk_QtGroupEditorFactoryFunc_createAttributeEditor_TypeError;
 
     // Call function/method
     {
@@ -372,7 +372,7 @@ static PyObject* Sbk_QtGroupEditFactoryFunc_createAttributeEditor(PyObject* self
         if (!PyErr_Occurred()) {
             // createAttributeEditor(QtAbstractPropertyManager*,QtProperty*,QWidget*,Attribute)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QWidget * cppResult = ((::QtGroupEditFactoryWrapper*) cppSelf)->QtGroupEditFactoryWrapper::createAttributeEditor_protected(cppArg0, cppArg1, cppArg2, cppArg3);
+            QWidget * cppResult = ((::QtGroupEditorFactoryWrapper*) cppSelf)->QtGroupEditorFactoryWrapper::createAttributeEditor_protected(cppArg0, cppArg1, cppArg2, cppArg3);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), cppResult);
             Shiboken::Object::setParent(self, pyResult);
@@ -385,18 +385,18 @@ static PyObject* Sbk_QtGroupEditFactoryFunc_createAttributeEditor(PyObject* self
     }
     return pyResult;
 
-    Sbk_QtGroupEditFactoryFunc_createAttributeEditor_TypeError:
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtGroupEditFactory.createAttributeEditor");
+    Sbk_QtGroupEditorFactoryFunc_createAttributeEditor_TypeError:
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtGroupEditorFactory.createAttributeEditor");
         return {};
 }
 
-static PyObject* Sbk_QtGroupEditFactoryFunc_createEditor(PyObject* self, PyObject* args)
+static PyObject* Sbk_QtGroupEditorFactoryFunc_createEditor(PyObject* self, PyObject* args)
 {
-    QtGroupEditFactoryWrapper* cppSelf = nullptr;
+    QtGroupEditorFactoryWrapper* cppSelf = nullptr;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
         return {};
-    cppSelf = static_cast<QtGroupEditFactoryWrapper *>(reinterpret_cast< ::QtGroupEditFactory *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTGROUPEDITFACTORY_IDX], reinterpret_cast<SbkObject *>(self))));
+    cppSelf = static_cast<QtGroupEditorFactoryWrapper *>(reinterpret_cast< ::QtGroupEditorFactory *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTGROUPEDITORFACTORY_IDX], reinterpret_cast<SbkObject *>(self))));
     PyObject* pyResult{};
     int overloadId = -1;
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr, nullptr };
@@ -412,7 +412,7 @@ static PyObject* Sbk_QtGroupEditFactoryFunc_createEditor(PyObject* self, PyObjec
 
 
     // Overloaded function decisor
-    // 0: QtGroupEditFactory::createEditor(QtAbstractPropertyManager*,QtProperty*,QWidget*)
+    // 0: QtGroupEditorFactory::createEditor(QtAbstractPropertyManager*,QtProperty*,QWidget*)
     if (numArgs == 3
         && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]), (pyArgs[0])))
         && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[1])))
@@ -421,7 +421,7 @@ static PyObject* Sbk_QtGroupEditFactoryFunc_createEditor(PyObject* self, PyObjec
     }
 
     // Function signature not found.
-    if (overloadId == -1) goto Sbk_QtGroupEditFactoryFunc_createEditor_TypeError;
+    if (overloadId == -1) goto Sbk_QtGroupEditorFactoryFunc_createEditor_TypeError;
 
     // Call function/method
     {
@@ -441,7 +441,7 @@ static PyObject* Sbk_QtGroupEditFactoryFunc_createEditor(PyObject* self, PyObjec
         if (!PyErr_Occurred()) {
             // createEditor(QtAbstractPropertyManager*,QtProperty*,QWidget*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QWidget * cppResult = ((::QtGroupEditFactoryWrapper*) cppSelf)->QtGroupEditFactoryWrapper::createEditor_protected(cppArg0, cppArg1, cppArg2);
+            QWidget * cppResult = ((::QtGroupEditorFactoryWrapper*) cppSelf)->QtGroupEditorFactoryWrapper::createEditor_protected(cppArg0, cppArg1, cppArg2);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), cppResult);
             Shiboken::Object::setParent(self, pyResult);
@@ -454,30 +454,30 @@ static PyObject* Sbk_QtGroupEditFactoryFunc_createEditor(PyObject* self, PyObjec
     }
     return pyResult;
 
-    Sbk_QtGroupEditFactoryFunc_createEditor_TypeError:
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtGroupEditFactory.createEditor");
+    Sbk_QtGroupEditorFactoryFunc_createEditor_TypeError:
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtGroupEditorFactory.createEditor");
         return {};
 }
 
-static PyObject* Sbk_QtGroupEditFactoryFunc_disconnectPropertyManager(PyObject* self, PyObject* pyArg)
+static PyObject* Sbk_QtGroupEditorFactoryFunc_disconnectPropertyManager(PyObject* self, PyObject* pyArg)
 {
-    QtGroupEditFactoryWrapper* cppSelf = nullptr;
+    QtGroupEditorFactoryWrapper* cppSelf = nullptr;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
         return {};
-    cppSelf = static_cast<QtGroupEditFactoryWrapper *>(reinterpret_cast< ::QtGroupEditFactory *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTGROUPEDITFACTORY_IDX], reinterpret_cast<SbkObject *>(self))));
+    cppSelf = static_cast<QtGroupEditorFactoryWrapper *>(reinterpret_cast< ::QtGroupEditorFactory *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTGROUPEDITORFACTORY_IDX], reinterpret_cast<SbkObject *>(self))));
     int overloadId = -1;
     PythonToCppFunc pythonToCpp{};
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtGroupEditFactory::disconnectPropertyManager(QtAbstractPropertyManager*)
+    // 0: QtGroupEditorFactory::disconnectPropertyManager(QtAbstractPropertyManager*)
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]), (pyArg)))) {
         overloadId = 0; // disconnectPropertyManager(QtAbstractPropertyManager*)
     }
 
     // Function signature not found.
-    if (overloadId == -1) goto Sbk_QtGroupEditFactoryFunc_disconnectPropertyManager_TypeError;
+    if (overloadId == -1) goto Sbk_QtGroupEditorFactoryFunc_disconnectPropertyManager_TypeError;
 
     // Call function/method
     {
@@ -489,7 +489,7 @@ static PyObject* Sbk_QtGroupEditFactoryFunc_disconnectPropertyManager(PyObject* 
         if (!PyErr_Occurred()) {
             // disconnectPropertyManager(QtAbstractPropertyManager*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtGroupEditFactoryWrapper*) cppSelf)->QtGroupEditFactoryWrapper::disconnectPropertyManager_protected(cppArg0);
+            ((::QtGroupEditorFactoryWrapper*) cppSelf)->QtGroupEditorFactoryWrapper::disconnectPropertyManager_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -499,39 +499,39 @@ static PyObject* Sbk_QtGroupEditFactoryFunc_disconnectPropertyManager(PyObject* 
     }
     Py_RETURN_NONE;
 
-    Sbk_QtGroupEditFactoryFunc_disconnectPropertyManager_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtGroupEditFactory.disconnectPropertyManager");
+    Sbk_QtGroupEditorFactoryFunc_disconnectPropertyManager_TypeError:
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtGroupEditorFactory.disconnectPropertyManager");
         return {};
 }
 
-static PyMethodDef Sbk_QtGroupEditFactory_methods[] = {
-    {"connectPropertyManager", (PyCFunction)Sbk_QtGroupEditFactoryFunc_connectPropertyManager, METH_O},
-    {"createAttributeEditor", (PyCFunction)Sbk_QtGroupEditFactoryFunc_createAttributeEditor, METH_VARARGS},
-    {"createEditor", (PyCFunction)Sbk_QtGroupEditFactoryFunc_createEditor, METH_VARARGS},
-    {"disconnectPropertyManager", (PyCFunction)Sbk_QtGroupEditFactoryFunc_disconnectPropertyManager, METH_O},
+static PyMethodDef Sbk_QtGroupEditorFactory_methods[] = {
+    {"connectPropertyManager", (PyCFunction)Sbk_QtGroupEditorFactoryFunc_connectPropertyManager, METH_O},
+    {"createAttributeEditor", (PyCFunction)Sbk_QtGroupEditorFactoryFunc_createAttributeEditor, METH_VARARGS},
+    {"createEditor", (PyCFunction)Sbk_QtGroupEditorFactoryFunc_createEditor, METH_VARARGS},
+    {"disconnectPropertyManager", (PyCFunction)Sbk_QtGroupEditorFactoryFunc_disconnectPropertyManager, METH_O},
 
     {nullptr, nullptr} // Sentinel
 };
 
 } // extern "C"
 
-static int Sbk_QtGroupEditFactory_traverse(PyObject* self, visitproc visit, void* arg)
+static int Sbk_QtGroupEditorFactory_traverse(PyObject* self, visitproc visit, void* arg)
 {
     return reinterpret_cast<PyTypeObject *>(SbkObject_TypeF())->tp_traverse(self, visit, arg);
 }
-static int Sbk_QtGroupEditFactory_clear(PyObject* self)
+static int Sbk_QtGroupEditorFactory_clear(PyObject* self)
 {
     return reinterpret_cast<PyTypeObject *>(SbkObject_TypeF())->tp_clear(self);
 }
 // Class Definition -----------------------------------------------
 extern "C" {
-static SbkObjectType *_Sbk_QtGroupEditFactory_Type = nullptr;
-static SbkObjectType *Sbk_QtGroupEditFactory_TypeF(void)
+static SbkObjectType *_Sbk_QtGroupEditorFactory_Type = nullptr;
+static SbkObjectType *Sbk_QtGroupEditorFactory_TypeF(void)
 {
-    return _Sbk_QtGroupEditFactory_Type;
+    return _Sbk_QtGroupEditorFactory_Type;
 }
 
-static PyType_Slot Sbk_QtGroupEditFactory_slots[] = {
+static PyType_Slot Sbk_QtGroupEditorFactory_slots[] = {
     {Py_tp_base,        nullptr}, // inserted by introduceWrapperType
     {Py_tp_dealloc,     reinterpret_cast<void*>(&SbkDeallocWrapper)},
     {Py_tp_repr,        nullptr},
@@ -540,23 +540,23 @@ static PyType_Slot Sbk_QtGroupEditFactory_slots[] = {
     {Py_tp_str,         nullptr},
     {Py_tp_getattro,    nullptr},
     {Py_tp_setattro,    nullptr},
-    {Py_tp_traverse,    reinterpret_cast<void*>(Sbk_QtGroupEditFactory_traverse)},
-    {Py_tp_clear,       reinterpret_cast<void*>(Sbk_QtGroupEditFactory_clear)},
+    {Py_tp_traverse,    reinterpret_cast<void*>(Sbk_QtGroupEditorFactory_traverse)},
+    {Py_tp_clear,       reinterpret_cast<void*>(Sbk_QtGroupEditorFactory_clear)},
     {Py_tp_richcompare, nullptr},
     {Py_tp_iter,        nullptr},
     {Py_tp_iternext,    nullptr},
-    {Py_tp_methods,     reinterpret_cast<void*>(Sbk_QtGroupEditFactory_methods)},
+    {Py_tp_methods,     reinterpret_cast<void*>(Sbk_QtGroupEditorFactory_methods)},
     {Py_tp_getset,      nullptr},
-    {Py_tp_init,        reinterpret_cast<void*>(Sbk_QtGroupEditFactory_Init)},
+    {Py_tp_init,        reinterpret_cast<void*>(Sbk_QtGroupEditorFactory_Init)},
     {Py_tp_new,         reinterpret_cast<void*>(SbkObjectTpNew)},
     {0, nullptr}
 };
-static PyType_Spec Sbk_QtGroupEditFactory_spec = {
-    "qtpropertybrowser.QtGroupEditFactory",
+static PyType_Spec Sbk_QtGroupEditorFactory_spec = {
+    "qtpropertybrowser.QtGroupEditorFactory",
     sizeof(SbkObject),
     0,
     Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_GC,
-    Sbk_QtGroupEditFactory_slots
+    Sbk_QtGroupEditorFactory_slots
 };
 
 } //extern "C"
@@ -565,33 +565,33 @@ static PyType_Spec Sbk_QtGroupEditFactory_spec = {
 // Type conversion functions.
 
 // Python to C++ pointer conversion - returns the C++ object of the Python wrapper (keeps object identity).
-static void QtGroupEditFactory_PythonToCpp_QtGroupEditFactory_PTR(PyObject* pyIn, void* cppOut) {
-    Shiboken::Conversions::pythonToCppPointer(Sbk_QtGroupEditFactory_TypeF(), pyIn, cppOut);
+static void QtGroupEditorFactory_PythonToCpp_QtGroupEditorFactory_PTR(PyObject* pyIn, void* cppOut) {
+    Shiboken::Conversions::pythonToCppPointer(Sbk_QtGroupEditorFactory_TypeF(), pyIn, cppOut);
 }
-static PythonToCppFunc is_QtGroupEditFactory_PythonToCpp_QtGroupEditFactory_PTR_Convertible(PyObject* pyIn) {
+static PythonToCppFunc is_QtGroupEditorFactory_PythonToCpp_QtGroupEditorFactory_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtGroupEditFactory_TypeF()))
-        return QtGroupEditFactory_PythonToCpp_QtGroupEditFactory_PTR;
+    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtGroupEditorFactory_TypeF()))
+        return QtGroupEditorFactory_PythonToCpp_QtGroupEditorFactory_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
-static PyObject* QtGroupEditFactory_PTR_CppToPython_QtGroupEditFactory(const void* cppIn) {
+static PyObject* QtGroupEditorFactory_PTR_CppToPython_QtGroupEditorFactory(const void* cppIn) {
     PyObject* pyOut = (PyObject*)Shiboken::BindingManager::instance().retrieveWrapper(cppIn);
     if (pyOut) {
         Py_INCREF(pyOut);
         return pyOut;
     }
     bool changedTypeName = false;
-    auto tCppIn = reinterpret_cast<const ::QtGroupEditFactory *>(cppIn);
+    auto tCppIn = reinterpret_cast<const ::QtGroupEditorFactory *>(cppIn);
     const char *typeName = typeid(*tCppIn).name();
     auto sbkType = Shiboken::ObjectType::typeForTypeName(typeName);
     if (sbkType && Shiboken::ObjectType::hasSpecialCastFunction(sbkType)) {
         typeName = typeNameOf(tCppIn);
         changedTypeName = true;
      }
-    PyObject *result = Shiboken::Object::newObject(Sbk_QtGroupEditFactory_TypeF(), const_cast<void*>(cppIn), false, /* exactType */ changedTypeName, typeName);
+    PyObject *result = Shiboken::Object::newObject(Sbk_QtGroupEditorFactory_TypeF(), const_cast<void*>(cppIn), false, /* exactType */ changedTypeName, typeName);
     if (changedTypeName)
         delete [] typeName;
     return result;
@@ -599,43 +599,43 @@ static PyObject* QtGroupEditFactory_PTR_CppToPython_QtGroupEditFactory(const voi
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtGroupEditFactory_SignaturesString[] = ""
-    "qtpropertybrowser.QtGroupEditFactory(parent:PySide2.QtCore.QObject=0)\n"
-    "qtpropertybrowser.QtGroupEditFactory.connectPropertyManager(manager:qtpropertybrowser.QtAbstractPropertyManager)\n"
-    "qtpropertybrowser.QtGroupEditFactory.createAttributeEditor(manager:qtpropertybrowser.QtAbstractPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.Attribute)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtGroupEditFactory.createEditor(manager:qtpropertybrowser.QtAbstractPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtGroupEditFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtAbstractPropertyManager)\n"
+const char QtGroupEditorFactory_SignaturesString[] = ""
+    "qtpropertybrowser.QtGroupEditorFactory(parent:PySide2.QtCore.QObject=0)\n"
+    "qtpropertybrowser.QtGroupEditorFactory.connectPropertyManager(manager:qtpropertybrowser.QtAbstractPropertyManager)\n"
+    "qtpropertybrowser.QtGroupEditorFactory.createAttributeEditor(manager:qtpropertybrowser.QtAbstractPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.Attribute)->PySide2.QtWidgets.QWidget\n"
+    "qtpropertybrowser.QtGroupEditorFactory.createEditor(manager:qtpropertybrowser.QtAbstractPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
+    "qtpropertybrowser.QtGroupEditorFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtAbstractPropertyManager)\n"
 ;
 
-void init_QtGroupEditFactory(PyObject* module)
+void init_QtGroupEditorFactory(PyObject* module)
 {
-    _Sbk_QtGroupEditFactory_Type = Shiboken::ObjectType::introduceWrapperType(
+    _Sbk_QtGroupEditorFactory_Type = Shiboken::ObjectType::introduceWrapperType(
         module,
-        "QtGroupEditFactory",
-        "QtGroupEditFactory*",
-        &Sbk_QtGroupEditFactory_spec,
-        QtGroupEditFactory_SignaturesString,
-        &Shiboken::callCppDestructor< ::QtGroupEditFactory >,
+        "QtGroupEditorFactory",
+        "QtGroupEditorFactory*",
+        &Sbk_QtGroupEditorFactory_spec,
+        QtGroupEditorFactory_SignaturesString,
+        &Shiboken::callCppDestructor< ::QtGroupEditorFactory >,
         0,
         0,
         0    );
     
-    SbkqtpropertybrowserTypes[SBK_QTGROUPEDITFACTORY_IDX]
-        = reinterpret_cast<PyTypeObject*>(Sbk_QtGroupEditFactory_TypeF());
+    SbkqtpropertybrowserTypes[SBK_QTGROUPEDITORFACTORY_IDX]
+        = reinterpret_cast<PyTypeObject*>(Sbk_QtGroupEditorFactory_TypeF());
 
     // Register Converter
-    SbkConverter* converter = Shiboken::Conversions::createConverter(Sbk_QtGroupEditFactory_TypeF(),
-        QtGroupEditFactory_PythonToCpp_QtGroupEditFactory_PTR,
-        is_QtGroupEditFactory_PythonToCpp_QtGroupEditFactory_PTR_Convertible,
-        QtGroupEditFactory_PTR_CppToPython_QtGroupEditFactory);
+    SbkConverter* converter = Shiboken::Conversions::createConverter(Sbk_QtGroupEditorFactory_TypeF(),
+        QtGroupEditorFactory_PythonToCpp_QtGroupEditorFactory_PTR,
+        is_QtGroupEditorFactory_PythonToCpp_QtGroupEditorFactory_PTR_Convertible,
+        QtGroupEditorFactory_PTR_CppToPython_QtGroupEditorFactory);
 
-    Shiboken::Conversions::registerConverterName(converter, "QtGroupEditFactory");
-    Shiboken::Conversions::registerConverterName(converter, "QtGroupEditFactory*");
-    Shiboken::Conversions::registerConverterName(converter, "QtGroupEditFactory&");
-    Shiboken::Conversions::registerConverterName(converter, typeid(::QtGroupEditFactory).name());
-    Shiboken::Conversions::registerConverterName(converter, typeid(::QtGroupEditFactoryWrapper).name());
+    Shiboken::Conversions::registerConverterName(converter, "QtGroupEditorFactory");
+    Shiboken::Conversions::registerConverterName(converter, "QtGroupEditorFactory*");
+    Shiboken::Conversions::registerConverterName(converter, "QtGroupEditorFactory&");
+    Shiboken::Conversions::registerConverterName(converter, typeid(::QtGroupEditorFactory).name());
+    Shiboken::Conversions::registerConverterName(converter, typeid(::QtGroupEditorFactoryWrapper).name());
 
 
 
-    QtGroupEditFactoryWrapper::pysideInitQtMetaTypes();
+    QtGroupEditorFactoryWrapper::pysideInitQtMetaTypes();
 }
