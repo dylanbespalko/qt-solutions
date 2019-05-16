@@ -241,7 +241,7 @@ Sbk_QtIntEditFactory_Init(PyObject* self, PyObject* args, PyObject* kwds)
         }
         if (!Shiboken::Object::isValid(pyArgs[0]))
             return -1;
-        ::QObject* cppArg0 = 0;
+        ::QObject* cppArg0 = nullptr;
         if (pythonToCpp[0]) pythonToCpp[0](pyArgs[0], &cppArg0);
 
         if (!PyErr_Occurred()) {
@@ -601,7 +601,7 @@ static PyObject* QtIntEditFactory_PTR_CppToPython_QtIntEditFactory(const void* c
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
 const char QtIntEditFactory_SignaturesString[] = ""
-    "qtpropertybrowser.QtIntEditFactory(parent:PySide2.QtCore.QObject=0)\n"
+    "qtpropertybrowser.QtIntEditFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
     "qtpropertybrowser.QtIntEditFactory.connectPropertyManager(manager:qtpropertybrowser.QtIntPropertyManager)\n"
     "qtpropertybrowser.QtIntEditFactory.createAttributeEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.Attribute)->PySide2.QtWidgets.QWidget\n"
     "qtpropertybrowser.QtIntEditFactory.createEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"

@@ -196,16 +196,18 @@ class QIntEditPrivate
 public:
     QIntEditPrivate()
         : m_value(0),
+          m_minimum(lowest),
+          m_maximum(highest),
           m_precision(3),
           m_format(Format::LIN_DEG),
           m_scale(Scale::_),
-          m_readOnly(false) {}
+          m_readOnly(false),
+          m_edit(nullptr){}
 
     int m_value;
     double m_minimum;
     double m_maximum;
     int m_precision;
-
     Format m_format;
     Scale m_scale;
     bool m_readOnly;
@@ -862,7 +864,6 @@ QString QComplexEdit::num2str(const QComplex& val, const Scale scale, const Form
             sep = QString(QChar(0x2220));
             text2 = double2str(arg(scaled_val)*180/M_PI, precision);
             break;
-        case Format::LIN_DEG:
         default:
             scaled_val = val/pow(10, scale_);
             text1 = double2str(abs(scaled_val), precision);
@@ -1354,7 +1355,7 @@ bool QtKeySequenceEdit::eventFilter(QObject *o, QEvent *e)
                 actionString.remove(pos, actionString.length() - pos);
             action->setText(actionString);
         }
-        QAction *actionBefore = 0;
+        QAction *actionBefore = nullptr;
         if (actions.count() > 0)
             actionBefore = actions[0];
         QAction *clearAction = new QAction(tr("Clear Shortcut"), menu);

@@ -241,7 +241,7 @@ Sbk_QtColorEditorFactory_Init(PyObject* self, PyObject* args, PyObject* kwds)
         }
         if (!Shiboken::Object::isValid(pyArgs[0]))
             return -1;
-        ::QObject* cppArg0 = 0;
+        ::QObject* cppArg0 = nullptr;
         if (pythonToCpp[0]) pythonToCpp[0](pyArgs[0], &cppArg0);
 
         if (!PyErr_Occurred()) {
@@ -601,7 +601,7 @@ static PyObject* QtColorEditorFactory_PTR_CppToPython_QtColorEditorFactory(const
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
 const char QtColorEditorFactory_SignaturesString[] = ""
-    "qtpropertybrowser.QtColorEditorFactory(parent:PySide2.QtCore.QObject=0)\n"
+    "qtpropertybrowser.QtColorEditorFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
     "qtpropertybrowser.QtColorEditorFactory.connectPropertyManager(manager:qtpropertybrowser.QtColorPropertyManager)\n"
     "qtpropertybrowser.QtColorEditorFactory.createAttributeEditor(manager:qtpropertybrowser.QtColorPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.Attribute)->PySide2.QtWidgets.QWidget\n"
     "qtpropertybrowser.QtColorEditorFactory.createEditor(manager:qtpropertybrowser.QtColorPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"

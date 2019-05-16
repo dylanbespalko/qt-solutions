@@ -6,7 +6,7 @@
 class QtEnumEditorFactoryWrapper : public QtEnumEditorFactory
 {
 public:
-    QtEnumEditorFactoryWrapper(QObject * parent = 0);
+    QtEnumEditorFactoryWrapper(QObject * parent = nullptr);
     inline void connectPropertyManager_protected(QtEnumPropertyManager * manager) { QtEnumEditorFactory::connectPropertyManager(manager); }
     void connectPropertyManager(QtEnumPropertyManager * manager) override;
     inline QWidget * createAttributeEditor_protected(QtEnumPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) { return QtEnumEditorFactory::createAttributeEditor(manager, property, parent, Attribute(attribute)); }

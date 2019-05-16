@@ -1642,7 +1642,7 @@ Sbk_QtTreePropertyBrowser_Init(PyObject* self, PyObject* args, PyObject* kwds)
         }
         if (!Shiboken::Object::isValid(pyArgs[0]))
             return -1;
-        ::QWidget* cppArg0 = 0;
+        ::QWidget* cppArg0 = nullptr;
         if (pythonToCpp[0]) pythonToCpp[0](pyArgs[0], &cppArg0);
 
         if (!PyErr_Occurred()) {
@@ -3313,7 +3313,7 @@ static PyObject* QtTreePropertyBrowser_PTR_CppToPython_QtTreePropertyBrowser(con
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
 const char QtTreePropertyBrowser_SignaturesString[] = ""
-    "qtpropertybrowser.QtTreePropertyBrowser(parent:PySide2.QtWidgets.QWidget=0)\n"
+    "qtpropertybrowser.QtTreePropertyBrowser(parent:PySide2.QtWidgets.QWidget=nullptr)\n"
     "qtpropertybrowser.QtTreePropertyBrowser.alternatingRowColors()->bool\n"
     "qtpropertybrowser.QtTreePropertyBrowser.attribute1()->qtpropertybrowser.Attribute\n"
     "qtpropertybrowser.QtTreePropertyBrowser.attribute2()->qtpropertybrowser.Attribute\n"

@@ -847,7 +847,7 @@ Sbk_QtCharPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds)
         }
         if (!Shiboken::Object::isValid(pyArgs[0]))
             return -1;
-        ::QObject* cppArg0 = 0;
+        ::QObject* cppArg0 = nullptr;
         if (pythonToCpp[0]) pythonToCpp[0](pyArgs[0], &cppArg0);
 
         if (!PyErr_Occurred()) {
@@ -1275,7 +1275,7 @@ static PyObject* QtCharPropertyManager_PTR_CppToPython_QtCharPropertyManager(con
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
 const char QtCharPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtCharPropertyManager(parent:PySide2.QtCore.QObject=0)\n"
+    "qtpropertybrowser.QtCharPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
     "qtpropertybrowser.QtCharPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
     "qtpropertybrowser.QtCharPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
     "qtpropertybrowser.QtCharPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:QChar)\n"

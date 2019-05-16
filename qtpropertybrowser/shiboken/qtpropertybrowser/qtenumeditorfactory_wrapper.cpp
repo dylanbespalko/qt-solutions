@@ -241,7 +241,7 @@ Sbk_QtEnumEditorFactory_Init(PyObject* self, PyObject* args, PyObject* kwds)
         }
         if (!Shiboken::Object::isValid(pyArgs[0]))
             return -1;
-        ::QObject* cppArg0 = 0;
+        ::QObject* cppArg0 = nullptr;
         if (pythonToCpp[0]) pythonToCpp[0](pyArgs[0], &cppArg0);
 
         if (!PyErr_Occurred()) {
@@ -601,7 +601,7 @@ static PyObject* QtEnumEditorFactory_PTR_CppToPython_QtEnumEditorFactory(const v
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
 const char QtEnumEditorFactory_SignaturesString[] = ""
-    "qtpropertybrowser.QtEnumEditorFactory(parent:PySide2.QtCore.QObject=0)\n"
+    "qtpropertybrowser.QtEnumEditorFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
     "qtpropertybrowser.QtEnumEditorFactory.connectPropertyManager(manager:qtpropertybrowser.QtEnumPropertyManager)\n"
     "qtpropertybrowser.QtEnumEditorFactory.createAttributeEditor(manager:qtpropertybrowser.QtEnumPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.Attribute)->PySide2.QtWidgets.QWidget\n"
     "qtpropertybrowser.QtEnumEditorFactory.createEditor(manager:qtpropertybrowser.QtEnumPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"

@@ -6,7 +6,7 @@
 class QtTimeEditFactoryWrapper : public QtTimeEditFactory
 {
 public:
-    QtTimeEditFactoryWrapper(QObject * parent = 0);
+    QtTimeEditFactoryWrapper(QObject * parent = nullptr);
     inline void connectPropertyManager_protected(QtTimePropertyManager * manager) { QtTimeEditFactory::connectPropertyManager(manager); }
     void connectPropertyManager(QtTimePropertyManager * manager) override;
     inline QWidget * createAttributeEditor_protected(QtTimePropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) { return QtTimeEditFactory::createAttributeEditor(manager, property, parent, Attribute(attribute)); }

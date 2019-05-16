@@ -241,7 +241,7 @@ Sbk_QtFontEditorFactory_Init(PyObject* self, PyObject* args, PyObject* kwds)
         }
         if (!Shiboken::Object::isValid(pyArgs[0]))
             return -1;
-        ::QObject* cppArg0 = 0;
+        ::QObject* cppArg0 = nullptr;
         if (pythonToCpp[0]) pythonToCpp[0](pyArgs[0], &cppArg0);
 
         if (!PyErr_Occurred()) {
@@ -601,7 +601,7 @@ static PyObject* QtFontEditorFactory_PTR_CppToPython_QtFontEditorFactory(const v
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
 const char QtFontEditorFactory_SignaturesString[] = ""
-    "qtpropertybrowser.QtFontEditorFactory(parent:PySide2.QtCore.QObject=0)\n"
+    "qtpropertybrowser.QtFontEditorFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
     "qtpropertybrowser.QtFontEditorFactory.connectPropertyManager(manager:qtpropertybrowser.QtFontPropertyManager)\n"
     "qtpropertybrowser.QtFontEditorFactory.createAttributeEditor(manager:qtpropertybrowser.QtFontPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.Attribute)->PySide2.QtWidgets.QWidget\n"
     "qtpropertybrowser.QtFontEditorFactory.createEditor(manager:qtpropertybrowser.QtFontPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"

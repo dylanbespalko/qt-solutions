@@ -6,7 +6,7 @@
 class QtFontEditorFactoryWrapper : public QtFontEditorFactory
 {
 public:
-    QtFontEditorFactoryWrapper(QObject * parent = 0);
+    QtFontEditorFactoryWrapper(QObject * parent = nullptr);
     inline void connectPropertyManager_protected(QtFontPropertyManager * manager) { QtFontEditorFactory::connectPropertyManager(manager); }
     void connectPropertyManager(QtFontPropertyManager * manager) override;
     inline QWidget * createAttributeEditor_protected(QtFontPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) { return QtFontEditorFactory::createAttributeEditor(manager, property, parent, Attribute(attribute)); }

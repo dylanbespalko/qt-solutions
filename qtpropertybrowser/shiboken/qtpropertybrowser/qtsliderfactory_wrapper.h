@@ -6,7 +6,7 @@
 class QtSliderFactoryWrapper : public QtSliderFactory
 {
 public:
-    QtSliderFactoryWrapper(QObject * parent = 0);
+    QtSliderFactoryWrapper(QObject * parent = nullptr);
     inline void connectPropertyManager_protected(QtIntPropertyManager * manager) { QtSliderFactory::connectPropertyManager(manager); }
     void connectPropertyManager(QtIntPropertyManager * manager) override;
     inline QWidget * createAttributeEditor_protected(QtIntPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) { return QtSliderFactory::createAttributeEditor(manager, property, parent, Attribute(attribute)); }

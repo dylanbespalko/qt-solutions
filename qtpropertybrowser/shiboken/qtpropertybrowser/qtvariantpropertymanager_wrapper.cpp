@@ -1126,7 +1126,7 @@ Sbk_QtVariantPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds
         }
         if (!Shiboken::Object::isValid(pyArgs[0]))
             return -1;
-        ::QObject* cppArg0 = 0;
+        ::QObject* cppArg0 = nullptr;
         if (pythonToCpp[0]) pythonToCpp[0](pyArgs[0], &cppArg0);
 
         if (!PyErr_Occurred()) {
@@ -2289,7 +2289,7 @@ static PyObject* QtVariantPropertyManager_PTR_CppToPython_QtVariantPropertyManag
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
 const char QtVariantPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtVariantPropertyManager(parent:PySide2.QtCore.QObject=0)\n"
+    "qtpropertybrowser.QtVariantPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
     "1:qtpropertybrowser.QtVariantPropertyManager.addProperty(propertyType:int,name:QString=QString())->qtpropertybrowser.QtVariantProperty\n"
     "0:qtpropertybrowser.QtVariantPropertyManager.addProperty(name:QString=QString())->qtpropertybrowser.QtProperty\n"
     "qtpropertybrowser.QtVariantPropertyManager.attributeType(propertyType:int,attribute:QString)->int\n"

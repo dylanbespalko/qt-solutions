@@ -6,7 +6,7 @@
 class QtKeySequenceEditorFactoryWrapper : public QtKeySequenceEditorFactory
 {
 public:
-    QtKeySequenceEditorFactoryWrapper(QObject * parent = 0);
+    QtKeySequenceEditorFactoryWrapper(QObject * parent = nullptr);
     inline void connectPropertyManager_protected(QtKeySequencePropertyManager * manager) { QtKeySequenceEditorFactory::connectPropertyManager(manager); }
     void connectPropertyManager(QtKeySequencePropertyManager * manager) override;
     inline QWidget * createAttributeEditor_protected(QtKeySequencePropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) { return QtKeySequenceEditorFactory::createAttributeEditor(manager, property, parent, Attribute(attribute)); }

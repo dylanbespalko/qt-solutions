@@ -8,7 +8,7 @@ namespace PySide { class DynamicQMetaObject; }
 class QtFontPropertyManagerWrapper : public QtFontPropertyManager
 {
 public:
-    QtFontPropertyManagerWrapper(QObject * parent = 0);
+    QtFontPropertyManagerWrapper(QObject * parent = nullptr);
     inline QIcon checkIcon_protected(const QtProperty * property) const { return QtFontPropertyManager::checkIcon(property); }
     QIcon checkIcon(const QtProperty * property) const override;
     inline void childEvent_protected(QChildEvent * event) { QtFontPropertyManager::childEvent(event); }
@@ -71,7 +71,7 @@ public:
 class QtAbstractPropertyManagerWrapper : public QtAbstractPropertyManager
 {
 public:
-    QtAbstractPropertyManagerWrapper(QObject * parent = 0);
+    QtAbstractPropertyManagerWrapper(QObject * parent = nullptr);
     inline QIcon checkIcon_protected(const QtProperty * property) const { return QtAbstractPropertyManager::checkIcon(property); }
     QIcon checkIcon(const QtProperty * property) const override;
     inline void childEvent_protected(QChildEvent * event) { QtAbstractPropertyManager::childEvent(event); }

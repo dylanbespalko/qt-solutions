@@ -6,7 +6,7 @@
 class QtFileEditorFactoryWrapper : public QtFileEditorFactory
 {
 public:
-    QtFileEditorFactoryWrapper(QObject * parent = 0);
+    QtFileEditorFactoryWrapper(QObject * parent = nullptr);
     inline void connectPropertyManager_protected(QtFilePropertyManager * manager) { QtFileEditorFactory::connectPropertyManager(manager); }
     void connectPropertyManager(QtFilePropertyManager * manager) override;
     inline QWidget * createAttributeEditor_protected(QtFilePropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) { return QtFileEditorFactory::createAttributeEditor(manager, property, parent, Attribute(attribute)); }

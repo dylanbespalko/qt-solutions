@@ -241,7 +241,7 @@ Sbk_QtKeySequenceEditorFactory_Init(PyObject* self, PyObject* args, PyObject* kw
         }
         if (!Shiboken::Object::isValid(pyArgs[0]))
             return -1;
-        ::QObject* cppArg0 = 0;
+        ::QObject* cppArg0 = nullptr;
         if (pythonToCpp[0]) pythonToCpp[0](pyArgs[0], &cppArg0);
 
         if (!PyErr_Occurred()) {
@@ -601,7 +601,7 @@ static PyObject* QtKeySequenceEditorFactory_PTR_CppToPython_QtKeySequenceEditorF
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
 const char QtKeySequenceEditorFactory_SignaturesString[] = ""
-    "qtpropertybrowser.QtKeySequenceEditorFactory(parent:PySide2.QtCore.QObject=0)\n"
+    "qtpropertybrowser.QtKeySequenceEditorFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
     "qtpropertybrowser.QtKeySequenceEditorFactory.connectPropertyManager(manager:qtpropertybrowser.QtKeySequencePropertyManager)\n"
     "qtpropertybrowser.QtKeySequenceEditorFactory.createAttributeEditor(manager:qtpropertybrowser.QtKeySequencePropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.Attribute)->PySide2.QtWidgets.QWidget\n"
     "qtpropertybrowser.QtKeySequenceEditorFactory.createEditor(manager:qtpropertybrowser.QtKeySequencePropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"

@@ -131,7 +131,7 @@ class QT_QTPROPERTYBROWSER_EXPORT   QtAbstractPropertyManager : public QObject
     Q_OBJECT
 public:
 
-    explicit QtAbstractPropertyManager(QObject *parent = 0);
+    explicit QtAbstractPropertyManager(QObject *parent = nullptr);
     ~QtAbstractPropertyManager();
     void connect_signals() const{}
     void disconnect_signals() const{}
@@ -161,7 +161,7 @@ protected:
     virtual QString minimumText(const QtProperty *property) const{Q_UNUSED(property); return QString();}
     virtual QString maximumText(const QtProperty *property) const{Q_UNUSED(property); return QString();}
     virtual EchoMode echoMode(const QtProperty *) const;
-    virtual QBrush foreground(const QtProperty *property) const{return QBrush(QColor(Qt::black),Qt::SolidPattern);}
+    virtual QBrush foreground(const QtProperty *property) const{Q_UNUSED(property);return QBrush(QColor(Qt::black),Qt::SolidPattern);}
     virtual void initializeProperty(QtProperty *property) = 0;
     virtual void uninitializeProperty(QtProperty *property);
     virtual QtProperty *createProperty();
@@ -179,7 +179,7 @@ public:
     virtual QWidget *createEditor(QtProperty *property, QWidget *parent) = 0;
     virtual QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, Attribute atttribute) = 0;
 protected:
-    explicit QtAbstractEditorFactoryBase(QObject *parent = 0)
+    explicit QtAbstractEditorFactoryBase(QObject *parent = nullptr)
         : QObject(parent) {}
 
     virtual void breakConnection(QtAbstractPropertyManager *manager) = 0;
@@ -203,7 +203,7 @@ public:
                 return createEditor(manager, property, parent);
             }
         }
-        return 0;
+        return nullptr;
     }
     QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, Attribute attribute)
     {
@@ -214,7 +214,7 @@ public:
                 return createAttributeEditor(manager, property, parent, attribute);
             }
         }
-        return 0;
+        return nullptr;
     }
     void addPropertyManager(PropertyManager *manager)
     {
@@ -255,7 +255,7 @@ protected:
     virtual QWidget *createEditor(PropertyManager *manager, QtProperty *property,
                 QWidget *parent) = 0;
     virtual QWidget *createAttributeEditor(PropertyManager *manager, QtProperty *property,QWidget *parent, Attribute attribute)
-    {Q_UNUSED(manager);Q_UNUSED(property);Q_UNUSED(parent);Q_UNUSED(attribute);return 0;};
+    {Q_UNUSED(manager);Q_UNUSED(property);Q_UNUSED(parent);Q_UNUSED(attribute);return nullptr;}
     virtual void disconnectPropertyManager(PropertyManager *manager) = 0;
     void managerDestroyed(QObject *manager)
     {
@@ -308,7 +308,7 @@ class QT_QTPROPERTYBROWSER_EXPORT QtAbstractPropertyBrowser : public QWidget
 {
     Q_OBJECT
 public:
-    explicit QtAbstractPropertyBrowser(QWidget *parent = 0);
+    explicit QtAbstractPropertyBrowser(QWidget *parent = nullptr);
     ~QtAbstractPropertyBrowser();
 
     QList<QtProperty *> properties() const;

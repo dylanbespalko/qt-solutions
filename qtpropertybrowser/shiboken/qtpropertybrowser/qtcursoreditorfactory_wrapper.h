@@ -6,7 +6,7 @@
 class QtCursorEditorFactoryWrapper : public QtCursorEditorFactory
 {
 public:
-    QtCursorEditorFactoryWrapper(QObject * parent = 0);
+    QtCursorEditorFactoryWrapper(QObject * parent = nullptr);
     inline void connectPropertyManager_protected(QtCursorPropertyManager * manager) { QtCursorEditorFactory::connectPropertyManager(manager); }
     void connectPropertyManager(QtCursorPropertyManager * manager) override;
     inline QWidget * createAttributeEditor_protected(QtCursorPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) { return QtCursorEditorFactory::createAttributeEditor(manager, property, parent, Attribute(attribute)); }

@@ -8,7 +8,7 @@ namespace PySide { class DynamicQMetaObject; }
 class QtTreePropertyBrowserWrapper : public QtTreePropertyBrowser
 {
 public:
-    QtTreePropertyBrowserWrapper(QWidget * parent = 0);
+    QtTreePropertyBrowserWrapper(QWidget * parent = nullptr);
     inline void actionEvent_protected(QActionEvent * event) { QtTreePropertyBrowser::actionEvent(event); }
     void actionEvent(QActionEvent * event) override;
     inline void changeEvent_protected(QEvent * event) { QtTreePropertyBrowser::changeEvent(event); }
@@ -124,7 +124,7 @@ public:
 class QtAbstractPropertyBrowserWrapper : public QtAbstractPropertyBrowser
 {
 public:
-    QtAbstractPropertyBrowserWrapper(QWidget * parent = 0);
+    QtAbstractPropertyBrowserWrapper(QWidget * parent = nullptr);
     inline void actionEvent_protected(QActionEvent * event) { QtAbstractPropertyBrowser::actionEvent(event); }
     void actionEvent(QActionEvent * event) override;
     inline void changeEvent_protected(QEvent * event) { QtAbstractPropertyBrowser::changeEvent(event); }

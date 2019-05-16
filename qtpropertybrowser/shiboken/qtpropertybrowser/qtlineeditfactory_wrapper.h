@@ -6,7 +6,7 @@
 class QtLineEditFactoryWrapper : public QtLineEditFactory
 {
 public:
-    QtLineEditFactoryWrapper(QObject * parent = 0);
+    QtLineEditFactoryWrapper(QObject * parent = nullptr);
     inline void connectPropertyManager_protected(QtStringPropertyManager * manager) { QtLineEditFactory::connectPropertyManager(manager); }
     void connectPropertyManager(QtStringPropertyManager * manager) override;
     inline QWidget * createAttributeEditor_protected(QtStringPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) { return QtLineEditFactory::createAttributeEditor(manager, property, parent, Attribute(attribute)); }

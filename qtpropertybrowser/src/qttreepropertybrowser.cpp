@@ -124,7 +124,7 @@ class QtPropertyEditorView : public QTreeWidget
 {
     Q_OBJECT
 public:
-    QtPropertyEditorView(QWidget *parent = 0);
+    QtPropertyEditorView(QWidget *parent = nullptr);
 
     void setEditorPrivate(QtTreePropertyBrowserPrivate *editorPrivate)
         { m_editorPrivate = editorPrivate; }
@@ -143,7 +143,7 @@ private:
 
 QtPropertyEditorView::QtPropertyEditorView(QWidget *parent) :
     QTreeWidget(parent),
-    m_editorPrivate(0)
+    m_editorPrivate(nullptr)
 {
     connect(header(), SIGNAL(sectionDoubleClicked(int)), this, SLOT(resizeColumnToContents(int)));
 }
@@ -228,8 +228,8 @@ class QtPropertyEditorDelegate : public QItemDelegate
 {
     Q_OBJECT
 public:
-    QtPropertyEditorDelegate(QObject *parent = 0)
-        : QItemDelegate(parent), m_editorPrivate(0), m_editedItem(0), m_editedWidget(0), m_disablePainting(false)
+    QtPropertyEditorDelegate(QObject *parent = nullptr)
+        : QItemDelegate(parent), m_editorPrivate(nullptr), m_editedItem(nullptr), m_editedWidget(nullptr), m_disablePainting(false)
         {}
 
     void setEditorPrivate(QtTreePropertyBrowserPrivate *editorPrivate)
@@ -306,8 +306,8 @@ void QtPropertyEditorDelegate::slotEditorDestroyed(QObject *object)
             m_editorToProperty.erase(it);
         }
         if (m_editedWidget == w) {
-            m_editedWidget = 0;
-            m_editedItem = 0;
+            m_editedWidget = nullptr;
+            m_editedItem = nullptr;
             m_editedColumn = -1;
         }
     }
@@ -315,7 +315,7 @@ void QtPropertyEditorDelegate::slotEditorDestroyed(QObject *object)
 
 void QtPropertyEditorDelegate::closeEditor(QtProperty *property)
 {
-    if (QWidget *w = m_propertyToEditor.value(property, 0))
+    if (QWidget *w = m_propertyToEditor.value(property, nullptr))
         w->deleteLater();
 }
 
@@ -357,7 +357,7 @@ QWidget *QtPropertyEditorDelegate::createEditor(QWidget *parent,
         }
     }
     m_editedColumn = index.column();
-    return 0;
+    return nullptr;
 }
 
 void QtPropertyEditorDelegate::updateEditorGeometry(QWidget *editor,
@@ -447,10 +447,10 @@ bool QtPropertyEditorDelegate::eventFilter(QObject *object, QEvent *event)
 
 //  -------- QtTreePropertyBrowserPrivate implementation
 QtTreePropertyBrowserPrivate::QtTreePropertyBrowserPrivate() :
-    m_treeWidget(0),
+    m_treeWidget(nullptr),
     m_headerVisible(true),
     m_resizeMode(QtTreePropertyBrowser::ResizeToContents),
-    m_delegate(0),
+    m_delegate(nullptr),
     m_markPropertiesWithoutValue(false),
     m_browserChangedBlocked(false)
 {
@@ -603,14 +603,14 @@ QtBrowserItem *QtTreePropertyBrowserPrivate::currentItem() const
 {
     if (QTreeWidgetItem *treeItem = m_treeWidget->currentItem())
         return m_itemToIndex.value(treeItem);
-    return 0;
+    return nullptr;
 }
 
 void QtTreePropertyBrowserPrivate::setCurrentItem(QtBrowserItem *browserItem, bool block)
 {
     const bool blocked = block ? m_treeWidget->blockSignals(true) : false;
-    if (browserItem == 0)
-        m_treeWidget->setCurrentItem(0);
+    if (browserItem == nullptr)
+        m_treeWidget->setCurrentItem(nullptr);
     else
         m_treeWidget->setCurrentItem(m_indexToItem.value(browserItem));
     if (block)
@@ -623,7 +623,7 @@ QtProperty *QtTreePropertyBrowserPrivate::indexToProperty(const QModelIndex &ind
     QtBrowserItem *idx = m_itemToIndex.value(item);
     if (idx)
         return idx->property();
-    return 0;
+    return nullptr;
 }
 
 QtBrowserItem *QtTreePropertyBrowserPrivate::indexToBrowserItem(const QModelIndex &index) const
@@ -690,7 +690,7 @@ void QtTreePropertyBrowserPrivate::propertyInserted(QtBrowserItem *index, QtBrow
     QTreeWidgetItem *afterItem = m_indexToItem.value(afterIndex);
     QTreeWidgetItem *parentItem = m_indexToItem.value(index->parent());
 
-    QTreeWidgetItem *newItem = 0;
+    QTreeWidgetItem *newItem = nullptr;
     if (parentItem) {
         newItem = new QTreeWidgetItem(parentItem, afterItem);
     } else {
@@ -710,7 +710,7 @@ void QtTreePropertyBrowserPrivate::propertyRemoved(QtBrowserItem *index)
     QTreeWidgetItem *item = m_indexToItem.value(index);
 
     if (m_treeWidget->currentItem() == item) {
-        m_treeWidget->setCurrentItem(0);
+        m_treeWidget->setCurrentItem(nullptr);
     }
 
     delete item;
@@ -841,7 +841,7 @@ void QtTreePropertyBrowserPrivate::slotCurrentBrowserItemChanged(QtBrowserItem *
 
 void QtTreePropertyBrowserPrivate::slotCurrentTreeItemChanged(QTreeWidgetItem *newItem, QTreeWidgetItem *)
 {
-    QtBrowserItem *browserItem = newItem ? m_itemToIndex.value(newItem) : 0;
+    QtBrowserItem *browserItem = newItem ? m_itemToIndex.value(newItem) : nullptr;
     m_browserChangedBlocked = true;
     q_ptr->setCurrentItem(browserItem);
     m_browserChangedBlocked = false;
@@ -854,7 +854,7 @@ QTreeWidgetItem *QtTreePropertyBrowserPrivate::editedItem() const
 
 void QtTreePropertyBrowserPrivate::editItem(QtBrowserItem *browserItem)
 {
-    if (QTreeWidgetItem *treeItem = m_indexToItem.value(browserItem, 0)) {
+    if (QTreeWidgetItem *treeItem = m_indexToItem.value(browserItem, nullptr)) {
         m_treeWidget->setCurrentItem (treeItem, 1);
         m_treeWidget->editItem(treeItem, 1);
     }
@@ -1232,7 +1232,6 @@ void QtTreePropertyBrowser::setAttributes(const QList<Attribute> &attributeList)
 
     QMapIterator<QTreeWidgetItem *, QtBrowserItem *> it(d_ptr->m_itemToIndex);
     while (it.hasNext()) {
-        QtProperty *property = it.next().value()->property();
         d_ptr->updateItem(it.key());
     }
 }

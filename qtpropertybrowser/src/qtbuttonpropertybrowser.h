@@ -55,7 +55,7 @@ class QT_QTPROPERTYBROWSER_EXPORT QtButtonPropertyBrowser : public QtAbstractPro
     Q_OBJECT
 public:
 
-    QtButtonPropertyBrowser(QWidget *parent = 0);
+    QtButtonPropertyBrowser(QWidget *parent = nullptr);
     ~QtButtonPropertyBrowser();
     Q_PROPERTY(Attribute attribute1 READ attribute1 WRITE setAttribute1)
     Q_PROPERTY(Attribute attribute2 READ attribute2 WRITE setAttribute2)

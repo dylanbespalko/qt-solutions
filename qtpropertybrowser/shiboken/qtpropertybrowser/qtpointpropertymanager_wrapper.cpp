@@ -849,7 +849,7 @@ Sbk_QtPointPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds)
         }
         if (!Shiboken::Object::isValid(pyArgs[0]))
             return -1;
-        ::QObject* cppArg0 = 0;
+        ::QObject* cppArg0 = nullptr;
         if (pythonToCpp[0]) pythonToCpp[0](pyArgs[0], &cppArg0);
 
         if (!PyErr_Occurred()) {
@@ -1312,7 +1312,7 @@ static PyObject* QtPointPropertyManager_PTR_CppToPython_QtPointPropertyManager(c
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
 const char QtPointPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtPointPropertyManager(parent:PySide2.QtCore.QObject=0)\n"
+    "qtpropertybrowser.QtPointPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
     "qtpropertybrowser.QtPointPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
     "qtpropertybrowser.QtPointPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
     "qtpropertybrowser.QtPointPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtCore.QPoint)\n"

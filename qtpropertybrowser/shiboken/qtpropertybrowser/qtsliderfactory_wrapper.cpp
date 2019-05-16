@@ -241,7 +241,7 @@ Sbk_QtSliderFactory_Init(PyObject* self, PyObject* args, PyObject* kwds)
         }
         if (!Shiboken::Object::isValid(pyArgs[0]))
             return -1;
-        ::QObject* cppArg0 = 0;
+        ::QObject* cppArg0 = nullptr;
         if (pythonToCpp[0]) pythonToCpp[0](pyArgs[0], &cppArg0);
 
         if (!PyErr_Occurred()) {
@@ -601,7 +601,7 @@ static PyObject* QtSliderFactory_PTR_CppToPython_QtSliderFactory(const void* cpp
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
 const char QtSliderFactory_SignaturesString[] = ""
-    "qtpropertybrowser.QtSliderFactory(parent:PySide2.QtCore.QObject=0)\n"
+    "qtpropertybrowser.QtSliderFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
     "qtpropertybrowser.QtSliderFactory.connectPropertyManager(manager:qtpropertybrowser.QtIntPropertyManager)\n"
     "qtpropertybrowser.QtSliderFactory.createAttributeEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.Attribute)->PySide2.QtWidgets.QWidget\n"
     "qtpropertybrowser.QtSliderFactory.createEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"

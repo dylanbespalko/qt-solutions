@@ -6,7 +6,7 @@
 class QtColorEditorFactoryWrapper : public QtColorEditorFactory
 {
 public:
-    QtColorEditorFactoryWrapper(QObject * parent = 0);
+    QtColorEditorFactoryWrapper(QObject * parent = nullptr);
     inline void connectPropertyManager_protected(QtColorPropertyManager * manager) { QtColorEditorFactory::connectPropertyManager(manager); }
     void connectPropertyManager(QtColorPropertyManager * manager) override;
     inline QWidget * createAttributeEditor_protected(QtColorPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) { return QtColorEditorFactory::createAttributeEditor(manager, property, parent, Attribute(attribute)); }

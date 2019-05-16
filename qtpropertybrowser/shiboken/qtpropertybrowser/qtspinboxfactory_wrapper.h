@@ -6,7 +6,7 @@
 class QtSpinBoxFactoryWrapper : public QtSpinBoxFactory
 {
 public:
-    QtSpinBoxFactoryWrapper(QObject * parent = 0);
+    QtSpinBoxFactoryWrapper(QObject * parent = nullptr);
     inline void connectPropertyManager_protected(QtIntPropertyManager * manager) { QtSpinBoxFactory::connectPropertyManager(manager); }
     void connectPropertyManager(QtIntPropertyManager * manager) override;
     inline QWidget * createAttributeEditor_protected(QtIntPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) { return QtSpinBoxFactory::createAttributeEditor(manager, property, parent, Attribute(attribute)); }

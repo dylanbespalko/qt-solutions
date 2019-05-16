@@ -6,7 +6,7 @@
 class QtCharEditorFactoryWrapper : public QtCharEditorFactory
 {
 public:
-    QtCharEditorFactoryWrapper(QObject * parent = 0);
+    QtCharEditorFactoryWrapper(QObject * parent = nullptr);
     inline void connectPropertyManager_protected(QtCharPropertyManager * manager) { QtCharEditorFactory::connectPropertyManager(manager); }
     void connectPropertyManager(QtCharPropertyManager * manager) override;
     inline QWidget * createAttributeEditor_protected(QtCharPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) { return QtCharEditorFactory::createAttributeEditor(manager, property, parent, Attribute(attribute)); }

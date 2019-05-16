@@ -848,7 +848,7 @@ Sbk_QtStringPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds)
         }
         if (!Shiboken::Object::isValid(pyArgs[0]))
             return -1;
-        ::QObject* cppArg0 = 0;
+        ::QObject* cppArg0 = nullptr;
         if (pythonToCpp[0]) pythonToCpp[0](pyArgs[0], &cppArg0);
 
         if (!PyErr_Occurred()) {
@@ -1656,7 +1656,7 @@ static PyObject* QtStringPropertyManager_PTR_CppToPython_QtStringPropertyManager
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
 const char QtStringPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtStringPropertyManager(parent:PySide2.QtCore.QObject=0)\n"
+    "qtpropertybrowser.QtStringPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
     "qtpropertybrowser.QtStringPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
     "qtpropertybrowser.QtStringPropertyManager.displayText(property:qtpropertybrowser.QtProperty)->QString\n"
     "qtpropertybrowser.QtStringPropertyManager.echoMode(property:qtpropertybrowser.QtProperty)->PySide2.QtWidgets.QLineEdit.EchoMode\n"

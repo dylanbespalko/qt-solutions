@@ -6,7 +6,7 @@
 class QtDoubleEditFactoryWrapper : public QtDoubleEditFactory
 {
 public:
-    QtDoubleEditFactoryWrapper(QObject * parent = 0);
+    QtDoubleEditFactoryWrapper(QObject * parent = nullptr);
     inline void connectPropertyManager_protected(QtDoublePropertyManager * manager) { QtDoubleEditFactory::connectPropertyManager(manager); }
     void connectPropertyManager(QtDoublePropertyManager * manager) override;
     inline QWidget * createAttributeEditor_protected(QtDoublePropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) { return QtDoubleEditFactory::createAttributeEditor(manager, property, parent, Attribute(attribute)); }

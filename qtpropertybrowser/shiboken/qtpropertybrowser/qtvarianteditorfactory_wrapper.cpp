@@ -206,7 +206,7 @@ Sbk_QtVariantEditorFactory_Init(PyObject* self, PyObject* args, PyObject* kwds)
         }
         if (!Shiboken::Object::isValid(pyArgs[0]))
             return -1;
-        ::QObject* cppArg0 = 0;
+        ::QObject* cppArg0 = nullptr;
         if (pythonToCpp[0]) pythonToCpp[0](pyArgs[0], &cppArg0);
 
         if (!PyErr_Occurred()) {
@@ -493,7 +493,7 @@ static PyObject* QtVariantEditorFactory_PTR_CppToPython_QtVariantEditorFactory(c
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
 const char QtVariantEditorFactory_SignaturesString[] = ""
-    "qtpropertybrowser.QtVariantEditorFactory(parent:PySide2.QtCore.QObject=0)\n"
+    "qtpropertybrowser.QtVariantEditorFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
     "qtpropertybrowser.QtVariantEditorFactory.connectPropertyManager(manager:qtpropertybrowser.QtVariantPropertyManager)\n"
     "qtpropertybrowser.QtVariantEditorFactory.createEditor(manager:qtpropertybrowser.QtVariantPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
     "qtpropertybrowser.QtVariantEditorFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtVariantPropertyManager)\n"

@@ -6,7 +6,7 @@
 class QtGroupEditorFactoryWrapper : public QtGroupEditorFactory
 {
 public:
-    QtGroupEditorFactoryWrapper(QObject * parent = 0);
+    QtGroupEditorFactoryWrapper(QObject * parent = nullptr);
     inline void connectPropertyManager_protected(QtAbstractPropertyManager * manager) { QtGroupEditorFactory::connectPropertyManager(manager); }
     void connectPropertyManager(QtAbstractPropertyManager * manager) override;
     inline QWidget * createAttributeEditor_protected(QtAbstractPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) { return QtGroupEditorFactory::createAttributeEditor(manager, property, parent, Attribute(attribute)); }

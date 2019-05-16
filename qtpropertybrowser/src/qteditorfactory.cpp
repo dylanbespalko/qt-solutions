@@ -520,14 +520,14 @@ QWidget *QtGroupEditorFactory::createAttributeEditor(QtAbstractPropertyManager *
     if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable(Attribute::CHECK))
-            return NULL;
+            return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
         connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    return NULL;
+    return nullptr;
 }
 
 /*!
@@ -778,7 +778,7 @@ QWidget *QtSpinBoxFactory::createAttributeEditor(QtIntPropertyManager *manager, 
     if (attribute == Attribute::MINIMUM)
     {
         if (!manager->attributesEditable(Attribute::MINIMUM))
-            return NULL;
+            return nullptr;
         QDoubleEdit *editor = d_ptr->createMinimumAttributeEditor(property, parent);
 
         editor->setRange(LONG_MIN, LONG_MAX);
@@ -791,7 +791,7 @@ QWidget *QtSpinBoxFactory::createAttributeEditor(QtIntPropertyManager *manager, 
     else if (attribute == Attribute::MAXIMUM)
     {
         if (!manager->attributesEditable(Attribute::MAXIMUM))
-            return NULL;
+            return nullptr;
         QDoubleEdit *editor = d_ptr->createMaximumAttributeEditor(property, parent);
 
         editor->setRange(LONG_MIN, LONG_MAX);
@@ -804,14 +804,14 @@ QWidget *QtSpinBoxFactory::createAttributeEditor(QtIntPropertyManager *manager, 
     else if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable(Attribute::CHECK))
-            return NULL;
+            return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
         connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    return NULL;
+    return nullptr;
 }
 /*!
     \internal
@@ -841,7 +841,6 @@ public:
     void slotPropertyChanged(QtProperty *property, int value);
     void slotRangeChanged(QtProperty *property, int min, int max);
     void slotRangeChanged(QtProperty *property, double min, double max);
-    void slotSingleStepChanged(QtProperty *property, int step);
     void slotPrecisionChanged(QtProperty *property, int prec);
     void slotReadOnlyChanged(QtProperty *property, bool readOnly);
     void slotSetValue(int value);
@@ -887,25 +886,6 @@ void QtIntEditFactoryPrivate::slotRangeChanged(QtProperty *property, int min, in
         editor->blockSignals(true);
         editor->setRange(min, max);
         editor->setValue(manager->value(property));
-        editor->blockSignals(false);
-    }
-}
-
-void QtIntEditFactoryPrivate::slotSingleStepChanged(QtProperty *property, int step)
-{
-    if (!m_createdEditors.contains(property))
-        return;
-
-    QtIntPropertyManager *manager = q_ptr->propertyManager(property);
-    if (!manager)
-        return;
-
-    QList<QIntEdit *> editors = m_createdEditors[property];
-    QListIterator<QIntEdit *> itEditor(editors);
-    while (itEditor.hasNext()) {
-        QIntEdit *editor = itEditor.next();
-        editor->blockSignals(true);
-//        editor->setSingleStep(step);
         editor->blockSignals(false);
     }
 }
@@ -1060,8 +1040,6 @@ void QtIntEditFactory::connectPropertyManager(QtIntPropertyManager *manager)
             this, SLOT(slotPropertyChanged(QtProperty *, int)));
     connect(manager, SIGNAL(rangeChanged(QtProperty *, int, int)),
             this, SLOT(slotRangeChanged(QtProperty *, int, int)));
-    connect(manager, SIGNAL(singleStepChanged(QtProperty *, int)),
-            this, SLOT(slotSingleStepChanged(QtProperty *, int)));
     connect(manager, SIGNAL(readOnlyChanged(QtProperty *, bool)),
             this, SLOT(slotReadOnlyChanged(QtProperty *, bool)));
 }
@@ -1097,7 +1075,7 @@ QWidget *QtIntEditFactory::createAttributeEditor(QtIntPropertyManager *manager, 
     if (attribute == Attribute::MINIMUM)
     {
         if (!manager->attributesEditable(Attribute::MINIMUM))
-            return NULL;
+            return nullptr;
         QDoubleEdit *editor = d_ptr->createMinimumAttributeEditor(property, parent);
 
         editor->setRange(lowest, highest);
@@ -1110,7 +1088,7 @@ QWidget *QtIntEditFactory::createAttributeEditor(QtIntPropertyManager *manager, 
     else if (attribute == Attribute::MAXIMUM)
     {
         if (!manager->attributesEditable(Attribute::MAXIMUM))
-            return NULL;
+            return nullptr;
         QDoubleEdit *editor = d_ptr->createMaximumAttributeEditor(property, parent);
 
         editor->setRange(lowest, highest);
@@ -1123,14 +1101,14 @@ QWidget *QtIntEditFactory::createAttributeEditor(QtIntPropertyManager *manager, 
     else if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable(Attribute::CHECK))
-            return NULL;
+            return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
         connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    return NULL;
+    return nullptr;
 }
 
 /*!
@@ -1144,8 +1122,6 @@ void QtIntEditFactory::disconnectPropertyManager(QtIntPropertyManager *manager)
                this, SLOT(slotPropertyChanged(QtProperty *, int)));
     disconnect(manager, SIGNAL(rangeChanged(QtProperty *, int, int)),
                this, SLOT(slotRangeChanged(QtProperty *, int, int)));
-    disconnect(manager, SIGNAL(singleStepChanged(QtProperty *, int)),
-               this, SLOT(slotSingleStepChanged(QtProperty *, int)));
     disconnect(manager, SIGNAL(readOnlyChanged(QtProperty *, bool)),
                this, SLOT(slotReadOnlyChanged(QtProperty *, bool)));
 }
@@ -1362,7 +1338,7 @@ QWidget *QtSliderFactory::createAttributeEditor(QtIntPropertyManager *manager, Q
     if (attribute == Attribute::MINIMUM)
     {
         if (!manager->attributesEditable(Attribute::MINIMUM))
-            return NULL;
+            return nullptr;
         QDoubleEdit *editor = d_ptr->createMinimumAttributeEditor(property, parent);
 
         editor->setRange(lowest, highest);
@@ -1375,7 +1351,7 @@ QWidget *QtSliderFactory::createAttributeEditor(QtIntPropertyManager *manager, Q
     else if (attribute == Attribute::MAXIMUM)
     {
         if (!manager->attributesEditable(Attribute::MAXIMUM))
-            return NULL;
+            return nullptr;
         QDoubleEdit *editor = d_ptr->createMaximumAttributeEditor(property, parent);
 
         editor->setRange(lowest, highest);
@@ -1388,14 +1364,14 @@ QWidget *QtSliderFactory::createAttributeEditor(QtIntPropertyManager *manager, Q
     else if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable(Attribute::CHECK))
-            return NULL;
+            return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
         connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    return NULL;
+    return nullptr;
 }
 
 /*!
@@ -1624,7 +1600,7 @@ QWidget *QtScrollBarFactory::createAttributeEditor(QtIntPropertyManager *manager
     if (attribute == Attribute::MINIMUM)
     {
         if (!manager->attributesEditable(Attribute::MINIMUM))
-            return NULL;
+            return nullptr;
         QDoubleEdit *editor = d_ptr->createMinimumAttributeEditor(property, parent);
 
         editor->setRange(lowest, highest);
@@ -1637,7 +1613,7 @@ QWidget *QtScrollBarFactory::createAttributeEditor(QtIntPropertyManager *manager
     else if (attribute == Attribute::MAXIMUM)
     {
         if (!manager->attributesEditable(Attribute::MAXIMUM))
-            return NULL;
+            return nullptr;
         QDoubleEdit *editor = d_ptr->createMaximumAttributeEditor(property, parent);
 
         editor->setRange(lowest, highest);
@@ -1650,14 +1626,14 @@ QWidget *QtScrollBarFactory::createAttributeEditor(QtIntPropertyManager *manager
     else if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable(Attribute::CHECK))
-            return NULL;
+            return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
         connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    return NULL;
+    return nullptr;
 }
 
 /*!
@@ -1819,7 +1795,7 @@ QWidget *QtCheckBoxFactory::createAttributeEditor(QtBoolPropertyManager *manager
     if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable(Attribute::CHECK))
-            return NULL;
+            return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
         editor->setChecked(property->check());
@@ -1830,7 +1806,7 @@ QWidget *QtCheckBoxFactory::createAttributeEditor(QtBoolPropertyManager *manager
                 this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    return NULL;
+    return nullptr;
 
 }
 
@@ -2102,7 +2078,7 @@ QWidget *QtDoubleSpinBoxFactory::createAttributeEditor(QtDoublePropertyManager *
     if (attribute == Attribute::MINIMUM)
     {
         if (!manager->attributesEditable(Attribute::MINIMUM))
-            return NULL;
+            return nullptr;
         QDoubleEdit *editor = d_ptr->createMinimumAttributeEditor(property, parent);
 
         editor->setScale(manager->scale(property));
@@ -2118,7 +2094,7 @@ QWidget *QtDoubleSpinBoxFactory::createAttributeEditor(QtDoublePropertyManager *
     else if (attribute == Attribute::MAXIMUM)
     {
         if (!manager->attributesEditable(Attribute::MAXIMUM))
-            return NULL;
+            return nullptr;
         QDoubleEdit *editor = d_ptr->createMaximumAttributeEditor(property, parent);
 
         editor->setScale(manager->scale(property));
@@ -2134,14 +2110,14 @@ QWidget *QtDoubleSpinBoxFactory::createAttributeEditor(QtDoublePropertyManager *
     else if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable(Attribute::CHECK))
-            return NULL;
+            return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
         connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    return NULL;
+    return nullptr;
 }
 
 /*!
@@ -2173,7 +2149,6 @@ public:
 
     void slotPropertyChanged(QtProperty *property, double value);
     void slotRangeChanged(QtProperty *property, double min, double max);
-    void slotSingleStepChanged(QtProperty *property, int step);
     void slotPrecisionChanged(QtProperty *property, int prec);
     void slotReadOnlyChanged(QtProperty *property, bool readOnly);
     void slotSetValue(double value);
@@ -2217,25 +2192,6 @@ void QtDoubleEditFactoryPrivate::slotRangeChanged(QtProperty *property, double m
         editor->blockSignals(true);
         editor->setRange(min, max);
         editor->setValue(manager->value(property));
-        editor->blockSignals(false);
-    }
-}
-
-void QtDoubleEditFactoryPrivate::slotSingleStepChanged(QtProperty *property, int step)
-{
-    if (!m_createdEditors.contains(property))
-    return;
-
-    QtDoublePropertyManager *manager = q_ptr->propertyManager(property);
-    if (!manager)
-    return;
-
-    QList<QDoubleEdit *> editors = m_createdEditors[property];
-    QListIterator<QDoubleEdit *> itEditor(editors);
-    while (itEditor.hasNext()) {
-        QDoubleEdit *editor = itEditor.next();
-        editor->blockSignals(true);
-        //        editor->setSingleStep(step);
         editor->blockSignals(false);
     }
 }
@@ -2416,8 +2372,6 @@ void QtDoubleEditFactory::connectPropertyManager(QtDoublePropertyManager *manage
             this, SLOT(slotPropertyChanged(QtProperty *, double)));
     connect(manager, SIGNAL(rangeChanged(QtProperty *, double, double)),
             this, SLOT(slotRangeChanged(QtProperty *, double, double)));
-    connect(manager, SIGNAL(singleStepChanged(QtProperty *, double)),
-            this, SLOT(slotSingleStepChanged(QtProperty *, double)));
     connect(manager, SIGNAL(precisionChanged(QtProperty *, int)),
             this, SLOT(slotPrecisionChanged(QtProperty *, int)));
     connect(manager, SIGNAL(readOnlyChanged(QtProperty *, bool)),
@@ -2459,7 +2413,7 @@ QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *man
     if (attribute == Attribute::UNIT)
     {
         if (!manager->attributesEditable(Attribute::UNIT))
-            return NULL;
+            return nullptr;
         QComboBox *editor = d_ptr->createUnitAttributeEditor(property, parent);
 
         QString prefix;
@@ -2481,7 +2435,7 @@ QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *man
     else if (attribute == Attribute::FORMAT)
     {
         if (!manager->attributesEditable(Attribute::FORMAT))
-            return NULL;
+            return nullptr;
         QComboBox *editor = d_ptr->createFormatAttributeEditor(property, parent);
 
         editor->clear();
@@ -2495,7 +2449,7 @@ QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *man
     else if (attribute == Attribute::MINIMUM)
     {
         if (!manager->attributesEditable(Attribute::MINIMUM))
-            return NULL;
+            return nullptr;
         QDoubleEdit *editor = d_ptr->createMinimumAttributeEditor(property, parent);
 
         editor->setScale(manager->scale(property));
@@ -2511,7 +2465,7 @@ QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *man
     else if (attribute == Attribute::MAXIMUM)
     {
         if (!manager->attributesEditable(Attribute::MAXIMUM))
-            return NULL;
+            return nullptr;
         QDoubleEdit *editor = d_ptr->createMaximumAttributeEditor(property, parent);
 
         editor->setScale(manager->scale(property));
@@ -2527,14 +2481,14 @@ QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *man
     else if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable(Attribute::CHECK))
-            return NULL;
+            return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
         connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    return NULL;
+    return nullptr;
 }
 
 /*!
@@ -2548,8 +2502,6 @@ void QtDoubleEditFactory::disconnectPropertyManager(QtDoublePropertyManager *man
                this, SLOT(slotPropertyChanged(QtProperty *, double)));
     disconnect(manager, SIGNAL(rangeChanged(QtProperty *, double, double)),
                this, SLOT(slotRangeChanged(QtProperty *, double, double)));
-    disconnect(manager, SIGNAL(singleStepChanged(QtProperty *, double)),
-               this, SLOT(slotSingleStepChanged(QtProperty *, double)));
     disconnect(manager, SIGNAL(precisionChanged(QtProperty *, int)),
                this, SLOT(slotPrecisionChanged(QtProperty *, int)));
     disconnect(manager, SIGNAL(readOnlyChanged(QtProperty *, bool)),
@@ -2566,7 +2518,6 @@ public:
 
     void slotPropertyChanged(QtProperty *property, const QComplex& value);
     void slotRangeChanged(QtProperty *property, double min, double max);
-    void slotSingleStepChanged(QtProperty *property, const QComplex& step);
     void slotPrecisionChanged(QtProperty *property, int prec);
     void slotReadOnlyChanged(QtProperty *property, bool readOnly);
     void slotSetValue(const QComplex& value);
@@ -2612,25 +2563,6 @@ void QtComplexEditFactoryPrivate::slotRangeChanged(QtProperty *property,
         editor->blockSignals(true);
         editor->setRange(min, max);
         editor->setValue(manager->value(property));
-        editor->blockSignals(false);
-    }
-}
-
-void QtComplexEditFactoryPrivate::slotSingleStepChanged(QtProperty *property, const QComplex& step)
-{
-    if (!m_createdEditors.contains(property))
-        return;
-
-    QtComplexPropertyManager *manager = q_ptr->propertyManager(property);
-    if (!manager)
-        return;
-
-    QList<QComplexEdit *> editors = m_createdEditors[property];
-    QListIterator<QComplexEdit *> itEditor(editors);
-    while (itEditor.hasNext()) {
-        QComplexEdit *editor = itEditor.next();
-        editor->blockSignals(true);
-        //editor->setSingleStep(step);
         editor->blockSignals(false);
     }
 }
@@ -2828,8 +2760,6 @@ void QtComplexEditFactory::connectPropertyManager(QtComplexPropertyManager *mana
             this, SLOT(slotPropertyChanged(QtProperty *, const QComplex&)));
     connect(manager, SIGNAL(rangeChanged(QtProperty *, double, double)),
             this, SLOT(slotRangeChanged(QtProperty *, double, double)));
-    connect(manager, SIGNAL(singleStepChanged(QtProperty *, const QComplex&)),
-            this, SLOT(slotSingleStepChanged(QtProperty *, const QComplex&)));
     connect(manager, SIGNAL(precisionChanged(QtProperty *, int)),
             this, SLOT(slotPrecisionChanged(QtProperty *, int)));
     connect(manager, SIGNAL(readOnlyChanged(QtProperty *, bool)),
@@ -2871,7 +2801,7 @@ QWidget *QtComplexEditFactory::createAttributeEditor(QtComplexPropertyManager *m
     if (attribute == Attribute::UNIT)
     {
         if (!manager->attributesEditable(Attribute::UNIT))
-            return NULL;
+            return nullptr;
         QComboBox *editor = d_ptr->createUnitAttributeEditor(property, parent);
 
         QString prefix;
@@ -2893,7 +2823,7 @@ QWidget *QtComplexEditFactory::createAttributeEditor(QtComplexPropertyManager *m
     else if (attribute == Attribute::FORMAT)
     {
         if (!manager->attributesEditable(Attribute::FORMAT))
-            return NULL;
+            return nullptr;
         QComboBox *editor = d_ptr->createFormatAttributeEditor(property, parent);
 
         editor->clear();
@@ -2907,7 +2837,7 @@ QWidget *QtComplexEditFactory::createAttributeEditor(QtComplexPropertyManager *m
     else if (attribute == Attribute::MINIMUM)
     {
         if (!manager->attributesEditable(Attribute::MINIMUM))
-            return NULL;
+            return nullptr;
         QDoubleEdit *editor = d_ptr->createMinimumAttributeEditor(property, parent);
 
         editor->setScale(manager->scale(property));
@@ -2923,7 +2853,7 @@ QWidget *QtComplexEditFactory::createAttributeEditor(QtComplexPropertyManager *m
     else if (attribute == Attribute::MAXIMUM)
     {
         if (!manager->attributesEditable(Attribute::MAXIMUM))
-            return NULL;
+            return nullptr;
         QDoubleEdit *editor = d_ptr->createMaximumAttributeEditor(property, parent);
 
         editor->setScale(manager->scale(property));
@@ -2939,14 +2869,14 @@ QWidget *QtComplexEditFactory::createAttributeEditor(QtComplexPropertyManager *m
     else if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable(Attribute::CHECK))
-            return NULL;
+            return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
         connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    return NULL;
+    return nullptr;
 }
 
 /*!
@@ -2960,8 +2890,6 @@ void QtComplexEditFactory::disconnectPropertyManager(QtComplexPropertyManager *m
                this, SLOT(slotPropertyChanged(QtProperty *, const QComplex&)));
     disconnect(manager, SIGNAL(rangeChanged(QtProperty *, double, double)),
                this, SLOT(slotRangeChanged(QtProperty *, double, double)));
-    disconnect(manager, SIGNAL(singleStepChanged(QtProperty *, const QComplex&)),
-               this, SLOT(slotSingleStepChanged(QtProperty *, const QComplex&)));
     disconnect(manager, SIGNAL(precisionChanged(QtProperty *, int)),
                this, SLOT(slotPrecisionChanged(QtProperty *, int)));
     disconnect(manager, SIGNAL(readOnlyChanged(QtProperty *, bool)),
@@ -3135,7 +3063,7 @@ QWidget *QtTFTensorEditFactory::createAttributeEditor(QtTFTensorPropertyManager 
     if (attribute == Attribute::UNIT)
         {
             if (!manager->attributesEditable(Attribute::UNIT))
-                return NULL;
+                return nullptr;
             QComboBox *editor = d_ptr->createUnitAttributeEditor(property, parent);
 
             QString prefix;
@@ -3157,7 +3085,7 @@ QWidget *QtTFTensorEditFactory::createAttributeEditor(QtTFTensorPropertyManager 
     else if (attribute == Attribute::PKAVG)
     {
         if (!manager->attributesEditable(Attribute::PKAVG))
-            return NULL;
+            return nullptr;
         QComboBox *editor = d_ptr->createPkAvgAttributeEditor(property, parent);
 
         QStringList enumNames;
@@ -3172,7 +3100,7 @@ QWidget *QtTFTensorEditFactory::createAttributeEditor(QtTFTensorPropertyManager 
     else if (attribute == Attribute::FORMAT)
     {
         if (!manager->attributesEditable(Attribute::FORMAT))
-            return NULL;
+            return nullptr;
         QComboBox *editor = d_ptr->createFormatAttributeEditor(property, parent);
 
         editor->clear();
@@ -3186,14 +3114,14 @@ QWidget *QtTFTensorEditFactory::createAttributeEditor(QtTFTensorPropertyManager 
     else if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable(Attribute::CHECK))
-            return NULL;
+            return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
         connect(editor, SIGNAL(toggled(bool)), this, SLOT(slotSetCheck(bool)));
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    return NULL;
+    return nullptr;
 }
 
 /*!
@@ -3255,7 +3183,7 @@ void QtLineEditFactoryPrivate::slotRegExpChanged(QtProperty *property,
         QLineEdit *editor = itEditor.next();
         editor->blockSignals(true);
         const QValidator *oldValidator = editor->validator();
-        QValidator *newValidator = 0;
+        QValidator *newValidator = nullptr;
         if (regExp.isValid()) {
             newValidator = new QRegExpValidator(regExp, editor);
         }
@@ -3414,7 +3342,7 @@ QWidget *QtLineEditFactory::createAttributeEditor(QtStringPropertyManager *manag
     if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable(Attribute::CHECK))
-            return NULL;
+            return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
         editor->setChecked(property->check());
@@ -3424,7 +3352,7 @@ QWidget *QtLineEditFactory::createAttributeEditor(QtStringPropertyManager *manag
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    return NULL;
+    return nullptr;
 
 }
 
@@ -3595,7 +3523,7 @@ QWidget *QtDateEditFactory::createAttributeEditor(QtDatePropertyManager *manager
     if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable(Attribute::CHECK))
-            return NULL;
+            return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
         editor->setChecked(property->check());
@@ -3605,7 +3533,7 @@ QWidget *QtDateEditFactory::createAttributeEditor(QtDatePropertyManager *manager
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    return NULL;
+    return nullptr;
 }
 
 /*!
@@ -3745,7 +3673,7 @@ QWidget *QtTimeEditFactory::createAttributeEditor(QtTimePropertyManager *manager
     if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable(Attribute::CHECK))
-            return NULL;
+            return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
         editor->setChecked(property->check());
@@ -3755,7 +3683,7 @@ QWidget *QtTimeEditFactory::createAttributeEditor(QtTimePropertyManager *manager
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    return NULL;
+    return nullptr;
 
 }
 
@@ -3897,7 +3825,7 @@ QWidget *QtDateTimeEditFactory::createAttributeEditor(QtDateTimePropertyManager 
     if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable(Attribute::CHECK))
-            return NULL;
+            return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
         editor->setChecked(property->check());
@@ -3907,7 +3835,7 @@ QWidget *QtDateTimeEditFactory::createAttributeEditor(QtDateTimePropertyManager 
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    return NULL;
+    return nullptr;
 
 }
 
@@ -4048,7 +3976,7 @@ QWidget *QtKeySequenceEditorFactory::createAttributeEditor(QtKeySequenceProperty
     if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable(Attribute::CHECK))
-            return NULL;
+            return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
         editor->setChecked(property->check());
@@ -4058,7 +3986,7 @@ QWidget *QtKeySequenceEditorFactory::createAttributeEditor(QtKeySequenceProperty
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    return NULL;
+    return nullptr;
 
 }
 
@@ -4079,7 +4007,7 @@ class QtCharEdit : public QWidget
 {
     Q_OBJECT
 public:
-    QtCharEdit(QWidget *parent = 0);
+    QtCharEdit(QWidget *parent = nullptr);
 
     QChar value() const;
     bool eventFilter(QObject *o, QEvent *e);
@@ -4132,7 +4060,7 @@ bool QtCharEdit::eventFilter(QObject *o, QEvent *e)
                 actionString = actionString.remove(pos, actionString.length() - pos);
             action->setText(actionString);
         }
-        QAction *actionBefore = 0;
+        QAction *actionBefore = nullptr;
         if (actions.count() > 0)
             actionBefore = actions[0];
         QAction *clearAction = new QAction(tr("Clear Char"), menu);
@@ -4378,7 +4306,7 @@ QWidget *QtCharEditorFactory::createAttributeEditor(QtCharPropertyManager *manag
     if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable(Attribute::CHECK))
-            return NULL;
+            return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
         editor->setChecked(property->check());
@@ -4388,7 +4316,7 @@ QWidget *QtCharEditorFactory::createAttributeEditor(QtCharPropertyManager *manag
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    return NULL;
+    return nullptr;
 
 }
 
@@ -4589,7 +4517,7 @@ QWidget *QtEnumEditorFactory::createAttributeEditor(QtEnumPropertyManager *manag
     if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable(Attribute::CHECK))
-            return NULL;
+            return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
         editor->setChecked(property->check());
@@ -4599,7 +4527,7 @@ QWidget *QtEnumEditorFactory::createAttributeEditor(QtEnumPropertyManager *manag
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    return NULL;
+    return nullptr;
 
 }
 
@@ -4764,7 +4692,7 @@ void QtCursorEditorFactory::connectPropertyManager(QtCursorPropertyManager *mana
 QWidget *QtCursorEditorFactory::createEditor(QtCursorPropertyManager *manager, QtProperty *property,
         QWidget *parent)
 {
-    QtProperty *enumProp = 0;
+    QtProperty *enumProp = nullptr;
     if (d_ptr->m_propertyToEnum.contains(property)) {
         enumProp = d_ptr->m_propertyToEnum[property];
     } else {
@@ -4797,7 +4725,7 @@ QWidget *QtCursorEditorFactory::createAttributeEditor(QtCursorPropertyManager *m
     if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable(Attribute::CHECK))
-            return NULL;
+            return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
         editor->setChecked(property->check());
@@ -4807,7 +4735,7 @@ QWidget *QtCursorEditorFactory::createAttributeEditor(QtCursorPropertyManager *m
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    return NULL;
+    return nullptr;
 
 }
 
@@ -5047,7 +4975,7 @@ QWidget *QtColorEditorFactory::createAttributeEditor(QtColorPropertyManager *man
     if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable(Attribute::CHECK))
-            return NULL;
+            return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
         editor->setChecked(property->check());
@@ -5057,7 +4985,7 @@ QWidget *QtColorEditorFactory::createAttributeEditor(QtColorPropertyManager *man
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    return NULL;
+    return nullptr;
 
 }
 
@@ -5311,7 +5239,7 @@ QWidget *QtFontEditorFactory::createAttributeEditor(QtFontPropertyManager *manag
     if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable(Attribute::CHECK))
-            return NULL;
+            return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
         editor->setChecked(property->check());
@@ -5321,7 +5249,7 @@ QWidget *QtFontEditorFactory::createAttributeEditor(QtFontPropertyManager *manag
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    return NULL;
+    return nullptr;
 
 }
 
@@ -5487,7 +5415,7 @@ QWidget *QtFileEditorFactory::createAttributeEditor(QtFilePropertyManager *manag
     if (attribute == Attribute::CHECK)
     {
         if (!manager->attributesEditable(Attribute::CHECK))
-            return NULL;
+            return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
 
         editor->setChecked(property->check());
@@ -5497,7 +5425,7 @@ QWidget *QtFileEditorFactory::createAttributeEditor(QtFilePropertyManager *manag
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotCheckAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    return NULL;
+    return nullptr;
 
 }
 

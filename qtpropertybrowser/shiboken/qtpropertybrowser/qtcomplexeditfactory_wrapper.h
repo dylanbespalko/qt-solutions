@@ -6,7 +6,7 @@
 class QtComplexEditFactoryWrapper : public QtComplexEditFactory
 {
 public:
-    QtComplexEditFactoryWrapper(QObject * parent = 0);
+    QtComplexEditFactoryWrapper(QObject * parent = nullptr);
     inline void connectPropertyManager_protected(QtComplexPropertyManager * manager) { QtComplexEditFactory::connectPropertyManager(manager); }
     void connectPropertyManager(QtComplexPropertyManager * manager) override;
     inline QWidget * createAttributeEditor_protected(QtComplexPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) { return QtComplexEditFactory::createAttributeEditor(manager, property, parent, Attribute(attribute)); }

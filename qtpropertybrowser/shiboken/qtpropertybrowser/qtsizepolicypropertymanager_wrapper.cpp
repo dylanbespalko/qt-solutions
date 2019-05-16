@@ -849,7 +849,7 @@ Sbk_QtSizePolicyPropertyManager_Init(PyObject* self, PyObject* args, PyObject* k
         }
         if (!Shiboken::Object::isValid(pyArgs[0]))
             return -1;
-        ::QObject* cppArg0 = 0;
+        ::QObject* cppArg0 = nullptr;
         if (pythonToCpp[0]) pythonToCpp[0](pyArgs[0], &cppArg0);
 
         if (!PyErr_Occurred()) {
@@ -1340,7 +1340,7 @@ static PyObject* QtSizePolicyPropertyManager_PTR_CppToPython_QtSizePolicyPropert
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
 const char QtSizePolicyPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtSizePolicyPropertyManager(parent:PySide2.QtCore.QObject=0)\n"
+    "qtpropertybrowser.QtSizePolicyPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
     "qtpropertybrowser.QtSizePolicyPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
     "qtpropertybrowser.QtSizePolicyPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
     "qtpropertybrowser.QtSizePolicyPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtWidgets.QSizePolicy)\n"

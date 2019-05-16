@@ -8,7 +8,7 @@ namespace PySide { class DynamicQMetaObject; }
 class QtAbstractEditorFactoryBaseWrapper : public QtAbstractEditorFactoryBase
 {
 public:
-    QtAbstractEditorFactoryBaseWrapper(QObject * parent = 0);
+    QtAbstractEditorFactoryBaseWrapper(QObject * parent = nullptr);
     inline void breakConnection_protected(QtAbstractPropertyManager * manager) { breakConnection(manager); }
     void breakConnection(QtAbstractPropertyManager * manager) override;
     inline void childEvent_protected(QChildEvent * event) { QtAbstractEditorFactoryBase::childEvent(event); }

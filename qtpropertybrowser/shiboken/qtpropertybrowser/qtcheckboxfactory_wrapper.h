@@ -6,7 +6,7 @@
 class QtCheckBoxFactoryWrapper : public QtCheckBoxFactory
 {
 public:
-    QtCheckBoxFactoryWrapper(QObject * parent = 0);
+    QtCheckBoxFactoryWrapper(QObject * parent = nullptr);
     inline void connectPropertyManager_protected(QtBoolPropertyManager * manager) { QtCheckBoxFactory::connectPropertyManager(manager); }
     void connectPropertyManager(QtBoolPropertyManager * manager) override;
     inline QWidget * createAttributeEditor_protected(QtBoolPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) { return QtCheckBoxFactory::createAttributeEditor(manager, property, parent, Attribute(attribute)); }

@@ -849,7 +849,7 @@ Sbk_QtSizeFPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds)
         }
         if (!Shiboken::Object::isValid(pyArgs[0]))
             return -1;
-        ::QObject* cppArg0 = 0;
+        ::QObject* cppArg0 = nullptr;
         if (pythonToCpp[0]) pythonToCpp[0](pyArgs[0], &cppArg0);
 
         if (!PyErr_Occurred()) {
@@ -1834,7 +1834,7 @@ static PyObject* QtSizeFPropertyManager_PTR_CppToPython_QtSizeFPropertyManager(c
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
 const char QtSizeFPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtSizeFPropertyManager(parent:PySide2.QtCore.QObject=0)\n"
+    "qtpropertybrowser.QtSizeFPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
     "qtpropertybrowser.QtSizeFPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
     "qtpropertybrowser.QtSizeFPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
     "qtpropertybrowser.QtSizeFPropertyManager.isReadOnly(property:qtpropertybrowser.QtProperty)->bool\n"

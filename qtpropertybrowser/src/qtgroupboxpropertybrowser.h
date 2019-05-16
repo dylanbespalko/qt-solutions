@@ -55,7 +55,7 @@ class QT_QTPROPERTYBROWSER_EXPORT QtGroupBoxPropertyBrowser : public QtAbstractP
     Q_OBJECT
 public:
 
-    QtGroupBoxPropertyBrowser(QWidget *parent = 0);
+    QtGroupBoxPropertyBrowser(QWidget *parent = nullptr);
     ~QtGroupBoxPropertyBrowser();
     Q_PROPERTY(Attribute attribute1 READ attribute1 WRITE setAttribute1)
     Q_PROPERTY(Attribute attribute2 READ attribute2 WRITE setAttribute2)

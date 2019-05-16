@@ -1640,7 +1640,7 @@ Sbk_QtGroupBoxPropertyBrowser_Init(PyObject* self, PyObject* args, PyObject* kwd
         }
         if (!Shiboken::Object::isValid(pyArgs[0]))
             return -1;
-        ::QWidget* cppArg0 = 0;
+        ::QWidget* cppArg0 = nullptr;
         if (pythonToCpp[0]) pythonToCpp[0](pyArgs[0], &cppArg0);
 
         if (!PyErr_Occurred()) {
@@ -2224,7 +2224,7 @@ static PyObject* QtGroupBoxPropertyBrowser_PTR_CppToPython_QtGroupBoxPropertyBro
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
 const char QtGroupBoxPropertyBrowser_SignaturesString[] = ""
-    "qtpropertybrowser.QtGroupBoxPropertyBrowser(parent:PySide2.QtWidgets.QWidget=0)\n"
+    "qtpropertybrowser.QtGroupBoxPropertyBrowser(parent:PySide2.QtWidgets.QWidget=nullptr)\n"
     "qtpropertybrowser.QtGroupBoxPropertyBrowser.attribute1()->qtpropertybrowser.Attribute\n"
     "qtpropertybrowser.QtGroupBoxPropertyBrowser.attribute2()->qtpropertybrowser.Attribute\n"
     "qtpropertybrowser.QtGroupBoxPropertyBrowser.attribute3()->qtpropertybrowser.Attribute\n"

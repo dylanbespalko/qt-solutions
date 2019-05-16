@@ -849,7 +849,7 @@ Sbk_QtRectFPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds)
         }
         if (!Shiboken::Object::isValid(pyArgs[0]))
             return -1;
-        ::QObject* cppArg0 = 0;
+        ::QObject* cppArg0 = nullptr;
         if (pythonToCpp[0]) pythonToCpp[0](pyArgs[0], &cppArg0);
 
         if (!PyErr_Occurred()) {
@@ -1535,7 +1535,7 @@ static PyObject* QtRectFPropertyManager_PTR_CppToPython_QtRectFPropertyManager(c
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
 const char QtRectFPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtRectFPropertyManager(parent:PySide2.QtCore.QObject=0)\n"
+    "qtpropertybrowser.QtRectFPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
     "qtpropertybrowser.QtRectFPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
     "qtpropertybrowser.QtRectFPropertyManager.constraint(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QRectF\n"
     "qtpropertybrowser.QtRectFPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"

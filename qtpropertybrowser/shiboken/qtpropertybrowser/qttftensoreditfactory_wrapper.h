@@ -6,7 +6,7 @@
 class QtTFTensorEditFactoryWrapper : public QtTFTensorEditFactory
 {
 public:
-    QtTFTensorEditFactoryWrapper(QObject * parent = 0);
+    QtTFTensorEditFactoryWrapper(QObject * parent = nullptr);
     inline void connectPropertyManager_protected(QtTFTensorPropertyManager * manager) { QtTFTensorEditFactory::connectPropertyManager(manager); }
     void connectPropertyManager(QtTFTensorPropertyManager * manager) override;
     inline QWidget * createAttributeEditor_protected(QtTFTensorPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) { return QtTFTensorEditFactory::createAttributeEditor(manager, property, parent, Attribute(attribute)); }

@@ -847,7 +847,7 @@ Sbk_QtTimePropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds)
         }
         if (!Shiboken::Object::isValid(pyArgs[0]))
             return -1;
-        ::QObject* cppArg0 = 0;
+        ::QObject* cppArg0 = nullptr;
         if (pythonToCpp[0]) pythonToCpp[0](pyArgs[0], &cppArg0);
 
         if (!PyErr_Occurred()) {
@@ -1216,7 +1216,7 @@ static PyObject* QtTimePropertyManager_PTR_CppToPython_QtTimePropertyManager(con
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
 const char QtTimePropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtTimePropertyManager(parent:PySide2.QtCore.QObject=0)\n"
+    "qtpropertybrowser.QtTimePropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
     "qtpropertybrowser.QtTimePropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
     "qtpropertybrowser.QtTimePropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
     "qtpropertybrowser.QtTimePropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"

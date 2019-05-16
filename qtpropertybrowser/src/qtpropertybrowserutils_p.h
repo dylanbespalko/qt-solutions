@@ -155,7 +155,7 @@ class QT_QTPROPERTYBROWSER_EXPORT QIntEdit : public QWidget
     Q_OBJECT
     Q_ENUMS(Format)
 public:
-    explicit QIntEdit(QWidget *parent = 0);
+    explicit QIntEdit(QWidget *parent = nullptr);
     ~QIntEdit();
 
     int value() const;
@@ -205,7 +205,7 @@ class QT_QTPROPERTYBROWSER_EXPORT QDoubleEdit : public QWidget
     Q_ENUMS(Format)
 public:
 
-    explicit QDoubleEdit(QWidget *parent = 0);
+    explicit QDoubleEdit(QWidget *parent = nullptr);
     ~QDoubleEdit();
 
     double value() const;
@@ -261,7 +261,7 @@ class QT_QTPROPERTYBROWSER_EXPORT QComplexEdit : public QWidget
     Q_OBJECT
     Q_ENUMS(Format)
 public:
-    explicit QComplexEdit(QWidget *parent = 0);
+    explicit QComplexEdit(QWidget *parent = nullptr);
     ~QComplexEdit();
 
     QComplex value() const;
@@ -375,7 +375,7 @@ public:
 class QtBoolEdit : public QWidget {
     Q_OBJECT
 public:
-    QtBoolEdit(QWidget *parent = 0);
+    QtBoolEdit(QWidget *parent = nullptr);
 
     bool textVisible() const { return m_textVisible; }
     void setTextVisible(bool textVisible);
@@ -404,7 +404,7 @@ class QtKeySequenceEdit : public QWidget
 {
     Q_OBJECT
 public:
-    QtKeySequenceEdit(QWidget *parent = 0);
+    QtKeySequenceEdit(QWidget *parent = nullptr);
 
     QKeySequence keySequence() const;
     bool eventFilter(QObject *o, QEvent *e);

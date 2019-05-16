@@ -6,7 +6,7 @@
 class QtScrollBarFactoryWrapper : public QtScrollBarFactory
 {
 public:
-    QtScrollBarFactoryWrapper(QObject * parent = 0);
+    QtScrollBarFactoryWrapper(QObject * parent = nullptr);
     inline void connectPropertyManager_protected(QtIntPropertyManager * manager) { QtScrollBarFactory::connectPropertyManager(manager); }
     void connectPropertyManager(QtIntPropertyManager * manager) override;
     inline QWidget * createAttributeEditor_protected(QtIntPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) { return QtScrollBarFactory::createAttributeEditor(manager, property, parent, Attribute(attribute)); }

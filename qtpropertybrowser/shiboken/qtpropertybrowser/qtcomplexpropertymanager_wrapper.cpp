@@ -847,7 +847,7 @@ Sbk_QtComplexPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds
         }
         if (!Shiboken::Object::isValid(pyArgs[0]))
             return -1;
-        ::QObject* cppArg0 = 0;
+        ::QObject* cppArg0 = nullptr;
         if (pythonToCpp[0]) pythonToCpp[0](pyArgs[0], &cppArg0);
 
         if (!PyErr_Occurred()) {
@@ -2819,7 +2819,7 @@ static PyObject* QtComplexPropertyManager_PTR_CppToPython_QtComplexPropertyManag
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
 const char QtComplexPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtComplexPropertyManager(parent:PySide2.QtCore.QObject=0)\n"
+    "qtpropertybrowser.QtComplexPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
     "qtpropertybrowser.QtComplexPropertyManager.absTol(property:qtpropertybrowser.QtProperty)->double\n"
     "qtpropertybrowser.QtComplexPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
     "qtpropertybrowser.QtComplexPropertyManager.foreground(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QBrush\n"

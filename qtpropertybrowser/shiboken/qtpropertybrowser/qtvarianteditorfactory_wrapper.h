@@ -6,7 +6,7 @@
 class QtVariantEditorFactoryWrapper : public QtVariantEditorFactory
 {
 public:
-    QtVariantEditorFactoryWrapper(QObject * parent = 0);
+    QtVariantEditorFactoryWrapper(QObject * parent = nullptr);
     inline void connectPropertyManager_protected(QtVariantPropertyManager * manager) { QtVariantEditorFactory::connectPropertyManager(manager); }
     void connectPropertyManager(QtVariantPropertyManager * manager) override;
     inline QWidget * createEditor_protected(QtVariantPropertyManager * manager, QtProperty * property, QWidget * parent) { return QtVariantEditorFactory::createEditor(manager, property, parent); }

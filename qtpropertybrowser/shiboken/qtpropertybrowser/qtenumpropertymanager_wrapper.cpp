@@ -848,7 +848,7 @@ Sbk_QtEnumPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds)
         }
         if (!Shiboken::Object::isValid(pyArgs[0]))
             return -1;
-        ::QObject* cppArg0 = 0;
+        ::QObject* cppArg0 = nullptr;
         if (pythonToCpp[0]) pythonToCpp[0](pyArgs[0], &cppArg0);
 
         if (!PyErr_Occurred()) {
@@ -1541,7 +1541,7 @@ static PyObject* QtEnumPropertyManager_PTR_CppToPython_QtEnumPropertyManager(con
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
 const char QtEnumPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtEnumPropertyManager(parent:PySide2.QtCore.QObject=0)\n"
+    "qtpropertybrowser.QtEnumPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
     "qtpropertybrowser.QtEnumPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
     "qtpropertybrowser.QtEnumPropertyManager.enumIcons(property:qtpropertybrowser.QtProperty)->QMap\n"
     "qtpropertybrowser.QtEnumPropertyManager.enumNames(property:qtpropertybrowser.QtProperty)->QStringList\n"
