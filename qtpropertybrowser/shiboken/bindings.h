@@ -26,7 +26,4 @@
 #include <qtgroupboxpropertybrowser.h>
 #include <qtbuttonpropertybrowser.h>
 
-//QComplexEdit
-#include <qcomplexedit.h>
-
 #endif // BINDINGS_H

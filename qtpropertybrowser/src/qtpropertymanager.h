@@ -43,7 +43,6 @@
 #define QTPROPERTYMANAGER_H
 
 #include "qtpropertybrowser.h"
-#include "qcomplexedit.h"
 
 #include <QLineEdit>
 #include <QFileDialog>

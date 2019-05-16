@@ -38,9 +38,7 @@
 **
 ****************************************************************************/
 
-#include "qcomplexedit.h"
 #include "qtpropertymanager.h"
-#include "qtpropertybrowserutils_p.h"
 
 #include <QDateTime>
 #include <QLocale>

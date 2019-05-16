@@ -14,8 +14,7 @@ qtpropertybrowser-uselib:!qtpropertybrowser-buildlib {
             $$PWD/qttreepropertybrowser.cpp \
             $$PWD/qtbuttonpropertybrowser.cpp \
             $$PWD/qtgroupboxpropertybrowser.cpp \
-            $$PWD/qtpropertybrowserutils.cpp \
-            $$PWD/qcomplexedit.cpp
+            $$PWD/qtpropertybrowserutils.cpp
     HEADERS += $$PWD/qtpropertybrowser.h \
             $$PWD/qtpropertymanager.h \
             $$PWD/qteditorfactory.h \
@@ -23,8 +22,7 @@ qtpropertybrowser-uselib:!qtpropertybrowser-buildlib {
             $$PWD/qttreepropertybrowser.h \
             $$PWD/qtbuttonpropertybrowser.h \
             $$PWD/qtgroupboxpropertybrowser.h \
-            $$PWD/qtpropertybrowserutils_p.h \
-            $$PWD/qcomplexedit.h
+            $$PWD/qtpropertybrowserutils_p.h
     RESOURCES += $$PWD/qtpropertybrowser.qrc
 }
 

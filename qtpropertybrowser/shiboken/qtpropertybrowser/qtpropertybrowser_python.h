@@ -12,8 +12,8 @@
 
 // Binded library includes
 #include <qtbuttonpropertybrowser.h>
+#include <qtpropertybrowserutils_p.h>
 #include <qtvariantproperty.h>
-#include <qcomplexedit.h>
 #include <qtgroupboxpropertybrowser.h>
 #include <qtpropertymanager.h>
 #include <qttreepropertybrowser.h>

@@ -97,14 +97,6 @@ extern double neg_infinity;
 extern double highest;
 extern double lowest;
 
-class QT_QTPROPERTYBROWSER_EXPORT QComplex : public std::complex<double>
-{
-public:
-    QComplex(double re = 0.0, double im = 0.0);
-    QComplex(std::complex<double> parent);
-};
-
-
 class QIntEditPrivate;
 
 class QT_QTPROPERTYBROWSER_EXPORT QIntEdit : public QWidget
@@ -202,6 +194,14 @@ public:
     static QString num2str(double val, const Scale scale, const Format format, int precision);
     static double str2num(const QString &text, const Scale scale, const Format format);
 };
+
+class QT_QTPROPERTYBROWSER_EXPORT QComplex : public std::complex<double>
+{
+public:
+    QComplex(double re = 0.0, double im = 0.0);
+    QComplex(std::complex<double> parent);
+};
+
 
 class QComplexEditPrivate;
 

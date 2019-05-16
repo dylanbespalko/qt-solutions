@@ -42,7 +42,7 @@
 #ifndef QTPROPERTYBROWSER_H
 #define QTPROPERTYBROWSER_H
 
-#include "qcomplexedit.h"
+#include "qtpropertybrowserutils_p.h"
 
 #include <QWidget>
 #include <QSet>

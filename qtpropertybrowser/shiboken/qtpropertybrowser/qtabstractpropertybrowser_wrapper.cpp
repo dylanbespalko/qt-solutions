@@ -102,33 +102,33 @@ static void setFactoryForManager_template(QtAbstractPropertyBrowser* self, PyObj
 }
 static void setFactoryForManager_glue(QtAbstractPropertyBrowser* self, PyObject* pyManager, PyObject* pyFactory )
 {
-    setFactoryForManager_template <SBK_QTBOOLPROPERTYMANAGER_IDX, QtBoolPropertyManager> (self, pyManager, pyFactory );
+    setFactoryForManager_template <SBK_QTGROUPPROPERTYMANAGER_IDX, QtGroupPropertyManager> (self, pyManager, pyFactory );
     setFactoryForManager_template <SBK_QTINTPROPERTYMANAGER_IDX, QtIntPropertyManager> (self, pyManager, pyFactory );
+    setFactoryForManager_template <SBK_QTBOOLPROPERTYMANAGER_IDX, QtBoolPropertyManager> (self, pyManager, pyFactory );
     setFactoryForManager_template <SBK_QTDOUBLEPROPERTYMANAGER_IDX, QtDoublePropertyManager> (self, pyManager, pyFactory );
     setFactoryForManager_template <SBK_QTCOMPLEXPROPERTYMANAGER_IDX, QtComplexPropertyManager> (self, pyManager, pyFactory );
     setFactoryForManager_template <SBK_QTTFTENSORPROPERTYMANAGER_IDX, QtTFTensorPropertyManager> (self, pyManager, pyFactory );
-    setFactoryForManager_template <SBK_QTCHARPROPERTYMANAGER_IDX, QtCharPropertyManager> (self, pyManager, pyFactory );
     setFactoryForManager_template <SBK_QTSTRINGPROPERTYMANAGER_IDX, QtStringPropertyManager> (self, pyManager, pyFactory );
     setFactoryForManager_template <SBK_QTFILEPROPERTYMANAGER_IDX, QtFilePropertyManager> (self, pyManager, pyFactory );
+    setFactoryForManager_template <SBK_QTDATEPROPERTYMANAGER_IDX, QtDatePropertyManager> (self, pyManager, pyFactory );
+    setFactoryForManager_template <SBK_QTTIMEPROPERTYMANAGER_IDX, QtTimePropertyManager> (self, pyManager, pyFactory );
+    setFactoryForManager_template <SBK_QTDATETIMEPROPERTYMANAGER_IDX, QtDateTimePropertyManager> (self, pyManager, pyFactory );
     setFactoryForManager_template <SBK_QTKEYSEQUENCEPROPERTYMANAGER_IDX, QtKeySequencePropertyManager> (self, pyManager, pyFactory );
-    setFactoryForManager_template <SBK_QTENUMPROPERTYMANAGER_IDX, QtEnumPropertyManager> (self, pyManager, pyFactory );
-    setFactoryForManager_template <SBK_QTFLAGPROPERTYMANAGER_IDX, QtFlagPropertyManager> (self, pyManager, pyFactory );
-    setFactoryForManager_template <SBK_QTFONTPROPERTYMANAGER_IDX, QtFontPropertyManager> (self, pyManager, pyFactory );
-    setFactoryForManager_template <SBK_QTCURSORPROPERTYMANAGER_IDX, QtCursorPropertyManager> (self, pyManager, pyFactory );
-    setFactoryForManager_template <SBK_QTCOLORPROPERTYMANAGER_IDX, QtColorPropertyManager> (self, pyManager, pyFactory );
+    setFactoryForManager_template <SBK_QTCHARPROPERTYMANAGER_IDX, QtCharPropertyManager> (self, pyManager, pyFactory );
+    setFactoryForManager_template <SBK_QTLOCALEPROPERTYMANAGER_IDX, QtLocalePropertyManager> (self, pyManager, pyFactory );
     setFactoryForManager_template <SBK_QTPOINTPROPERTYMANAGER_IDX, QtPointPropertyManager> (self, pyManager, pyFactory );
     setFactoryForManager_template <SBK_QTPOINTFPROPERTYMANAGER_IDX, QtPointFPropertyManager> (self, pyManager, pyFactory );
-    setFactoryForManager_template <SBK_QTRECTPROPERTYMANAGER_IDX, QtRectPropertyManager> (self, pyManager, pyFactory );
-    setFactoryForManager_template <SBK_QTRECTFPROPERTYMANAGER_IDX, QtRectFPropertyManager> (self, pyManager, pyFactory );
     setFactoryForManager_template <SBK_QTSIZEPROPERTYMANAGER_IDX, QtSizePropertyManager> (self, pyManager, pyFactory );
     setFactoryForManager_template <SBK_QTSIZEFPROPERTYMANAGER_IDX, QtSizeFPropertyManager> (self, pyManager, pyFactory );
+    setFactoryForManager_template <SBK_QTRECTPROPERTYMANAGER_IDX, QtRectPropertyManager> (self, pyManager, pyFactory );
+    setFactoryForManager_template <SBK_QTRECTFPROPERTYMANAGER_IDX, QtRectFPropertyManager> (self, pyManager, pyFactory );
+    setFactoryForManager_template <SBK_QTENUMPROPERTYMANAGER_IDX, QtEnumPropertyManager> (self, pyManager, pyFactory );
+    setFactoryForManager_template <SBK_QTFLAGPROPERTYMANAGER_IDX, QtFlagPropertyManager> (self, pyManager, pyFactory );
     setFactoryForManager_template <SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX, QtSizePolicyPropertyManager> (self, pyManager, pyFactory );
-    setFactoryForManager_template <SBK_QTDATEPROPERTYMANAGER_IDX, QtDatePropertyManager> (self, pyManager, pyFactory );
-    setFactoryForManager_template <SBK_QTDATETIMEPROPERTYMANAGER_IDX, QtDateTimePropertyManager> (self, pyManager, pyFactory );
-    setFactoryForManager_template <SBK_QTTIMEPROPERTYMANAGER_IDX, QtTimePropertyManager> (self, pyManager, pyFactory );
-    setFactoryForManager_template <SBK_QTLOCALEPROPERTYMANAGER_IDX, QtLocalePropertyManager> (self, pyManager, pyFactory );
+    setFactoryForManager_template <SBK_QTCURSORPROPERTYMANAGER_IDX, QtCursorPropertyManager> (self, pyManager, pyFactory );
+    setFactoryForManager_template <SBK_QTFONTPROPERTYMANAGER_IDX, QtFontPropertyManager> (self, pyManager, pyFactory );
+    setFactoryForManager_template <SBK_QTCOLORPROPERTYMANAGER_IDX, QtColorPropertyManager> (self, pyManager, pyFactory );
     setFactoryForManager_template <SBK_QTVARIANTPROPERTYMANAGER_IDX, QtVariantPropertyManager> (self, pyManager, pyFactory );
-    setFactoryForManager_template <SBK_QTGROUPPROPERTYMANAGER_IDX, QtGroupPropertyManager> (self, pyManager, pyFactory );
 }
 
 // END of custom code block [file: ./glue/qtpropertybrowser.cpp (qtabstractpropertybrowser-setFactoryForManager)]
