@@ -131,16 +131,16 @@ if __name__ == "__main__":
 
     tree_scroll_area = QScrollArea()
     tree_browser = QtTreePropertyBrowser()
-    # tree_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
-    tree_browser.setAttributes([Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
+    tree_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
+    # tree_browser.setAttributes([Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
     box_scroll_area = QScrollArea()
     box_browser = QtGroupBoxPropertyBrowser()
-    # box_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
-    box_browser.setAttributes([Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
+    box_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
+    # box_browser.setAttributes([Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
     button_scroll_area = QScrollArea()
     button_browser = QtButtonPropertyBrowser()
-    # button_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
-    button_browser.setAttributes([Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
+    button_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM, Attribute.CHECK])
+    # button_browser.setAttributes([Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
 
     manager_map = {Manager.GROUP: QtGroupPropertyManager(),
                    Manager.INT_SPIN: QtIntPropertyManager(),

@@ -1065,54 +1065,6 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_disconnect_signals(PyObject* 
     Py_RETURN_NONE;
 }
 
-static PyObject* Sbk_QtTFTensorPropertyManagerFunc_equation(PyObject* self, PyObject* pyArg)
-{
-    QtTFTensorPropertyManagerWrapper* cppSelf = nullptr;
-    SBK_UNUSED(cppSelf)
-    if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtTFTensorPropertyManagerWrapper *>(reinterpret_cast< ::QtTFTensorPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTTFTENSORPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
-    int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
-    SBK_UNUSED(pythonToCpp)
-
-    // Overloaded function decisor
-    // 0: QtTFTensorPropertyManager::equation(const QtProperty*)const
-    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
-        overloadId = 0; // equation(const QtProperty*)const
-    }
-
-    // Function signature not found.
-    if (overloadId == -1) goto Sbk_QtTFTensorPropertyManagerFunc_equation_TypeError;
-
-    // Call function/method
-    {
-        if (!Shiboken::Object::isValid(pyArg))
-            return {};
-        ::QtProperty* cppArg0;
-        pythonToCpp(pyArg, &cppArg0);
-
-        if (!PyErr_Occurred()) {
-            // equation(const QtProperty*)const
-            PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = const_cast<const ::QtTFTensorPropertyManagerWrapper*>(cppSelf)->equation(cppArg0);
-            PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
-            pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
-        }
-    }
-
-    if (PyErr_Occurred() || !pyResult) {
-        Py_XDECREF(pyResult);
-        return {};
-    }
-    return pyResult;
-
-    Sbk_QtTFTensorPropertyManagerFunc_equation_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtTFTensorPropertyManager.equation");
-        return {};
-}
-
 static PyObject* Sbk_QtTFTensorPropertyManagerFunc_foreground(PyObject* self, PyObject* pyArg)
 {
     QtTFTensorPropertyManagerWrapper* cppSelf = nullptr;
@@ -1786,64 +1738,6 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_setAbsTol(PyObject* self, PyO
 
     Sbk_QtTFTensorPropertyManagerFunc_setAbsTol_TypeError:
         Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtTFTensorPropertyManager.setAbsTol");
-        return {};
-}
-
-static PyObject* Sbk_QtTFTensorPropertyManagerFunc_setEquation(PyObject* self, PyObject* args)
-{
-    QtTFTensorPropertyManagerWrapper* cppSelf = nullptr;
-    SBK_UNUSED(cppSelf)
-    if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtTFTensorPropertyManagerWrapper *>(reinterpret_cast< ::QtTFTensorPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTTFTENSORPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    int overloadId = -1;
-    PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
-    SBK_UNUSED(pythonToCpp)
-    int numArgs = PyTuple_GET_SIZE(args);
-    PyObject* pyArgs[] = {0, 0};
-
-    // invalid argument lengths
-
-
-    if (!PyArg_UnpackTuple(args, "setEquation", 2, 2, &(pyArgs[0]), &(pyArgs[1])))
-        return {};
-
-
-    // Overloaded function decisor
-    // 0: QtTFTensorPropertyManager::setEquation(QtProperty*,QString)
-    if (numArgs == 2
-        && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[0])))
-        && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppConvertible(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], (pyArgs[1])))) {
-        overloadId = 0; // setEquation(QtProperty*,QString)
-    }
-
-    // Function signature not found.
-    if (overloadId == -1) goto Sbk_QtTFTensorPropertyManagerFunc_setEquation_TypeError;
-
-    // Call function/method
-    {
-        if (!Shiboken::Object::isValid(pyArgs[0]))
-            return {};
-        ::QtProperty* cppArg0;
-        pythonToCpp[0](pyArgs[0], &cppArg0);
-        ::QString cppArg1;
-        pythonToCpp[1](pyArgs[1], &cppArg1);
-
-        if (!PyErr_Occurred()) {
-            // setEquation(QtProperty*,QString)
-            PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            cppSelf->setEquation(cppArg0, cppArg1);
-            PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
-        }
-    }
-
-    if (PyErr_Occurred()) {
-        return {};
-    }
-    Py_RETURN_NONE;
-
-    Sbk_QtTFTensorPropertyManagerFunc_setEquation_TypeError:
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtTFTensorPropertyManager.setEquation");
         return {};
 }
 
@@ -2863,7 +2757,6 @@ static PyMethodDef Sbk_QtTFTensorPropertyManager_methods[] = {
     {"checkIcon", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_checkIcon, METH_O},
     {"connect_signals", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_connect_signals, METH_NOARGS},
     {"disconnect_signals", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_disconnect_signals, METH_NOARGS},
-    {"equation", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_equation, METH_O},
     {"foreground", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_foreground, METH_O},
     {"format", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_format, METH_O},
     {"formatText", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_formatText, METH_O},
@@ -2878,7 +2771,6 @@ static PyMethodDef Sbk_QtTFTensorPropertyManager_methods[] = {
     {"relTol", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_relTol, METH_O},
     {"scale", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_scale, METH_O},
     {"setAbsTol", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_setAbsTol, METH_VARARGS},
-    {"setEquation", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_setEquation, METH_VARARGS},
     {"setFormat", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_setFormat, METH_VARARGS},
     {"setMaximum", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_setMaximum, METH_VARARGS},
     {"setMinimum", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_setMinimum, METH_VARARGS},
@@ -2986,7 +2878,6 @@ const char QtTFTensorPropertyManager_SignaturesString[] = ""
     "qtpropertybrowser.QtTFTensorPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
     "qtpropertybrowser.QtTFTensorPropertyManager.connect_signals()\n"
     "qtpropertybrowser.QtTFTensorPropertyManager.disconnect_signals()\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.equation(property:qtpropertybrowser.QtProperty)->QString\n"
     "qtpropertybrowser.QtTFTensorPropertyManager.foreground(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QBrush\n"
     "qtpropertybrowser.QtTFTensorPropertyManager.format(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.Format\n"
     "qtpropertybrowser.QtTFTensorPropertyManager.formatText(property:qtpropertybrowser.QtProperty)->QString\n"
@@ -3001,7 +2892,6 @@ const char QtTFTensorPropertyManager_SignaturesString[] = ""
     "qtpropertybrowser.QtTFTensorPropertyManager.relTol(property:qtpropertybrowser.QtProperty)->double\n"
     "qtpropertybrowser.QtTFTensorPropertyManager.scale(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.Scale\n"
     "qtpropertybrowser.QtTFTensorPropertyManager.setAbsTol(property:qtpropertybrowser.QtProperty,absTol:QVector)\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.setEquation(property:qtpropertybrowser.QtProperty,equation:QString)\n"
     "qtpropertybrowser.QtTFTensorPropertyManager.setFormat(property:qtpropertybrowser.QtProperty,format_:qtpropertybrowser.Format)\n"
     "qtpropertybrowser.QtTFTensorPropertyManager.setMaximum(property:qtpropertybrowser.QtProperty,maxVal:QVector)\n"
     "qtpropertybrowser.QtTFTensorPropertyManager.setMinimum(property:qtpropertybrowser.QtProperty,minVal:QVector)\n"

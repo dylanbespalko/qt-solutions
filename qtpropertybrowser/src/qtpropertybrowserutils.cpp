@@ -90,6 +90,12 @@ QT_BEGIN_NAMESPACE
 
 QT_BEGIN_NAMESPACE
 
+double infinity(std::numeric_limits<double>::infinity());
+double neg_infinity(-std::numeric_limits<double>::infinity());
+double highest(std::numeric_limits<double>::max());
+double lowest(-std::numeric_limits<double>::max());
+double epsilon(std::numeric_limits<double>::epsilon());
+
 QMap<Format, QString> FormatNameMap = {
     {Format::RE, "Re"},
     {Format::RE_IM, "Re+Imj"},
@@ -138,11 +144,6 @@ QMap<Attribute, QString> AttributeNameMap = {
     {Attribute::MINIMUM, "Minimum"},
     {Attribute::MAXIMUM, "Maximum"},
 };
-
-double infinity(std::numeric_limits<double>::infinity());
-double neg_infinity(-std::numeric_limits<double>::infinity());
-double highest(std::numeric_limits<double>::max());
-double lowest(-std::numeric_limits<double>::max());
 
 const QRegExp regExps[4] = {
     QRegExp("\\s*([+-]?(?:(?:\\d+(?:\\.\\d*)?)|\\.\\d+|inf)(?:[eE][+-]?[0-9]+)?).*"),

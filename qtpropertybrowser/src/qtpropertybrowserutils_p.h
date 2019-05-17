@@ -84,6 +84,12 @@ QT_BEGIN_NAMESPACE
 #  define QT_QTPROPERTYBROWSER_EXPORT
 #endif
 
+extern double infinity;
+extern double neg_infinity;
+extern double highest;
+extern double lowest;
+extern double epsilon;
+
 class QMouseEvent;
 class QCheckBox;
 class QLineEdit;
@@ -142,11 +148,6 @@ enum Attribute
     CHECK
 };
 extern QMap<Attribute, QString> AttributeNameMap;
-
-extern double infinity;
-extern double neg_infinity;
-extern double highest;
-extern double lowest;
 
 class QIntEditPrivate;
 

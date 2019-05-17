@@ -37,7 +37,6 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-
 #include "qtpropertymanager.h"
 
 #include <QDateTime>
@@ -745,17 +744,21 @@ public:
     struct Data
     {
         Data()
-            : val(0), minVal(-INT_MAX), maxVal(INT_MAX), singleStep(1), precision(2), unit(QString()),
-              readOnly(false),
+            : val(0), minVal(-INT_MAX), maxVal(INT_MAX),
+              singleStep(1), precision(2), absTol(0), relTol(0),
+              readOnly(false), unit(QString()),
               foreground(QBrush(Qt::black, Qt::SolidPattern)){}
         int val;
         int minVal;
         int maxVal;
         int singleStep;
         int precision;
-        QString unit;
+        int absTol;
+        int relTol;
         bool readOnly;
+        QString unit;
         QBrush foreground;
+
         int minimumValue() const { return minVal; }
         int maximumValue() const { return maxVal; }
         void setMinimumValue(int newMinVal) { setSimpleMinimumData(this, newMinVal); }
@@ -1200,16 +1203,16 @@ public:
     struct Data
     {
         Data()
-            : val(0), absTol(std::numeric_limits<double>::epsilon()), relTol(std::numeric_limits<double>::epsilon()), minVal(-INT_MAX), maxVal(INT_MAX),
-            singleStep(1), precision(2), scale(Scale::_), unit(QString()),
-            format(Format::LIN_DEG), readOnly(false),
+            : val(0), minVal(lowest), maxVal(highest),
+            singleStep(1), absTol(epsilon), relTol(epsilon),
+            precision(2), scale(Scale::_), unit(QString()), format(Format::LIN_DEG), readOnly(false),
             foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         double val;
-        double absTol;
-        double relTol;
         double minVal;
         double maxVal;
         double singleStep;
+        double absTol;
+        double relTol;
         int precision;
         Scale scale;
         QString unit;
@@ -1837,21 +1840,22 @@ public:
     struct Data
     {
         Data()
-            : val(0.0,0.0), absTol(std::numeric_limits<double>::epsilon()), relTol(std::numeric_limits<double>::epsilon()), minVal(0), maxVal(LONG_MAX),
-              singleStep(1), precision(2), scale(Scale::_), unit(QString()), pkAvg(PkAvg::PK),
-              format(Format::RE_IM), readOnly(false), foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
+            : val(QComplex(0.0,0.0)), minVal(0), maxVal(highest),
+              singleStep(1), absTol(epsilon), relTol(epsilon),
+              precision(2), pkAvg(PkAvg::PK), scale(Scale::_), format(Format::RE_IM), readOnly(false), unit(QString()),
+              foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QComplex val;
-        double absTol;
-        double relTol;
         double minVal;
         double maxVal;
         QComplex singleStep;
+        double absTol;
+        double relTol;
         int precision;
-        Scale scale;
-        QString unit;
         PkAvg pkAvg;
+        Scale scale;
         Format format;
         bool readOnly;
+        QString unit;
         QBrush foreground;
 
         double minimumValue() const { return minVal; }
@@ -2152,9 +2156,6 @@ QString QtComplexPropertyManager::unitText(const QtProperty *property) const
     switch (it.value().format) {
         case Format::LOG_DEG:
             return QString("dB") + ScaleNameMap[it.value().scale] + it.value().unit;
-        case Format::RE:
-        case Format::RE_IM:
-        case Format::LIN_DEG:
         default:
             return ScaleNameMap[it.value().scale] + it.value().unit;
     }
@@ -2174,7 +2175,6 @@ QString QtComplexPropertyManager::pkAvgText(const QtProperty *property) const
     switch (it.value().pkAvg) {
         case PkAvg::PK:
             return QString("pk");
-        case PkAvg::AVG:
         default:
             return QString("avg");
     }
@@ -2198,7 +2198,6 @@ QString QtComplexPropertyManager::formatText(const QtProperty *property) const
             return QString("Re+Imj");
         case Format::LOG_DEG:
             return QString("Log") + QString(QChar(0x2220)) + QString("Deg");
-        case Format::LIN_DEG:
         default:
             return QString("Lin") + QString(QChar(0x2220)) + QString("Deg");
     }
@@ -2633,23 +2632,22 @@ public:
     struct Data
     {
         Data()
-            :val(QVector<QComplex>(0)), absTol(QVector<double>(0)), relTol(QVector<double>(0)), minVal(QVector<double>(0)), maxVal(QVector<double>(0)),
-              singleStep(QVector<QComplex>(0)), precision(2), scale(Scale::_), unit(QString()), pkAvg(PkAvg::PK),
-              format(Format::RE_IM), equation(QString()), readOnly(false),
-              foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
+            :val(QVector<QComplex>(0)), minVal(QVector<double>(0)), maxVal(QVector<double>(0)),
+             singleStep(QVector<QComplex>(0)), absTol(QVector<double>(0)), relTol(QVector<double>(0)),
+             precision(2), scale(Scale::_), pkAvg(PkAvg::PK),format(Format::RE_IM), readOnly(false), unit(QString()),
+             foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QVector<QComplex> val;
-        QVector<double> absTol;
-        QVector<double> relTol;
         QVector<double> minVal;
         QVector<double> maxVal;
         QVector<QComplex> singleStep;
+        QVector<double> absTol;
+        QVector<double> relTol;
         int precision;
         Scale scale;
-        QString unit;
         PkAvg pkAvg;
         Format format;
-        QString equation;
         bool readOnly;
+        QString unit;
         QBrush foreground;
 
         std::vector<QtProperty *> subProperties;
@@ -2971,21 +2969,6 @@ Format QtTFTensorPropertyManager::format(const QtProperty *property) const
 }
 
 /*!
- Returns the given \a property's equation string, as a QString.
-
- \sa setEquation()
- */
-QString QtTFTensorPropertyManager::equation(const QtProperty *property) const
-{
-    typedef QMap<const QtProperty *, QtTFTensorPropertyManagerPrivate::Data> PropertyToData;
-    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
-    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
-    if (it == d_ptr->m_values.constEnd())
-        return QString();
-    return it.value().equation;
-}
-
-/*!
  Returns read-only status of the property.
 
  When property is read-only it's value can be selected and copied from editor but not modified.
@@ -3042,7 +3025,6 @@ QString QtTFTensorPropertyManager::pkAvgText(const QtProperty *property) const
     switch (it.value().pkAvg) {
         case PkAvg::PK:
             return QString("pk");
-        case PkAvg::AVG:
         default:
             return QString("avg");
     }
@@ -3066,7 +3048,6 @@ QString QtTFTensorPropertyManager::formatText(const QtProperty *property) const
             return QString("Re+Imj");
         case Format::LOG_DEG:
             return QString("Log") + QString(QChar(0x2220)) + QString("Deg");
-        case Format::LIN_DEG:
         default:
             return QString("Lin") + QString(QChar(0x2220)) + QString("Deg");
     }
@@ -3086,9 +3067,6 @@ QString QtTFTensorPropertyManager::unitText(const QtProperty *property) const
     switch (it.value().format) {
         case Format::LOG_DEG:
             return QString("dB") + ScaleNameMap[it.value().scale] + it.value().unit;
-        case Format::RE:
-        case Format::RE_IM:
-        case Format::LIN_DEG:
         default:
             return ScaleNameMap[it.value().scale] + it.value().unit;
     }
@@ -3565,31 +3543,6 @@ void QtTFTensorPropertyManager::setFormat(QtProperty *property, Format format_)
 }
 
 /*!
- \fn void QtComplexArrayPropertyManager::setEquation(QtProperty *property, const Qstring& equation)
-
- Sets the equation of the given \a property to \a equation.
-
- \sa equation(), equationChanged()
- */
-void QtTFTensorPropertyManager::setEquation(QtProperty *property, const QString& equation)
-{
-    const QtTFTensorPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
-    if (it == d_ptr->m_values.end())
-        return;
-
-    QtTFTensorPropertyManagerPrivate::Data data = it.value();
-
-    if (data.equation == equation)
-        return;
-
-    data.equation = equation;
-    it.value() = data;
-
-    emit propertyChanged(property);
-    emit equationChanged(property, data.equation);
-}
-
-/*!
  \reimp
  */
 void QtTFTensorPropertyManager::reinitializeProperty(QtProperty *property)
@@ -3667,10 +3620,13 @@ public:
     struct Data
     {
         Data() : regExp(QString(QLatin1Char('*')),  Qt::CaseSensitive, QRegExp::Wildcard),
-            echoMode(QLineEdit::Normal), readOnly(false),
-            foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
+                 absTol(QString()), relTol(QString()),
+                 echoMode(QLineEdit::Normal), readOnly(false),
+                 foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QString val;
         QRegExp regExp;
+        QString absTol;
+        QString relTol;
         int echoMode;
         bool readOnly;
         QBrush foreground;
@@ -3947,9 +3903,12 @@ public:
     struct Data
     {
         Data() : val(false), textVisible(true),
-            foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
+                 absTol(QString()), relTol(QString()),
+                 foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         bool val;
         bool textVisible;
+        QString absTol;
+        QString relTol;
         QBrush foreground;
     };
 
@@ -4135,12 +4094,14 @@ public:
 
     struct Data
     {
-        Data() : val(QDate::currentDate()), minVal(QDate(1752, 9, 14)),
-                maxVal(QDate(7999, 12, 31)),
-                foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
+        Data() : val(QDate::currentDate()), minVal(QDate(1752, 9, 14)), maxVal(QDate(7999, 12, 31)),
+                 absTol(QDate(1752, 9, 14)), relTol(QDate(1752, 9, 14)),
+                 foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QDate val;
         QDate minVal;
         QDate maxVal;
+        QDate absTol;
+        QDate relTol;
         QBrush foreground;
         QDate minimumValue() const { return minVal; }
         QDate maximumValue() const { return maxVal; }
@@ -5351,8 +5312,11 @@ public:
 
     struct Data
     {
-        Data() : precision(2) {}
+        Data() : val(QPointF(0.0, 0.0)),
+                 absTol(QPointF(epsilon, epsilon)), relTol(QPointF(epsilon, epsilon)), precision(2) {}
         QPointF val;
+        QPointF absTol;
+        QPointF relTol;
         int precision;
         QBrush foreground;
     };
@@ -5646,11 +5610,14 @@ public:
     struct Data
     {
         Data() : val(QSize(0, 0)), minVal(QSize(0, 0)), maxVal(QSize(INT_MAX, INT_MAX)),
-            readOnly(false),
-            foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
+                 absTol(QSize(0, 0)), relTol(QSize(0, 0)),
+                 readOnly(false),
+                 foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QSize val;
         QSize minVal;
         QSize maxVal;
+        QSize absTol;
+        QSize relTol;
         bool readOnly;
         QBrush foreground;
         QSize minimumValue() const { return minVal; }
@@ -6039,12 +6006,15 @@ public:
 
     struct Data
     {
-        Data() : val(QSizeF(0, 0)), minVal(QSizeF(0, 0)), maxVal(QSizeF(INT_MAX, INT_MAX)), precision(2),
-            readOnly(false),
-            foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
+        Data() : val(QSizeF(0, 0)), minVal(QSizeF(0, 0)), maxVal(QSizeF(highest, highest)),
+                 absTol(QSizeF(epsilon, epsilon)), relTol(QSizeF(epsilon, epsilon)), precision(2),
+                 readOnly(false),
+                 foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QSizeF val;
         QSizeF minVal;
         QSizeF maxVal;
+        QSizeF absTol;
+        QSizeF relTol;
         int precision;
         bool readOnly;
         QBrush foreground;
@@ -6487,9 +6457,12 @@ public:
 
     struct Data
     {
-        Data() : val(0, 0, 0, 0),
-            foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
+        Data() : val(QRect(0, 0, 0, 0)),
+                 absTol(QRect(0, 0, 0, 0)), relTol(QRect(0, 0, 0, 0)),
+                 foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QRect val;
+        QRect absTol;
+        QRect relTol;
         QBrush foreground;
         QRect constraint;
     };
@@ -6908,9 +6881,12 @@ public:
 
     struct Data
     {
-        Data() : val(0, 0, 0, 0), precision(2),
-            foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
+        Data() : val(QRectF(0, 0, 0, 0)),
+                 absTol(QRectF(epsilon, epsilon, epsilon, epsilon)), relTol(QRectF(epsilon, epsilon, epsilon, epsilon)), precision(2),
+                 foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QRectF val;
+        QRectF absTol;
+        QRectF relTol;
         QRectF constraint;
         int precision;
         QBrush foreground;
@@ -7388,8 +7364,11 @@ public:
     struct Data
     {
         Data() : val(-1),
-            foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
+                 absTol(0), relTol(0),
+                 foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         int val;
+        int absTol;
+        int relTol;
         QBrush foreground;
         QStringList enumNames;
         QMap<int, QIcon> enumIcons;
@@ -7672,8 +7651,11 @@ public:
     struct Data
     {
         Data() : val(-1),
-            foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
+                 absTol(0), relTol(0),
+                 foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         int val;
+        int absTol;
+        int relTol;
         QBrush foreground;
         QStringList flagNames;
     };
@@ -9285,11 +9267,15 @@ class QtFilePropertyManagerPrivate
     Q_DECLARE_PUBLIC(QtFilePropertyManager)
 public:
     struct Data {
-        Data() : filter("All Files (*)"), fileMode(QFileDialog::AnyFile) {}
-        QString val;
-        QString filter;
-        QFileDialog::FileMode fileMode;
-        bool readOnly;
+        Data() : val(QString()),
+                 absTol(QString()), relTol(QString()),
+                 filter("All Files (*)"), fileMode(QFileDialog::AnyFile) {}
+         QString val;
+         QString absTol;
+         QString relTol;
+         QString filter;
+         QFileDialog::FileMode fileMode;
+         bool readOnly;
     };
     typedef QMap<const QtProperty *, Data> PropertyValueMap;
     PropertyValueMap m_values;

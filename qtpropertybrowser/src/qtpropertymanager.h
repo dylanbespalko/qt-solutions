@@ -297,7 +297,6 @@ public:
     QString unit(const QtProperty *property) const;
     PkAvg pkAvg(const QtProperty *property) const;
     Format format(const QtProperty *property) const;
-    QString equation(const QtProperty *property) const;
     bool isReadOnly(const QtProperty *property) const;
     QBrush foreground(const QtProperty *property) const;
 
@@ -314,7 +313,6 @@ public Q_SLOTS:
     void setUnit(QtProperty *property, QString unit);
     void setPkAvg(QtProperty *property,PkAvg pkAvg);
     void setFormat(QtProperty *property,Format format_);
-    void setEquation(QtProperty *property, const QString& equation);
     void setReadOnly(QtProperty *property, bool readOnly);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QVector<QComplex>& val);
