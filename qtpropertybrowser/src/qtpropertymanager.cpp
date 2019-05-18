@@ -565,7 +565,7 @@ void QtMetaEnumProvider::initLocale()
         QLocale locale(language);
         if (locale.language() == language)
             nameToLanguage.insert(QLocale::languageToString(language), language);
-        language = (QLocale::Language)((uint)language + 1); // ++language
+        language = static_cast<QLocale::Language>(static_cast<uint>(language) + 1); // ++language
     }
 
     const QLocale system = QLocale::system();
@@ -2691,7 +2691,7 @@ void QtTFTensorPropertyManagerPrivate::slotPropertyDestroyed(QtProperty *sub_pro
     if (it == m_values.end())
         return;
 
-    for (unsigned short index = it.value().val.size(); index > 0; index--) {
+    for (unsigned short index = ushort(it.value().val.size()); index > 0; index--) {
         if (it.value().subProperties[index-1] == sub_property){
             it.value().subProperties[index-1] = nullptr;
             m_subToProperty.remove(sub_property);
@@ -2847,7 +2847,7 @@ QVector<QComplex> QtTFTensorPropertyManager::value(const QtProperty *property) c
  */
 QVector<double> QtTFTensorPropertyManager::absTol(const QtProperty *property) const
 {
-    return getData<QVector<double> >(d_ptr->m_values, &QtTFTensorPropertyManagerPrivate::Data::absTol, property, QVector<double>(std::numeric_limits<double>::epsilon()));
+    return getData<QVector<double> >(d_ptr->m_values, &QtTFTensorPropertyManagerPrivate::Data::absTol, property, QVector<double>(0));
 }
 
 /*!
@@ -2857,7 +2857,7 @@ QVector<double> QtTFTensorPropertyManager::absTol(const QtProperty *property) co
  */
 QVector<double> QtTFTensorPropertyManager::relTol(const QtProperty *property) const
 {
-    return getData<QVector<double> >(d_ptr->m_values, &QtTFTensorPropertyManagerPrivate::Data::relTol, property, QVector<double>(std::numeric_limits<double>::epsilon()));
+    return getData<QVector<double> >(d_ptr->m_values, &QtTFTensorPropertyManagerPrivate::Data::relTol, property, QVector<double>(0));
 }
 
 /*!
@@ -3555,7 +3555,7 @@ void QtTFTensorPropertyManager::reinitializeProperty(QtProperty *property)
         data.singleStep[index] = 1;
     }
     it.value() = data;
-    it.value().subProperties = std::vector<QtProperty *>(data.val.size());
+    it.value().subProperties = std::vector<QtProperty *>(ushort(data.val.size()));
 
     for (unsigned short index=0; index < data.val.size(); index++) {
         QtProperty *subProp = d_ptr->m_complexPropertyManager->addProperty();
@@ -3587,7 +3587,7 @@ void QtTFTensorPropertyManager::uninitializeProperty(QtProperty *property)
         return;
 
     QVector<QComplex> value = it.value().val;
-    for (unsigned short index=value.size(); index >0; index--) {
+    for (unsigned short index=ushort(value.size()); index >0; index--) {
         QtProperty *subProp = it.value().subProperties[index-1];
         if (subProp) {
             d_ptr->m_subToProperty.remove(subProp);
@@ -3715,7 +3715,7 @@ QRegExp QtStringPropertyManager::regExp(const QtProperty *property) const
 */
 EchoMode QtStringPropertyManager::echoMode(const QtProperty *property) const
 {
-    return (EchoMode)getData<int>(d_ptr->m_values, &QtStringPropertyManagerPrivate::Data::echoMode, property, 0);
+    return static_cast<EchoMode>(getData<int>(d_ptr->m_values, &QtStringPropertyManagerPrivate::Data::echoMode, property, 0));
 }
 
 /*!
@@ -3752,7 +3752,7 @@ QString QtStringPropertyManager::displayText(const QtProperty *property) const
         return QString();
 
     QLineEdit edit;
-    edit.setEchoMode((EchoMode)it.value().echoMode);
+    edit.setEchoMode(static_cast<EchoMode>(it.value().echoMode));
     edit.setText(it.value().val);
     return edit.displayText();
 }

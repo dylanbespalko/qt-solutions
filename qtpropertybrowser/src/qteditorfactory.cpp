@@ -2426,7 +2426,7 @@ QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *man
             enumNames << prefix + i.value() + unit;
         }
         editor->addItems(enumNames);
-        editor->setCurrentIndex((int)currentScale);
+        editor->setCurrentIndex(static_cast<int>(currentScale));
 
         connect(editor, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetScale(int)));
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotUnitAttributeEditorDestroyed(QObject *)));
@@ -2814,7 +2814,7 @@ QWidget *QtComplexEditFactory::createAttributeEditor(QtComplexPropertyManager *m
             enumNames << prefix + i.value() + unit;
         }
         editor->addItems(enumNames);
-        editor->setCurrentIndex((int)currentScale);
+        editor->setCurrentIndex(static_cast<int>(currentScale));
 
         connect(editor, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetScale(int)));
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotUnitAttributeEditorDestroyed(QObject *)));
@@ -3076,7 +3076,7 @@ QWidget *QtTFTensorEditFactory::createAttributeEditor(QtTFTensorPropertyManager 
                 enumNames << prefix + i.value() + unit;
             }
             editor->addItems(enumNames);
-            editor->setCurrentIndex((int)currentScale);
+            editor->setCurrentIndex(static_cast<int>(currentScale));
 
             connect(editor, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSetScale(int)));
             connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotUnitAttributeEditorDestroyed(QObject *)));
@@ -3207,7 +3207,7 @@ void QtLineEditFactoryPrivate::slotEchoModeChanged(QtProperty *property, int ech
     while (itEditor.hasNext()) {
         QLineEdit *editor = itEditor.next();
         editor->blockSignals(true);
-        editor->setEchoMode((EchoMode)echoMode);
+        editor->setEchoMode(static_cast<EchoMode>(echoMode));
         editor->blockSignals(false);
     }
 }
@@ -3315,7 +3315,7 @@ QWidget *QtLineEditFactory::createEditor(QtStringPropertyManager *manager,
 {
 
     QLineEdit *editor = d_ptr->createEditor(property, parent);
-    editor->setEchoMode((EchoMode)manager->echoMode(property));
+    editor->setEchoMode(static_cast<EchoMode>(manager->echoMode(property)));
     editor->setReadOnly(manager->isReadOnly(property));
     QRegExp regExp = manager->regExp(property);
     if (regExp.isValid()) {

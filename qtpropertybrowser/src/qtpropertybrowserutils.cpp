@@ -68,8 +68,7 @@
 #include <QPainter>
 #include <QMap>
 
-#define _USE_MATH_DEFINES
-#include <math.h>
+#include <cmath>
 #include <float.h>
 #include <complex>
 #include <stdio.h>
@@ -80,11 +79,11 @@ QT_BEGIN_NAMESPACE
 
 #ifdef Q_CC_MSVC
     #define isnan(x) _isnan(x)
-    #define isinf(x) (!_finite(x) && !isnan(x))
+    #define isinfinite(x) (!_finite(x) && !isnan(x))
     #define fpu_error(x) (isinf(x) || isnan(x))
 #else
     #define isnan(x) std::isnan(x)
-    #define isinf(x) std::isinf(x)
+    #define isinfinite(x) std::isinf(x)
     #define fpu_error(x) (isinf(x) || isnan(x))
 #endif
 
@@ -463,7 +462,7 @@ int QIntEdit::str2num(const QString &text, const Scale scale, const Format forma
             val *= pow(10, scale_);
             break;
     }
-    if (isinf(std::abs(val)))
+    if (isinfinite(std::abs(val)))
         val = 0;
     return val;
 }
@@ -691,7 +690,7 @@ double QDoubleEdit::str2num(const QString &text, const Scale scale, const Format
         val *= pow(10, scale_);
         break;
     }
-    if (isinf(std::abs(val)))
+    if (isinfinite(std::abs(val)))
         val = 0;
     return val;
 }
@@ -958,7 +957,7 @@ QComplex QComplexEdit::str2num(const QString &text, const Scale scale, const For
             val *= pow(10, scale_);
             break;
     }
-    if (isinf(std::abs(val)))
+    if (isinfinite(std::abs(val)))
         val = 0;
     return val;
 }

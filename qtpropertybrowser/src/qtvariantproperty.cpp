@@ -1743,7 +1743,7 @@ void QtVariantPropertyManager::setAttribute(QtProperty *property,
         return;
 
     if (attrType != attributeType(propertyType(property), attribute) &&
-                !value.canConvert((QVariant::Type)attrType))
+                !value.canConvert(static_cast<QVariant::Type>(attrType)))
         return;
 
     QtProperty *internProp = propertyToWrappedProperty()->value(property, nullptr);
@@ -1781,9 +1781,9 @@ void QtVariantPropertyManager::setAttribute(QtProperty *property,
         if (attribute == d_ptr->m_regExpAttribute)
             stringManager->setRegExp(internProp, qVariantValue<QRegExp>(value));
         if (attribute == d_ptr->m_echoModeAttribute)
-            stringManager->setEchoMode(internProp, (EchoMode)qVariantValue<int>(value));
+            stringManager->setEchoMode(internProp, static_cast<EchoMode>(qVariantValue<int>(value)));
         if (attribute == d_ptr->m_readOnlyAttribute)
-            stringManager->setReadOnly(internProp, (EchoMode)qVariantValue<bool>(value));
+            stringManager->setReadOnly(internProp, static_cast<EchoMode>(qVariantValue<bool>(value)));
         return;
     } else if (QtDatePropertyManager *dateManager = qobject_cast<QtDatePropertyManager *>(manager)) {
         if (attribute == d_ptr->m_maximumAttribute)
