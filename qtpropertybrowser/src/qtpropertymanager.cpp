@@ -253,43 +253,6 @@ QColor qSoftBound(QSizeF minVal, QSizeF val, QSizeF maxVal)
     return qSoftBoundSize(minVal, val, maxVal);
 }
 
-// Matches the Python isclose() function in PEP 0485 and Boost Weak Approach
-template <class Value>
-bool isclose(Value a, Value b, Value abs_tol, Value rel_tol)
-{
-    if (std::abs(a-b) <= std::max( rel_tol * std::max(std::abs(a), std::abs(b)), abs_tol))
-        return true;
-    else
-        return false;
-}
-
-bool isclose(QComplex a, QComplex b, double abs_tol, double rel_tol)
-{
-    if (std::abs(a-b) <= std::max( rel_tol * std::max(std::abs(a), std::abs(b)), abs_tol))
-        return true;
-    else
-        return false;
-}
-
-bool isclose(QDate a, QDate b, QDate abs_tol, QDate rel_tol)
-{
-    Q_UNUSED(abs_tol);
-    Q_UNUSED(rel_tol);
-    return a == b;
-}
-
-bool isclose(QSize a, QSize b, QSize abs_tol, QSize rel_tol)
-{
-    return (isclose(a.width(), b.width(), abs_tol.width(), rel_tol.width()) &&
-            isclose(a.height(), b.height(), abs_tol.height(), rel_tol.height()));
-}
-
-bool isclose(QSizeF a, QSizeF b, QSizeF abs_tol, QSizeF rel_tol)
-{
-    return (isclose(a.width(), b.width(), abs_tol.width(), rel_tol.width()) &&
-            isclose(a.height(), b.height(), abs_tol.height(), rel_tol.height()));
-}
-
 namespace {
 
 namespace {
@@ -1635,7 +1598,7 @@ void QtDoublePropertyManager::setSingleStep(QtProperty *property, double step)
     if (step < 0)
         step = 0;
 
-    if (data.singleStep == step)
+    if (isclose(step, data.singleStep, data.absTol, data.relTol))
         return;
 
     data.singleStep = step;
@@ -2421,7 +2384,7 @@ void QtComplexPropertyManager::setMinimum(QtProperty *property, double minVal)
         (d_ptr->*setSubPropertyRange)(property, data.minVal, data.maxVal, data.val);
 
     emit propertyChanged(property);
-    if (data.val == oldVal)
+    if (isclose(oldVal, data.val, data.absTol, data.relTol))
         return;
     emit valueChanged(property, data.val);
 }
@@ -2463,7 +2426,7 @@ void QtComplexPropertyManager::setMaximum(QtProperty *property, double maxVal)
         (d_ptr->*setSubPropertyRange)(property, data.minVal, data.maxVal, data.val);
 
     emit propertyChanged(property);
-    if (data.val == oldVal)
+    if (isclose(oldVal, data.val, data.absTol, data.relTol))
         return;
     emit valueChanged(property, data.val);
 }
@@ -3353,7 +3316,7 @@ void QtTFTensorPropertyManager::setMinimum(QtProperty *property, const QVector<d
 
     emit rangeChanged(property, data.minVal, data.maxVal);
     emit propertyChanged(property);
-    if (data.val == oldVal)
+    if (isclose(oldVal, data.val, data.absTol, data.relTol))
         return;
     emit valueChanged(property, data.val);
 }
@@ -3397,7 +3360,7 @@ void QtTFTensorPropertyManager::setMaximum(QtProperty *property, const QVector<d
 
     emit rangeChanged(property, data.minVal, data.maxVal);
     emit propertyChanged(property);
-    if (data.val == oldVal)
+    if (isclose(oldVal, data.val, data.absTol, data.relTol))
         return;
     emit valueChanged(property, data.val);
 }
@@ -3452,7 +3415,7 @@ void QtTFTensorPropertyManager::setRange(QtProperty *property, const QVector<dou
 
     emit rangeChanged(property, data.minVal, data.maxVal);
     emit propertyChanged(property);
-    if (data.val == oldVal)
+    if (isclose(oldVal, data.val, data.absTol, data.relTol))
         return;
     emit valueChanged(property, data.val);
 }
@@ -5528,7 +5491,8 @@ void QtPointFPropertyManager::setValue(QtProperty *property, const QPointF &val)
     if (it == d_ptr->m_values.end())
         return;
 
-    if (it.value().val == val)
+    QtPointFPropertyManagerPrivate::Data data = it.value();
+    if (isclose(val, data.val, data.absTol, data.relTol))
         return;
 
     it.value().val = val;
@@ -7191,7 +7155,7 @@ void QtRectFPropertyManager::setValue(QtProperty *property, const QRectF &val)
             return;
     }
 
-    if (data.val == newRect)
+    if (isclose(newRect, data.val, data.absTol, data.relTol))
         return;
 
     data.val = newRect;
@@ -7225,7 +7189,7 @@ void QtRectFPropertyManager::setConstraint(QtProperty *property, const QRectF &c
     QtRectFPropertyManagerPrivate::Data data = it.value();
 
     QRectF newConstraint = constraint.normalized();
-    if (data.constraint == newConstraint)
+    if (isclose(newConstraint, data.constraint, data.absTol, data.relTol))
         return;
 
     const QRectF oldVal = data.val;
@@ -7258,7 +7222,7 @@ void QtRectFPropertyManager::setConstraint(QtProperty *property, const QRectF &c
 
     d_ptr->setConstraint(property, data.constraint, data.val);
 
-    if (data.val == oldVal)
+    if (isclose(oldVal, data.val, data.absTol, data.relTol))
         return;
 
     emit propertyChanged(property);

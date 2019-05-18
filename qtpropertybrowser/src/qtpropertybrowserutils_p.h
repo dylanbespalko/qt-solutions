@@ -90,6 +90,30 @@ extern double highest;
 extern double lowest;
 extern double epsilon;
 
+class QT_QTPROPERTYBROWSER_EXPORT QComplex : public std::complex<double>
+{
+public:
+    QComplex(double re = 0.0, double im = 0.0);
+    QComplex(std::complex<double> parent);
+};
+
+// Matches the Python isclose() function in PEP 0485 and Boost Weak Approach
+template <class Value>
+bool isclose(Value a, Value b, Value abs_tol, Value rel_tol)
+{
+    if (std::abs(a-b) <= std::max( rel_tol * std::max(std::abs(a), std::abs(b)), abs_tol))
+        return true;
+    else
+        return false;
+}
+bool isclose(QComplex a, QComplex b, double abs_tol, double rel_tol);
+bool isclose(QVector<QComplex> a, QVector<QComplex> b, QVector<double> abs_tol, QVector<double> rel_tol);
+bool isclose(QDate a, QDate b, QDate abs_tol, QDate rel_tol);
+bool isclose(QSize a, QSize b, QSize abs_tol, QSize rel_tol);
+bool isclose(QPointF a, QPointF b, QPointF abs_tol, QPointF rel_tol);
+bool isclose(QSizeF a, QSizeF b, QSizeF abs_tol, QSizeF rel_tol);
+bool isclose(QRectF a, QRectF b, QRectF abs_tol, QRectF rel_tol);
+
 class QMouseEvent;
 class QCheckBox;
 class QLineEdit;
@@ -246,14 +270,6 @@ public:
     static QString num2str(double val, const Scale scale, const Format format, int precision);
     static double str2num(const QString &text, const Scale scale, const Format format);
 };
-
-class QT_QTPROPERTYBROWSER_EXPORT QComplex : public std::complex<double>
-{
-public:
-    QComplex(double re = 0.0, double im = 0.0);
-    QComplex(std::complex<double> parent);
-};
-
 
 class QComplexEditPrivate;
 

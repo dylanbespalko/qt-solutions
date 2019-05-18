@@ -1848,7 +1848,7 @@ void QtDoubleSpinBoxFactoryPrivate::slotPropertyChanged(QtProperty *property, do
     QListIterator<QDoubleSpinBox *> itEditor(m_createdEditors[property]);
     while (itEditor.hasNext()) {
         QDoubleSpinBox *editor = itEditor.next();
-        if (editor->value() != value) {
+        if (!isclose(value, editor->value(), epsilon, epsilon)){
             editor->blockSignals(true);
             editor->setValue(value);
             editor->blockSignals(false);
@@ -2168,7 +2168,7 @@ void QtDoubleEditFactoryPrivate::slotPropertyChanged(QtProperty *property, doubl
         QDoubleEdit *editor = itEditor.next();
         editor->setFormat(manager->format(property));
         editor->setScale(manager->scale(property));
-        if (editor->value() != value) {
+        if (!isclose(value, editor->value(), epsilon, epsilon)){
             editor->blockSignals(true);
             editor->setValue(value);
             editor->blockSignals(false);
@@ -2538,7 +2538,7 @@ void QtComplexEditFactoryPrivate::slotPropertyChanged(QtProperty *property, cons
         QComplexEdit *editor = itEditor.next();
         editor->setScale(manager->scale(property));
         editor->setFormat(manager->format(property));
-        if (editor->value() != value) {
+        if (!isclose(value, editor->value(), epsilon, epsilon)){
             editor->blockSignals(true);
             editor->setValue(value);
             editor->blockSignals(false);

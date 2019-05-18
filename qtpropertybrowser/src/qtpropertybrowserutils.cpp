@@ -96,6 +96,55 @@ double highest(std::numeric_limits<double>::max());
 double lowest(-std::numeric_limits<double>::max());
 double epsilon(std::numeric_limits<double>::epsilon());
 
+bool isclose(QComplex a, QComplex b, double abs_tol, double rel_tol)
+{
+    if (std::abs(a-b) <= std::max( rel_tol * std::max(std::abs(a), std::abs(b)), abs_tol))
+        return true;
+    else
+        return false;
+}
+
+bool isclose(QVector<QComplex> a, QVector<QComplex> b, QVector<double> abs_tol, QVector<double> rel_tol)
+{
+    for (unsigned short index=0; index < a.size(); index++) {
+        if (!(std::abs(a[index]-b[index]) <= std::max(rel_tol[index] * std::max(std::abs(a[index]), std::abs(b[index])), abs_tol[index])))
+            return false;
+    }
+}
+
+bool isclose(QDate a, QDate b, QDate abs_tol, QDate rel_tol)
+{
+    Q_UNUSED(abs_tol);
+    Q_UNUSED(rel_tol);
+    return a == b;
+}
+
+bool isclose(QSize a, QSize b, QSize abs_tol, QSize rel_tol)
+{
+    return (isclose(a.width(), b.width(), abs_tol.width(), rel_tol.width()) &&
+            isclose(a.height(), b.height(), abs_tol.height(), rel_tol.height()));
+}
+
+bool isclose(QPointF a, QPointF b, QPointF abs_tol, QPointF rel_tol)
+{
+    return (isclose(a.x(), b.x(), abs_tol.x(), rel_tol.x()) &&
+            isclose(a.y(), b.y(), abs_tol.y(), rel_tol.y()));
+}
+
+bool isclose(QSizeF a, QSizeF b, QSizeF abs_tol, QSizeF rel_tol)
+{
+    return (isclose(a.width(), b.width(), abs_tol.width(), rel_tol.width()) &&
+            isclose(a.height(), b.height(), abs_tol.height(), rel_tol.height()));
+}
+
+bool isclose(QRectF a, QRectF b, QRectF abs_tol, QRectF rel_tol)
+{
+    return (isclose(a.x(), b.x(), abs_tol.x(), rel_tol.x()) &&
+            isclose(a.y(), b.y(), abs_tol.y(), rel_tol.y()) &&
+            isclose(a.width(), b.width(), abs_tol.width(), rel_tol.width()) &&
+            isclose(a.height(), b.height(), abs_tol.height(), rel_tol.height()));
+}
+
 QMap<Format, QString> FormatNameMap = {
     {Format::RE, "Re"},
     {Format::RE_IM, "Re+Imj"},
@@ -299,7 +348,7 @@ void QIntEdit::setValue(int val)
 
 void QIntEdit::setMinimum(double min)
 {
-    if (d_ptr->m_minimum != min) {
+    if (!isclose(min, d_ptr->m_minimum, epsilon, epsilon)){
         if(d_ptr->m_value < min)
             setValue(min);
         d_ptr->m_minimum = min;
@@ -308,7 +357,7 @@ void QIntEdit::setMinimum(double min)
 
 void QIntEdit::setMaximum(double max)
 {
-    if (d_ptr->m_maximum != max) {
+    if (!isclose(max, d_ptr->m_maximum, epsilon, epsilon)){
         if(d_ptr->m_value > max)
             setValue(max);
         d_ptr->m_maximum = max;
@@ -515,7 +564,7 @@ void QDoubleEdit::setValue()
     if (!d_ptr->m_readOnly && validate(text,pos))
     {
         val = str2num(d_ptr->m_edit->text(), d_ptr->m_scale, d_ptr->m_format);
-        if (d_ptr->m_value != val) {
+        if (!isclose(val, d_ptr->m_value, epsilon, epsilon)){
             d_ptr->m_value = val;
             emit valueChanged(val);
         }
@@ -524,7 +573,7 @@ void QDoubleEdit::setValue()
 
 void QDoubleEdit::setValue(double val)
 {
-    if (d_ptr->m_value != val) {
+    if (!isclose(val, d_ptr->m_value, epsilon, epsilon)){
         d_ptr->m_value = val;
         d_ptr->m_edit->setText(num2str(d_ptr->m_value, d_ptr->m_scale, d_ptr->m_format, d_ptr->m_precision));
         emit valueChanged(val);
@@ -533,7 +582,7 @@ void QDoubleEdit::setValue(double val)
 
 void QDoubleEdit::setMinimum(double min)
 {
-    if (d_ptr->m_minimum != min) {
+    if (!isclose(min, d_ptr->m_minimum, epsilon, epsilon)){
         if (d_ptr->m_value < min)
             setValue(min);
         d_ptr->m_minimum = min;
@@ -542,7 +591,7 @@ void QDoubleEdit::setMinimum(double min)
 
 void QDoubleEdit::setMaximum(double max)
 {
-    if (d_ptr->m_maximum != max) {
+    if (!isclose(max, d_ptr->m_maximum, epsilon, epsilon)){
         if (d_ptr->m_value > max)
             setValue(max);
         d_ptr->m_maximum = max;
@@ -749,7 +798,7 @@ void QComplexEdit::setValue()
     if (!d_ptr->m_readOnly && validate(text,pos))
     {
         val = QComplexEdit::str2num(d_ptr->m_edit->text(), d_ptr->m_scale, d_ptr->m_format);
-        if (d_ptr->m_value != val) {
+        if (!isclose(val, d_ptr->m_value, epsilon, epsilon)){
             d_ptr->m_value = val;
             emit valueChanged(val);
         }
@@ -758,7 +807,7 @@ void QComplexEdit::setValue()
 
 void QComplexEdit::setValue(const QComplex &val)
 {
-    if (d_ptr->m_value != val) {
+    if (!isclose(val, d_ptr->m_value, epsilon, epsilon)){
         d_ptr->m_value = val;
         d_ptr->m_edit->setText(QComplexEdit::num2str(d_ptr->m_value, d_ptr->m_scale, d_ptr->m_format, d_ptr->m_precision));
         emit valueChanged(val);
@@ -767,7 +816,7 @@ void QComplexEdit::setValue(const QComplex &val)
 
 void QComplexEdit::setMinimum(double min)
 {
-    if (d_ptr->m_minimum != min) {
+    if (!isclose(min, d_ptr->m_minimum, epsilon, epsilon)){
         if(abs(d_ptr->m_value) < min)
             setValue(min);
         d_ptr->m_minimum = min;
@@ -776,7 +825,7 @@ void QComplexEdit::setMinimum(double min)
 
 void QComplexEdit::setMaximum(double max)
 {
-    if (d_ptr->m_maximum != max) {
+    if (!isclose(max, d_ptr->m_maximum, epsilon, epsilon)){
         if(abs(d_ptr->m_value) > max)
             setValue(max);
         d_ptr->m_maximum = max;
@@ -909,7 +958,6 @@ QComplex QComplexEdit::str2num(const QString &text, const Scale scale, const For
                 val = QComplex(pow(10,(regExp.cap(1).toDouble())/20),0);
             val *= sqrt(pow(10, scale_));
             break;
-        case Format::LIN_DEG:
         default:
             pos = regExp.indexIn(text);
             if (pos == -1)
