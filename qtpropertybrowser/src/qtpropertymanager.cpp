@@ -254,13 +254,40 @@ QColor qSoftBound(QSizeF minVal, QSizeF val, QSizeF maxVal)
 }
 
 // Matches the Python isclose() function in PEP 0485 and Boost Weak Approach
-template <class FloatType>
-bool isclose(FloatType a, FloatType b, FloatType abs_tol, FloatType rel_tol)
+template <class Value>
+bool isclose(Value a, Value b, Value abs_tol, Value rel_tol)
 {
     if (std::abs(a-b) <= std::max( rel_tol * std::max(std::abs(a), std::abs(b)), abs_tol))
         return true;
     else
         return false;
+}
+
+bool isclose(QComplex a, QComplex b, double abs_tol, double rel_tol)
+{
+    if (std::abs(a-b) <= std::max( rel_tol * std::max(std::abs(a), std::abs(b)), abs_tol))
+        return true;
+    else
+        return false;
+}
+
+bool isclose(QDate a, QDate b, QDate abs_tol, QDate rel_tol)
+{
+    Q_UNUSED(abs_tol);
+    Q_UNUSED(rel_tol);
+    return a == b;
+}
+
+bool isclose(QSize a, QSize b, QSize abs_tol, QSize rel_tol)
+{
+    return (isclose(a.width(), b.width(), abs_tol.width(), rel_tol.width()) &&
+            isclose(a.height(), b.height(), abs_tol.height(), rel_tol.height()));
+}
+
+bool isclose(QSizeF a, QSizeF b, QSizeF abs_tol, QSizeF rel_tol)
+{
+    return (isclose(a.width(), b.width(), abs_tol.width(), rel_tol.width()) &&
+            isclose(a.height(), b.height(), abs_tol.height(), rel_tol.height()));
 }
 
 namespace {
@@ -376,7 +403,7 @@ static void setValueInRange(PropertyManager *manager, PropertyManagerPrivate *ma
 
     PrivateData &data = it.value();
 
-    if (data.val == val)
+    if (isclose(val, data.val, data.absTol, data.relTol))
         return;
 
     const Value oldVal = data.val;
@@ -385,7 +412,7 @@ static void setValueInRange(PropertyManager *manager, PropertyManagerPrivate *ma
     if (!manager->isReadOnly(property))
         data.val = qBound(data.minVal, val, data.maxVal);
 
-    if (data.val == oldVal)
+    if (isclose(oldVal, data.val, data.absTol, data.relTol))
         return;
 
     if (setSubPropertyValue)
@@ -417,7 +444,7 @@ static void setBorderValues(PropertyManager *manager, PropertyManagerPrivate *ma
 
     PrivateData &data = it.value();
 
-    if (data.minVal == fromVal && data.maxVal == toVal)
+    if (isclose(fromVal, data.minVal, data.absTol, data.relTol) && isclose(toVal, data.maxVal, data.absTol, data.relTol))
         return;
 
     const Value oldVal = data.val;
@@ -431,7 +458,7 @@ static void setBorderValues(PropertyManager *manager, PropertyManagerPrivate *ma
         (managerPrivate->*setSubPropertyRange)(property, data.minVal, data.maxVal, data.val);
 
     emit (manager->*propertyChangedSignal)(property);
-    if (data.val == oldVal)
+    if (isclose(oldVal, data.val, data.absTol, data.relTol))
         return;
     emit (manager->*valueChangedSignal)(property, data.val);
 }
@@ -454,8 +481,7 @@ static void setBorderValue(PropertyManager *manager, PropertyManagerPrivate *man
         return;
 
     PrivateData &data = it.value();
-
-    if ((data.*getRangeVal)() == borderVal)
+    if (isclose(borderVal, (data.*getRangeVal)(), data.absTol, data.relTol))
         return;
 
     const Value oldVal = data.val;
@@ -469,7 +495,7 @@ static void setBorderValue(PropertyManager *manager, PropertyManagerPrivate *man
         (managerPrivate->*setSubPropertyRange)(property, data.minVal, data.maxVal, data.val);
 
     emit (manager->*propertyChangedSignal)(property);
-    if (data.val == oldVal)
+    if (isclose(oldVal, data.val, data.absTol, data.relTol))
         return;
     emit (manager->*valueChangedSignal)(property, data.val);
 }
