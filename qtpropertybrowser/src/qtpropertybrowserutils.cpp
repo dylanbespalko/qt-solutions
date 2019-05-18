@@ -110,6 +110,7 @@ bool isclose(QVector<QComplex> a, QVector<QComplex> b, QVector<double> abs_tol, 
         if (!(std::abs(a[index]-b[index]) <= std::max(rel_tol[index] * std::max(std::abs(a[index]), std::abs(b[index])), abs_tol[index])))
             return false;
     }
+    return true;
 }
 
 bool isclose(QDate a, QDate b, QDate abs_tol, QDate rel_tol)
@@ -350,7 +351,7 @@ void QIntEdit::setMinimum(double min)
 {
     if (!isclose(min, d_ptr->m_minimum, epsilon, epsilon)){
         if(d_ptr->m_value < min)
-            setValue(min);
+            setValue(int(min));
         d_ptr->m_minimum = min;
     }
 }
@@ -359,7 +360,7 @@ void QIntEdit::setMaximum(double max)
 {
     if (!isclose(max, d_ptr->m_maximum, epsilon, epsilon)){
         if(d_ptr->m_value > max)
-            setValue(max);
+            setValue(int(max));
         d_ptr->m_maximum = max;
     }
 }
@@ -432,9 +433,6 @@ QString QIntEdit::num2str(int val, const Scale scale, const Format format, int p
             scaled_val = val/sqrt(pow(10, scale_));
             text = double2str(20*log10(scaled_val), precision);
             break;
-        case Format::RE:
-        case Format::RE_IM:
-        case Format::LIN_DEG:
         default:
             scaled_val = val/pow(10, scale_);
             text = double2str(scaled_val, precision);
@@ -457,9 +455,6 @@ int QIntEdit::str2num(const QString &text, const Scale scale, const Format forma
             val = int(pow(10,(regExp.cap(1).toDouble())/20));
             val *= sqrt(pow(10, scale_));
             break;
-        case Format::RE:
-        case Format::RE_IM:
-        case Format::LIN_DEG:
         default:
             pos = regExp.indexIn(text);
             if (pos == -1)
@@ -666,9 +661,6 @@ QString QDoubleEdit::num2str(double val, const Scale scale, const Format format,
             scaled_val = val/sqrt(pow(10, scale_));
             text = double2str(20*log10(scaled_val), precision);
             break;
-        case Format::RE:
-        case Format::RE_IM:
-        case Format::LIN_DEG:
         default:
             scaled_val = val/pow(10, scale_);
             text = double2str(scaled_val, precision);
@@ -691,9 +683,6 @@ double QDoubleEdit::str2num(const QString &text, const Scale scale, const Format
             val = pow(10,(regExp.cap(1).toDouble())/20);
             val *= sqrt(pow(10, scale_));
             break;
-    case Format::RE:
-    case Format::RE_IM:
-    case Format::LIN_DEG:
     default:
         pos = regExp.indexIn(text);
         if (pos == -1)

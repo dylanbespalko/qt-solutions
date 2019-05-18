@@ -6948,17 +6948,17 @@ void QtRectFPropertyManagerPrivate::setConstraint(QtProperty *property,
             const QRectF &constraint, const QRectF &val)
 {
     const bool isNull = constraint.isNull();
-    const float left   = isNull ? FLT_MIN : constraint.left();
-    const float right  = isNull ? FLT_MAX : constraint.left() + constraint.width();
-    const float top    = isNull ? FLT_MIN : constraint.top();
-    const float bottom = isNull ? FLT_MAX : constraint.top() + constraint.height();
-    const float width  = isNull ? FLT_MAX : constraint.width();
-    const float height = isNull ? FLT_MAX : constraint.height();
+    const float left   = isNull ? FLT_MIN : float(constraint.left());
+    const float right  = isNull ? FLT_MAX : float(constraint.left() + constraint.width());
+    const float top    = isNull ? FLT_MIN : float(constraint.top());
+    const float bottom = isNull ? FLT_MAX : float(constraint.top() + constraint.height());
+    const float width  = isNull ? FLT_MAX : float(constraint.width());
+    const float height = isNull ? FLT_MAX : float(constraint.height());
 
-    m_doublePropertyManager->setRange(m_propertyToX[property], left, right);
-    m_doublePropertyManager->setRange(m_propertyToY[property], top, bottom);
-    m_doublePropertyManager->setRange(m_propertyToW[property], 0, width);
-    m_doublePropertyManager->setRange(m_propertyToH[property], 0, height);
+    m_doublePropertyManager->setRange(m_propertyToX[property], double(left), double(right));
+    m_doublePropertyManager->setRange(m_propertyToY[property], double(top), double(bottom));
+    m_doublePropertyManager->setRange(m_propertyToW[property], 0, double(width));
+    m_doublePropertyManager->setRange(m_propertyToH[property], 0, double(height));
 
     m_doublePropertyManager->setValue(m_propertyToX[property], val.x());
     m_doublePropertyManager->setValue(m_propertyToY[property], val.y());

@@ -276,7 +276,7 @@ private:
     mutable PropertyToEditorMap m_propertyToEditor;
     QtTreePropertyBrowserPrivate *m_editorPrivate;
     mutable QTreeWidgetItem *m_editedItem;
-    mutable unsigned short m_editedColumn;
+    mutable short m_editedColumn;
     mutable QWidget *m_editedWidget;
     mutable bool m_disablePainting;
 };
@@ -356,7 +356,7 @@ QWidget *QtPropertyEditorDelegate::createEditor(QWidget *parent,
             return editor;
         }
     }
-    m_editedColumn = index.column();
+    m_editedColumn = short(index.column());
     return nullptr;
 }
 
@@ -1046,7 +1046,6 @@ void QtTreePropertyBrowser::setResizeMode(QtTreePropertyBrowser::ResizeMode mode
         case QtTreePropertyBrowser::Interactive:      m = QHeaderView::Interactive;      break;
         case QtTreePropertyBrowser::Fixed:            m = QHeaderView::Fixed;            break;
         case QtTreePropertyBrowser::ResizeToContents: m = QHeaderView::ResizeToContents; break;
-        case QtTreePropertyBrowser::Stretch:
         default:                                      m = QHeaderView::Stretch;          break;
     }
     d_ptr->m_treeWidget->header()->setResizeMode(m);
