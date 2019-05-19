@@ -538,7 +538,7 @@ void QtTreePropertyBrowserPrivate::updateAttributes()
     }
     if (m_treeWidget->columnCount() > 1){
         m_treeWidget->header()->setStretchLastSection(false);
-        m_treeWidget->header()->setResizeMode(1, QHeaderView::Interactive); // QHeaderView::Stretch
+        m_treeWidget->header()->setResizeMode(1, QHeaderView::Stretch); // QHeaderView::Interactive
         attributeWidth = metrics.width("12.34<-180.00");
         m_treeWidget->header()->resizeSection(1, attributeWidth);
     }
