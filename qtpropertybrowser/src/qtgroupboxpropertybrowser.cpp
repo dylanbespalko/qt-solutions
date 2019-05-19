@@ -587,15 +587,15 @@ void QtGroupBoxPropertyBrowserPrivate::updateItem(WidgetItem *item)
     }
     if (item->widget) {
         QFont font = item->widget->font();
-        QFontMetrics metrics(item->widget->fontMetrics());
         font.setUnderline(false);
         item->widget->setFont(font);
         item->widget->setEnabled(property->isEnabled());
         item->widget->setToolTip(property->valueText());
-        item->widget->setMaximumWidth(metrics.width("12.34<-180.00"));
         QLabel *label = dynamic_cast<QLabel*>(item->widget);
         if (label){
             label->setText(property->valueText());
+            QFontMetrics metrics(item->widget->fontMetrics());
+            item->widget->setMaximumWidth(metrics.width("12.34<-180.00"));
         }
     }
     if (item->unit){
