@@ -55,13 +55,6 @@
 QT_BEGIN_NAMESPACE
 #endif
 
-QFrame* addLine(){
-    QFrame *line = new QFrame();
-    line->setFrameShape(QFrame::HLine);
-    line->setFrameShadow(QFrame::Sunken);
-    return line;
-}
-
 class QtGroupBoxPropertyBrowserPrivate
 {
     QtGroupBoxPropertyBrowser *q_ptr;
@@ -132,53 +125,6 @@ void QtGroupBoxPropertyBrowserPrivate::init(QWidget *parent)
 void QtGroupBoxPropertyBrowserPrivate::updateAttributes()
 {
     return;
-//    QStringList attributeNames;
-//    QStringList labels;
-//    labels.append(QCoreApplication::translate("QtGroupBoxPropertyBrowser", "Property"));
-//    labels.append(QCoreApplication::translate("QtGroupBoxPropertyBrowser", "Value"));
-//    m_mainLayout->addWidget(new QLabel(labels[0]), 0, 0, 1, 1);
-//    m_mainLayout->addWidget(new QLabel(labels[1]), 0, 1, 1, 1);
-//    m_mainLayout->addWidget(addLine(), 1, 0, 1, 1);
-//    m_mainLayout->addWidget(addLine(), 1, 1, 1, 1);
-//    for (unsigned short index=0; index < m_attributes.size(); index++) {
-//        switch (m_attributes.at(index)) {
-//            case Attribute::UNIT:
-//                labels.append(QCoreApplication::translate("QtGroupBoxPropertyBrowser", "Unit"));
-//                m_mainLayout->addWidget(new QLabel(labels[index+2]), 0, index+2, 1, 1);
-//                m_mainLayout->addWidget(addLine(), 1, index+2, 1, 1);
-//                break;
-//            case Attribute::PKAVG:
-//                labels.append(QCoreApplication::translate("QtGroupBoxPropertyBrowser", "Pk"));
-//                m_mainLayout->addWidget(new QLabel(labels[index+2]), 0, index+2, 1, 1);
-//                m_mainLayout->addWidget(addLine(), 1, index+2, 1, 1);
-//                break;
-//            case Attribute::FORMAT:
-//                labels.append(QCoreApplication::translate("QtGroupBoxPropertyBrowser", "Format"));
-//                m_mainLayout->addWidget(new QLabel(labels[index+2]), 0, index+2, 1, 1);
-//                m_mainLayout->addWidget(addLine(), 1, index+2, 1, 1);
-//                break;
-//            case Attribute::MINIMUM:
-//                labels.append(QCoreApplication::translate("QtGroupBoxPropertyBrowser", "Min"));
-//                m_mainLayout->addWidget(new QLabel(labels[index+2]), 0, index+2, 1, 1);
-//                m_mainLayout->addWidget(addLine(), 1, index+2, 1, 1);
-//                break;
-//            case Attribute::MAXIMUM:
-//                labels.append(QCoreApplication::translate("QtGroupBoxPropertyBrowser", "Max"));
-//                m_mainLayout->addWidget(new QLabel(labels[index+2]), 0, index+2, 1, 1);
-//                m_mainLayout->addWidget(addLine(), 1, index+2, 1, 1);
-//                break;
-//            case Attribute::CHECK:
-//                labels.append(QCoreApplication::translate("QtGroupBoxPropertyBrowser", "?"));
-//                m_mainLayout->addWidget(new QLabel(labels[index+2]), 0, index+2, 1, 1);
-//                m_mainLayout->addWidget(addLine(), 1, index+2, 1, 1);
-//                break;
-//            default:
-//                break;
-//        }
-//    }
-//    insertRow(m_mainLayout, 0);
-//    insertRow(m_mainLayout, 1);
-
 }
 
 void QtGroupBoxPropertyBrowserPrivate::slotEditorDestroyed()

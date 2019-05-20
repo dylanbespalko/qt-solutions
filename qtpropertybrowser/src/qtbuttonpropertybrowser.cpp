@@ -50,6 +50,7 @@
 #include <QMap>
 #include <QToolButton>
 #include <QStyle>
+#include <QCoreApplication>
 
 #if QT_VERSION >= 0x040400
 QT_BEGIN_NAMESPACE
