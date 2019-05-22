@@ -6,98 +6,9 @@ from PySide2.QtGui import QCursor, QColor, QFont, QKeySequence
 from PySide2.QtWidgets import QSizePolicy
 from PySide2.QtWidgets import QApplication, QDialog, QLabel, QGridLayout, QScrollArea
 
+from enums import PropertyID, id_manager_map, id_factory_map
 from qtpropertybrowser import QtTreePropertyBrowser, QtGroupBoxPropertyBrowser, QtButtonPropertyBrowser
-from qtpropertybrowser import QtGroupPropertyManager
-from qtpropertybrowser import QtIntPropertyManager, QtBoolPropertyManager
-from qtpropertybrowser import QtDoublePropertyManager, QtComplexPropertyManager
-from qtpropertybrowser import QtTFTensorPropertyManager
-from qtpropertybrowser import QtStringPropertyManager, QtFilePropertyManager
-from qtpropertybrowser import QtDatePropertyManager, QtTimePropertyManager, QtDateTimePropertyManager
-from qtpropertybrowser import QtCharPropertyManager, QtKeySequencePropertyManager
-from qtpropertybrowser import QtLocalePropertyManager
-from qtpropertybrowser import QtPointPropertyManager, QtPointFPropertyManager
-from qtpropertybrowser import QtSizePropertyManager, QtSizeFPropertyManager
-from qtpropertybrowser import QtRectPropertyManager, QtRectFPropertyManager
-from qtpropertybrowser import QtEnumPropertyManager, QtFlagPropertyManager
-from qtpropertybrowser import QtSizePolicyPropertyManager
-from qtpropertybrowser import QtFontPropertyManager, QtColorPropertyManager, QtCursorPropertyManager
-from qtpropertybrowser import QtGroupEditorFactory
-from qtpropertybrowser import QtIntEditFactory, QtSpinBoxFactory, QtSliderFactory, QtScrollBarFactory, QtCheckBoxFactory
-from qtpropertybrowser import QtDoubleEditFactory, QtDoubleSpinBoxFactory, QtComplexEditFactory
-from qtpropertybrowser import QtTFTensorEditFactory
-from qtpropertybrowser import QtLineEditFactory, QtFileEditorFactory
-from qtpropertybrowser import QtDateEditFactory, QtTimeEditFactory, QtDateTimeEditFactory
-from qtpropertybrowser import QtKeySequenceEditorFactory, QtCharEditorFactory
-from qtpropertybrowser import QtEnumEditorFactory
-from qtpropertybrowser import QtFontEditorFactory, QtColorEditorFactory, QtCursorEditorFactory
 from qtpropertybrowser import PkAvg, Scale, Format, Domain, Attribute
-
-
-@unique
-class Manager(Enum):
-    GROUP = auto()
-    INT_SPIN = auto()
-    INT_EDIT = auto()
-    INT_SLIDER = auto()
-    INT_SCROLL = auto()
-    BOOL = auto()
-    DOUBLE_SPIN = auto()
-    DOUBLE_EDIT = auto()
-    COMPLEX_EDIT = auto()
-    TF_EDIT = auto()
-    STRING = auto()
-    FILE = auto()
-    DATE = auto()
-    TIME = auto()
-    DATETIME = auto()
-    KEY_SEQUENCE = auto()
-    CHAR = auto()
-    LOCALE = auto()
-    POINT = auto()
-    POINTF = auto()
-    SIZE = auto()
-    SIZEF = auto()
-    RECT = auto()
-    RECTF = auto()
-    ENUM = auto()
-    FLAG = auto()
-    SIZE_POLICY = auto()
-    FONT = auto()
-    COLOR = auto()
-    CURSOR = auto()
-
-@unique
-class Factory(Enum):
-    GROUP = auto()
-    INT_SPIN = auto()
-    INT_EDIT = auto()
-    INT_SLIDER = auto()
-    INT_SCROLL = auto()
-    BOOL = auto()
-    DOUBLE_SPIN = auto()
-    DOUBLE_EDIT = auto()
-    COMPLEX_EDIT = auto()
-    TF_EDIT = auto()
-    STRING = auto()
-    FILE = auto()
-    DATE = auto()
-    TIME = auto()
-    DATETIME = auto()
-    KEY_SEQUENCE = auto()
-    CHAR = auto()
-    LOCALE = auto()
-    POINT = auto()
-    POINTF = auto()
-    SIZE = auto()
-    SIZEF = auto()
-    RECT = auto()
-    RECTF = auto()
-    ENUM = auto()
-    FLAG = auto()
-    SIZE_POLICY = auto()
-    FONT = auto()
-    COLOR = auto()
-    CURSOR = auto()
 
 
 @unique
@@ -142,171 +53,116 @@ if __name__ == "__main__":
     # button_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM])
     button_browser.setAttributes([Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
 
-    manager_map = {Manager.GROUP: QtGroupPropertyManager(),
-                   Manager.INT_SPIN: QtIntPropertyManager(),
-                   Manager.INT_EDIT: QtIntPropertyManager(),
-                   Manager.INT_SLIDER: QtIntPropertyManager(),
-                   Manager.INT_SCROLL: QtIntPropertyManager(),
-                   Manager.BOOL: QtBoolPropertyManager(),
-                   Manager.DOUBLE_SPIN: QtDoublePropertyManager(),
-                   Manager.DOUBLE_EDIT: QtDoublePropertyManager(),
-                   Manager.COMPLEX_EDIT: QtComplexPropertyManager(),
-                   Manager.TF_EDIT: QtTFTensorPropertyManager(),
-                   Manager.STRING: QtStringPropertyManager(),
-                   Manager.FILE: QtFilePropertyManager(),
-                   Manager.DATE: QtDatePropertyManager(),
-                   Manager.TIME: QtTimePropertyManager(),
-                   Manager.DATETIME: QtDateTimePropertyManager(),
-                   Manager.KEY_SEQUENCE: QtKeySequencePropertyManager(),
-                   Manager.CHAR: QtCharPropertyManager(),
-                   Manager.LOCALE: QtLocalePropertyManager(),
-                   Manager.POINT: QtPointPropertyManager(),
-                   Manager.POINTF: QtPointFPropertyManager(),
-                   Manager.SIZE: QtSizePropertyManager(),
-                   Manager.SIZEF: QtSizeFPropertyManager(),
-                   Manager.RECT: QtRectPropertyManager(),
-                   Manager.RECTF: QtRectFPropertyManager(),
-                   Manager.ENUM: QtEnumPropertyManager(),
-                   Manager.FLAG: QtFlagPropertyManager(),
-                   Manager.SIZE_POLICY: QtSizePolicyPropertyManager(),
-                   Manager.FONT: QtFontPropertyManager(),
-                   Manager.COLOR: QtColorPropertyManager(),
-                   Manager.CURSOR: QtCursorPropertyManager(),
-                   }
-    factory_map = {Factory.GROUP: QtGroupEditorFactory(),
-                   Factory.INT_SPIN: QtSpinBoxFactory(),
-                   Factory.INT_EDIT: QtIntEditFactory(),
-                   Factory.INT_SLIDER: QtSliderFactory(),
-                   Factory.INT_SCROLL: QtScrollBarFactory(),
-                   Factory.BOOL: QtCheckBoxFactory(),
-                   Factory.DOUBLE_SPIN: QtDoubleSpinBoxFactory(),
-                   Factory.DOUBLE_EDIT: QtDoubleEditFactory(),
-                   Factory.COMPLEX_EDIT: QtComplexEditFactory(),
-                   Factory.TF_EDIT: QtTFTensorEditFactory(),
-                   Factory.STRING: QtLineEditFactory(),
-                   Factory.FILE: QtFileEditorFactory(),
-                   Factory.DATE: QtDateEditFactory(),
-                   Factory.TIME: QtTimeEditFactory(),
-                   Factory.DATETIME: QtDateTimeEditFactory(),
-                   Factory.KEY_SEQUENCE: QtKeySequenceEditorFactory(),
-                   Factory.CHAR: QtCharEditorFactory(),
-                   Factory.LOCALE: QtGroupEditorFactory(),
-                   Factory.POINT: QtGroupEditorFactory(),
-                   Factory.POINTF: QtGroupEditorFactory(),
-                   Factory.SIZE: QtGroupEditorFactory(),
-                   Factory.SIZEF: QtGroupEditorFactory(),
-                   Factory.RECT: QtGroupEditorFactory(),
-                   Factory.RECTF: QtGroupEditorFactory(),
-                   Factory.ENUM: QtEnumEditorFactory(),
-                   Factory.FLAG: QtGroupEditorFactory(),
-                   Factory.SIZE_POLICY: QtGroupEditorFactory(),
-                   Factory.FONT: QtFontEditorFactory(),
-                   Factory.COLOR: QtColorEditorFactory(),
-                   Factory.CURSOR: QtCursorEditorFactory(),
-                   }
+    manager_map = {}
+    for k, v in id_manager_map.items():
+        manager_map[k] = v()
 
-    factory_map[Factory.TF_EDIT].setSubFactory(factory_map[Factory.COMPLEX_EDIT])
-    print(factory_map[Factory.COMPLEX_EDIT])
-    print(factory_map[Factory.TF_EDIT].subFactory())
+    factory_map = {}
+    for k, v in id_factory_map.items():
+        factory_map[k] = v()
+
+    factory_map[PropertyID.TF_EDIT].setSubFactory(factory_map[PropertyID.COMPLEX_EDIT])
+    print(factory_map[PropertyID.COMPLEX_EDIT])
+    print(factory_map[PropertyID.TF_EDIT].subFactory())
 
     for count in range(len(group)):
         # group
-        group[count] = manager_map[Manager.GROUP].addProperty("group_%d" % (count + 1,))
-        tree_browser.setFactoryForManager(manager_map[Manager.GROUP], factory_map[Factory.GROUP])
-        box_browser.setFactoryForManager(manager_map[Manager.GROUP], factory_map[Factory.GROUP])
-        button_browser.setFactoryForManager(manager_map[Manager.GROUP], factory_map[Factory.GROUP])
+        group[count] = manager_map[PropertyID.PY_OBJECT].addProperty("group_%d" % (count + 1,))
+        tree_browser.setFactoryForManager(manager_map[PropertyID.PY_OBJECT], factory_map[PropertyID.PY_OBJECT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.PY_OBJECT], factory_map[PropertyID.PY_OBJECT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.PY_OBJECT], factory_map[PropertyID.PY_OBJECT])
 
         # int_spin_rw
-        manager_map[Manager.INT_SPIN].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.INT_SPIN].addProperty("int_spinbox_rw_%d" % (count + 1,))
+        manager_map[PropertyID.INT_SPIN].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.INT_SPIN].addProperty("int_spinbox_rw_%d" % (count + 1,))
         property_.propertyManager().setReadOnly(property_, False)
         property_.propertyManager().setUnit(property_, "V")
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
         property_.propertyManager().setValue(property_, 3)
-        tree_browser.setFactoryForManager(manager_map[Manager.INT_SPIN], factory_map[Factory.INT_SPIN])
-        box_browser.setFactoryForManager(manager_map[Manager.INT_SPIN], factory_map[Factory.INT_SPIN])
-        button_browser.setFactoryForManager(manager_map[Manager.INT_SPIN], factory_map[Factory.INT_SPIN])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.INT_SPIN], factory_map[PropertyID.INT_SPIN])
+        box_browser.setFactoryForManager(manager_map[PropertyID.INT_SPIN], factory_map[PropertyID.INT_SPIN])
+        button_browser.setFactoryForManager(manager_map[PropertyID.INT_SPIN], factory_map[PropertyID.INT_SPIN])
         group[count].addSubProperty(property_)
 
         # int_edit_r
-        manager_map[Manager.INT_EDIT].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.INT_EDIT].addProperty("int_edit_r_%d" % (count + 1,))
+        manager_map[PropertyID.INT_EDIT].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.INT_EDIT].addProperty("int_edit_r_%d" % (count + 1,))
         property_.propertyManager().setReadOnly(property_, True)
         property_.propertyManager().setUnit(property_, "V")
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
         property_.propertyManager().setValue(property_, 3)
-        tree_browser.setFactoryForManager(manager_map[Manager.INT_EDIT], factory_map[Factory.INT_EDIT])
-        box_browser.setFactoryForManager(manager_map[Manager.INT_EDIT], factory_map[Factory.INT_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.INT_EDIT], factory_map[Factory.INT_EDIT])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.INT_EDIT], factory_map[PropertyID.INT_EDIT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.INT_EDIT], factory_map[PropertyID.INT_EDIT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.INT_EDIT], factory_map[PropertyID.INT_EDIT])
         group[count].addSubProperty(property_)
 
         # int_edit_rw
-        manager_map[Manager.INT_EDIT].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.INT_EDIT].addProperty("int_edit_rw_%d" % (count + 1,))
+        manager_map[PropertyID.INT_EDIT].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.INT_EDIT].addProperty("int_edit_rw_%d" % (count + 1,))
         property_.propertyManager().setReadOnly(property_, False)
         property_.propertyManager().setUnit(property_, "V")
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
         property_.propertyManager().setValue(property_, 3)
-        tree_browser.setFactoryForManager(manager_map[Manager.INT_EDIT], factory_map[Factory.INT_EDIT])
-        box_browser.setFactoryForManager(manager_map[Manager.INT_EDIT], factory_map[Factory.INT_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.INT_EDIT], factory_map[Factory.INT_EDIT])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.INT_EDIT], factory_map[PropertyID.INT_EDIT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.INT_EDIT], factory_map[PropertyID.INT_EDIT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.INT_EDIT], factory_map[PropertyID.INT_EDIT])
         group[count].addSubProperty(property_)
 
         # int_slider_rw
-        manager_map[Manager.INT_SLIDER].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.INT_SLIDER].addProperty("int_slider_rw_%d" % (count + 1,))
+        manager_map[PropertyID.INT_SLIDER].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.INT_SLIDER].addProperty("int_slider_rw_%d" % (count + 1,))
         property_.propertyManager().setReadOnly(property_, False)
         property_.propertyManager().setUnit(property_, "V")
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
         property_.propertyManager().setValue(property_, 3)
-        tree_browser.setFactoryForManager(manager_map[Manager.INT_SLIDER], factory_map[Factory.INT_SLIDER])
-        box_browser.setFactoryForManager(manager_map[Manager.INT_SLIDER], factory_map[Factory.INT_SLIDER])
-        button_browser.setFactoryForManager(manager_map[Manager.INT_SLIDER], factory_map[Factory.INT_SLIDER])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.INT_SLIDER], factory_map[PropertyID.INT_SLIDER])
+        box_browser.setFactoryForManager(manager_map[PropertyID.INT_SLIDER], factory_map[PropertyID.INT_SLIDER])
+        button_browser.setFactoryForManager(manager_map[PropertyID.INT_SLIDER], factory_map[PropertyID.INT_SLIDER])
         group[count].addSubProperty(property_)
 
         # int_scroll_rw
-        manager_map[Manager.INT_SCROLL].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.INT_SCROLL].addProperty("int_scroll_rw_%d" % (count + 1,))
+        manager_map[PropertyID.INT_SCROLL].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.INT_SCROLL].addProperty("int_scroll_rw_%d" % (count + 1,))
         property_.propertyManager().setReadOnly(property_, False)
         property_.propertyManager().setUnit(property_, "V")
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
         property_.propertyManager().setValue(property_, 3)
-        tree_browser.setFactoryForManager(manager_map[Manager.INT_SCROLL], factory_map[Factory.INT_SCROLL])
-        box_browser.setFactoryForManager(manager_map[Manager.INT_SCROLL], factory_map[Factory.INT_SCROLL])
-        button_browser.setFactoryForManager(manager_map[Manager.INT_SCROLL], factory_map[Factory.INT_SCROLL])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.INT_SCROLL], factory_map[PropertyID.INT_SCROLL])
+        box_browser.setFactoryForManager(manager_map[PropertyID.INT_SCROLL], factory_map[PropertyID.INT_SCROLL])
+        button_browser.setFactoryForManager(manager_map[PropertyID.INT_SCROLL], factory_map[PropertyID.INT_SCROLL])
         group[count].addSubProperty(property_)
 
         # bool
-        manager_map[Manager.BOOL].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.BOOL].addProperty("bool_%d" % (count + 1,))
+        manager_map[PropertyID.BOOL].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.BOOL].addProperty("bool_%d" % (count + 1,))
         property_.propertyManager().setValue(property_, False)
-        tree_browser.setFactoryForManager(manager_map[Manager.BOOL], factory_map[Factory.BOOL])
-        box_browser.setFactoryForManager(manager_map[Manager.BOOL], factory_map[Factory.BOOL])
-        button_browser.setFactoryForManager(manager_map[Manager.BOOL], factory_map[Factory.BOOL])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.BOOL], factory_map[PropertyID.BOOL])
+        box_browser.setFactoryForManager(manager_map[PropertyID.BOOL], factory_map[PropertyID.BOOL])
+        button_browser.setFactoryForManager(manager_map[PropertyID.BOOL], factory_map[PropertyID.BOOL])
         group[count].addSubProperty(property_)
 
         # double_spin_rw
-        manager_map[Manager.DOUBLE_SPIN].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.DOUBLE_SPIN].addProperty("double_spin_rw_%d" % (count + 1,))
+        manager_map[PropertyID.DOUBLE_SPIN].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.DOUBLE_SPIN].addProperty("double_spin_rw_%d" % (count + 1,))
         property_.propertyManager().setReadOnly(property_, False)
         property_.propertyManager().setUnit(property_, "V")
         property_.propertyManager().setPrecision(property_, 2)
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
         property_.propertyManager().setValue(property_, 3.14)
-        tree_browser.setFactoryForManager(manager_map[Manager.DOUBLE_SPIN], factory_map[Factory.DOUBLE_SPIN])
-        box_browser.setFactoryForManager(manager_map[Manager.DOUBLE_SPIN], factory_map[Factory.DOUBLE_SPIN])
-        button_browser.setFactoryForManager(manager_map[Manager.DOUBLE_SPIN], factory_map[Factory.DOUBLE_SPIN])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.DOUBLE_SPIN], factory_map[PropertyID.DOUBLE_SPIN])
+        box_browser.setFactoryForManager(manager_map[PropertyID.DOUBLE_SPIN], factory_map[PropertyID.DOUBLE_SPIN])
+        button_browser.setFactoryForManager(manager_map[PropertyID.DOUBLE_SPIN], factory_map[PropertyID.DOUBLE_SPIN])
         group[count].addSubProperty(property_)
 
         # double_edit_r
-        manager_map[Manager.DOUBLE_EDIT].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.DOUBLE_EDIT].addProperty("double_edit_r_%d" % (count + 1,))
+        manager_map[PropertyID.DOUBLE_EDIT].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.DOUBLE_EDIT].addProperty("double_edit_r_%d" % (count + 1,))
         property_.propertyManager().setReadOnly(property_, True)
         property_.propertyManager().setScale(property_, Scale.K)
         property_.propertyManager().setUnit(property_, "V")
@@ -314,42 +170,42 @@ if __name__ == "__main__":
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
         property_.propertyManager().setValue(property_, 3.14)
-        tree_browser.setFactoryForManager(manager_map[Manager.DOUBLE_EDIT], factory_map[Factory.DOUBLE_EDIT])
-        box_browser.setFactoryForManager(manager_map[Manager.DOUBLE_EDIT], factory_map[Factory.DOUBLE_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.DOUBLE_EDIT], factory_map[Factory.DOUBLE_EDIT])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.DOUBLE_EDIT], factory_map[PropertyID.DOUBLE_EDIT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.DOUBLE_EDIT], factory_map[PropertyID.DOUBLE_EDIT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.DOUBLE_EDIT], factory_map[PropertyID.DOUBLE_EDIT])
         group[count].addSubProperty(property_)
 
         # double_edit_rw
-        manager_map[Manager.DOUBLE_EDIT].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.DOUBLE_EDIT].addProperty("double_edit_rw_%d" % (count + 1,))
+        manager_map[PropertyID.DOUBLE_EDIT].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.DOUBLE_EDIT].addProperty("double_edit_rw_%d" % (count + 1,))
         property_.propertyManager().setReadOnly(property_, False)
         property_.propertyManager().setUnit(property_, "V")
         property_.propertyManager().setPrecision(property_, 2)
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
         property_.propertyManager().setValue(property_, 3.14)
-        tree_browser.setFactoryForManager(manager_map[Manager.DOUBLE_EDIT], factory_map[Factory.DOUBLE_EDIT])
-        box_browser.setFactoryForManager(manager_map[Manager.DOUBLE_EDIT], factory_map[Factory.DOUBLE_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.DOUBLE_EDIT], factory_map[Factory.DOUBLE_EDIT])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.DOUBLE_EDIT], factory_map[PropertyID.DOUBLE_EDIT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.DOUBLE_EDIT], factory_map[PropertyID.DOUBLE_EDIT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.DOUBLE_EDIT], factory_map[PropertyID.DOUBLE_EDIT])
         group[count].addSubProperty(property_)
 
         # complex_edit_r
-        manager_map[Manager.COMPLEX_EDIT].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.COMPLEX_EDIT].addProperty("complex_edit_r_%d" % (count + 1,))
+        manager_map[PropertyID.COMPLEX_EDIT].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.COMPLEX_EDIT].addProperty("complex_edit_r_%d" % (count + 1,))
         property_.propertyManager().setReadOnly(property_, True)
         property_.propertyManager().setUnit(property_, "V")
         property_.propertyManager().setPrecision(property_, 2)
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
         property_.propertyManager().setValue(property_, 2 + 2j)
-        tree_browser.setFactoryForManager(manager_map[Manager.COMPLEX_EDIT], factory_map[Factory.COMPLEX_EDIT])
-        box_browser.setFactoryForManager(manager_map[Manager.COMPLEX_EDIT], factory_map[Factory.COMPLEX_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.COMPLEX_EDIT], factory_map[Factory.COMPLEX_EDIT])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.COMPLEX_EDIT], factory_map[PropertyID.COMPLEX_EDIT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.COMPLEX_EDIT], factory_map[PropertyID.COMPLEX_EDIT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.COMPLEX_EDIT], factory_map[PropertyID.COMPLEX_EDIT])
         group[count].addSubProperty(property_)
 
         # complex_edit_rw
-        manager_map[Manager.COMPLEX_EDIT].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.COMPLEX_EDIT].addProperty("complex_edit_rw_%d" % (count + 1,))
+        manager_map[PropertyID.COMPLEX_EDIT].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.COMPLEX_EDIT].addProperty("complex_edit_rw_%d" % (count + 1,))
         property_.propertyManager().setReadOnly(property_, False)
         property_.propertyManager().setScale(property_, Scale.K)
         property_.propertyManager().setUnit(property_, "rW")
@@ -357,355 +213,355 @@ if __name__ == "__main__":
         property_.propertyManager().setMinimum(property_, 0)
         property_.propertyManager().setMaximum(property_, 2)
         property_.propertyManager().setValue(property_, 2 + 2j)
-        tree_browser.setFactoryForManager(manager_map[Manager.COMPLEX_EDIT], factory_map[Factory.COMPLEX_EDIT])
-        box_browser.setFactoryForManager(manager_map[Manager.COMPLEX_EDIT], factory_map[Factory.COMPLEX_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.COMPLEX_EDIT], factory_map[Factory.COMPLEX_EDIT])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.COMPLEX_EDIT], factory_map[PropertyID.COMPLEX_EDIT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.COMPLEX_EDIT], factory_map[PropertyID.COMPLEX_EDIT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.COMPLEX_EDIT], factory_map[PropertyID.COMPLEX_EDIT])
         group[count].addSubProperty(property_)
 
         # tf_tensor_r
-        manager_map[Manager.TF_EDIT].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.TF_EDIT].addProperty("tf_tensor_r_%d" % (count + 1,))
+        manager_map[PropertyID.TF_EDIT].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.TF_EDIT].addProperty("tf_tensor_r_%d" % (count + 1,))
         property_.propertyManager().setReadOnly(property_, True)
         property_.propertyManager().setUnit(property_, "V")
         property_.propertyManager().setPrecision(property_, 2)
         property_.propertyManager().setMinimum(property_, [0, 0])
         property_.propertyManager().setMaximum(property_, [2, 2])
         property_.propertyManager().setValue(property_, [2 + 2j, 2 + 2j])
-        tree_browser.setFactoryForManager(manager_map[Manager.TF_EDIT], factory_map[Factory.TF_EDIT])
-        box_browser.setFactoryForManager(manager_map[Manager.TF_EDIT], factory_map[Factory.TF_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.TF_EDIT], factory_map[Factory.TF_EDIT])
-        tree_browser.setFactoryForManager(manager_map[Manager.TF_EDIT].subComplexPropertyManager(),
-                                          factory_map[Factory.COMPLEX_EDIT])
-        box_browser.setFactoryForManager(manager_map[Manager.TF_EDIT].subComplexPropertyManager(),
-                                         factory_map[Factory.COMPLEX_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.TF_EDIT].subComplexPropertyManager(),
-                                            factory_map[Factory.COMPLEX_EDIT])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.TF_EDIT], factory_map[PropertyID.TF_EDIT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.TF_EDIT], factory_map[PropertyID.TF_EDIT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.TF_EDIT], factory_map[PropertyID.TF_EDIT])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.TF_EDIT].subComplexPropertyManager(),
+                                          factory_map[PropertyID.COMPLEX_EDIT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.TF_EDIT].subComplexPropertyManager(),
+                                         factory_map[PropertyID.COMPLEX_EDIT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.TF_EDIT].subComplexPropertyManager(),
+                                            factory_map[PropertyID.COMPLEX_EDIT])
         group[count].addSubProperty(property_)
 
         # tf_tensor_rw
-        manager_map[Manager.TF_EDIT].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.TF_EDIT].addProperty("tf_tensor_rw_%d" % (count + 1,))
+        manager_map[PropertyID.TF_EDIT].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.TF_EDIT].addProperty("tf_tensor_rw_%d" % (count + 1,))
         property_.propertyManager().setReadOnly(property_, False)
         property_.propertyManager().setUnit(property_, "V")
         property_.propertyManager().setPrecision(property_, 2)
         property_.propertyManager().setMinimum(property_, [0, 0, 0, 0, 0])
         property_.propertyManager().setMaximum(property_, [2, 2, 2, 2, 2])
         property_.propertyManager().setValue(property_, [2 + 2j, 2 + 2j, 2 + 2j, 2 + 2j, 2 + 2j])
-        tree_browser.setFactoryForManager(manager_map[Manager.TF_EDIT], factory_map[Factory.TF_EDIT])
-        box_browser.setFactoryForManager(manager_map[Manager.TF_EDIT], factory_map[Factory.TF_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.TF_EDIT], factory_map[Factory.TF_EDIT])
-        tree_browser.setFactoryForManager(manager_map[Manager.TF_EDIT].subComplexPropertyManager(),
-                                          factory_map[Factory.COMPLEX_EDIT])
-        box_browser.setFactoryForManager(manager_map[Manager.TF_EDIT].subComplexPropertyManager(),
-                                         factory_map[Factory.COMPLEX_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.TF_EDIT].subComplexPropertyManager(),
-                                            factory_map[Factory.COMPLEX_EDIT])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.TF_EDIT], factory_map[PropertyID.TF_EDIT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.TF_EDIT], factory_map[PropertyID.TF_EDIT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.TF_EDIT], factory_map[PropertyID.TF_EDIT])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.TF_EDIT].subComplexPropertyManager(),
+                                          factory_map[PropertyID.COMPLEX_EDIT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.TF_EDIT].subComplexPropertyManager(),
+                                         factory_map[PropertyID.COMPLEX_EDIT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.TF_EDIT].subComplexPropertyManager(),
+                                            factory_map[PropertyID.COMPLEX_EDIT])
         group[count].addSubProperty(property_)
 
         # str
-        manager_map[Manager.STRING].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.STRING].addProperty("str_%d" % (count + 1,))
+        manager_map[PropertyID.STRING].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.STRING].addProperty("str_%d" % (count + 1,))
         property_.propertyManager().setValue(property_, "Hello World")
-        tree_browser.setFactoryForManager(manager_map[Manager.STRING], factory_map[Factory.STRING])
-        box_browser.setFactoryForManager(manager_map[Manager.STRING], factory_map[Factory.STRING])
-        button_browser.setFactoryForManager(manager_map[Manager.STRING], factory_map[Factory.STRING])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.STRING], factory_map[PropertyID.STRING])
+        box_browser.setFactoryForManager(manager_map[PropertyID.STRING], factory_map[PropertyID.STRING])
+        button_browser.setFactoryForManager(manager_map[PropertyID.STRING], factory_map[PropertyID.STRING])
         group[count].addSubProperty(property_)
 
         # file
         value = open("./file.txt", mode='w')
         value.close()
-        manager_map[Manager.FILE].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.FILE].addProperty("file_%d" % (count + 1,))
+        manager_map[PropertyID.FILE].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.FILE].addProperty("file_%d" % (count + 1,))
         property_.propertyManager().setReadOnly(property_, False)
         property_.setEnabled(True)
         property_.propertyManager().setValue(property_, value.name)
-        tree_browser.setFactoryForManager(manager_map[Manager.FILE], factory_map[Factory.FILE])
-        box_browser.setFactoryForManager(manager_map[Manager.FILE], factory_map[Factory.FILE])
-        button_browser.setFactoryForManager(manager_map[Manager.FILE], factory_map[Factory.FILE])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.FILE], factory_map[PropertyID.FILE])
+        box_browser.setFactoryForManager(manager_map[PropertyID.FILE], factory_map[PropertyID.FILE])
+        button_browser.setFactoryForManager(manager_map[PropertyID.FILE], factory_map[PropertyID.FILE])
         group[count].addSubProperty(property_)
 
         # date
-        manager_map[Manager.DATE].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.DATE].addProperty("date_%d" % (count + 1,))
+        manager_map[PropertyID.DATE].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.DATE].addProperty("date_%d" % (count + 1,))
         property_.propertyManager().setValue(property_, QDate.currentDate())
-        tree_browser.setFactoryForManager(manager_map[Manager.DATE], factory_map[Factory.DATE])
-        box_browser.setFactoryForManager(manager_map[Manager.DATE], factory_map[Factory.DATE])
-        button_browser.setFactoryForManager(manager_map[Manager.DATE], factory_map[Factory.DATE])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.DATE], factory_map[PropertyID.DATE])
+        box_browser.setFactoryForManager(manager_map[PropertyID.DATE], factory_map[PropertyID.DATE])
+        button_browser.setFactoryForManager(manager_map[PropertyID.DATE], factory_map[PropertyID.DATE])
         group[count].addSubProperty(property_)
 
         # time
-        manager_map[Manager.TIME].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.TIME].addProperty("time_%d" % (count + 1,))
+        manager_map[PropertyID.TIME].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.TIME].addProperty("time_%d" % (count + 1,))
         property_.propertyManager().setValue(property_, QTime.currentTime())
-        tree_browser.setFactoryForManager(manager_map[Manager.TIME], factory_map[Factory.TIME])
-        box_browser.setFactoryForManager(manager_map[Manager.TIME], factory_map[Factory.TIME])
-        button_browser.setFactoryForManager(manager_map[Manager.TIME], factory_map[Factory.TIME])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.TIME], factory_map[PropertyID.TIME])
+        box_browser.setFactoryForManager(manager_map[PropertyID.TIME], factory_map[PropertyID.TIME])
+        button_browser.setFactoryForManager(manager_map[PropertyID.TIME], factory_map[PropertyID.TIME])
         group[count].addSubProperty(property_)
 
         # datetime
-        manager_map[Manager.DATETIME].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.DATETIME].addProperty("datetime_%d" % (count + 1,))
+        manager_map[PropertyID.DATETIME].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.DATETIME].addProperty("datetime_%d" % (count + 1,))
         property_.propertyManager().setValue(property_, QDateTime.currentDateTime())
-        tree_browser.setFactoryForManager(manager_map[Manager.DATETIME], factory_map[Factory.DATETIME])
-        box_browser.setFactoryForManager(manager_map[Manager.DATETIME], factory_map[Factory.DATETIME])
-        button_browser.setFactoryForManager(manager_map[Manager.DATETIME], factory_map[Factory.DATETIME])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.DATETIME], factory_map[PropertyID.DATETIME])
+        box_browser.setFactoryForManager(manager_map[PropertyID.DATETIME], factory_map[PropertyID.DATETIME])
+        button_browser.setFactoryForManager(manager_map[PropertyID.DATETIME], factory_map[PropertyID.DATETIME])
         group[count].addSubProperty(property_)
 
         # key sequence
         value = QKeySequence(Qt.CTRL + Qt.Key_P)
-        manager_map[Manager.KEY_SEQUENCE].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.KEY_SEQUENCE].addProperty("key sequence_%d" % (count + 1,))
+        manager_map[PropertyID.KEY_SEQUENCE].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.KEY_SEQUENCE].addProperty("key sequence_%d" % (count + 1,))
         property_.propertyManager().setValue(property_, value)
-        tree_browser.setFactoryForManager(manager_map[Manager.KEY_SEQUENCE], factory_map[Factory.KEY_SEQUENCE])
-        box_browser.setFactoryForManager(manager_map[Manager.KEY_SEQUENCE], factory_map[Factory.KEY_SEQUENCE])
-        button_browser.setFactoryForManager(manager_map[Manager.KEY_SEQUENCE], factory_map[Factory.KEY_SEQUENCE])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.KEY_SEQUENCE], factory_map[PropertyID.KEY_SEQUENCE])
+        box_browser.setFactoryForManager(manager_map[PropertyID.KEY_SEQUENCE], factory_map[PropertyID.KEY_SEQUENCE])
+        button_browser.setFactoryForManager(manager_map[PropertyID.KEY_SEQUENCE], factory_map[PropertyID.KEY_SEQUENCE])
         group[count].addSubProperty(property_)
 
         # char
         value = 'a'
-        manager_map[Manager.CHAR].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.CHAR].addProperty("char_%d" % (count + 1,))
+        manager_map[PropertyID.CHAR].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.CHAR].addProperty("char_%d" % (count + 1,))
         property_.propertyManager().setValue(property_, value)
-        tree_browser.setFactoryForManager(manager_map[Manager.CHAR], factory_map[Factory.CHAR])
-        box_browser.setFactoryForManager(manager_map[Manager.CHAR], factory_map[Factory.CHAR])
-        button_browser.setFactoryForManager(manager_map[Manager.CHAR], factory_map[Factory.CHAR])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.CHAR], factory_map[PropertyID.CHAR])
+        box_browser.setFactoryForManager(manager_map[PropertyID.CHAR], factory_map[PropertyID.CHAR])
+        button_browser.setFactoryForManager(manager_map[PropertyID.CHAR], factory_map[PropertyID.CHAR])
         group[count].addSubProperty(property_)
 
         # locale
-        manager_map[Manager.LOCALE].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.LOCALE].addProperty("locale_%d" % (count + 1,))
+        manager_map[PropertyID.LOCALE].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.LOCALE].addProperty("locale_%d" % (count + 1,))
         property_.propertyManager().setValue(property_, QLocale(QLocale.English, QLocale.Canada))
-        tree_browser.setFactoryForManager(manager_map[Manager.LOCALE], factory_map[Factory.LOCALE])
-        box_browser.setFactoryForManager(manager_map[Manager.LOCALE], factory_map[Factory.LOCALE])
-        button_browser.setFactoryForManager(manager_map[Manager.LOCALE], factory_map[Factory.LOCALE])
-        box_browser.setFactoryForManager(manager_map[Manager.LOCALE].subEnumPropertyManager(),
-                                         factory_map[Factory.ENUM])
-        button_browser.setFactoryForManager(manager_map[Manager.LOCALE].subEnumPropertyManager(),
-                                            factory_map[Factory.ENUM])
-        tree_browser.setFactoryForManager(manager_map[Manager.LOCALE].subEnumPropertyManager(),
-                                          factory_map[Factory.ENUM])
-        box_browser.setFactoryForManager(manager_map[Manager.LOCALE].subEnumPropertyManager(),
-                                         factory_map[Factory.ENUM])
-        button_browser.setFactoryForManager(manager_map[Manager.LOCALE].subEnumPropertyManager(),
-                                            factory_map[Factory.ENUM])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.LOCALE], factory_map[PropertyID.LOCALE])
+        box_browser.setFactoryForManager(manager_map[PropertyID.LOCALE], factory_map[PropertyID.LOCALE])
+        button_browser.setFactoryForManager(manager_map[PropertyID.LOCALE], factory_map[PropertyID.LOCALE])
+        box_browser.setFactoryForManager(manager_map[PropertyID.LOCALE].subEnumPropertyManager(),
+                                         factory_map[PropertyID.ENUM])
+        button_browser.setFactoryForManager(manager_map[PropertyID.LOCALE].subEnumPropertyManager(),
+                                            factory_map[PropertyID.ENUM])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.LOCALE].subEnumPropertyManager(),
+                                          factory_map[PropertyID.ENUM])
+        box_browser.setFactoryForManager(manager_map[PropertyID.LOCALE].subEnumPropertyManager(),
+                                         factory_map[PropertyID.ENUM])
+        button_browser.setFactoryForManager(manager_map[PropertyID.LOCALE].subEnumPropertyManager(),
+                                            factory_map[PropertyID.ENUM])
         group[count].addSubProperty(property_)
 
         # point
-        manager_map[Manager.POINT].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.POINT].addProperty("point_%d" % (count + 1,))
+        manager_map[PropertyID.POINT].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.POINT].addProperty("point_%d" % (count + 1,))
         property_.propertyManager().setValue(property_, QPoint(1, 3))
-        tree_browser.setFactoryForManager(manager_map[Manager.POINT], factory_map[Factory.POINT])
-        box_browser.setFactoryForManager(manager_map[Manager.POINT], factory_map[Factory.POINT])
-        button_browser.setFactoryForManager(manager_map[Manager.POINT], factory_map[Factory.POINT])
-        tree_browser.setFactoryForManager(manager_map[Manager.POINT].subIntPropertyManager(),
-                                          factory_map[Factory.INT_EDIT])
-        box_browser.setFactoryForManager(manager_map[Manager.POINT].subIntPropertyManager(),
-                                         factory_map[Factory.INT_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.POINT].subIntPropertyManager(),
-                                            factory_map[Factory.INT_EDIT])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.POINT], factory_map[PropertyID.POINT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.POINT], factory_map[PropertyID.POINT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.POINT], factory_map[PropertyID.POINT])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.POINT].subIntPropertyManager(),
+                                          factory_map[PropertyID.INT_EDIT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.POINT].subIntPropertyManager(),
+                                         factory_map[PropertyID.INT_EDIT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.POINT].subIntPropertyManager(),
+                                            factory_map[PropertyID.INT_EDIT])
         group[count].addSubProperty(property_)
 
         # pointf
-        manager_map[Manager.POINTF].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.POINTF].addProperty("pointf_%d" % (count + 1,))
+        manager_map[PropertyID.POINTF].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.POINTF].addProperty("pointf_%d" % (count + 1,))
         property_.propertyManager().setValue(property_, QPointF(1.23, 3.21))
-        tree_browser.setFactoryForManager(manager_map[Manager.POINTF], factory_map[Factory.POINTF])
-        box_browser.setFactoryForManager(manager_map[Manager.POINTF], factory_map[Factory.POINTF])
-        button_browser.setFactoryForManager(manager_map[Manager.POINTF], factory_map[Factory.POINTF])
-        tree_browser.setFactoryForManager(manager_map[Manager.POINTF].subDoublePropertyManager(),
-                                          factory_map[Factory.DOUBLE_EDIT])
-        box_browser.setFactoryForManager(manager_map[Manager.POINTF].subDoublePropertyManager(),
-                                         factory_map[Factory.DOUBLE_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.POINTF].subDoublePropertyManager(),
-                                            factory_map[Factory.DOUBLE_EDIT])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.POINTF], factory_map[PropertyID.POINTF])
+        box_browser.setFactoryForManager(manager_map[PropertyID.POINTF], factory_map[PropertyID.POINTF])
+        button_browser.setFactoryForManager(manager_map[PropertyID.POINTF], factory_map[PropertyID.POINTF])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.POINTF].subDoublePropertyManager(),
+                                          factory_map[PropertyID.DOUBLE_EDIT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.POINTF].subDoublePropertyManager(),
+                                         factory_map[PropertyID.DOUBLE_EDIT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.POINTF].subDoublePropertyManager(),
+                                            factory_map[PropertyID.DOUBLE_EDIT])
         group[count].addSubProperty(property_)
 
         # size_r
-        manager_map[Manager.SIZE].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.SIZE].addProperty("size_r_%d" % (count + 1,))
+        manager_map[PropertyID.SIZE].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.SIZE].addProperty("size_r_%d" % (count + 1,))
         property_.propertyManager().setReadOnly(property_, True)
         property_.propertyManager().setMinimum(property_, QSize(0, 0))
         property_.propertyManager().setMaximum(property_, QSize(2, 2))
         property_.propertyManager().setValue(property_, QSize(-1, 3))
-        tree_browser.setFactoryForManager(manager_map[Manager.SIZE], factory_map[Factory.SIZE])
-        box_browser.setFactoryForManager(manager_map[Manager.SIZE], factory_map[Factory.SIZE])
-        button_browser.setFactoryForManager(manager_map[Manager.SIZE], factory_map[Factory.SIZE])
-        tree_browser.setFactoryForManager(manager_map[Manager.SIZE].subIntPropertyManager(),
-                                          factory_map[Factory.INT_EDIT])
-        box_browser.setFactoryForManager(manager_map[Manager.SIZE].subIntPropertyManager(),
-                                         factory_map[Factory.INT_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.SIZE].subIntPropertyManager(),
-                                            factory_map[Factory.INT_EDIT])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.SIZE], factory_map[PropertyID.SIZE])
+        box_browser.setFactoryForManager(manager_map[PropertyID.SIZE], factory_map[PropertyID.SIZE])
+        button_browser.setFactoryForManager(manager_map[PropertyID.SIZE], factory_map[PropertyID.SIZE])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.SIZE].subIntPropertyManager(),
+                                          factory_map[PropertyID.INT_EDIT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.SIZE].subIntPropertyManager(),
+                                         factory_map[PropertyID.INT_EDIT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.SIZE].subIntPropertyManager(),
+                                            factory_map[PropertyID.INT_EDIT])
         group[count].addSubProperty(property_)
 
         # size_rw
-        manager_map[Manager.SIZE].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.SIZE].addProperty("size_rw_%d" % (count + 1,))
+        manager_map[PropertyID.SIZE].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.SIZE].addProperty("size_rw_%d" % (count + 1,))
         property_.propertyManager().setReadOnly(property_, False)
         property_.propertyManager().setMinimum(property_, QSize(0, 0))
         property_.propertyManager().setMaximum(property_, QSize(255, 255))
         property_.propertyManager().setValue(property_, QSize(-1, 3))
-        tree_browser.setFactoryForManager(manager_map[Manager.SIZE], factory_map[Factory.SIZE])
-        box_browser.setFactoryForManager(manager_map[Manager.SIZE], factory_map[Factory.SIZE])
-        button_browser.setFactoryForManager(manager_map[Manager.SIZE], factory_map[Factory.SIZE])
-        tree_browser.setFactoryForManager(manager_map[Manager.SIZE].subIntPropertyManager(),
-                                          factory_map[Factory.INT_EDIT])
-        box_browser.setFactoryForManager(manager_map[Manager.SIZE].subIntPropertyManager(),
-                                         factory_map[Factory.INT_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.SIZE].subIntPropertyManager(),
-                                            factory_map[Factory.INT_EDIT])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.SIZE], factory_map[PropertyID.SIZE])
+        box_browser.setFactoryForManager(manager_map[PropertyID.SIZE], factory_map[PropertyID.SIZE])
+        button_browser.setFactoryForManager(manager_map[PropertyID.SIZE], factory_map[PropertyID.SIZE])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.SIZE].subIntPropertyManager(),
+                                          factory_map[PropertyID.INT_EDIT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.SIZE].subIntPropertyManager(),
+                                         factory_map[PropertyID.INT_EDIT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.SIZE].subIntPropertyManager(),
+                                            factory_map[PropertyID.INT_EDIT])
         group[count].addSubProperty(property_)
 
         # sizef_r
-        manager_map[Manager.SIZEF].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.SIZEF].addProperty("sizef_r_%d" % (count + 1,))
+        manager_map[PropertyID.SIZEF].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.SIZEF].addProperty("sizef_r_%d" % (count + 1,))
         property_.propertyManager().setReadOnly(property_, True)
         property_.propertyManager().setMinimum(property_, QSize(0, 0))
         property_.propertyManager().setMaximum(property_, QSize(2, 2))
         property_.propertyManager().setValue(property_, QSizeF(-1.23, 3.21))
-        tree_browser.setFactoryForManager(manager_map[Manager.SIZEF], factory_map[Factory.SIZEF])
-        box_browser.setFactoryForManager(manager_map[Manager.SIZEF], factory_map[Factory.SIZEF])
-        button_browser.setFactoryForManager(manager_map[Manager.SIZEF], factory_map[Factory.SIZEF])
-        tree_browser.setFactoryForManager(manager_map[Manager.SIZEF].subDoublePropertyManager(),
-                                          factory_map[Factory.DOUBLE_EDIT])
-        box_browser.setFactoryForManager(manager_map[Manager.SIZEF].subDoublePropertyManager(),
-                                         factory_map[Factory.DOUBLE_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.SIZEF].subDoublePropertyManager(),
-                                            factory_map[Factory.DOUBLE_EDIT])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.SIZEF], factory_map[PropertyID.SIZEF])
+        box_browser.setFactoryForManager(manager_map[PropertyID.SIZEF], factory_map[PropertyID.SIZEF])
+        button_browser.setFactoryForManager(manager_map[PropertyID.SIZEF], factory_map[PropertyID.SIZEF])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.SIZEF].subDoublePropertyManager(),
+                                          factory_map[PropertyID.DOUBLE_EDIT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.SIZEF].subDoublePropertyManager(),
+                                         factory_map[PropertyID.DOUBLE_EDIT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.SIZEF].subDoublePropertyManager(),
+                                            factory_map[PropertyID.DOUBLE_EDIT])
         group[count].addSubProperty(property_)
 
         # sizef_rw
-        manager_map[Manager.SIZEF].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.SIZEF].addProperty("sizef_rw_%d" % (count + 1,))
+        manager_map[PropertyID.SIZEF].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.SIZEF].addProperty("sizef_rw_%d" % (count + 1,))
         property_.propertyManager().setReadOnly(property_, False)
         property_.propertyManager().setMinimum(property_, QSize(0, 0))
         property_.propertyManager().setMaximum(property_, QSize(2, 2))
         property_.propertyManager().setValue(property_, QSizeF(-1.23, 3.21))
-        tree_browser.setFactoryForManager(manager_map[Manager.SIZEF], factory_map[Factory.SIZEF])
-        box_browser.setFactoryForManager(manager_map[Manager.SIZEF], factory_map[Factory.SIZEF])
-        button_browser.setFactoryForManager(manager_map[Manager.SIZEF], factory_map[Factory.SIZEF])
-        tree_browser.setFactoryForManager(manager_map[Manager.SIZEF].subDoublePropertyManager(),
-                                          factory_map[Factory.DOUBLE_EDIT])
-        box_browser.setFactoryForManager(manager_map[Manager.SIZEF].subDoublePropertyManager(),
-                                         factory_map[Factory.DOUBLE_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.SIZEF].subDoublePropertyManager(),
-                                            factory_map[Factory.DOUBLE_EDIT])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.SIZEF], factory_map[PropertyID.SIZEF])
+        box_browser.setFactoryForManager(manager_map[PropertyID.SIZEF], factory_map[PropertyID.SIZEF])
+        button_browser.setFactoryForManager(manager_map[PropertyID.SIZEF], factory_map[PropertyID.SIZEF])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.SIZEF].subDoublePropertyManager(),
+                                          factory_map[PropertyID.DOUBLE_EDIT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.SIZEF].subDoublePropertyManager(),
+                                         factory_map[PropertyID.DOUBLE_EDIT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.SIZEF].subDoublePropertyManager(),
+                                            factory_map[PropertyID.DOUBLE_EDIT])
         group[count].addSubProperty(property_)
 
         # rect
-        manager_map[Manager.RECT].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.RECT].addProperty("rect_%d" % (count + 1,))
+        manager_map[PropertyID.RECT].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.RECT].addProperty("rect_%d" % (count + 1,))
         property_.propertyManager().setValue(property_, QRect(0, 1, 2, 3))
-        tree_browser.setFactoryForManager(manager_map[Manager.RECT], factory_map[Factory.RECT])
-        box_browser.setFactoryForManager(manager_map[Manager.RECT], factory_map[Factory.RECT])
-        button_browser.setFactoryForManager(manager_map[Manager.RECT], factory_map[Factory.RECT])
-        tree_browser.setFactoryForManager(manager_map[Manager.RECT].subIntPropertyManager(),
-                                          factory_map[Factory.INT_EDIT])
-        box_browser.setFactoryForManager(manager_map[Manager.RECT].subIntPropertyManager(),
-                                         factory_map[Factory.INT_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.RECT].subIntPropertyManager(),
-                                            factory_map[Factory.INT_EDIT])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.RECT], factory_map[PropertyID.RECT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.RECT], factory_map[PropertyID.RECT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.RECT], factory_map[PropertyID.RECT])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.RECT].subIntPropertyManager(),
+                                          factory_map[PropertyID.INT_EDIT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.RECT].subIntPropertyManager(),
+                                         factory_map[PropertyID.INT_EDIT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.RECT].subIntPropertyManager(),
+                                            factory_map[PropertyID.INT_EDIT])
         group[count].addSubProperty(property_)
 
         # rectf
-        manager_map[Manager.RECTF].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.RECTF].addProperty("rectf_%d" % (count + 1,))
+        manager_map[PropertyID.RECTF].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.RECTF].addProperty("rectf_%d" % (count + 1,))
         property_.propertyManager().setValue(property_, QRectF(0.12, 1.23, 2.34, 3.45))
-        tree_browser.setFactoryForManager(manager_map[Manager.RECTF], factory_map[Factory.RECTF])
-        box_browser.setFactoryForManager(manager_map[Manager.RECTF], factory_map[Factory.RECTF])
-        button_browser.setFactoryForManager(manager_map[Manager.RECTF], factory_map[Factory.RECTF])
-        tree_browser.setFactoryForManager(manager_map[Manager.RECTF].subDoublePropertyManager(),
-                                          factory_map[Factory.DOUBLE_EDIT])
-        box_browser.setFactoryForManager(manager_map[Manager.RECTF].subDoublePropertyManager(),
-                                         factory_map[Factory.DOUBLE_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.RECTF].subDoublePropertyManager(),
-                                            factory_map[Factory.DOUBLE_EDIT])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.RECTF], factory_map[PropertyID.RECTF])
+        box_browser.setFactoryForManager(manager_map[PropertyID.RECTF], factory_map[PropertyID.RECTF])
+        button_browser.setFactoryForManager(manager_map[PropertyID.RECTF], factory_map[PropertyID.RECTF])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.RECTF].subDoublePropertyManager(),
+                                          factory_map[PropertyID.DOUBLE_EDIT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.RECTF].subDoublePropertyManager(),
+                                         factory_map[PropertyID.DOUBLE_EDIT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.RECTF].subDoublePropertyManager(),
+                                            factory_map[PropertyID.DOUBLE_EDIT])
         group[count].addSubProperty(property_)
 
         # enum
         value = Color.RED
-        manager_map[Manager.ENUM].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.ENUM].addProperty("enum_%d" % (count + 1,))
+        manager_map[PropertyID.ENUM].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.ENUM].addProperty("enum_%d" % (count + 1,))
         items = sorted(value.__class__.__members__.items(), key=lambda t: t[1].value)
         names = [k for k, v in items]
-        manager_map[Manager.ENUM].setEnumNames(property_, names)
+        manager_map[PropertyID.ENUM].setEnumNames(property_, names)
         try:
-            manager_map[Manager.ENUM].setValue(property_, value.value)
+            manager_map[PropertyID.ENUM].setValue(property_, value.value)
         except AttributeError:
-            manager_map[Manager.ENUM].setValue(property_, value)
-        tree_browser.setFactoryForManager(manager_map[Manager.ENUM], factory_map[Factory.ENUM])
-        box_browser.setFactoryForManager(manager_map[Manager.ENUM], factory_map[Factory.ENUM])
-        button_browser.setFactoryForManager(manager_map[Manager.ENUM], factory_map[Factory.ENUM])
+            manager_map[PropertyID.ENUM].setValue(property_, value)
+        tree_browser.setFactoryForManager(manager_map[PropertyID.ENUM], factory_map[PropertyID.ENUM])
+        box_browser.setFactoryForManager(manager_map[PropertyID.ENUM], factory_map[PropertyID.ENUM])
+        button_browser.setFactoryForManager(manager_map[PropertyID.ENUM], factory_map[PropertyID.ENUM])
         group[count].addSubProperty(property_)
 
         # flags
         value = ColorCombiner.PURPLE
-        manager_map[Manager.FLAG].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.FLAG].addProperty("flag_%d" % (count + 1,))
+        manager_map[PropertyID.FLAG].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.FLAG].addProperty("flag_%d" % (count + 1,))
         items = value.__class__.__members__.items()
         names = [k for ind, (k, v) in enumerate(items) if (v.value & (v.value - 1)) == 0 and v.value != 0]
-        manager_map[Manager.FLAG].setFlagNames(property_, names)
+        manager_map[PropertyID.FLAG].setFlagNames(property_, names)
         try:
-            manager_map[Manager.FLAG].setValue(property_, value.value)
+            manager_map[PropertyID.FLAG].setValue(property_, value.value)
         except AttributeError:
-            manager_map[Manager.FLAG].setValue(property_, value)
-        tree_browser.setFactoryForManager(manager_map[Manager.FLAG], factory_map[Factory.FLAG])
-        box_browser.setFactoryForManager(manager_map[Manager.FLAG], factory_map[Factory.FLAG])
-        button_browser.setFactoryForManager(manager_map[Manager.FLAG], factory_map[Factory.FLAG])
-        tree_browser.setFactoryForManager(manager_map[Manager.FLAG].subBoolPropertyManager(),
-                                          factory_map[Factory.BOOL])
-        box_browser.setFactoryForManager(manager_map[Manager.FLAG].subBoolPropertyManager(),
-                                         factory_map[Factory.BOOL])
-        button_browser.setFactoryForManager(manager_map[Manager.FLAG].subBoolPropertyManager(),
-                                            factory_map[Factory.BOOL])
+            manager_map[PropertyID.FLAG].setValue(property_, value)
+        tree_browser.setFactoryForManager(manager_map[PropertyID.FLAG], factory_map[PropertyID.FLAG])
+        box_browser.setFactoryForManager(manager_map[PropertyID.FLAG], factory_map[PropertyID.FLAG])
+        button_browser.setFactoryForManager(manager_map[PropertyID.FLAG], factory_map[PropertyID.FLAG])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.FLAG].subBoolPropertyManager(),
+                                          factory_map[PropertyID.BOOL])
+        box_browser.setFactoryForManager(manager_map[PropertyID.FLAG].subBoolPropertyManager(),
+                                         factory_map[PropertyID.BOOL])
+        button_browser.setFactoryForManager(manager_map[PropertyID.FLAG].subBoolPropertyManager(),
+                                            factory_map[PropertyID.BOOL])
         group[count].addSubProperty(property_)
 
         # size_policy
-        manager_map[Manager.SIZE_POLICY].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.SIZE_POLICY].addProperty("size_policy_%d" % (count + 1,))
+        manager_map[PropertyID.SIZE_POLICY].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.SIZE_POLICY].addProperty("size_policy_%d" % (count + 1,))
         property_.propertyManager().setValue(property_, QSizePolicy())
-        tree_browser.setFactoryForManager(manager_map[Manager.SIZE_POLICY], factory_map[Factory.SIZE_POLICY])
-        box_browser.setFactoryForManager(manager_map[Manager.SIZE_POLICY], factory_map[Factory.SIZE_POLICY])
-        button_browser.setFactoryForManager(manager_map[Manager.SIZE_POLICY], factory_map[Factory.SIZE_POLICY])
-        tree_browser.setFactoryForManager(manager_map[Manager.SIZE_POLICY].subEnumPropertyManager(),
-                                          factory_map[Factory.ENUM])
-        tree_browser.setFactoryForManager(manager_map[Manager.SIZE_POLICY].subIntPropertyManager(),
-                                          factory_map[Factory.INT_EDIT])
-        box_browser.setFactoryForManager(manager_map[Manager.SIZE_POLICY].subEnumPropertyManager(),
-                                         factory_map[Factory.ENUM])
-        box_browser.setFactoryForManager(manager_map[Manager.SIZE_POLICY].subIntPropertyManager(),
-                                         factory_map[Factory.INT_EDIT])
-        button_browser.setFactoryForManager(manager_map[Manager.SIZE_POLICY].subEnumPropertyManager(),
-                                            factory_map[Factory.ENUM])
-        button_browser.setFactoryForManager(manager_map[Manager.SIZE_POLICY].subIntPropertyManager(),
-                                            factory_map[Factory.INT_EDIT])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.SIZE_POLICY], factory_map[PropertyID.SIZE_POLICY])
+        box_browser.setFactoryForManager(manager_map[PropertyID.SIZE_POLICY], factory_map[PropertyID.SIZE_POLICY])
+        button_browser.setFactoryForManager(manager_map[PropertyID.SIZE_POLICY], factory_map[PropertyID.SIZE_POLICY])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.SIZE_POLICY].subEnumPropertyManager(),
+                                          factory_map[PropertyID.ENUM])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.SIZE_POLICY].subIntPropertyManager(),
+                                          factory_map[PropertyID.INT_EDIT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.SIZE_POLICY].subEnumPropertyManager(),
+                                         factory_map[PropertyID.ENUM])
+        box_browser.setFactoryForManager(manager_map[PropertyID.SIZE_POLICY].subIntPropertyManager(),
+                                         factory_map[PropertyID.INT_EDIT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.SIZE_POLICY].subEnumPropertyManager(),
+                                            factory_map[PropertyID.ENUM])
+        button_browser.setFactoryForManager(manager_map[PropertyID.SIZE_POLICY].subIntPropertyManager(),
+                                            factory_map[PropertyID.INT_EDIT])
         group[count].addSubProperty(property_)
 
         # font
-        manager_map[Manager.FONT].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.FONT].addProperty("font_%d" % (count + 1,))
+        manager_map[PropertyID.FONT].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.FONT].addProperty("font_%d" % (count + 1,))
         property_.propertyManager().setValue(property_, QFont())
-        tree_browser.setFactoryForManager(manager_map[Manager.FONT], factory_map[Factory.FONT])
-        box_browser.setFactoryForManager(manager_map[Manager.FONT], factory_map[Factory.FONT])
-        button_browser.setFactoryForManager(manager_map[Manager.FONT], factory_map[Factory.FONT])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.FONT], factory_map[PropertyID.FONT])
+        box_browser.setFactoryForManager(manager_map[PropertyID.FONT], factory_map[PropertyID.FONT])
+        button_browser.setFactoryForManager(manager_map[PropertyID.FONT], factory_map[PropertyID.FONT])
         group[count].addSubProperty(property_)
 
         # color
-        manager_map[Manager.COLOR].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.COLOR].addProperty("color_%d" % (count + 1,))
+        manager_map[PropertyID.COLOR].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.COLOR].addProperty("color_%d" % (count + 1,))
         property_.propertyManager().setValue(property_, QColor())
-        tree_browser.setFactoryForManager(manager_map[Manager.COLOR], factory_map[Factory.COLOR])
-        box_browser.setFactoryForManager(manager_map[Manager.COLOR], factory_map[Factory.COLOR])
-        button_browser.setFactoryForManager(manager_map[Manager.COLOR], factory_map[Factory.COLOR])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.COLOR], factory_map[PropertyID.COLOR])
+        box_browser.setFactoryForManager(manager_map[PropertyID.COLOR], factory_map[PropertyID.COLOR])
+        button_browser.setFactoryForManager(manager_map[PropertyID.COLOR], factory_map[PropertyID.COLOR])
         group[count].addSubProperty(property_)
 
         # cursor
-        manager_map[Manager.CURSOR].valueChanged.connect(set_value)
-        property_ = manager_map[Manager.CURSOR].addProperty("cursor_%d" % (count + 1,))
+        manager_map[PropertyID.CURSOR].valueChanged.connect(set_value)
+        property_ = manager_map[PropertyID.CURSOR].addProperty("cursor_%d" % (count + 1,))
         property_.propertyManager().setValue(property_, QCursor())
-        tree_browser.setFactoryForManager(manager_map[Manager.CURSOR], factory_map[Factory.CURSOR])
-        box_browser.setFactoryForManager(manager_map[Manager.CURSOR], factory_map[Factory.CURSOR])
-        button_browser.setFactoryForManager(manager_map[Manager.CURSOR], factory_map[Factory.CURSOR])
+        tree_browser.setFactoryForManager(manager_map[PropertyID.CURSOR], factory_map[PropertyID.CURSOR])
+        box_browser.setFactoryForManager(manager_map[PropertyID.CURSOR], factory_map[PropertyID.CURSOR])
+        button_browser.setFactoryForManager(manager_map[PropertyID.CURSOR], factory_map[PropertyID.CURSOR])
         group[count].addSubProperty(property_)
 
         browser_item = tree_browser.addProperty(group[count])
