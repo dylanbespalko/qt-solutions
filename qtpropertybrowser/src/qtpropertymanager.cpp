@@ -3099,6 +3099,7 @@ void QtTFTensorPropertyManager::setValue(QtProperty *property, const QVector<QCo
     }
 
     disconnect_signals();
+    QVector<QComplex> oldVal = data.val;
     for (unsigned short index=0; index < it.value().val.size(); index++) {
         QtProperty *subProperty = it.value().subProperties[index];
         d_ptr->m_complexPropertyManager->setValue(subProperty, val[index]);
@@ -3108,6 +3109,8 @@ void QtTFTensorPropertyManager::setValue(QtProperty *property, const QVector<QCo
     it.value() = data;
 
     emit propertyChanged(property);
+    if (isclose(oldVal, data.val, data.absTol, data.relTol))
+        return;
     emit valueChanged(property, data.val);
 }
 
