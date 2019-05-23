@@ -13,6 +13,8 @@ public:
     int attributeType(int propertyType, const QString & attribute) const override;
     QVariant attributeValue(const QtProperty * property, const QString & attribute) const override;
     QStringList attributes(int propertyType) const override;
+    inline bool check_protected(const QtProperty * property) const { return QtVariantPropertyManager::check(property); }
+    bool check(const QtProperty * property) const override;
     inline QIcon checkIcon_protected(const QtProperty * property) const { return QtVariantPropertyManager::checkIcon(property); }
     QIcon checkIcon(const QtProperty * property) const override;
     inline void childEvent_protected(QChildEvent * event) { QtVariantPropertyManager::childEvent(event); }
@@ -83,6 +85,8 @@ class QtAbstractPropertyManagerWrapper : public QtAbstractPropertyManager
 {
 public:
     QtAbstractPropertyManagerWrapper(QObject * parent = nullptr);
+    inline bool check_protected(const QtProperty * property) const { return QtAbstractPropertyManager::check(property); }
+    bool check(const QtProperty * property) const override;
     inline QIcon checkIcon_protected(const QtProperty * property) const { return QtAbstractPropertyManager::checkIcon(property); }
     QIcon checkIcon(const QtProperty * property) const override;
     inline void childEvent_protected(QChildEvent * event) { QtAbstractPropertyManager::childEvent(event); }

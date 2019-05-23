@@ -202,6 +202,38 @@ QStringList QtVariantPropertyManagerWrapper::attributes(int propertyType) const
     return cppResult;
 }
 
+bool QtVariantPropertyManagerWrapper::check(const QtProperty * property) const
+{
+    Shiboken::GilState gil;
+    if (PyErr_Occurred())
+        return false;
+    Shiboken::AutoDecRef pyOverride(Shiboken::BindingManager::instance().getOverride(this, "check"));
+    if (pyOverride.isNull()) {
+        gil.release();
+        return this->::QtAbstractPropertyManager::check(property);
+    }
+
+    Shiboken::AutoDecRef pyArgs(Py_BuildValue("(N)",
+        Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
+    ));
+
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    // An error happened in python code!
+    if (pyResult.isNull()) {
+        PyErr_Print();
+        return false;
+    }
+    // Check return type
+    PythonToCppFunc pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), pyResult);
+    if (!pythonToCpp) {
+        Shiboken::warning(PyExc_RuntimeWarning, 2, "Invalid return value in function %s, expected %s, got %s.", "QtVariantPropertyManager.check", "bool", Py_TYPE(pyResult)->tp_name);
+        return false;
+    }
+    bool cppResult;
+    pythonToCpp(pyResult, &cppResult);
+    return cppResult;
+}
+
 QIcon QtVariantPropertyManagerWrapper::checkIcon(const QtProperty * property) const
 {
     Shiboken::GilState gil;

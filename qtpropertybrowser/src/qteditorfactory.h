@@ -49,6 +49,28 @@
 QT_BEGIN_NAMESPACE
 #endif
 
+class QtGroupEditorFactoryPrivate;
+
+class QT_QTPROPERTYBROWSER_EXPORT QtGroupEditorFactory : public QtAbstractEditorFactory<QtGroupPropertyManager>
+{
+    Q_OBJECT
+public:
+    QtGroupEditorFactory(QObject *parent = nullptr);
+    ~QtGroupEditorFactory();
+protected:
+    void connectPropertyManager(QtGroupPropertyManager *manager);
+    QWidget *createEditor(QtGroupPropertyManager *manager, QtProperty *property,
+                          QWidget *parent);
+    QWidget *createAttributeEditor(QtGroupPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    void disconnectPropertyManager(QtGroupPropertyManager *manager);
+private:
+    QtGroupEditorFactoryPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QtGroupEditorFactory)
+    Q_DISABLE_COPY(QtGroupEditorFactory)
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
+};
+
 class QtSpinBoxFactoryPrivate;
 
 class QT_QTPROPERTYBROWSER_EXPORT QtSpinBoxFactory : public QtAbstractEditorFactory<QtIntPropertyManager>
@@ -357,28 +379,6 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
-class QtGroupEditorFactoryPrivate;
-
-class QT_QTPROPERTYBROWSER_EXPORT QtGroupEditorFactory : public QtAbstractEditorFactory<QtAbstractPropertyManager>
-{
-    Q_OBJECT
-public:
-    QtGroupEditorFactory(QObject *parent = nullptr);
-    ~QtGroupEditorFactory();
-protected:
-    void connectPropertyManager(QtAbstractPropertyManager *manager);
-    QWidget *createEditor(QtAbstractPropertyManager *manager, QtProperty *property,
-                          QWidget *parent);
-    QWidget *createAttributeEditor(QtAbstractPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
-    void disconnectPropertyManager(QtAbstractPropertyManager *manager);
-private:
-    QtGroupEditorFactoryPrivate *d_ptr;
-    Q_DECLARE_PRIVATE(QtGroupEditorFactory)
-    Q_DISABLE_COPY(QtGroupEditorFactory)
-    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
-    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
-};
-
 class QtLineEditFactoryPrivate;
 
 class QT_QTPROPERTYBROWSER_EXPORT QtLineEditFactory : public QtAbstractEditorFactory<QtStringPropertyManager>
@@ -534,6 +534,160 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 
+class QtLocaleEditorFactoryPrivate;
+
+class QT_QTPROPERTYBROWSER_EXPORT QtLocaleEditorFactory : public QtAbstractEditorFactory<QtLocalePropertyManager>
+{
+    Q_OBJECT
+public:
+    QtLocaleEditorFactory(QObject *parent = nullptr);
+    ~QtLocaleEditorFactory();
+protected:
+    void connectPropertyManager(QtLocalePropertyManager *manager);
+    QWidget *createEditor(QtLocalePropertyManager *manager, QtProperty *property,
+                          QWidget *parent);
+    QWidget *createAttributeEditor(QtLocalePropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    void disconnectPropertyManager(QtLocalePropertyManager *manager);
+private:
+    QtLocaleEditorFactoryPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QtLocaleEditorFactory)
+    Q_DISABLE_COPY(QtLocaleEditorFactory)
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
+};
+
+class QtPointEditorFactoryPrivate;
+
+class QT_QTPROPERTYBROWSER_EXPORT QtPointEditorFactory : public QtAbstractEditorFactory<QtPointPropertyManager>
+{
+    Q_OBJECT
+public:
+    QtPointEditorFactory(QObject *parent = nullptr);
+    ~QtPointEditorFactory();
+protected:
+    void connectPropertyManager(QtPointPropertyManager *manager);
+    QWidget *createEditor(QtPointPropertyManager *manager, QtProperty *property,
+                          QWidget *parent);
+    QWidget *createAttributeEditor(QtPointPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    void disconnectPropertyManager(QtPointPropertyManager *manager);
+private:
+    QtPointEditorFactoryPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QtPointEditorFactory)
+    Q_DISABLE_COPY(QtPointEditorFactory)
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
+};
+
+class QtPointFEditorFactoryPrivate;
+
+class QT_QTPROPERTYBROWSER_EXPORT QtPointFEditorFactory : public QtAbstractEditorFactory<QtPointFPropertyManager>
+{
+    Q_OBJECT
+public:
+    QtPointFEditorFactory(QObject *parent = nullptr);
+    ~QtPointFEditorFactory();
+protected:
+    void connectPropertyManager(QtPointFPropertyManager *manager);
+    QWidget *createEditor(QtPointFPropertyManager *manager, QtProperty *property,
+                          QWidget *parent);
+    QWidget *createAttributeEditor(QtPointFPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    void disconnectPropertyManager(QtPointFPropertyManager *manager);
+private:
+    QtPointFEditorFactoryPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QtPointFEditorFactory)
+    Q_DISABLE_COPY(QtPointFEditorFactory)
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
+};
+
+class QtSizeEditorFactoryPrivate;
+
+class QT_QTPROPERTYBROWSER_EXPORT QtSizeEditorFactory : public QtAbstractEditorFactory<QtSizePropertyManager>
+{
+    Q_OBJECT
+public:
+    QtSizeEditorFactory(QObject *parent = nullptr);
+    ~QtSizeEditorFactory();
+protected:
+    void connectPropertyManager(QtSizePropertyManager *manager);
+    QWidget *createEditor(QtSizePropertyManager *manager, QtProperty *property,
+                          QWidget *parent);
+    QWidget *createAttributeEditor(QtSizePropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    void disconnectPropertyManager(QtSizePropertyManager *manager);
+private:
+    QtSizeEditorFactoryPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QtSizeEditorFactory)
+    Q_DISABLE_COPY(QtSizeEditorFactory)
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
+};
+
+class QtSizeFEditorFactoryPrivate;
+
+class QT_QTPROPERTYBROWSER_EXPORT QtSizeFEditorFactory : public QtAbstractEditorFactory<QtSizeFPropertyManager>
+{
+    Q_OBJECT
+public:
+    QtSizeFEditorFactory(QObject *parent = nullptr);
+    ~QtSizeFEditorFactory();
+protected:
+    void connectPropertyManager(QtSizeFPropertyManager *manager);
+    QWidget *createEditor(QtSizeFPropertyManager *manager, QtProperty *property,
+                          QWidget *parent);
+    QWidget *createAttributeEditor(QtSizeFPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    void disconnectPropertyManager(QtSizeFPropertyManager *manager);
+private:
+    QtSizeFEditorFactoryPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QtSizeFEditorFactory)
+    Q_DISABLE_COPY(QtSizeFEditorFactory)
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
+};
+
+class QtRectEditorFactoryPrivate;
+
+class QT_QTPROPERTYBROWSER_EXPORT QtRectEditorFactory : public QtAbstractEditorFactory<QtRectPropertyManager>
+{
+    Q_OBJECT
+public:
+    QtRectEditorFactory(QObject *parent = nullptr);
+    ~QtRectEditorFactory();
+protected:
+    void connectPropertyManager(QtRectPropertyManager *manager);
+    QWidget *createEditor(QtRectPropertyManager *manager, QtProperty *property,
+                          QWidget *parent);
+    QWidget *createAttributeEditor(QtRectPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    void disconnectPropertyManager(QtRectPropertyManager *manager);
+private:
+    QtRectEditorFactoryPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QtRectEditorFactory)
+    Q_DISABLE_COPY(QtRectEditorFactory)
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
+};
+
+class QtRectFEditorFactoryPrivate;
+
+class QT_QTPROPERTYBROWSER_EXPORT QtRectFEditorFactory : public QtAbstractEditorFactory<QtRectFPropertyManager>
+{
+    Q_OBJECT
+public:
+    QtRectFEditorFactory(QObject *parent = nullptr);
+    ~QtRectFEditorFactory();
+protected:
+    void connectPropertyManager(QtRectFPropertyManager *manager);
+    QWidget *createEditor(QtRectFPropertyManager *manager, QtProperty *property,
+                          QWidget *parent);
+    QWidget *createAttributeEditor(QtRectFPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    void disconnectPropertyManager(QtRectFPropertyManager *manager);
+private:
+    QtRectFEditorFactoryPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QtRectFEditorFactory)
+    Q_DISABLE_COPY(QtRectFEditorFactory)
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
+};
+
 class QtEnumEditorFactoryPrivate;
 
 class QT_QTPROPERTYBROWSER_EXPORT QtEnumEditorFactory : public QtAbstractEditorFactory<QtEnumPropertyManager>
@@ -559,6 +713,50 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(int))
     Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
+};
+
+class QtFlagEditorFactoryPrivate;
+
+class QT_QTPROPERTYBROWSER_EXPORT QtFlagEditorFactory : public QtAbstractEditorFactory<QtFlagPropertyManager>
+{
+    Q_OBJECT
+public:
+    QtFlagEditorFactory(QObject *parent = nullptr);
+    ~QtFlagEditorFactory();
+protected:
+    void connectPropertyManager(QtFlagPropertyManager *manager);
+    QWidget *createEditor(QtFlagPropertyManager *manager, QtProperty *property,
+                          QWidget *parent);
+    QWidget *createAttributeEditor(QtFlagPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    void disconnectPropertyManager(QtFlagPropertyManager *manager);
+private:
+    QtFlagEditorFactoryPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QtFlagEditorFactory)
+    Q_DISABLE_COPY(QtFlagEditorFactory)
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
+};
+
+class QtSizePolicyEditorFactoryPrivate;
+
+class QT_QTPROPERTYBROWSER_EXPORT QtSizePolicyEditorFactory : public QtAbstractEditorFactory<QtSizePolicyPropertyManager>
+{
+    Q_OBJECT
+public:
+    QtSizePolicyEditorFactory(QObject *parent = nullptr);
+    ~QtSizePolicyEditorFactory();
+protected:
+    void connectPropertyManager(QtSizePolicyPropertyManager *manager);
+    QWidget *createEditor(QtSizePolicyPropertyManager *manager, QtProperty *property,
+                          QWidget *parent);
+    QWidget *createAttributeEditor(QtSizePolicyPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    void disconnectPropertyManager(QtSizePolicyPropertyManager *manager);
+private:
+    QtSizePolicyEditorFactoryPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QtSizePolicyEditorFactory)
+    Q_DISABLE_COPY(QtSizePolicyEditorFactory)
+    Q_PRIVATE_SLOT(d_func(), void slotSetCheck(bool))
     Q_PRIVATE_SLOT(d_func(), void slotCheckAttributeEditorDestroyed(QObject *))
 };
 

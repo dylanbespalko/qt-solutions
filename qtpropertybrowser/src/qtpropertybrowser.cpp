@@ -292,16 +292,6 @@ bool QtProperty::isModified() const
 }
 
 /*!
- Returns whether the property is checked.
-
- \sa setCheck()
- */
-bool QtProperty::check() const
-{
-    return d_ptr->m_check;
-}
-
-/*!
     Returns whether the property has a value.
 
     \sa QtAbstractPropertyManager::hasValue()
@@ -429,6 +419,16 @@ QString QtProperty::maximumText() const
 }
 
 /*!
+ Returns whether the property is checked.
+
+ \sa setCheck()
+ */
+bool QtProperty::check() const
+{
+    return d_ptr->m_manager->check(this);
+}
+
+/*!
  Sets the property's label to the given \a text.
 
  \sa label()
@@ -525,20 +525,6 @@ void QtProperty::setModified(bool modified)
         return;
 
     d_ptr->m_modified = modified;
-    propertyChanged();
-}
-
-/*!
- Sets the property's check state according to the passed \a check value.
-
- \sa check()
- */
-void QtProperty::setCheck(bool check)
-{
-    if (d_ptr->m_check == check)
-        return;
-
-    d_ptr->m_check = check;
     propertyChanged();
 }
 

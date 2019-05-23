@@ -63,7 +63,16 @@ HEADERS += \
     qtpropertybrowser/qtdatetimeeditfactory_wrapper.h \
     qtpropertybrowser/qtkeysequenceeditorfactory_wrapper.h \
     qtpropertybrowser/qtchareditorfactory_wrapper.h \
+    qtpropertybrowser/qtlocaleeditorfactory_wrapper.h \
+    qtpropertybrowser/qtpointeditorfactory_wrapper.h \
+    qtpropertybrowser/qtpointfeditorfactory_wrapper.h \
+    qtpropertybrowser/qtsizeeditorfactory_wrapper.h \
+    qtpropertybrowser/qtsizefeditorfactory_wrapper.h \
+    qtpropertybrowser/qtrecteditorfactory_wrapper.h \
+    qtpropertybrowser/qtrectfeditorfactory_wrapper.h \
     qtpropertybrowser/qtenumeditorfactory_wrapper.h \
+    qtpropertybrowser/qtflageditorfactory_wrapper.h \
+    qtpropertybrowser/qtsizepolicyeditorfactory_wrapper.h \
     qtpropertybrowser/qtcoloreditorfactory_wrapper.h \
     qtpropertybrowser/qtfonteditorfactory_wrapper.h \
     qtpropertybrowser/qtvarianteditorfactory_wrapper.h \
@@ -126,7 +135,16 @@ SOURCES += \
     qtpropertybrowser/qtdatetimeeditfactory_wrapper.cpp \
     qtpropertybrowser/qtkeysequenceeditorfactory_wrapper.cpp \
     qtpropertybrowser/qtchareditorfactory_wrapper.cpp \
+    qtpropertybrowser/qtlocaleeditorfactory_wrapper.cpp \
+    qtpropertybrowser/qtpointeditorfactory_wrapper.cpp \
+    qtpropertybrowser/qtpointfeditorfactory_wrapper.cpp \
+    qtpropertybrowser/qtsizeeditorfactory_wrapper.cpp \
+    qtpropertybrowser/qtsizefeditorfactory_wrapper.cpp \
+    qtpropertybrowser/qtrecteditorfactory_wrapper.cpp \
+    qtpropertybrowser/qtrectfeditorfactory_wrapper.cpp \
     qtpropertybrowser/qtenumeditorfactory_wrapper.cpp \
+    qtpropertybrowser/qtflageditorfactory_wrapper.cpp \
+    qtpropertybrowser/qtsizepolicyeditorfactory_wrapper.cpp \
     qtpropertybrowser/qtcursoreditorfactory_wrapper.cpp \
     qtpropertybrowser/qtcoloreditorfactory_wrapper.cpp \
     qtpropertybrowser/qtfonteditorfactory_wrapper.cpp \

@@ -9,6 +9,7 @@ class QtIntPropertyManagerWrapper : public QtIntPropertyManager
 {
 public:
     QtIntPropertyManagerWrapper(QObject * parent = nullptr);
+    bool check(const QtProperty * property) const override;
     inline QIcon checkIcon_protected(const QtProperty * property) const { return QtIntPropertyManager::checkIcon(property); }
     QIcon checkIcon(const QtProperty * property) const override;
     inline void childEvent_protected(QChildEvent * event) { QtIntPropertyManager::childEvent(event); }
@@ -71,6 +72,8 @@ class QtAbstractPropertyManagerWrapper : public QtAbstractPropertyManager
 {
 public:
     QtAbstractPropertyManagerWrapper(QObject * parent = nullptr);
+    inline bool check_protected(const QtProperty * property) const { return QtAbstractPropertyManager::check(property); }
+    bool check(const QtProperty * property) const override;
     inline QIcon checkIcon_protected(const QtProperty * property) const { return QtAbstractPropertyManager::checkIcon(property); }
     QIcon checkIcon(const QtProperty * property) const override;
     inline void childEvent_protected(QChildEvent * event) { QtAbstractPropertyManager::childEvent(event); }

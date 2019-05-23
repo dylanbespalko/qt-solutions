@@ -680,49 +680,6 @@ static PyObject* Sbk_QtPropertyFunc_removeSubProperty(PyObject* self, PyObject* 
         return {};
 }
 
-static PyObject* Sbk_QtPropertyFunc_setCheck(PyObject* self, PyObject* pyArg)
-{
-    QtPropertyWrapper* cppSelf = nullptr;
-    SBK_UNUSED(cppSelf)
-    if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtPropertyWrapper *>(reinterpret_cast< ::QtProperty *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX], reinterpret_cast<SbkObject *>(self))));
-    int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
-    SBK_UNUSED(pythonToCpp)
-
-    // Overloaded function decisor
-    // 0: QtProperty::setCheck(bool)
-    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), (pyArg)))) {
-        overloadId = 0; // setCheck(bool)
-    }
-
-    // Function signature not found.
-    if (overloadId == -1) goto Sbk_QtPropertyFunc_setCheck_TypeError;
-
-    // Call function/method
-    {
-        bool cppArg0;
-        pythonToCpp(pyArg, &cppArg0);
-
-        if (!PyErr_Occurred()) {
-            // setCheck(bool)
-            PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            cppSelf->setCheck(cppArg0);
-            PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
-        }
-    }
-
-    if (PyErr_Occurred()) {
-        return {};
-    }
-    Py_RETURN_NONE;
-
-    Sbk_QtPropertyFunc_setCheck_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtProperty.setCheck");
-        return {};
-}
-
 static PyObject* Sbk_QtPropertyFunc_setEnabled(PyObject* self, PyObject* pyArg)
 {
     QtPropertyWrapper* cppSelf = nullptr;
@@ -1225,7 +1182,6 @@ static PyMethodDef Sbk_QtProperty_methods[] = {
     {"propertyManager", (PyCFunction)Sbk_QtPropertyFunc_propertyManager, METH_NOARGS},
     {"propertyName", (PyCFunction)Sbk_QtPropertyFunc_propertyName, METH_NOARGS},
     {"removeSubProperty", (PyCFunction)Sbk_QtPropertyFunc_removeSubProperty, METH_O},
-    {"setCheck", (PyCFunction)Sbk_QtPropertyFunc_setCheck, METH_O},
     {"setEnabled", (PyCFunction)Sbk_QtPropertyFunc_setEnabled, METH_O},
     {"setLabel", (PyCFunction)Sbk_QtPropertyFunc_setLabel, METH_O},
     {"setModified", (PyCFunction)Sbk_QtPropertyFunc_setModified, METH_O},
@@ -1350,7 +1306,6 @@ const char QtProperty_SignaturesString[] = ""
     "qtpropertybrowser.QtProperty.propertyManager()->qtpropertybrowser.QtAbstractPropertyManager\n"
     "qtpropertybrowser.QtProperty.propertyName()->QString\n"
     "qtpropertybrowser.QtProperty.removeSubProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtProperty.setCheck(check:bool)\n"
     "qtpropertybrowser.QtProperty.setEnabled(enable:bool)\n"
     "qtpropertybrowser.QtProperty.setLabel(text:QString)\n"
     "qtpropertybrowser.QtProperty.setModified(modified:bool)\n"

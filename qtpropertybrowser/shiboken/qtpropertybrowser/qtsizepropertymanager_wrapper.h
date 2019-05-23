@@ -9,6 +9,7 @@ class QtSizePropertyManagerWrapper : public QtSizePropertyManager
 {
 public:
     QtSizePropertyManagerWrapper(QObject * parent = nullptr);
+    bool check(const QtProperty * property) const override;
     inline QIcon checkIcon_protected(const QtProperty * property) const { return QtSizePropertyManager::checkIcon(property); }
     QIcon checkIcon(const QtProperty * property) const override;
     inline void childEvent_protected(QChildEvent * event) { QtSizePropertyManager::childEvent(event); }
@@ -72,6 +73,8 @@ class QtAbstractPropertyManagerWrapper : public QtAbstractPropertyManager
 {
 public:
     QtAbstractPropertyManagerWrapper(QObject * parent = nullptr);
+    inline bool check_protected(const QtProperty * property) const { return QtAbstractPropertyManager::check(property); }
+    bool check(const QtProperty * property) const override;
     inline QIcon checkIcon_protected(const QtProperty * property) const { return QtAbstractPropertyManager::checkIcon(property); }
     QIcon checkIcon(const QtProperty * property) const override;
     inline void childEvent_protected(QChildEvent * event) { QtAbstractPropertyManager::childEvent(event); }

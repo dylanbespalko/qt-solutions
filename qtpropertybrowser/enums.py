@@ -22,8 +22,20 @@ from qtpropertybrowser import QtTFTensorEditFactory
 from qtpropertybrowser import QtLineEditFactory, QtFileEditorFactory
 from qtpropertybrowser import QtDateEditFactory, QtTimeEditFactory, QtDateTimeEditFactory
 from qtpropertybrowser import QtKeySequenceEditorFactory, QtCharEditorFactory
-from qtpropertybrowser import QtEnumEditorFactory
+from qtpropertybrowser import QtLocaleEditorFactory
+from qtpropertybrowser import QtPointEditorFactory, QtPointFEditorFactory
+from qtpropertybrowser import QtSizeEditorFactory, QtSizeFEditorFactory
+from qtpropertybrowser import QtRectEditorFactory, QtRectFEditorFactory
+from qtpropertybrowser import QtEnumEditorFactory, QtFlagEditorFactory
+from qtpropertybrowser import QtSizePolicyEditorFactory
 from qtpropertybrowser import QtFontEditorFactory, QtColorEditorFactory, QtCursorEditorFactory
+
+
+@unique
+class BrowserType(Enum):
+    TREE = auto()
+    BOX = auto()
+    BUTTON = auto()
 
 
 @unique
@@ -124,16 +136,16 @@ id_factory_map = {
     PropertyID.DATETIME: QtDateTimeEditFactory,
     PropertyID.KEY_SEQUENCE: QtKeySequenceEditorFactory,
     PropertyID.CHAR: QtCharEditorFactory,
-    PropertyID.LOCALE: QtGroupEditorFactory,
-    PropertyID.POINT: QtGroupEditorFactory,
-    PropertyID.POINTF: QtGroupEditorFactory,
-    PropertyID.SIZE: QtGroupEditorFactory,
-    PropertyID.SIZEF: QtGroupEditorFactory,
-    PropertyID.RECT: QtGroupEditorFactory,
-    PropertyID.RECTF: QtGroupEditorFactory,
+    PropertyID.LOCALE: QtLocaleEditorFactory,
+    PropertyID.POINT: QtPointEditorFactory,
+    PropertyID.POINTF: QtPointFEditorFactory,
+    PropertyID.SIZE: QtSizeEditorFactory,
+    PropertyID.SIZEF: QtSizeFEditorFactory,
+    PropertyID.RECT: QtRectEditorFactory,
+    PropertyID.RECTF: QtRectFEditorFactory,
     PropertyID.ENUM: QtEnumEditorFactory,
-    PropertyID.FLAG: QtGroupEditorFactory,
-    PropertyID.SIZE_POLICY: QtGroupEditorFactory,
+    PropertyID.FLAG: QtFlagEditorFactory,
+    PropertyID.SIZE_POLICY: QtSizePolicyEditorFactory,
     PropertyID.FONT: QtFontEditorFactory,
     PropertyID.COLOR: QtColorEditorFactory,
     PropertyID.CURSOR: QtCursorEditorFactory,

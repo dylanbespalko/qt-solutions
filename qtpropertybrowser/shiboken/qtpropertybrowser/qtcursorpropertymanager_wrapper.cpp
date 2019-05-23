@@ -71,6 +71,38 @@ QtCursorPropertyManagerWrapper::QtCursorPropertyManagerWrapper(QObject * parent)
     // ... middle
 }
 
+bool QtCursorPropertyManagerWrapper::check(const QtProperty * property) const
+{
+    Shiboken::GilState gil;
+    if (PyErr_Occurred())
+        return false;
+    Shiboken::AutoDecRef pyOverride(Shiboken::BindingManager::instance().getOverride(this, "check"));
+    if (pyOverride.isNull()) {
+        gil.release();
+        return this->::QtCursorPropertyManager::check(property);
+    }
+
+    Shiboken::AutoDecRef pyArgs(Py_BuildValue("(N)",
+        Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
+    ));
+
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    // An error happened in python code!
+    if (pyResult.isNull()) {
+        PyErr_Print();
+        return false;
+    }
+    // Check return type
+    PythonToCppFunc pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), pyResult);
+    if (!pythonToCpp) {
+        Shiboken::warning(PyExc_RuntimeWarning, 2, "Invalid return value in function %s, expected %s, got %s.", "QtCursorPropertyManager.check", "bool", Py_TYPE(pyResult)->tp_name);
+        return false;
+    }
+    bool cppResult;
+    pythonToCpp(pyResult, &cppResult);
+    return cppResult;
+}
+
 QIcon QtCursorPropertyManagerWrapper::checkIcon(const QtProperty * property) const
 {
     Shiboken::GilState gil;
@@ -907,7 +939,7 @@ static PyObject* Sbk_QtCursorPropertyManagerFunc_check(PyObject* self, PyObject*
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtCursorPropertyManager::check(const QtProperty*)const
+    // 0: QtAbstractPropertyManager::check(const QtProperty*)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // check(const QtProperty*)const
     }
@@ -925,7 +957,7 @@ static PyObject* Sbk_QtCursorPropertyManagerFunc_check(PyObject* self, PyObject*
         if (!PyErr_Occurred()) {
             // check(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            bool cppResult = const_cast<const ::QtCursorPropertyManagerWrapper*>(cppSelf)->check(cppArg0);
+            bool cppResult = Shiboken::Object::hasCppWrapper(reinterpret_cast<SbkObject*>(self)) ? const_cast<const ::QtCursorPropertyManagerWrapper*>(cppSelf)->::QtCursorPropertyManager::check(cppArg0) : const_cast<const ::QtCursorPropertyManagerWrapper*>(cppSelf)->check(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), &cppResult);
         }

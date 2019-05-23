@@ -85,7 +85,16 @@
     <object-type name="QtDateTimeEditFactory"/>
     <object-type name="QtKeySequenceEditorFactory"/>
     <object-type name="QtCharEditorFactory"/>
+    <object-type name="QtLocaleEditorFactory"/>
+    <object-type name="QtPointEditorFactory"/>
+    <object-type name="QtPointFEditorFactory"/>
+    <object-type name="QtSizeEditorFactory"/>
+    <object-type name="QtSizeFEditorFactory"/>
+    <object-type name="QtRectEditorFactory"/>
+    <object-type name="QtRectFEditorFactory"/>
     <object-type name="QtEnumEditorFactory"/>
+    <object-type name="QtFlagEditorFactory"/>
+    <object-type name="QtSizePolicyEditorFactory"/>
     <object-type name="QtCursorEditorFactory"/>
     <object-type name="QtColorEditorFactory"/>
     <object-type name="QtFontEditorFactory"/>

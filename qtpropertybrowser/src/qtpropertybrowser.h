@@ -91,7 +91,6 @@ public:
     QBrush foreground() const;
     bool isEnabled() const;
     bool isModified() const;
-    bool check() const;
 
     bool hasValue() const;
     QIcon valueIcon() const;
@@ -103,6 +102,7 @@ public:
     QString formatText() const;
     QString minimumText() const;
     QString maximumText() const;
+    bool check() const;
 
     void setLabel(const QString &text);
     void setToolTip(const QString &text);
@@ -111,7 +111,6 @@ public:
     void setPropertyName(const QString &text);
     void setEnabled(bool enable);
     void setModified(bool modified);
-    void setCheck(bool check);
 
     void addSubProperty(QtProperty *property);
     void insertSubProperty(QtProperty *property, QtProperty *afterProperty);
@@ -160,6 +159,7 @@ protected:
     virtual QString formatText(const QtProperty *property) const{Q_UNUSED(property); return QString();}
     virtual QString minimumText(const QtProperty *property) const{Q_UNUSED(property); return QString();}
     virtual QString maximumText(const QtProperty *property) const{Q_UNUSED(property); return QString();}
+    virtual bool check(const QtProperty *property) const{Q_UNUSED(property); return false;}
     virtual EchoMode echoMode(const QtProperty *) const;
     virtual QBrush foreground(const QtProperty *property) const{Q_UNUSED(property);return QBrush(QColor(Qt::black),Qt::SolidPattern);}
     virtual void initializeProperty(QtProperty *property) = 0;
