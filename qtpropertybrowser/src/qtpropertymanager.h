@@ -56,6 +56,8 @@ class QTime;
 class QDateTime;
 class QLocale;
 
+class QtGroupPropertyManagerPrivate;
+
 class QT_QTPROPERTYBROWSER_EXPORT QtGroupPropertyManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
@@ -63,11 +65,23 @@ public:
     QtGroupPropertyManager(QObject *parent = nullptr);
     ~QtGroupPropertyManager();
 
+    bool check(const QtProperty *property) const;
+
+public Q_SLOTS:
+    void setCheck(QtProperty *property, bool check);
+
+Q_SIGNALS:
+    void checkChanged(QtProperty *property, bool check);
+
 protected:
     virtual bool hasValue(const QtProperty *property) const;
 
     virtual void initializeProperty(QtProperty *property);
     virtual void uninitializeProperty(QtProperty *property);
+private:
+    QtGroupPropertyManagerPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QtGroupPropertyManager)
+    Q_DISABLE_COPY(QtGroupPropertyManager)
 };
 
 class QtIntPropertyManagerPrivate;
@@ -86,6 +100,7 @@ public:
     int precision(const QtProperty *property) const;
     QString unit(const QtProperty *property) const;
     bool isReadOnly(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
     QBrush foreground(const QtProperty *property) const;
 
 public Q_SLOTS:
@@ -97,6 +112,7 @@ public Q_SLOTS:
     void setPrecision(QtProperty *property, int prec);
     void setUnit(QtProperty *property, const QString& unit);
     void setReadOnly(QtProperty *property, bool readOnly);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, int val);
     void rangeChanged(QtProperty *property, int minVal, int maxVal);
@@ -104,6 +120,7 @@ Q_SIGNALS:
     void precisionChanged(QtProperty *property, int prec);
     void unitChanged(QtProperty *property, const QString& unit);
     void readOnlyChanged(QtProperty *property, bool readOnly);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QString minimumText(const QtProperty *property) const;
@@ -129,13 +146,16 @@ public:
 
     bool value(const QtProperty *property) const;
     bool textVisible(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, bool val);
     void setTextVisible(QtProperty *property, bool textVisible);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, bool val);
     void textVisibleChanged(QtProperty *property, bool);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon valueIcon(const QtProperty *property) const;
@@ -168,6 +188,7 @@ public:
     QString unit(const QtProperty *property) const;
     Format format(const QtProperty *property) const;
     bool isReadOnly(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
     QBrush foreground(const QtProperty *property) const;
 
 public Q_SLOTS:
@@ -183,6 +204,7 @@ public Q_SLOTS:
     void setUnit(QtProperty *property, const QString& unit);
     void setFormat(QtProperty *property, Format format_);
     void setReadOnly(QtProperty *property, bool readOnly);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, double val);
     void rangeChanged(QtProperty *property, double minVal, double maxVal);
@@ -192,6 +214,7 @@ Q_SIGNALS:
     void unitChanged(QtProperty *property, const QString& unit);
     void formatChanged(QtProperty *property, Format format_);
     void readOnlyChanged(QtProperty *property, bool readOnly);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QString minimumText(const QtProperty *property) const;
@@ -230,6 +253,7 @@ public:
     PkAvg pkAvg(const QtProperty *property) const;
     Format format(const QtProperty *property) const;
     bool isReadOnly(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
     QBrush foreground(const QtProperty *property) const;
 
 
@@ -247,6 +271,7 @@ public Q_SLOTS:
     void setPkAvg(QtProperty *property,PkAvg pkAvg);
     void setFormat(QtProperty *property,Format format_);
     void setReadOnly(QtProperty *property, bool readOnly);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QComplex& val);
     void rangeChanged(QtProperty *property, double minVal, double maxVal);
@@ -257,6 +282,7 @@ Q_SIGNALS:
     void pkAvgChanged(QtProperty *property,PkAvg pkAvg);
     void formatChanged(QtProperty *property,Format format_);
     void readOnlyChanged(QtProperty *property, bool readOnly);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QString minimumText(const QtProperty *property) const;
@@ -298,6 +324,7 @@ public:
     PkAvg pkAvg(const QtProperty *property) const;
     Format format(const QtProperty *property) const;
     bool isReadOnly(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
     QBrush foreground(const QtProperty *property) const;
 
 public Q_SLOTS:
@@ -314,6 +341,7 @@ public Q_SLOTS:
     void setPkAvg(QtProperty *property,PkAvg pkAvg);
     void setFormat(QtProperty *property,Format format_);
     void setReadOnly(QtProperty *property, bool readOnly);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QVector<QComplex>& val);
     void precisionChanged(QtProperty *property, int prec);
@@ -325,6 +353,7 @@ Q_SIGNALS:
     void formatChanged(QtProperty *property,Format format_);
     void equationChanged(QtProperty *property, const QString& equation);
     void readOnlyChanged(QtProperty *property, bool readOnly);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QString unitText(const QtProperty *property) const;
@@ -357,18 +386,21 @@ public:
     QRegExp regExp(const QtProperty *property) const;
     EchoMode echoMode(const QtProperty *property) const;
     bool isReadOnly(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, const QString &val);
     void setRegExp(QtProperty *property, const QRegExp &regExp);
     void setEchoMode(QtProperty *property, EchoMode echoMode);
     void setReadOnly(QtProperty *property, bool readOnly);
+    void setCheck(QtProperty *property, bool check);
 
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QString &val);
     void regExpChanged(QtProperty *property, const QRegExp &regExp);
     void echoModeChanged(QtProperty *property, const int);
     void readOnlyChanged(QtProperty *property, bool);
+    void checkChanged(QtProperty *property, bool check);
 
 protected:
     QString valueText(const QtProperty *property) const;
@@ -394,15 +426,18 @@ public:
     QDate value(const QtProperty *property) const;
     QDate minimum(const QtProperty *property) const;
     QDate maximum(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, const QDate &val);
     void setMinimum(QtProperty *property, const QDate &minVal);
     void setMaximum(QtProperty *property, const QDate &maxVal);
     void setRange(QtProperty *property, const QDate &minVal, const QDate &maxVal);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QDate &val);
     void rangeChanged(QtProperty *property, const QDate &minVal, const QDate &maxVal);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon checkIcon(const QtProperty *property) const;
@@ -424,11 +459,14 @@ public:
     ~QtTimePropertyManager();
 
     QTime value(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, const QTime &val);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QTime &val);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon checkIcon(const QtProperty *property) const;
@@ -450,11 +488,14 @@ public:
     ~QtDateTimePropertyManager();
 
     QDateTime value(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, const QDateTime &val);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QDateTime &val);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon checkIcon(const QtProperty *property) const;
@@ -476,11 +517,14 @@ public:
     ~QtKeySequencePropertyManager();
 
     QKeySequence value(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, const QKeySequence &val);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QKeySequence &val);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon checkIcon(const QtProperty *property) const;
@@ -502,11 +546,14 @@ public:
     ~QtCharPropertyManager();
 
     QChar value(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, const QChar &val);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QChar &val);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon checkIcon(const QtProperty *property) const;
@@ -531,11 +578,14 @@ public:
     QtEnumPropertyManager *subEnumPropertyManager() const;
 
     QLocale value(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, const QLocale &val);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QLocale &val);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon checkIcon(const QtProperty *property) const;
@@ -561,11 +611,14 @@ public:
     QtIntPropertyManager *subIntPropertyManager() const;
 
     QPoint value(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, const QPoint &val);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QPoint &val);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon checkIcon(const QtProperty *property) const;
@@ -592,13 +645,16 @@ public:
 
     QPointF value(const QtProperty *property) const;
     int precision(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, const QPointF &val);
     void setPrecision(QtProperty *property, int prec);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QPointF &val);
     void precisionChanged(QtProperty *property, int prec);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon checkIcon(const QtProperty *property) const;
@@ -627,6 +683,7 @@ public:
     QSize minimum(const QtProperty *property) const;
     QSize maximum(const QtProperty *property) const;
     bool isReadOnly(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, const QSize &val);
@@ -634,10 +691,12 @@ public Q_SLOTS:
     void setMaximum(QtProperty *property, const QSize &maxVal);
     void setRange(QtProperty *property, const QSize &minVal, const QSize &maxVal);
     void setReadOnly(QtProperty *property, bool readOnly);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QSize &val);
     void rangeChanged(QtProperty *property, const QSize &minVal, const QSize &maxVal);
     void readOnlyChanged(QtProperty *property, bool readOnly);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon checkIcon(const QtProperty *property) const;
@@ -667,6 +726,7 @@ public:
     QSizeF maximum(const QtProperty *property) const;
     int precision(const QtProperty *property) const;
     bool isReadOnly(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, const QSizeF &val);
@@ -675,11 +735,13 @@ public Q_SLOTS:
     void setRange(QtProperty *property, const QSizeF &minVal, const QSizeF &maxVal);
     void setPrecision(QtProperty *property, int prec);
     void setReadOnly(QtProperty *property, bool readOnly);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QSizeF &val);
     void rangeChanged(QtProperty *property, const QSizeF &minVal, const QSizeF &maxVal);
     void precisionChanged(QtProperty *property, int prec);
     void readOnlyChanged(QtProperty *property, bool readOnly);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon checkIcon(const QtProperty *property) const;
@@ -706,13 +768,16 @@ public:
 
     QRect value(const QtProperty *property) const;
     QRect constraint(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, const QRect &val);
     void setConstraint(QtProperty *property, const QRect &constraint);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QRect &val);
     void constraintChanged(QtProperty *property, const QRect &constraint);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon checkIcon(const QtProperty *property) const;
@@ -740,15 +805,18 @@ public:
     QRectF value(const QtProperty *property) const;
     QRectF constraint(const QtProperty *property) const;
     int precision(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, const QRectF &val);
     void setConstraint(QtProperty *property, const QRectF &constraint);
     void setPrecision(QtProperty *property, int prec);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QRectF &val);
     void constraintChanged(QtProperty *property, const QRectF &constraint);
     void precisionChanged(QtProperty *property, int prec);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon checkIcon(const QtProperty *property) const;
@@ -772,6 +840,7 @@ public:
     ~QtEnumPropertyManager();
 
     int value(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
     QStringList enumNames(const QtProperty *property) const;
     QMap<int, QIcon> enumIcons(const QtProperty *property) const;
 
@@ -779,10 +848,12 @@ public Q_SLOTS:
     void setValue(QtProperty *property, int val);
     void setEnumNames(QtProperty *property, const QStringList &names);
     void setEnumIcons(QtProperty *property, const QMap<int, QIcon> &icons);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, int val);
     void enumNamesChanged(QtProperty *property, const QStringList &names);
     void enumIconsChanged(QtProperty *property, const QMap<int, QIcon> &icons);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon valueIcon(const QtProperty *property) const;
@@ -807,14 +878,17 @@ public:
     QtBoolPropertyManager *subBoolPropertyManager() const;
 
     int value(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
     QStringList flagNames(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, int val);
     void setFlagNames(QtProperty *property, const QStringList &names);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, int val);
     void flagNamesChanged(QtProperty *property, const QStringList &names);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon checkIcon(const QtProperty *property) const;
@@ -841,11 +915,14 @@ public:
     QtEnumPropertyManager *subEnumPropertyManager() const;
 
     QSizePolicy value(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, const QSizePolicy &val);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QSizePolicy &val);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon checkIcon(const QtProperty *property) const;
@@ -874,11 +951,14 @@ public:
     QtBoolPropertyManager *subBoolPropertyManager() const;
 
     QFont value(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, const QFont &val);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QFont &val);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon valueIcon(const QtProperty *property) const;
@@ -909,11 +989,14 @@ public:
     QtIntPropertyManager *subIntPropertyManager() const;
 
     QColor value(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, const QColor &val);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QColor &val);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon valueIcon(const QtProperty *property) const;
@@ -940,11 +1023,14 @@ public:
 #ifndef QT_NO_CURSOR
     QCursor value(const QtProperty *property) const;
 #endif
+    bool check(const QtProperty *property) const;
 
 public Q_SLOTS:
     void setValue(QtProperty *property, const QCursor &val);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QCursor &val);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon valueIcon(const QtProperty *property) const;
@@ -970,15 +1056,18 @@ public:
     QString filter(const QtProperty *property) const;
     QFileDialog::FileMode fileMode(const QtProperty *property) const;
     bool isReadOnly(const QtProperty *property) const;
+    bool check(const QtProperty *property) const;
 public Q_SLOTS:
     void setValue(QtProperty *, const QString &);
     void setFilter(QtProperty *, const QString &);
     void setFileMode(QtProperty *, const QFileDialog::FileMode mode);
     void setReadOnly(QtProperty *property, bool readOnly);
+    void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *, const QString &);
     void filterChanged(QtProperty *, const QString &);
     void readOnlyChanged(QtProperty *property, bool readOnly);
+    void checkChanged(QtProperty *property, bool check);
 protected:
     QString valueText(const QtProperty *property) const;
     QIcon checkIcon(const QtProperty *property) const;

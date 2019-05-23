@@ -328,23 +328,29 @@ static Value getMaximum(const QMap<const QtProperty *, PrivateData> &propertyMap
     return getData<Value>(propertyMap, &PrivateData::maxVal, property, defaultValue);
 }
 
-template <class ValueChangeParameter, class Value, class PropertyManager>
-static void setSimpleValue(QMap<const QtProperty *, Value> &propertyMap,
-            PropertyManager *manager,
+template <class ValueChangeParameter, class PropertyManagerPrivate, class PropertyManager, class Value>
+static void setSimpleValue(PropertyManager *manager, PropertyManagerPrivate *managerPrivate,
             void (PropertyManager::*propertyChangedSignal)(QtProperty *),
             void (PropertyManager::*valueChangedSignal)(QtProperty *, ValueChangeParameter),
-            QtProperty *property, const Value &val)
+            QtProperty *property, const Value &val,
+            void (PropertyManagerPrivate::*setSubPropertyValue)(QtProperty *, ValueChangeParameter))
 {
-    typedef QMap<const QtProperty *, Value> PropertyToData;
+    typedef typename PropertyManagerPrivate::Data PrivateData;
+    typedef QMap<const QtProperty *, PrivateData> PropertyToData;
     typedef typename PropertyToData::iterator PropertyToDataIterator;
-    const PropertyToDataIterator it = propertyMap.find(property);
-    if (it == propertyMap.end())
+    const PropertyToDataIterator it = managerPrivate->m_values.find(property);
+    if (it == managerPrivate->m_values.end())
         return;
 
-    if (it.value() == val)
+    PrivateData &data = it.value();
+
+    if (data.val == val)
         return;
 
-    it.value() = val;
+    data.val = val;
+
+    if (setSubPropertyValue)
+        (managerPrivate->*setSubPropertyValue)(property, data.val);
 
     emit (manager->*propertyChangedSignal)(property);
     emit (manager->*valueChangedSignal)(property, val);
@@ -669,6 +675,24 @@ Q_GLOBAL_STATIC(QtMetaEnumProvider, metaEnumProvider)
 
 
 // QtGroupPropertyManager
+class QtGroupPropertyManagerPrivate
+{
+    QtGroupPropertyManager *q_ptr;
+    Q_DECLARE_PUBLIC(QtGroupPropertyManager)
+public:
+
+    struct Data
+    {
+        Data() : val(QCursor()), check(false),
+                 foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
+        QCursor val;
+        bool check;
+        QBrush foreground;
+    };
+
+    typedef QMap<const QtProperty *, Data> PropertyValueMap;
+    PropertyValueMap m_values;
+};
 
 /*!
     \class QtGroupPropertyManager
@@ -686,7 +710,8 @@ Q_GLOBAL_STATIC(QtMetaEnumProvider, metaEnumProvider)
 QtGroupPropertyManager::QtGroupPropertyManager(QObject *parent)
     : QtAbstractPropertyManager(parent)
 {
-
+    d_ptr = new QtGroupPropertyManagerPrivate;
+    d_ptr->q_ptr = this;
 }
 
 /*!
@@ -694,7 +719,25 @@ QtGroupPropertyManager::QtGroupPropertyManager(QObject *parent)
 */
 QtGroupPropertyManager::~QtGroupPropertyManager()
 {
+    clear();
+    delete d_ptr;
+}
 
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtGroupPropertyManager::setCheck
+*/
+bool QtGroupPropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtGroupPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*!
@@ -704,6 +747,29 @@ bool QtGroupPropertyManager::hasValue(const QtProperty *property) const
 {
     Q_UNUSED(property)
     return false;
+}
+
+/*!
+    Sets check status of the property.
+
+    \sa QtGroupPropertyManager::setCheck
+*/
+void QtGroupPropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtGroupPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtGroupPropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
 }
 
 /*!
@@ -735,7 +801,7 @@ public:
         Data()
             : val(0), minVal(-INT_MAX), maxVal(INT_MAX),
               singleStep(1), precision(2), absTol(0), relTol(0),
-              readOnly(false), unit(QString()),
+              readOnly(false), check(false), unit(QString()),
               foreground(QBrush(Qt::black, Qt::SolidPattern)){}
         int val;
         int minVal;
@@ -745,6 +811,7 @@ public:
         int absTol;
         int relTol;
         bool readOnly;
+        bool check;
         QString unit;
         QBrush foreground;
 
@@ -904,6 +971,23 @@ QString QtIntPropertyManager::unit(const QtProperty *property) const
 bool QtIntPropertyManager::isReadOnly(const QtProperty *property) const
 {
     return getData<bool>(d_ptr->m_values, &QtIntPropertyManagerPrivate::Data::readOnly, property, false);
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtIntPropertyManager::check
+*/
+bool QtIntPropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtIntPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*!
@@ -1166,6 +1250,29 @@ void QtIntPropertyManager::setReadOnly(QtProperty *property, bool readOnly)
 }
 
 /*!
+    Sets check status of the property.
+
+    \sa QtIntPropertyManager::setCheck
+*/
+void QtIntPropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtIntPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtIntPropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
+}
+
+/*!
     \reimp
 */
 void QtIntPropertyManager::initializeProperty(QtProperty *property)
@@ -1194,7 +1301,7 @@ public:
         Data()
             : val(0), minVal(lowest), maxVal(highest),
             singleStep(1), absTol(epsilon), relTol(epsilon),
-            precision(2), scale(Scale::_), unit(QString()), format(Format::LIN_DEG), readOnly(false),
+            precision(2), scale(Scale::_), unit(QString()), format(Format::LIN_DEG), readOnly(false), check(false),
             foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         double val;
         double minVal;
@@ -1207,6 +1314,7 @@ public:
         QString unit;
         Format format;
         bool readOnly;
+        bool check;
         QBrush foreground;
         double minimumValue() const { return minVal; }
         double maximumValue() const { return maxVal; }
@@ -1425,6 +1533,23 @@ Format QtDoublePropertyManager::format(const QtProperty *property) const
 bool QtDoublePropertyManager::isReadOnly(const QtProperty *property) const
 {
     return getData<bool>(d_ptr->m_values, &QtDoublePropertyManagerPrivate::Data::readOnly, property, false);
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtDoublePropertyManager::setCheck
+*/
+bool QtDoublePropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtDoublePropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*!
@@ -1803,6 +1928,29 @@ void QtDoublePropertyManager::setFormat(QtProperty *property, Format format_)
 }
 
 /*!
+    Sets check status of the property.
+
+    \sa QtDoublePropertyManager::setCheck
+*/
+void QtDoublePropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtDoublePropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtDoublePropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
+}
+
+/*!
     \reimp
 */
 void QtDoublePropertyManager::initializeProperty(QtProperty *property)
@@ -1831,7 +1979,7 @@ public:
         Data()
             : val(QComplex(0.0,0.0)), minVal(0), maxVal(highest),
               singleStep(1), absTol(epsilon), relTol(epsilon),
-              precision(2), pkAvg(PkAvg::PK), scale(Scale::_), format(Format::RE_IM), readOnly(false), unit(QString()),
+              precision(2), pkAvg(PkAvg::PK), scale(Scale::_), format(Format::RE_IM), readOnly(false), check(false), unit(QString()),
               foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QComplex val;
         double minVal;
@@ -1844,6 +1992,7 @@ public:
         Scale scale;
         Format format;
         bool readOnly;
+        bool check;
         QString unit;
         QBrush foreground;
 
@@ -2079,6 +2228,23 @@ Format QtComplexPropertyManager::format(const QtProperty *property) const
 bool QtComplexPropertyManager::isReadOnly(const QtProperty *property) const
 {
     return getData<bool>(d_ptr->m_values, &QtComplexPropertyManagerPrivate::Data::readOnly, property, false);
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtComplexPropertyManager::setCheck
+*/
+bool QtComplexPropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtComplexPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*Returns the given \a property's foreground brush.
@@ -2592,6 +2758,29 @@ void QtComplexPropertyManager::setFormat(QtProperty *property, Format format_)
 }
 
 /*!
+    Sets check status of the property.
+
+    \sa QtComplexPropertyManager::setCheck
+*/
+void QtComplexPropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtComplexPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtComplexPropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
+}
+
+/*!
  \reimp
  */
 void QtComplexPropertyManager::initializeProperty(QtProperty *property)
@@ -2623,7 +2812,7 @@ public:
         Data()
             :val(QVector<QComplex>(0)), minVal(QVector<double>(0)), maxVal(QVector<double>(0)),
              singleStep(QVector<QComplex>(0)), absTol(QVector<double>(0)), relTol(QVector<double>(0)),
-             precision(2), scale(Scale::_), pkAvg(PkAvg::PK),format(Format::RE_IM), readOnly(false), unit(QString()),
+             precision(2), scale(Scale::_), pkAvg(PkAvg::PK),format(Format::RE_IM), readOnly(false), check(false), unit(QString()),
              foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QVector<QComplex> val;
         QVector<double> minVal;
@@ -2636,6 +2825,7 @@ public:
         PkAvg pkAvg;
         Format format;
         bool readOnly;
+        bool check;
         QString unit;
         QBrush foreground;
 
@@ -2967,6 +3157,23 @@ Format QtTFTensorPropertyManager::format(const QtProperty *property) const
 bool QtTFTensorPropertyManager::isReadOnly(const QtProperty *property) const
 {
     return getData<bool>(d_ptr->m_values, &QtTFTensorPropertyManagerPrivate::Data::readOnly, property, false);
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtTFTensorPropertyManager::setCheck
+*/
+bool QtTFTensorPropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtTFTensorPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*Returns the given \a property's foreground brush.
@@ -3535,6 +3742,29 @@ void QtTFTensorPropertyManager::setFormat(QtProperty *property, Format format_)
 }
 
 /*!
+    Sets check status of the property.
+
+    \sa QtTFTensorPropertyManager::setCheck
+*/
+void QtTFTensorPropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtTFTensorPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtTFTensorPropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
+}
+
+/*!
  \reimp
  */
 void QtTFTensorPropertyManager::reinitializeProperty(QtProperty *property)
@@ -3613,7 +3843,7 @@ public:
     {
         Data() : regExp(QString(QLatin1Char('*')),  Qt::CaseSensitive, QRegExp::Wildcard),
                  absTol(QString()), relTol(QString()),
-                 echoMode(QLineEdit::Normal), readOnly(false),
+                 echoMode(QLineEdit::Normal), readOnly(false), check(false),
                  foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QString val;
         QRegExp regExp;
@@ -3621,6 +3851,7 @@ public:
         QString relTol;
         int echoMode;
         bool readOnly;
+        bool check;
         QBrush foreground;
     };
 
@@ -3697,7 +3928,7 @@ QtStringPropertyManager::~QtStringPropertyManager()
 */
 QString QtStringPropertyManager::value(const QtProperty *property) const
 {
-    return getValue<QString>(d_ptr->m_values, property);
+    return getValue<QString>(d_ptr->m_values, property, QString());
 }
 
 /*!
@@ -3731,6 +3962,23 @@ EchoMode QtStringPropertyManager::echoMode(const QtProperty *property) const
 bool QtStringPropertyManager::isReadOnly(const QtProperty *property) const
 {
     return getData<bool>(d_ptr->m_values, &QtStringPropertyManagerPrivate::Data::readOnly, property, false);
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtStringPropertyManager::setCheck
+*/
+bool QtStringPropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtStringPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*!
@@ -3868,6 +4116,29 @@ void QtStringPropertyManager::setReadOnly(QtProperty *property, bool readOnly)
 }
 
 /*!
+    Sets check status of the property.
+
+    \sa QtStringPropertyManager::setCheck
+*/
+void QtStringPropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtStringPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtStringPropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
+}
+
+/*!
     \reimp
 */
 void QtStringPropertyManager::initializeProperty(QtProperty *property)
@@ -3895,10 +4166,11 @@ public:
     struct Data
     {
         Data() : val(false), textVisible(true),
-                 absTol(QString()), relTol(QString()),
+                 check(false), absTol(QString()), relTol(QString()),
                  foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         bool val;
         bool textVisible;
+        bool check;
         QString absTol;
         QString relTol;
         QBrush foreground;
@@ -3970,6 +4242,23 @@ QtBoolPropertyManager::~QtBoolPropertyManager()
 bool QtBoolPropertyManager::value(const QtProperty *property) const
 {
     return getValue<bool>(d_ptr->m_values, property, false);
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtBoolPropertyManager::setCheck
+*/
+bool QtBoolPropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtBoolPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 bool QtBoolPropertyManager::textVisible(const QtProperty *property) const
@@ -4061,6 +4350,29 @@ void QtBoolPropertyManager::setTextVisible(QtProperty *property, bool textVisibl
 }
 
 /*!
+    Sets check status of the property.
+
+    \sa QtBoolPropertyManager::setCheck
+*/
+void QtBoolPropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtBoolPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtBoolPropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
+}
+
+/*!
     \reimp
 */
 void QtBoolPropertyManager::initializeProperty(QtProperty *property)
@@ -4087,13 +4399,14 @@ public:
     struct Data
     {
         Data() : val(QDate::currentDate()), minVal(QDate(1752, 9, 14)), maxVal(QDate(7999, 12, 31)),
-                 absTol(QDate(1752, 9, 14)), relTol(QDate(1752, 9, 14)),
+                 absTol(QDate(1752, 9, 14)), relTol(QDate(1752, 9, 14)), check(false),
                  foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QDate val;
         QDate minVal;
         QDate maxVal;
         QDate absTol;
         QDate relTol;
+        bool check;
         QBrush foreground;
         QDate minimumValue() const { return minVal; }
         QDate maximumValue() const { return maxVal; }
@@ -4181,7 +4494,7 @@ QtDatePropertyManager::~QtDatePropertyManager()
 */
 QDate QtDatePropertyManager::value(const QtProperty *property) const
 {
-    return getValue<QDate>(d_ptr->m_values, property);
+    return getValue<QDate>(d_ptr->m_values, property, QDate::currentDate());
 }
 
 /*!
@@ -4202,6 +4515,23 @@ QDate QtDatePropertyManager::minimum(const QtProperty *property) const
 QDate QtDatePropertyManager::maximum(const QtProperty *property) const
 {
     return getMaximum<QDate>(d_ptr->m_values, property);
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtDatePropertyManager::setCheck
+*/
+bool QtDatePropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtDatePropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*!
@@ -4307,6 +4637,29 @@ void QtDatePropertyManager::setRange(QtProperty *property, const QDate &minVal, 
 }
 
 /*!
+    Sets check status of the property.
+
+    \sa QtDatePropertyManager::setCheck
+*/
+void QtDatePropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtDatePropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtDatePropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
+}
+
+/*!
     \reimp
 */
 void QtDatePropertyManager::initializeProperty(QtProperty *property)
@@ -4330,10 +4683,20 @@ class QtTimePropertyManagerPrivate
     Q_DECLARE_PUBLIC(QtTimePropertyManager)
 public:
 
+    struct Data
+    {
+        Data()
+            : val(QTime::currentTime()), check(false),
+              foreground(QBrush(Qt::black, Qt::SolidPattern)){}
+        QTime val;
+        bool check;
+        QBrush foreground;
+    };
+
     QString m_format;
 
-    typedef QMap<const QtProperty *, QTime> PropertyValueMap;
-    PropertyValueMap m_values;
+    typedef QMap<const QtProperty *, Data> PropertyValueMap;
+    QMap<const QtProperty *, Data> m_values;
 };
 
 /*!
@@ -4393,7 +4756,24 @@ QtTimePropertyManager::~QtTimePropertyManager()
 */
 QTime QtTimePropertyManager::value(const QtProperty *property) const
 {
-    return d_ptr->m_values.value(property, QTime());
+    return getValue<QTime>(d_ptr->m_values, property, QTime::currentTime());
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtTimePropertyManager::setCheck
+*/
+bool QtTimePropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtTimePropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*!
@@ -4404,7 +4784,7 @@ QString QtTimePropertyManager::valueText(const QtProperty *property) const
    const QtTimePropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
-    return it.value().toString(d_ptr->m_format);
+    return getValue<QTime>(d_ptr->m_values, property, QTime::currentTime()).toString(d_ptr->m_format);
 }
 
 /*!
@@ -4426,10 +4806,34 @@ QIcon QtTimePropertyManager::checkIcon(const QtProperty *property) const
 */
 void QtTimePropertyManager::setValue(QtProperty *property, const QTime &val)
 {
-    setSimpleValue<const QTime &, QTime, QtTimePropertyManager>(d_ptr->m_values, this,
+    void (QtTimePropertyManagerPrivate::*setSubPropertyValue)(QtProperty *, const QTime &) = nullptr;
+    setSimpleValue<const QTime &, QtTimePropertyManagerPrivate, QtTimePropertyManager, const QTime>(this, d_ptr,
                 &QtTimePropertyManager::propertyChanged,
                 &QtTimePropertyManager::valueChanged,
-                property, val);
+                property, val, setSubPropertyValue);
+}
+
+/*!
+    Sets check status of the property.
+
+    \sa QtTimePropertyManager::setCheck
+*/
+void QtTimePropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtTimePropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtTimePropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
 }
 
 /*!
@@ -4437,7 +4841,7 @@ void QtTimePropertyManager::setValue(QtProperty *property, const QTime &val)
 */
 void QtTimePropertyManager::initializeProperty(QtProperty *property)
 {
-    d_ptr->m_values[property] = QTime::currentTime();
+    d_ptr->m_values[property].val = QTime::currentTime();
 }
 
 /*!
@@ -4456,10 +4860,20 @@ class QtDateTimePropertyManagerPrivate
     Q_DECLARE_PUBLIC(QtDateTimePropertyManager)
 public:
 
+    struct Data
+    {
+        Data()
+            : val(QDateTime::currentDateTime()), check(false),
+              foreground(QBrush(Qt::black, Qt::SolidPattern)){}
+        QDateTime val;
+        bool check;
+        QBrush foreground;
+    };
+
     QString m_format;
 
-    typedef QMap<const QtProperty *, QDateTime> PropertyValueMap;
-    PropertyValueMap m_values;
+    typedef QMap<const QtProperty *, Data> PropertyValueMap;
+    QMap<const QtProperty *, Data> m_values;
 };
 
 /*! \class QtDateTimePropertyManager
@@ -4517,7 +4931,24 @@ QtDateTimePropertyManager::~QtDateTimePropertyManager()
 */
 QDateTime QtDateTimePropertyManager::value(const QtProperty *property) const
 {
-    return d_ptr->m_values.value(property, QDateTime());
+    return getValue<QDateTime>(d_ptr->m_values, property, QDateTime::currentDateTime());
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtDateTimePropertyManager::setCheck
+*/
+bool QtDateTimePropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtDateTimePropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*!
@@ -4528,7 +4959,7 @@ QString QtDateTimePropertyManager::valueText(const QtProperty *property) const
    const QtDateTimePropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
-    return it.value().toString(d_ptr->m_format);
+    return getValue<QDateTime>(d_ptr->m_values, property, QDateTime::currentDateTime()).toString(d_ptr->m_format);
 }
 
 /*!
@@ -4550,10 +4981,34 @@ QIcon QtDateTimePropertyManager::checkIcon(const QtProperty *property) const
 */
 void QtDateTimePropertyManager::setValue(QtProperty *property, const QDateTime &val)
 {
-    setSimpleValue<const QDateTime &, QDateTime, QtDateTimePropertyManager>(d_ptr->m_values, this,
+    void (QtDateTimePropertyManagerPrivate::*setSubPropertyValue)(QtProperty *, const QDateTime &) = nullptr;
+    setSimpleValue<const QDateTime &, QtDateTimePropertyManagerPrivate, QtDateTimePropertyManager, const QDateTime>(this, d_ptr,
                 &QtDateTimePropertyManager::propertyChanged,
                 &QtDateTimePropertyManager::valueChanged,
-                property, val);
+                property, val, setSubPropertyValue);
+}
+
+/*!
+    Sets check status of the property.
+
+    \sa QtDateTimePropertyManager::setCheck
+*/
+void QtDateTimePropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtDateTimePropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtDateTimePropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
 }
 
 /*!
@@ -4561,7 +5016,7 @@ void QtDateTimePropertyManager::setValue(QtProperty *property, const QDateTime &
 */
 void QtDateTimePropertyManager::initializeProperty(QtProperty *property)
 {
-    d_ptr->m_values[property] = QDateTime::currentDateTime();
+    d_ptr->m_values[property].val = QDateTime::currentDateTime();
 }
 
 /*!
@@ -4580,10 +5035,20 @@ class QtKeySequencePropertyManagerPrivate
     Q_DECLARE_PUBLIC(QtKeySequencePropertyManager)
 public:
 
+    struct Data
+    {
+        Data()
+            : val(QKeySequence()), check(false),
+              foreground(QBrush(Qt::black, Qt::SolidPattern)){}
+        QKeySequence val;
+        bool check;
+        QBrush foreground;
+    };
+
     QString m_format;
 
-    typedef QMap<const QtProperty *, QKeySequence> PropertyValueMap;
-    PropertyValueMap m_values;
+    typedef QMap<const QtProperty *, Data> PropertyValueMap;
+    QMap<const QtProperty *, Data> m_values;
 };
 
 /*! \class QtKeySequencePropertyManager
@@ -4637,7 +5102,24 @@ QtKeySequencePropertyManager::~QtKeySequencePropertyManager()
 */
 QKeySequence QtKeySequencePropertyManager::value(const QtProperty *property) const
 {
-    return d_ptr->m_values.value(property, QKeySequence());
+    return getValue<QKeySequence>(d_ptr->m_values, property, QKeySequence());
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtKeySequencePropertyManager::setCheck
+*/
+bool QtKeySequencePropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtKeySequencePropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*!
@@ -4648,7 +5130,7 @@ QString QtKeySequencePropertyManager::valueText(const QtProperty *property) cons
     const QtKeySequencePropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
-    return it.value().toString(QKeySequence::NativeText);
+    return getValue<QKeySequence>(d_ptr->m_values, property, QKeySequence()).toString(QKeySequence::NativeText);
 }
 
 /*!
@@ -4670,10 +5152,34 @@ QIcon QtKeySequencePropertyManager::checkIcon(const QtProperty *property) const
 */
 void QtKeySequencePropertyManager::setValue(QtProperty *property, const QKeySequence &val)
 {
-    setSimpleValue<const QKeySequence &, QKeySequence, QtKeySequencePropertyManager>(d_ptr->m_values, this,
+    void (QtKeySequencePropertyManagerPrivate::*setSubPropertyValue)(QtProperty *, const QKeySequence &) = nullptr;
+    setSimpleValue<const QKeySequence &, QtKeySequencePropertyManagerPrivate, QtKeySequencePropertyManager, const QKeySequence>(this, d_ptr,
                 &QtKeySequencePropertyManager::propertyChanged,
                 &QtKeySequencePropertyManager::valueChanged,
-                property, val);
+                property, val, setSubPropertyValue);
+}
+
+/*!
+    Sets check status of the property.
+
+    \sa QtKeySequencePropertyManager::setCheck
+*/
+void QtKeySequencePropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtKeySequencePropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtKeySequencePropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
 }
 
 /*!
@@ -4681,7 +5187,7 @@ void QtKeySequencePropertyManager::setValue(QtProperty *property, const QKeySequ
 */
 void QtKeySequencePropertyManager::initializeProperty(QtProperty *property)
 {
-    d_ptr->m_values[property] = QKeySequence();
+    d_ptr->m_values[property].val = QKeySequence();
 }
 
 /*!
@@ -4700,8 +5206,18 @@ class QtCharPropertyManagerPrivate
     Q_DECLARE_PUBLIC(QtCharPropertyManager)
 public:
 
-    typedef QMap<const QtProperty *, QChar> PropertyValueMap;
-    PropertyValueMap m_values;
+    struct Data
+    {
+        Data()
+            : val(QChar()), check(false),
+              foreground(QBrush(Qt::black, Qt::SolidPattern)){}
+        QChar val;
+        bool check;
+        QBrush foreground;
+    };
+
+    typedef QMap<const QtProperty *, Data> PropertyValueMap;
+    QMap<const QtProperty *, Data> m_values;
 };
 
 /*! \class QtCharPropertyManager
@@ -4755,7 +5271,24 @@ QtCharPropertyManager::~QtCharPropertyManager()
 */
 QChar QtCharPropertyManager::value(const QtProperty *property) const
 {
-    return d_ptr->m_values.value(property, QChar());
+    return getValue<QChar>(d_ptr->m_values, property, QChar());
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtCharPropertyManager::setCheck
+*/
+bool QtCharPropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtCharPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*!
@@ -4766,7 +5299,7 @@ QString QtCharPropertyManager::valueText(const QtProperty *property) const
    const QtCharPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
-    const QChar c = it.value();
+    const QChar c = getValue<QChar>(d_ptr->m_values, property, QChar());
     return c.isNull() ? QString() : QString(c);
 }
 
@@ -4789,10 +5322,34 @@ QIcon QtCharPropertyManager::checkIcon(const QtProperty *property) const
 */
 void QtCharPropertyManager::setValue(QtProperty *property, const QChar &val)
 {
-    setSimpleValue<const QChar &, QChar, QtCharPropertyManager>(d_ptr->m_values, this,
+    void (QtCharPropertyManagerPrivate::*setSubPropertyValue)(QtProperty *, const QChar &) = nullptr;
+    setSimpleValue<const QChar &, QtCharPropertyManagerPrivate, QtCharPropertyManager, const QChar>(this, d_ptr,
                 &QtCharPropertyManager::propertyChanged,
                 &QtCharPropertyManager::valueChanged,
-                property, val);
+                property, val, setSubPropertyValue);
+}
+
+/*!
+    Sets check status of the property.
+
+    \sa QtCharPropertyManager::setCheck
+*/
+void QtCharPropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtCharPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtCharPropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
 }
 
 /*!
@@ -4800,7 +5357,7 @@ void QtCharPropertyManager::setValue(QtProperty *property, const QChar &val)
 */
 void QtCharPropertyManager::initializeProperty(QtProperty *property)
 {
-    d_ptr->m_values[property] = QChar();
+    d_ptr->m_values[property].val = QChar();
 }
 
 /*!
@@ -4819,13 +5376,23 @@ class QtLocalePropertyManagerPrivate
     Q_DECLARE_PUBLIC(QtLocalePropertyManager)
 public:
 
+    struct Data
+    {
+        Data()
+            : val(QLocale()), check(false),
+              foreground(QBrush(Qt::black, Qt::SolidPattern)){}
+        QLocale val;
+        bool check;
+        QBrush foreground;
+    };
+
+    typedef QMap<const QtProperty *, Data> PropertyValueMap;
+    QMap<const QtProperty *, Data> m_values;
+
     QtLocalePropertyManagerPrivate();
 
     void slotEnumChanged(QtProperty *property, int value);
     void slotPropertyDestroyed(QtProperty *property);
-
-    typedef QMap<const QtProperty *, QLocale> PropertyValueMap;
-    PropertyValueMap m_values;
 
     QtEnumPropertyManager *m_enumPropertyManager;
 
@@ -4843,14 +5410,14 @@ QtLocalePropertyManagerPrivate::QtLocalePropertyManagerPrivate()
 void QtLocalePropertyManagerPrivate::slotEnumChanged(QtProperty *property, int value)
 {
     if (QtProperty *prop = m_languageToProperty.value(property, nullptr)) {
-        const QLocale loc = m_values[prop];
+        const QLocale loc = m_values[prop].val;
         QLocale::Language newLanguage = loc.language();
         QLocale::Country newCountry = loc.country();
         metaEnumProvider()->indexToLocale(value, 0, &newLanguage, nullptr);
         QLocale newLoc(newLanguage, newCountry);
         q_ptr->setValue(prop, newLoc);
     } else if (QtProperty *prop = m_countryToProperty.value(property, nullptr)) {
-        const QLocale loc = m_values[prop];
+        const QLocale loc = m_values[prop].val;
         QLocale::Language newLanguage = loc.language();
         QLocale::Country newCountry = loc.country();
         metaEnumProvider()->indexToLocale(m_enumPropertyManager->value(m_propertyToLanguage.value(prop)), value, &newLanguage, &newCountry);
@@ -4953,7 +5520,24 @@ QtEnumPropertyManager *QtLocalePropertyManager::subEnumPropertyManager() const
 */
 QLocale QtLocalePropertyManager::value(const QtProperty *property) const
 {
-    return d_ptr->m_values.value(property, QLocale());
+    return getValue<QLocale>(d_ptr->m_values, property, QLocale());
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtLocalePropertyManager::setCheck
+*/
+bool QtLocalePropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtLocalePropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*!
@@ -4965,7 +5549,7 @@ QString QtLocalePropertyManager::valueText(const QtProperty *property) const
     if (it == d_ptr->m_values.constEnd())
         return QString();
 
-    QLocale loc = it.value();
+    QLocale loc = getValue<QLocale>(d_ptr->m_values, property, QLocale());
 
     int langIdx = 0;
     int countryIdx = 0;
@@ -5000,11 +5584,11 @@ void QtLocalePropertyManager::setValue(QtProperty *property, const QLocale &val)
     if (it == d_ptr->m_values.end())
         return;
 
-    const QLocale loc = it.value();
+    const QLocale loc = getValue<QLocale>(d_ptr->m_values, property, QLocale());
     if (loc == val)
         return;
 
-    it.value() = val;
+    it.value().val = val;
 
     int langIdx = 0;
     int countryIdx = 0;
@@ -5021,12 +5605,35 @@ void QtLocalePropertyManager::setValue(QtProperty *property, const QLocale &val)
 }
 
 /*!
+    Sets check status of the property.
+
+    \sa QtLocalePropertyManager::setCheck
+*/
+void QtLocalePropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtLocalePropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtLocalePropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
+}
+
+/*!
     \reimp
 */
 void QtLocalePropertyManager::initializeProperty(QtProperty *property)
 {
     QLocale val;
-    d_ptr->m_values[property] = val;
+    d_ptr->m_values[property].val = val;
 
     int langIdx = 0;
     int countryIdx = 0;
@@ -5079,11 +5686,21 @@ class QtPointPropertyManagerPrivate
     Q_DECLARE_PUBLIC(QtPointPropertyManager)
 public:
 
+    struct Data
+    {
+        Data()
+            : val(QPoint()), check(false),
+              foreground(QBrush(Qt::black, Qt::SolidPattern)){}
+        QPoint val;
+        bool check;
+        QBrush foreground;
+    };
+
+    typedef QMap<const QtProperty *, Data> PropertyValueMap;
+    QMap<const QtProperty *, Data> m_values;
+
     void slotIntChanged(QtProperty *property, int value);
     void slotPropertyDestroyed(QtProperty *property);
-
-    typedef QMap<const QtProperty *, QPoint> PropertyValueMap;
-    PropertyValueMap m_values;
 
     QtIntPropertyManager *m_intPropertyManager;
 
@@ -5097,11 +5714,11 @@ public:
 void QtPointPropertyManagerPrivate::slotIntChanged(QtProperty *property, int value)
 {
     if (QtProperty *xprop = m_xToProperty.value(property, nullptr)) {
-        QPoint p = m_values[xprop];
+        QPoint p = m_values[xprop].val;
         p.setX(value);
         q_ptr->setValue(xprop, p);
     } else if (QtProperty *yprop = m_yToProperty.value(property, nullptr)) {
-        QPoint p = m_values[yprop];
+        QPoint p = m_values[yprop].val;
         p.setY(value);
         q_ptr->setValue(yprop, p);
     }
@@ -5199,7 +5816,24 @@ QtIntPropertyManager *QtPointPropertyManager::subIntPropertyManager() const
 */
 QPoint QtPointPropertyManager::value(const QtProperty *property) const
 {
-    return d_ptr->m_values.value(property, QPoint());
+    return getValue<QPoint>(d_ptr->m_values, property, QPoint(0, 0));
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtPointPropertyManager::setCheck
+*/
+bool QtPointPropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtPointPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*!
@@ -5210,7 +5844,7 @@ QString QtPointPropertyManager::valueText(const QtProperty *property) const
     const QtPointPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
-    const QPoint v = it.value();
+    const QPoint v = getValue<QPoint>(d_ptr->m_values, property, QPoint(0, 0));
     return QString(tr("(%1, %2)").arg(QString::number(v.x()))
                                  .arg(QString::number(v.y())));
 }
@@ -5239,10 +5873,10 @@ void QtPointPropertyManager::setValue(QtProperty *property, const QPoint &val)
     if (it == d_ptr->m_values.end())
         return;
 
-    if (it.value() == val)
+    if (it.value().val == val)
         return;
 
-    it.value() = val;
+    it.value().val = val;
     d_ptr->m_intPropertyManager->setValue(d_ptr->m_propertyToX[property], val.x());
     d_ptr->m_intPropertyManager->setValue(d_ptr->m_propertyToY[property], val.y());
 
@@ -5251,11 +5885,34 @@ void QtPointPropertyManager::setValue(QtProperty *property, const QPoint &val)
 }
 
 /*!
+    Sets check status of the property.
+
+    \sa QtPointPropertyManager::setCheck
+*/
+void QtPointPropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtPointPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtPointPropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
+}
+
+/*!
     \reimp
 */
 void QtPointPropertyManager::initializeProperty(QtProperty *property)
 {
-    d_ptr->m_values[property] = QPoint(0, 0);
+    d_ptr->m_values[property].val = QPoint(0, 0);
 
     QtProperty *xProp = d_ptr->m_intPropertyManager->addProperty();
     xProp->setPropertyName(tr("X"));
@@ -5305,11 +5962,12 @@ public:
     struct Data
     {
         Data() : val(QPointF(0.0, 0.0)),
-                 absTol(QPointF(epsilon, epsilon)), relTol(QPointF(epsilon, epsilon)), precision(2) {}
+                 absTol(QPointF(epsilon, epsilon)), relTol(QPointF(epsilon, epsilon)), precision(2), check(false) {}
         QPointF val;
         QPointF absTol;
         QPointF relTol;
         int precision;
+        bool check;
         QBrush foreground;
     };
 
@@ -5443,7 +6101,24 @@ QtDoublePropertyManager *QtPointFPropertyManager::subDoublePropertyManager() con
 */
 QPointF QtPointFPropertyManager::value(const QtProperty *property) const
 {
-    return getValue<QPointF>(d_ptr->m_values, property);
+    return getValue<QPointF>(d_ptr->m_values, property, QPointF(0, 0));
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtPointFPropertyManager::setCheck
+*/
+bool QtPointFPropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtPointFPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*!
@@ -5541,6 +6216,29 @@ void QtPointFPropertyManager::setPrecision(QtProperty *property, int prec)
 }
 
 /*!
+    Sets check status of the property.
+
+    \sa QtPointFPropertyManager::setCheck
+*/
+void QtPointFPropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtPointFPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtPointFPropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
+}
+
+/*!
     \reimp
 */
 void QtPointFPropertyManager::initializeProperty(QtProperty *property)
@@ -5604,7 +6302,7 @@ public:
     {
         Data() : val(QSize(0, 0)), minVal(QSize(0, 0)), maxVal(QSize(INT_MAX, INT_MAX)),
                  absTol(QSize(0, 0)), relTol(QSize(0, 0)),
-                 readOnly(false),
+                 readOnly(false), check(false),
                  foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QSize val;
         QSize minVal;
@@ -5612,6 +6310,7 @@ public:
         QSize absTol;
         QSize relTol;
         bool readOnly;
+        bool check;
         QBrush foreground;
         QSize minimumValue() const { return minVal; }
         QSize maximumValue() const { return maxVal; }
@@ -5772,7 +6471,7 @@ QtIntPropertyManager *QtSizePropertyManager::subIntPropertyManager() const
 */
 QSize QtSizePropertyManager::value(const QtProperty *property) const
 {
-    return getValue<QSize>(d_ptr->m_values, property);
+    return getValue<QSize>(d_ptr->m_values, property, QSize(0, 0));
 }
 
 /*!
@@ -5805,6 +6504,23 @@ QSize QtSizePropertyManager::maximum(const QtProperty *property) const
 bool QtSizePropertyManager::isReadOnly(const QtProperty *property) const
 {
     return getData<bool>(d_ptr->m_values, &QtSizePropertyManagerPrivate::Data::readOnly, property, false);
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtSizePropertyManager::setCheck
+*/
+bool QtSizePropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtSizePropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*!
@@ -5938,6 +6654,29 @@ void QtSizePropertyManager::setReadOnly(QtProperty *property, bool readOnly)
 }
 
 /*!
+    Sets check status of the property.
+
+    \sa QtSizePropertyManager::setCheck
+*/
+void QtSizePropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtSizePropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtSizePropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
+}
+
+/*!
     \reimp
 */
 void QtSizePropertyManager::initializeProperty(QtProperty *property)
@@ -6001,7 +6740,7 @@ public:
     {
         Data() : val(QSizeF(0, 0)), minVal(QSizeF(0, 0)), maxVal(QSizeF(highest, highest)),
                  absTol(QSizeF(epsilon, epsilon)), relTol(QSizeF(epsilon, epsilon)), precision(2),
-                 readOnly(false),
+                 readOnly(false), check(false),
                  foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QSizeF val;
         QSizeF minVal;
@@ -6010,6 +6749,7 @@ public:
         QSizeF relTol;
         int precision;
         bool readOnly;
+        bool check;
         QBrush foreground;
         QSizeF minimumValue() const { return minVal; }
         QSizeF maximumValue() const { return maxVal; }
@@ -6178,7 +6918,7 @@ QtDoublePropertyManager *QtSizeFPropertyManager::subDoublePropertyManager() cons
 */
 QSizeF QtSizeFPropertyManager::value(const QtProperty *property) const
 {
-    return getValue<QSizeF>(d_ptr->m_values, property);
+    return getValue<QSizeF>(d_ptr->m_values, property, QSizeF(0.0, 0.0));
 }
 
 /*!
@@ -6221,6 +6961,23 @@ QSizeF QtSizeFPropertyManager::maximum(const QtProperty *property) const
 bool QtSizeFPropertyManager::isReadOnly(const QtProperty *property) const
 {
     return getData<bool>(d_ptr->m_values, &QtSizeFPropertyManagerPrivate::Data::readOnly, property, false);
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtSizeFPropertyManager::setCheck
+*/
+bool QtSizeFPropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtSizeFPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*!
@@ -6366,6 +7123,29 @@ void QtSizeFPropertyManager::setRange(QtProperty *property, const QSizeF &minVal
 }
 
 /*!
+    Sets check status of the property.
+
+    \sa QtSizeFPropertyManager::setCheck
+*/
+void QtSizeFPropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtSizeFPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtSizeFPropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
+}
+
+/*!
     \reimp
 */
 void QtSizeFPropertyManager::initializeProperty(QtProperty *property)
@@ -6451,11 +7231,12 @@ public:
     struct Data
     {
         Data() : val(QRect(0, 0, 0, 0)),
-                 absTol(QRect(0, 0, 0, 0)), relTol(QRect(0, 0, 0, 0)),
+                 absTol(QRect(0, 0, 0, 0)), relTol(QRect(0, 0, 0, 0)), check(false),
                  foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QRect val;
         QRect absTol;
         QRect relTol;
+        bool check;
         QBrush foreground;
         QRect constraint;
     };
@@ -6642,7 +7423,7 @@ QtIntPropertyManager *QtRectPropertyManager::subIntPropertyManager() const
 */
 QRect QtRectPropertyManager::value(const QtProperty *property) const
 {
-    return getValue<QRect>(d_ptr->m_values, property);
+    return getValue<QRect>(d_ptr->m_values, property, QRect(0, 0, 0, 0));
 }
 
 /*!
@@ -6653,6 +7434,23 @@ QRect QtRectPropertyManager::value(const QtProperty *property) const
 QRect QtRectPropertyManager::constraint(const QtProperty *property) const
 {
     return getData<QRect>(d_ptr->m_values, &QtRectPropertyManagerPrivate::Data::constraint, property, QRect());
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtRectPropertyManager::setCheck
+*/
+bool QtRectPropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtRectPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*!
@@ -6787,6 +7585,29 @@ void QtRectPropertyManager::setConstraint(QtProperty *property, const QRect &con
 }
 
 /*!
+    Sets check status of the property.
+
+    \sa QtRectPropertyManager::setCheck
+*/
+void QtRectPropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtRectPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtRectPropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
+}
+
+/*!
     \reimp
 */
 void QtRectPropertyManager::initializeProperty(QtProperty *property)
@@ -6876,12 +7697,13 @@ public:
     {
         Data() : val(QRectF(0, 0, 0, 0)),
                  absTol(QRectF(epsilon, epsilon, epsilon, epsilon)), relTol(QRectF(epsilon, epsilon, epsilon, epsilon)), precision(2),
-                 foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
+                 check(false), foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QRectF val;
         QRectF absTol;
         QRectF relTol;
         QRectF constraint;
         int precision;
+        bool check;
         QBrush foreground;
     };
 
@@ -7077,7 +7899,7 @@ QtDoublePropertyManager *QtRectFPropertyManager::subDoublePropertyManager() cons
 */
 QRectF QtRectFPropertyManager::value(const QtProperty *property) const
 {
-    return getValue<QRectF>(d_ptr->m_values, property);
+    return getValue<QRectF>(d_ptr->m_values, property, QRectF(0.0, 0.0, 0.0, 0.0));
 }
 
 /*!
@@ -7098,6 +7920,23 @@ int QtRectFPropertyManager::precision(const QtProperty *property) const
 QRectF QtRectFPropertyManager::constraint(const QtProperty *property) const
 {
     return getData<QRectF>(d_ptr->m_values, &QtRectFPropertyManagerPrivate::Data::constraint, property, QRect());
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtRectFPropertyManager::setCheck
+*/
+bool QtRectFPropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtRectFPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*!
@@ -7269,6 +8108,29 @@ void QtRectFPropertyManager::setPrecision(QtProperty *property, int prec)
 }
 
 /*!
+    Sets check status of the property.
+
+    \sa QtRectFPropertyManager::setCheck
+*/
+void QtRectFPropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtRectFPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtRectFPropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
+}
+
+/*!
     \reimp
 */
 void QtRectFPropertyManager::initializeProperty(QtProperty *property)
@@ -7357,11 +8219,12 @@ public:
     struct Data
     {
         Data() : val(-1),
-                 absTol(0), relTol(0),
+                 absTol(0), relTol(0), check(false),
                  foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         int val;
         int absTol;
         int relTol;
+        bool check;
         QBrush foreground;
         QStringList enumNames;
         QMap<int, QIcon> enumIcons;
@@ -7475,6 +8338,23 @@ QStringList QtEnumPropertyManager::enumNames(const QtProperty *property) const
 QMap<int, QIcon> QtEnumPropertyManager::enumIcons(const QtProperty *property) const
 {
     return getData<QMap<int, QIcon> >(d_ptr->m_values, &QtEnumPropertyManagerPrivate::Data::enumIcons, property, QMap<int, QIcon>());
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtEnumPropertyManager::setCheck
+*/
+bool QtEnumPropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtEnumPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*!
@@ -7615,6 +8495,29 @@ void QtEnumPropertyManager::setEnumIcons(QtProperty *property, const QMap<int, Q
 }
 
 /*!
+    Sets check status of the property.
+
+    \sa QtEnumPropertyManager::setCheck
+*/
+void QtEnumPropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtEnumPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtEnumPropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
+}
+
+/*!
     \reimp
 */
 void QtEnumPropertyManager::initializeProperty(QtProperty *property)
@@ -7644,11 +8547,12 @@ public:
     struct Data
     {
         Data() : val(-1),
-                 absTol(0), relTol(0),
+                 absTol(0), relTol(0), check(false),
                  foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         int val;
         int absTol;
         int relTol;
+        bool check;
         QBrush foreground;
         QStringList flagNames;
     };
@@ -7813,6 +8717,23 @@ QStringList QtFlagPropertyManager::flagNames(const QtProperty *property) const
 }
 
 /*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtFlagPropertyManager::setCheck
+*/
+bool QtFlagPropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtFlagPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
+}
+
+/*!
     \reimp
 */
 QString QtFlagPropertyManager::valueText(const QtProperty *property) const
@@ -7946,6 +8867,29 @@ void QtFlagPropertyManager::setFlagNames(QtProperty *property, const QStringList
 }
 
 /*!
+    Sets check status of the property.
+
+    \sa QtFlagPropertyManager::setCheck
+*/
+void QtFlagPropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtFlagPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtFlagPropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
+}
+
+/*!
     \reimp
 */
 void QtFlagPropertyManager::initializeProperty(QtProperty *property)
@@ -7981,14 +8925,24 @@ class QtSizePolicyPropertyManagerPrivate
     Q_DECLARE_PUBLIC(QtSizePolicyPropertyManager)
 public:
 
+    struct Data
+    {
+        Data()
+            : val(QSizePolicy()), check(false),
+              foreground(QBrush(Qt::black, Qt::SolidPattern)){}
+        QSizePolicy val;
+        bool check;
+        QBrush foreground;
+    };
+
+    typedef QMap<const QtProperty *, Data> PropertyValueMap;
+    QMap<const QtProperty *, Data> m_values;
+
     QtSizePolicyPropertyManagerPrivate();
 
     void slotIntChanged(QtProperty *property, int value);
     void slotEnumChanged(QtProperty *property, int value);
     void slotPropertyDestroyed(QtProperty *property);
-
-    typedef QMap<const QtProperty *, QSizePolicy> PropertyValueMap;
-    PropertyValueMap m_values;
 
     QtIntPropertyManager *m_intPropertyManager;
     QtEnumPropertyManager *m_enumPropertyManager;
@@ -8011,11 +8965,11 @@ QtSizePolicyPropertyManagerPrivate::QtSizePolicyPropertyManagerPrivate()
 void QtSizePolicyPropertyManagerPrivate::slotIntChanged(QtProperty *property, int value)
 {
     if (QtProperty *prop = m_hStretchToProperty.value(property, nullptr)) {
-        QSizePolicy sp = m_values[prop];
+        QSizePolicy sp = m_values[prop].val;
         sp.setHorizontalStretch(value);
         q_ptr->setValue(prop, sp);
     } else if (QtProperty *prop = m_vStretchToProperty.value(property, nullptr)) {
-        QSizePolicy sp = m_values[prop];
+        QSizePolicy sp = m_values[prop].val;
         sp.setVerticalStretch(value);
         q_ptr->setValue(prop, sp);
     }
@@ -8024,11 +8978,11 @@ void QtSizePolicyPropertyManagerPrivate::slotIntChanged(QtProperty *property, in
 void QtSizePolicyPropertyManagerPrivate::slotEnumChanged(QtProperty *property, int value)
 {
     if (QtProperty *prop = m_hPolicyToProperty.value(property, nullptr)) {
-        QSizePolicy sp = m_values[prop];
+        QSizePolicy sp = m_values[prop].val;
         sp.setHorizontalPolicy(metaEnumProvider()->indexToSizePolicy(value));
         q_ptr->setValue(prop, sp);
     } else if (QtProperty *prop = m_vPolicyToProperty.value(property, nullptr)) {
-        QSizePolicy sp = m_values[prop];
+        QSizePolicy sp = m_values[prop].val;
         sp.setVerticalPolicy(metaEnumProvider()->indexToSizePolicy(value));
         q_ptr->setValue(prop, sp);
     }
@@ -8157,7 +9111,24 @@ QtEnumPropertyManager *QtSizePolicyPropertyManager::subEnumPropertyManager() con
 */
 QSizePolicy QtSizePolicyPropertyManager::value(const QtProperty *property) const
 {
-    return d_ptr->m_values.value(property, QSizePolicy());
+    return getValue<QSizePolicy>(d_ptr->m_values, property, QSizePolicy());
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtSizePolicyPropertyManager::setCheck
+*/
+bool QtSizePolicyPropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtSizePolicyPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*!
@@ -8169,7 +9140,7 @@ QString QtSizePolicyPropertyManager::valueText(const QtProperty *property) const
     if (it == d_ptr->m_values.constEnd())
         return QString();
 
-    const QSizePolicy sp = it.value();
+    const QSizePolicy sp = getValue<QSizePolicy>(d_ptr->m_values, property, QSizePolicy());
     const QtMetaEnumProvider *mep = metaEnumProvider();
     const int hIndex = mep->sizePolicyToIndex(sp.horizontalPolicy());
     const int vIndex = mep->sizePolicyToIndex(sp.verticalPolicy());
@@ -8204,10 +9175,10 @@ void QtSizePolicyPropertyManager::setValue(QtProperty *property, const QSizePoli
     if (it == d_ptr->m_values.end())
         return;
 
-    if (it.value() == val)
+    if (it.value().val == val)
         return;
 
-    it.value() = val;
+    it.value().val = val;
 
     d_ptr->m_enumPropertyManager->setValue(d_ptr->m_propertyToHPolicy[property],
                 metaEnumProvider()->sizePolicyToIndex(val.horizontalPolicy()));
@@ -8223,12 +9194,35 @@ void QtSizePolicyPropertyManager::setValue(QtProperty *property, const QSizePoli
 }
 
 /*!
+    Sets check status of the property.
+
+    \sa QtSizePolicyPropertyManager::setCheck
+*/
+void QtSizePolicyPropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtSizePolicyPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtSizePolicyPropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
+}
+
+/*!
     \reimp
 */
 void QtSizePolicyPropertyManager::initializeProperty(QtProperty *property)
 {
     QSizePolicy val;
-    d_ptr->m_values[property] = val;
+    d_ptr->m_values[property].val = val;
 
     QtProperty *hPolicyProp = d_ptr->m_enumPropertyManager->addProperty();
     hPolicyProp->setPropertyName(tr("Horizontal Policy"));
@@ -8318,6 +9312,18 @@ class QtFontPropertyManagerPrivate
     Q_DECLARE_PUBLIC(QtFontPropertyManager)
 public:
 
+    struct Data
+    {
+        Data() : val(QFont()), check(false),
+                 foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
+        QFont val;
+        bool check;
+        QBrush foreground;
+    };
+
+    typedef QMap<const QtProperty *, Data> PropertyValueMap;
+    PropertyValueMap m_values;
+
     QtFontPropertyManagerPrivate();
 
     void slotIntChanged(QtProperty *property, int value);
@@ -8328,9 +9334,6 @@ public:
     void slotFontDatabaseDelayedChange();
 
     QStringList m_familyNames;
-
-    typedef QMap<const QtProperty *, QFont> PropertyValueMap;
-    PropertyValueMap m_values;
 
     QtIntPropertyManager *m_intPropertyManager;
     QtEnumPropertyManager *m_enumPropertyManager;
@@ -8367,7 +9370,7 @@ void QtFontPropertyManagerPrivate::slotIntChanged(QtProperty *property, int valu
     if (m_settingValue)
         return;
     if (QtProperty *prop = m_pointSizeToProperty.value(property, nullptr)) {
-        QFont f = m_values[prop];
+        QFont f = m_values[prop].val;
         f.setPointSize(value);
         q_ptr->setValue(prop, f);
     }
@@ -8378,7 +9381,7 @@ void QtFontPropertyManagerPrivate::slotEnumChanged(QtProperty *property, int val
     if (m_settingValue)
         return;
     if (QtProperty *prop = m_familyToProperty.value(property, nullptr)) {
-        QFont f = m_values[prop];
+        QFont f = m_values[prop].val;
         f.setFamily(m_familyNames.at(value));
         q_ptr->setValue(prop, f);
     }
@@ -8389,23 +9392,23 @@ void QtFontPropertyManagerPrivate::slotBoolChanged(QtProperty *property, bool va
     if (m_settingValue)
         return;
     if (QtProperty *prop = m_boldToProperty.value(property, nullptr)) {
-        QFont f = m_values[prop];
+        QFont f = m_values[prop].val;
         f.setBold(value);
         q_ptr->setValue(prop, f);
     } else if (QtProperty *prop = m_italicToProperty.value(property, nullptr)) {
-        QFont f = m_values[prop];
+        QFont f = m_values[prop].val;
         f.setItalic(value);
         q_ptr->setValue(prop, f);
     } else if (QtProperty *prop = m_underlineToProperty.value(property, nullptr)) {
-        QFont f = m_values[prop];
+        QFont f = m_values[prop].val;
         f.setUnderline(value);
         q_ptr->setValue(prop, f);
     } else if (QtProperty *prop = m_strikeOutToProperty.value(property, nullptr)) {
-        QFont f = m_values[prop];
+        QFont f = m_values[prop].val;
         f.setStrikeOut(value);
         q_ptr->setValue(prop, f);
     } else if (QtProperty *prop = m_kerningToProperty.value(property, nullptr)) {
-        QFont f = m_values[prop];
+        QFont f = m_values[prop].val;
         f.setKerning(value);
         q_ptr->setValue(prop, f);
     }
@@ -8601,7 +9604,24 @@ QtBoolPropertyManager *QtFontPropertyManager::subBoolPropertyManager() const
 */
 QFont QtFontPropertyManager::value(const QtProperty *property) const
 {
-    return d_ptr->m_values.value(property, QFont());
+    return getValue<QFont>(d_ptr->m_values, property, QFont());
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtFontPropertyManager::setCheck
+*/
+bool QtFontPropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtFontPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*!
@@ -8613,7 +9633,7 @@ QString QtFontPropertyManager::valueText(const QtProperty *property) const
     if (it == d_ptr->m_values.constEnd())
         return QString();
 
-    return QtPropertyBrowserUtils::fontValueText(it.value());
+    return QtPropertyBrowserUtils::fontValueText(getValue<QFont>(d_ptr->m_values, property, QFont()));
 }
 
 /*!
@@ -8625,7 +9645,7 @@ QIcon QtFontPropertyManager::valueIcon(const QtProperty *property) const
     if (it == d_ptr->m_values.constEnd())
         return QIcon();
 
-    return QtPropertyBrowserUtils::fontValueIcon(it.value());
+    return QtPropertyBrowserUtils::fontValueIcon(getValue<QFont>(d_ptr->m_values, property, QFont()));
 }
 
 /*!
@@ -8652,11 +9672,11 @@ void QtFontPropertyManager::setValue(QtProperty *property, const QFont &val)
     if (it == d_ptr->m_values.end())
         return;
 
-    const QFont oldVal = it.value();
+    const QFont oldVal = it.value().val;
     if (oldVal == val && oldVal.resolve() == val.resolve())
         return;
 
-    it.value() = val;
+    it.value().val = val;
 
     int idx = d_ptr->m_familyNames.indexOf(val.family());
     if (idx == -1)
@@ -8677,12 +9697,35 @@ void QtFontPropertyManager::setValue(QtProperty *property, const QFont &val)
 }
 
 /*!
+    Sets check status of the property.
+
+    \sa QtFontPropertyManager::setCheck
+*/
+void QtFontPropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtFontPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtFontPropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
+}
+
+/*!
     \reimp
 */
 void QtFontPropertyManager::initializeProperty(QtProperty *property)
 {
     QFont val;
-    d_ptr->m_values[property] = val;
+    d_ptr->m_values[property].val = val;
 
     QtProperty *familyProp = d_ptr->m_enumPropertyManager->addProperty();
     familyProp->setPropertyName(tr("Family"));
@@ -8806,11 +9849,20 @@ class QtColorPropertyManagerPrivate
     Q_DECLARE_PUBLIC(QtColorPropertyManager)
 public:
 
+    struct Data
+    {
+        Data() : val(QColor()), check(false),
+                 foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
+        QColor val;
+        bool check;
+        QBrush foreground;
+    };
+
+    typedef QMap<const QtProperty *, Data> PropertyValueMap;
+    PropertyValueMap m_values;
+
     void slotIntChanged(QtProperty *property, int value);
     void slotPropertyDestroyed(QtProperty *property);
-
-    typedef QMap<const QtProperty *, QColor> PropertyValueMap;
-    PropertyValueMap m_values;
 
     QtIntPropertyManager *m_intPropertyManager;
 
@@ -8828,19 +9880,19 @@ public:
 void QtColorPropertyManagerPrivate::slotIntChanged(QtProperty *property, int value)
 {
     if (QtProperty *prop = m_rToProperty.value(property, nullptr)) {
-        QColor c = m_values[prop];
+        QColor c = m_values[prop].val;
         c.setRed(value);
         q_ptr->setValue(prop, c);
     } else if (QtProperty *prop = m_gToProperty.value(property, nullptr)) {
-        QColor c = m_values[prop];
+        QColor c = m_values[prop].val;
         c.setGreen(value);
         q_ptr->setValue(prop, c);
     } else if (QtProperty *prop = m_bToProperty.value(property, nullptr)) {
-        QColor c = m_values[prop];
+        QColor c = m_values[prop].val;
         c.setBlue(value);
         q_ptr->setValue(prop, c);
     } else if (QtProperty *prop = m_aToProperty.value(property, nullptr)) {
-        QColor c = m_values[prop];
+        QColor c = m_values[prop].val;
         c.setAlpha(value);
         q_ptr->setValue(prop, c);
     }
@@ -8947,7 +9999,24 @@ QtIntPropertyManager *QtColorPropertyManager::subIntPropertyManager() const
 */
 QColor QtColorPropertyManager::value(const QtProperty *property) const
 {
-    return d_ptr->m_values.value(property, QColor());
+    return getValue<QColor>(d_ptr->m_values, property, QColor());
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtColorPropertyManager::setCheck
+*/
+bool QtColorPropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtColorPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*!
@@ -8960,7 +10029,7 @@ QString QtColorPropertyManager::valueText(const QtProperty *property) const
     if (it == d_ptr->m_values.constEnd())
         return QString();
 
-    return QtPropertyBrowserUtils::colorValueText(it.value());
+    return QtPropertyBrowserUtils::colorValueText(getValue<QColor>(d_ptr->m_values, property, QColor()));
 }
 
 /*!
@@ -8972,7 +10041,7 @@ QIcon QtColorPropertyManager::valueIcon(const QtProperty *property) const
     const QtColorPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QIcon();
-    return QtPropertyBrowserUtils::brushValueIcon(QBrush(it.value()));
+    return QtPropertyBrowserUtils::brushValueIcon(QBrush(getValue<QColor>(d_ptr->m_values, property, QColor())));
 }
 
 /*!
@@ -8999,10 +10068,10 @@ void QtColorPropertyManager::setValue(QtProperty *property, const QColor &val)
     if (it == d_ptr->m_values.end())
         return;
 
-    if (it.value() == val)
+    if (it.value().val == val)
         return;
 
-    it.value() = val;
+    it.value().val = val;
 
     d_ptr->m_intPropertyManager->setValue(d_ptr->m_propertyToR[property], val.red());
     d_ptr->m_intPropertyManager->setValue(d_ptr->m_propertyToG[property], val.green());
@@ -9014,12 +10083,35 @@ void QtColorPropertyManager::setValue(QtProperty *property, const QColor &val)
 }
 
 /*!
+    Sets check status of the property.
+
+    \sa QtColorPropertyManager::setCheck
+*/
+void QtColorPropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtColorPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtColorPropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
+}
+
+/*!
     \reimp
 */
 void QtColorPropertyManager::initializeProperty(QtProperty *property)
 {
     QColor val;
-    d_ptr->m_values[property] = val;
+    d_ptr->m_values[property].val = val;
 
     QtProperty *rProp = d_ptr->m_intPropertyManager->addProperty();
     rProp->setPropertyName(tr("Red"));
@@ -9116,7 +10208,17 @@ class QtCursorPropertyManagerPrivate
     QtCursorPropertyManager *q_ptr;
     Q_DECLARE_PUBLIC(QtCursorPropertyManager)
 public:
-    typedef QMap<const QtProperty *, QCursor> PropertyValueMap;
+
+    struct Data
+    {
+        Data() : val(QCursor()), check(false),
+                 foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
+        QCursor val;
+        bool check;
+        QBrush foreground;
+    };
+
+    typedef QMap<const QtProperty *, Data> PropertyValueMap;
     PropertyValueMap m_values;
 };
 
@@ -9174,9 +10276,26 @@ QtCursorPropertyManager::~QtCursorPropertyManager()
 #ifndef QT_NO_CURSOR
 QCursor QtCursorPropertyManager::value(const QtProperty *property) const
 {
-    return d_ptr->m_values.value(property, QCursor());
+    return getValue<QCursor>(d_ptr->m_values, property, QCursor());
 }
 #endif
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtCursorPropertyManager::setCheck
+*/
+bool QtCursorPropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtCursorPropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
+}
 
 /*!
     \reimp
@@ -9187,7 +10306,7 @@ QString QtCursorPropertyManager::valueText(const QtProperty *property) const
     if (it == d_ptr->m_values.constEnd())
         return QString();
 
-    return cursorDatabase()->cursorToShapeName(it.value());
+    return cursorDatabase()->cursorToShapeName(getValue<QCursor>(d_ptr->m_values, property, QCursor()));
 }
 
 /*!
@@ -9199,7 +10318,7 @@ QIcon QtCursorPropertyManager::valueIcon(const QtProperty *property) const
     if (it == d_ptr->m_values.constEnd())
         return QIcon();
 
-    return cursorDatabase()->cursorToShapeIcon(it.value());
+    return cursorDatabase()->cursorToShapeIcon(getValue<QCursor>(d_ptr->m_values, property, QCursor()));
 }
 
 /*!
@@ -9226,14 +10345,37 @@ void QtCursorPropertyManager::setValue(QtProperty *property, const QCursor &valu
     if (it == d_ptr->m_values.end())
         return;
 
-    if (it.value().shape() == value.shape() && value.shape() != Qt::BitmapCursor)
+    if (it.value().val.shape() == value.shape() && value.shape() != Qt::BitmapCursor)
         return;
 
-    it.value() = value;
+    it.value().val = value;
 
     emit propertyChanged(property);
     emit valueChanged(property, value);
 #endif
+}
+
+/*!
+    Sets check status of the property.
+
+    \sa QtCursorPropertyManager::setCheck
+*/
+void QtCursorPropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtCursorPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtCursorPropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
 }
 
 /*!
@@ -9242,7 +10384,7 @@ void QtCursorPropertyManager::setValue(QtProperty *property, const QCursor &valu
 void QtCursorPropertyManager::initializeProperty(QtProperty *property)
 {
 #ifndef QT_NO_CURSOR
-    d_ptr->m_values[property] = QCursor();
+    d_ptr->m_values[property].val = QCursor();
 #endif
 }
 
@@ -9262,12 +10404,13 @@ public:
     struct Data {
         Data() : val(QString()),
                  absTol(QString()), relTol(QString()),
-                 filter("All Files (*)"), fileMode(QFileDialog::AnyFile) {}
+                 filter("All Files (*)"), fileMode(QFileDialog::AnyFile), check(false) {}
          QString val;
          QString absTol;
          QString relTol;
          QString filter;
          QFileDialog::FileMode fileMode;
+         bool check;
          bool readOnly;
     };
     typedef QMap<const QtProperty *, Data> PropertyValueMap;
@@ -9362,6 +10505,23 @@ QFileDialog::FileMode QtFilePropertyManager::fileMode(const QtProperty *property
 bool QtFilePropertyManager::isReadOnly(const QtProperty *property) const
 {
     return getData<bool>(d_ptr->m_values, &QtFilePropertyManagerPrivate::Data::readOnly, property, false);
+}
+
+/*!
+    Returns check status of the property.
+
+    When property is checked a user-defined behavior is defined.
+
+    \sa QtFilePropertyManager::setCheck
+*/
+bool QtFilePropertyManager::check(const QtProperty *property) const
+{
+    typedef QMap<const QtProperty *, QtFilePropertyManagerPrivate::Data> PropertyToData;
+    typedef PropertyToData::const_iterator PropertyToDataConstIterator;
+    const PropertyToDataConstIterator it = d_ptr->m_values.constFind(property);
+    if (it == d_ptr->m_values.constEnd())
+        return false;
+    return it.value().check;
 }
 
 /*!
@@ -9471,6 +10631,29 @@ QIcon QtFilePropertyManager::checkIcon(const QtProperty *property) const
     if (!attributesEditable(Attribute::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
+}
+
+/*!
+    Sets check status of the property.
+
+    \sa QtFilePropertyManager::setCheck
+*/
+void QtFilePropertyManager::setCheck(QtProperty *property, bool check)
+{
+    const QtFilePropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtFilePropertyManagerPrivate::Data data = it.value();
+
+    if (data.check == check)
+        return;
+
+    data.check = check;
+    it.value() = data;
+
+    emit propertyChanged(property);
+    emit checkChanged(property, data.check);
 }
 
 /*!

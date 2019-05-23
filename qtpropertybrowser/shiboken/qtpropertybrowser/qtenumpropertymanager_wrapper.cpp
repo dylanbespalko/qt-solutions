@@ -894,6 +894,54 @@ Sbk_QtEnumPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds)
         return -1;
 }
 
+static PyObject* Sbk_QtEnumPropertyManagerFunc_check(PyObject* self, PyObject* pyArg)
+{
+    QtEnumPropertyManagerWrapper* cppSelf = nullptr;
+    SBK_UNUSED(cppSelf)
+    if (!Shiboken::Object::isValid(self))
+        return {};
+    cppSelf = static_cast<QtEnumPropertyManagerWrapper *>(reinterpret_cast< ::QtEnumPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTENUMPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+    PyObject* pyResult{};
+    int overloadId = -1;
+    PythonToCppFunc pythonToCpp{};
+    SBK_UNUSED(pythonToCpp)
+
+    // Overloaded function decisor
+    // 0: QtEnumPropertyManager::check(const QtProperty*)const
+    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
+        overloadId = 0; // check(const QtProperty*)const
+    }
+
+    // Function signature not found.
+    if (overloadId == -1) goto Sbk_QtEnumPropertyManagerFunc_check_TypeError;
+
+    // Call function/method
+    {
+        if (!Shiboken::Object::isValid(pyArg))
+            return {};
+        ::QtProperty* cppArg0;
+        pythonToCpp(pyArg, &cppArg0);
+
+        if (!PyErr_Occurred()) {
+            // check(const QtProperty*)const
+            PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
+            bool cppResult = const_cast<const ::QtEnumPropertyManagerWrapper*>(cppSelf)->check(cppArg0);
+            PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
+            pyResult = Shiboken::Conversions::copyToPython(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), &cppResult);
+        }
+    }
+
+    if (PyErr_Occurred() || !pyResult) {
+        Py_XDECREF(pyResult);
+        return {};
+    }
+    return pyResult;
+
+    Sbk_QtEnumPropertyManagerFunc_check_TypeError:
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtEnumPropertyManager.check");
+        return {};
+}
+
 static PyObject* Sbk_QtEnumPropertyManagerFunc_checkIcon(PyObject* self, PyObject* pyArg)
 {
     QtEnumPropertyManagerWrapper* cppSelf = nullptr;
@@ -1080,6 +1128,64 @@ static PyObject* Sbk_QtEnumPropertyManagerFunc_initializeProperty(PyObject* self
 
     Sbk_QtEnumPropertyManagerFunc_initializeProperty_TypeError:
         Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtEnumPropertyManager.initializeProperty");
+        return {};
+}
+
+static PyObject* Sbk_QtEnumPropertyManagerFunc_setCheck(PyObject* self, PyObject* args)
+{
+    QtEnumPropertyManagerWrapper* cppSelf = nullptr;
+    SBK_UNUSED(cppSelf)
+    if (!Shiboken::Object::isValid(self))
+        return {};
+    cppSelf = static_cast<QtEnumPropertyManagerWrapper *>(reinterpret_cast< ::QtEnumPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTENUMPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+    int overloadId = -1;
+    PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
+    SBK_UNUSED(pythonToCpp)
+    int numArgs = PyTuple_GET_SIZE(args);
+    PyObject* pyArgs[] = {0, 0};
+
+    // invalid argument lengths
+
+
+    if (!PyArg_UnpackTuple(args, "setCheck", 2, 2, &(pyArgs[0]), &(pyArgs[1])))
+        return {};
+
+
+    // Overloaded function decisor
+    // 0: QtEnumPropertyManager::setCheck(QtProperty*,bool)
+    if (numArgs == 2
+        && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[0])))
+        && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppConvertible(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), (pyArgs[1])))) {
+        overloadId = 0; // setCheck(QtProperty*,bool)
+    }
+
+    // Function signature not found.
+    if (overloadId == -1) goto Sbk_QtEnumPropertyManagerFunc_setCheck_TypeError;
+
+    // Call function/method
+    {
+        if (!Shiboken::Object::isValid(pyArgs[0]))
+            return {};
+        ::QtProperty* cppArg0;
+        pythonToCpp[0](pyArgs[0], &cppArg0);
+        bool cppArg1;
+        pythonToCpp[1](pyArgs[1], &cppArg1);
+
+        if (!PyErr_Occurred()) {
+            // setCheck(QtProperty*,bool)
+            PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
+            cppSelf->setCheck(cppArg0, cppArg1);
+            PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
+        }
+    }
+
+    if (PyErr_Occurred()) {
+        return {};
+    }
+    Py_RETURN_NONE;
+
+    Sbk_QtEnumPropertyManagerFunc_setCheck_TypeError:
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtEnumPropertyManager.setCheck");
         return {};
 }
 
@@ -1447,10 +1553,12 @@ static PyObject* Sbk_QtEnumPropertyManagerFunc_valueText(PyObject* self, PyObjec
 }
 
 static PyMethodDef Sbk_QtEnumPropertyManager_methods[] = {
+    {"check", (PyCFunction)Sbk_QtEnumPropertyManagerFunc_check, METH_O},
     {"checkIcon", (PyCFunction)Sbk_QtEnumPropertyManagerFunc_checkIcon, METH_O},
     {"enumIcons", (PyCFunction)Sbk_QtEnumPropertyManagerFunc_enumIcons, METH_O},
     {"enumNames", (PyCFunction)Sbk_QtEnumPropertyManagerFunc_enumNames, METH_O},
     {"initializeProperty", (PyCFunction)Sbk_QtEnumPropertyManagerFunc_initializeProperty, METH_O},
+    {"setCheck", (PyCFunction)Sbk_QtEnumPropertyManagerFunc_setCheck, METH_VARARGS},
     {"setEnumIcons", (PyCFunction)Sbk_QtEnumPropertyManagerFunc_setEnumIcons, METH_VARARGS},
     {"setEnumNames", (PyCFunction)Sbk_QtEnumPropertyManagerFunc_setEnumNames, METH_VARARGS},
     {"setValue", (PyCFunction)Sbk_QtEnumPropertyManagerFunc_setValue, METH_VARARGS},
@@ -1542,10 +1650,12 @@ static PyObject* QtEnumPropertyManager_PTR_CppToPython_QtEnumPropertyManager(con
 // Multiple signatures have their index "n:" in front.
 const char QtEnumPropertyManager_SignaturesString[] = ""
     "qtpropertybrowser.QtEnumPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
+    "qtpropertybrowser.QtEnumPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
     "qtpropertybrowser.QtEnumPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
     "qtpropertybrowser.QtEnumPropertyManager.enumIcons(property:qtpropertybrowser.QtProperty)->QMap\n"
     "qtpropertybrowser.QtEnumPropertyManager.enumNames(property:qtpropertybrowser.QtProperty)->QStringList\n"
     "qtpropertybrowser.QtEnumPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtEnumPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
     "qtpropertybrowser.QtEnumPropertyManager.setEnumIcons(property:qtpropertybrowser.QtProperty,icons:QMap)\n"
     "qtpropertybrowser.QtEnumPropertyManager.setEnumNames(property:qtpropertybrowser.QtProperty,names:QStringList)\n"
     "qtpropertybrowser.QtEnumPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:int)\n"

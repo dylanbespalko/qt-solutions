@@ -893,6 +893,54 @@ Sbk_QtGroupPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds)
         return -1;
 }
 
+static PyObject* Sbk_QtGroupPropertyManagerFunc_check(PyObject* self, PyObject* pyArg)
+{
+    QtGroupPropertyManagerWrapper* cppSelf = nullptr;
+    SBK_UNUSED(cppSelf)
+    if (!Shiboken::Object::isValid(self))
+        return {};
+    cppSelf = static_cast<QtGroupPropertyManagerWrapper *>(reinterpret_cast< ::QtGroupPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTGROUPPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+    PyObject* pyResult{};
+    int overloadId = -1;
+    PythonToCppFunc pythonToCpp{};
+    SBK_UNUSED(pythonToCpp)
+
+    // Overloaded function decisor
+    // 0: QtGroupPropertyManager::check(const QtProperty*)const
+    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
+        overloadId = 0; // check(const QtProperty*)const
+    }
+
+    // Function signature not found.
+    if (overloadId == -1) goto Sbk_QtGroupPropertyManagerFunc_check_TypeError;
+
+    // Call function/method
+    {
+        if (!Shiboken::Object::isValid(pyArg))
+            return {};
+        ::QtProperty* cppArg0;
+        pythonToCpp(pyArg, &cppArg0);
+
+        if (!PyErr_Occurred()) {
+            // check(const QtProperty*)const
+            PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
+            bool cppResult = const_cast<const ::QtGroupPropertyManagerWrapper*>(cppSelf)->check(cppArg0);
+            PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
+            pyResult = Shiboken::Conversions::copyToPython(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), &cppResult);
+        }
+    }
+
+    if (PyErr_Occurred() || !pyResult) {
+        Py_XDECREF(pyResult);
+        return {};
+    }
+    return pyResult;
+
+    Sbk_QtGroupPropertyManagerFunc_check_TypeError:
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtGroupPropertyManager.check");
+        return {};
+}
+
 static PyObject* Sbk_QtGroupPropertyManagerFunc_hasValue(PyObject* self, PyObject* pyArg)
 {
     QtGroupPropertyManagerWrapper* cppSelf = nullptr;
@@ -986,6 +1034,64 @@ static PyObject* Sbk_QtGroupPropertyManagerFunc_initializeProperty(PyObject* sel
         return {};
 }
 
+static PyObject* Sbk_QtGroupPropertyManagerFunc_setCheck(PyObject* self, PyObject* args)
+{
+    QtGroupPropertyManagerWrapper* cppSelf = nullptr;
+    SBK_UNUSED(cppSelf)
+    if (!Shiboken::Object::isValid(self))
+        return {};
+    cppSelf = static_cast<QtGroupPropertyManagerWrapper *>(reinterpret_cast< ::QtGroupPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTGROUPPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+    int overloadId = -1;
+    PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
+    SBK_UNUSED(pythonToCpp)
+    int numArgs = PyTuple_GET_SIZE(args);
+    PyObject* pyArgs[] = {0, 0};
+
+    // invalid argument lengths
+
+
+    if (!PyArg_UnpackTuple(args, "setCheck", 2, 2, &(pyArgs[0]), &(pyArgs[1])))
+        return {};
+
+
+    // Overloaded function decisor
+    // 0: QtGroupPropertyManager::setCheck(QtProperty*,bool)
+    if (numArgs == 2
+        && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[0])))
+        && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppConvertible(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), (pyArgs[1])))) {
+        overloadId = 0; // setCheck(QtProperty*,bool)
+    }
+
+    // Function signature not found.
+    if (overloadId == -1) goto Sbk_QtGroupPropertyManagerFunc_setCheck_TypeError;
+
+    // Call function/method
+    {
+        if (!Shiboken::Object::isValid(pyArgs[0]))
+            return {};
+        ::QtProperty* cppArg0;
+        pythonToCpp[0](pyArgs[0], &cppArg0);
+        bool cppArg1;
+        pythonToCpp[1](pyArgs[1], &cppArg1);
+
+        if (!PyErr_Occurred()) {
+            // setCheck(QtProperty*,bool)
+            PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
+            cppSelf->setCheck(cppArg0, cppArg1);
+            PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
+        }
+    }
+
+    if (PyErr_Occurred()) {
+        return {};
+    }
+    Py_RETURN_NONE;
+
+    Sbk_QtGroupPropertyManagerFunc_setCheck_TypeError:
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtGroupPropertyManager.setCheck");
+        return {};
+}
+
 static PyObject* Sbk_QtGroupPropertyManagerFunc_uninitializeProperty(PyObject* self, PyObject* pyArg)
 {
     QtGroupPropertyManagerWrapper* cppSelf = nullptr;
@@ -1032,8 +1138,10 @@ static PyObject* Sbk_QtGroupPropertyManagerFunc_uninitializeProperty(PyObject* s
 }
 
 static PyMethodDef Sbk_QtGroupPropertyManager_methods[] = {
+    {"check", (PyCFunction)Sbk_QtGroupPropertyManagerFunc_check, METH_O},
     {"hasValue", (PyCFunction)Sbk_QtGroupPropertyManagerFunc_hasValue, METH_O},
     {"initializeProperty", (PyCFunction)Sbk_QtGroupPropertyManagerFunc_initializeProperty, METH_O},
+    {"setCheck", (PyCFunction)Sbk_QtGroupPropertyManagerFunc_setCheck, METH_VARARGS},
     {"uninitializeProperty", (PyCFunction)Sbk_QtGroupPropertyManagerFunc_uninitializeProperty, METH_O},
 
     {nullptr, nullptr} // Sentinel
@@ -1119,8 +1227,10 @@ static PyObject* QtGroupPropertyManager_PTR_CppToPython_QtGroupPropertyManager(c
 // Multiple signatures have their index "n:" in front.
 const char QtGroupPropertyManager_SignaturesString[] = ""
     "qtpropertybrowser.QtGroupPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
+    "qtpropertybrowser.QtGroupPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
     "qtpropertybrowser.QtGroupPropertyManager.hasValue(property:qtpropertybrowser.QtProperty)->bool\n"
     "qtpropertybrowser.QtGroupPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtGroupPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
     "qtpropertybrowser.QtGroupPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
 ;
 

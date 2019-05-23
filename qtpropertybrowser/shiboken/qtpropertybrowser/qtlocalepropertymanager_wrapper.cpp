@@ -895,6 +895,54 @@ Sbk_QtLocalePropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds)
         return -1;
 }
 
+static PyObject* Sbk_QtLocalePropertyManagerFunc_check(PyObject* self, PyObject* pyArg)
+{
+    QtLocalePropertyManagerWrapper* cppSelf = nullptr;
+    SBK_UNUSED(cppSelf)
+    if (!Shiboken::Object::isValid(self))
+        return {};
+    cppSelf = static_cast<QtLocalePropertyManagerWrapper *>(reinterpret_cast< ::QtLocalePropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTLOCALEPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+    PyObject* pyResult{};
+    int overloadId = -1;
+    PythonToCppFunc pythonToCpp{};
+    SBK_UNUSED(pythonToCpp)
+
+    // Overloaded function decisor
+    // 0: QtLocalePropertyManager::check(const QtProperty*)const
+    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
+        overloadId = 0; // check(const QtProperty*)const
+    }
+
+    // Function signature not found.
+    if (overloadId == -1) goto Sbk_QtLocalePropertyManagerFunc_check_TypeError;
+
+    // Call function/method
+    {
+        if (!Shiboken::Object::isValid(pyArg))
+            return {};
+        ::QtProperty* cppArg0;
+        pythonToCpp(pyArg, &cppArg0);
+
+        if (!PyErr_Occurred()) {
+            // check(const QtProperty*)const
+            PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
+            bool cppResult = const_cast<const ::QtLocalePropertyManagerWrapper*>(cppSelf)->check(cppArg0);
+            PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
+            pyResult = Shiboken::Conversions::copyToPython(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), &cppResult);
+        }
+    }
+
+    if (PyErr_Occurred() || !pyResult) {
+        Py_XDECREF(pyResult);
+        return {};
+    }
+    return pyResult;
+
+    Sbk_QtLocalePropertyManagerFunc_check_TypeError:
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtLocalePropertyManager.check");
+        return {};
+}
+
 static PyObject* Sbk_QtLocalePropertyManagerFunc_checkIcon(PyObject* self, PyObject* pyArg)
 {
     QtLocalePropertyManagerWrapper* cppSelf = nullptr;
@@ -985,6 +1033,64 @@ static PyObject* Sbk_QtLocalePropertyManagerFunc_initializeProperty(PyObject* se
 
     Sbk_QtLocalePropertyManagerFunc_initializeProperty_TypeError:
         Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtLocalePropertyManager.initializeProperty");
+        return {};
+}
+
+static PyObject* Sbk_QtLocalePropertyManagerFunc_setCheck(PyObject* self, PyObject* args)
+{
+    QtLocalePropertyManagerWrapper* cppSelf = nullptr;
+    SBK_UNUSED(cppSelf)
+    if (!Shiboken::Object::isValid(self))
+        return {};
+    cppSelf = static_cast<QtLocalePropertyManagerWrapper *>(reinterpret_cast< ::QtLocalePropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTLOCALEPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+    int overloadId = -1;
+    PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
+    SBK_UNUSED(pythonToCpp)
+    int numArgs = PyTuple_GET_SIZE(args);
+    PyObject* pyArgs[] = {0, 0};
+
+    // invalid argument lengths
+
+
+    if (!PyArg_UnpackTuple(args, "setCheck", 2, 2, &(pyArgs[0]), &(pyArgs[1])))
+        return {};
+
+
+    // Overloaded function decisor
+    // 0: QtLocalePropertyManager::setCheck(QtProperty*,bool)
+    if (numArgs == 2
+        && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[0])))
+        && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppConvertible(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), (pyArgs[1])))) {
+        overloadId = 0; // setCheck(QtProperty*,bool)
+    }
+
+    // Function signature not found.
+    if (overloadId == -1) goto Sbk_QtLocalePropertyManagerFunc_setCheck_TypeError;
+
+    // Call function/method
+    {
+        if (!Shiboken::Object::isValid(pyArgs[0]))
+            return {};
+        ::QtProperty* cppArg0;
+        pythonToCpp[0](pyArgs[0], &cppArg0);
+        bool cppArg1;
+        pythonToCpp[1](pyArgs[1], &cppArg1);
+
+        if (!PyErr_Occurred()) {
+            // setCheck(QtProperty*,bool)
+            PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
+            cppSelf->setCheck(cppArg0, cppArg1);
+            PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
+        }
+    }
+
+    if (PyErr_Occurred()) {
+        return {};
+    }
+    Py_RETURN_NONE;
+
+    Sbk_QtLocalePropertyManagerFunc_setCheck_TypeError:
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtLocalePropertyManager.setCheck");
         return {};
 }
 
@@ -1222,8 +1328,10 @@ static PyObject* Sbk_QtLocalePropertyManagerFunc_valueText(PyObject* self, PyObj
 }
 
 static PyMethodDef Sbk_QtLocalePropertyManager_methods[] = {
+    {"check", (PyCFunction)Sbk_QtLocalePropertyManagerFunc_check, METH_O},
     {"checkIcon", (PyCFunction)Sbk_QtLocalePropertyManagerFunc_checkIcon, METH_O},
     {"initializeProperty", (PyCFunction)Sbk_QtLocalePropertyManagerFunc_initializeProperty, METH_O},
+    {"setCheck", (PyCFunction)Sbk_QtLocalePropertyManagerFunc_setCheck, METH_VARARGS},
     {"setValue", (PyCFunction)Sbk_QtLocalePropertyManagerFunc_setValue, METH_VARARGS},
     {"subEnumPropertyManager", (PyCFunction)Sbk_QtLocalePropertyManagerFunc_subEnumPropertyManager, METH_NOARGS},
     {"uninitializeProperty", (PyCFunction)Sbk_QtLocalePropertyManagerFunc_uninitializeProperty, METH_O},
@@ -1313,8 +1421,10 @@ static PyObject* QtLocalePropertyManager_PTR_CppToPython_QtLocalePropertyManager
 // Multiple signatures have their index "n:" in front.
 const char QtLocalePropertyManager_SignaturesString[] = ""
     "qtpropertybrowser.QtLocalePropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
+    "qtpropertybrowser.QtLocalePropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
     "qtpropertybrowser.QtLocalePropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
     "qtpropertybrowser.QtLocalePropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtLocalePropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
     "qtpropertybrowser.QtLocalePropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtCore.QLocale)\n"
     "qtpropertybrowser.QtLocalePropertyManager.subEnumPropertyManager()->qtpropertybrowser.QtEnumPropertyManager\n"
     "qtpropertybrowser.QtLocalePropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"

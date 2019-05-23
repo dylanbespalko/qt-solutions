@@ -893,6 +893,54 @@ Sbk_QtFilePropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds)
         return -1;
 }
 
+static PyObject* Sbk_QtFilePropertyManagerFunc_check(PyObject* self, PyObject* pyArg)
+{
+    QtFilePropertyManagerWrapper* cppSelf = nullptr;
+    SBK_UNUSED(cppSelf)
+    if (!Shiboken::Object::isValid(self))
+        return {};
+    cppSelf = static_cast<QtFilePropertyManagerWrapper *>(reinterpret_cast< ::QtFilePropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTFILEPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+    PyObject* pyResult{};
+    int overloadId = -1;
+    PythonToCppFunc pythonToCpp{};
+    SBK_UNUSED(pythonToCpp)
+
+    // Overloaded function decisor
+    // 0: QtFilePropertyManager::check(const QtProperty*)const
+    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
+        overloadId = 0; // check(const QtProperty*)const
+    }
+
+    // Function signature not found.
+    if (overloadId == -1) goto Sbk_QtFilePropertyManagerFunc_check_TypeError;
+
+    // Call function/method
+    {
+        if (!Shiboken::Object::isValid(pyArg))
+            return {};
+        ::QtProperty* cppArg0;
+        pythonToCpp(pyArg, &cppArg0);
+
+        if (!PyErr_Occurred()) {
+            // check(const QtProperty*)const
+            PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
+            bool cppResult = const_cast<const ::QtFilePropertyManagerWrapper*>(cppSelf)->check(cppArg0);
+            PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
+            pyResult = Shiboken::Conversions::copyToPython(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), &cppResult);
+        }
+    }
+
+    if (PyErr_Occurred() || !pyResult) {
+        Py_XDECREF(pyResult);
+        return {};
+    }
+    return pyResult;
+
+    Sbk_QtFilePropertyManagerFunc_check_TypeError:
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtFilePropertyManager.check");
+        return {};
+}
+
 static PyObject* Sbk_QtFilePropertyManagerFunc_checkIcon(PyObject* self, PyObject* pyArg)
 {
     QtFilePropertyManagerWrapper* cppSelf = nullptr;
@@ -1127,6 +1175,64 @@ static PyObject* Sbk_QtFilePropertyManagerFunc_isReadOnly(PyObject* self, PyObje
 
     Sbk_QtFilePropertyManagerFunc_isReadOnly_TypeError:
         Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtFilePropertyManager.isReadOnly");
+        return {};
+}
+
+static PyObject* Sbk_QtFilePropertyManagerFunc_setCheck(PyObject* self, PyObject* args)
+{
+    QtFilePropertyManagerWrapper* cppSelf = nullptr;
+    SBK_UNUSED(cppSelf)
+    if (!Shiboken::Object::isValid(self))
+        return {};
+    cppSelf = static_cast<QtFilePropertyManagerWrapper *>(reinterpret_cast< ::QtFilePropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTFILEPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+    int overloadId = -1;
+    PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
+    SBK_UNUSED(pythonToCpp)
+    int numArgs = PyTuple_GET_SIZE(args);
+    PyObject* pyArgs[] = {0, 0};
+
+    // invalid argument lengths
+
+
+    if (!PyArg_UnpackTuple(args, "setCheck", 2, 2, &(pyArgs[0]), &(pyArgs[1])))
+        return {};
+
+
+    // Overloaded function decisor
+    // 0: QtFilePropertyManager::setCheck(QtProperty*,bool)
+    if (numArgs == 2
+        && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[0])))
+        && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppConvertible(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), (pyArgs[1])))) {
+        overloadId = 0; // setCheck(QtProperty*,bool)
+    }
+
+    // Function signature not found.
+    if (overloadId == -1) goto Sbk_QtFilePropertyManagerFunc_setCheck_TypeError;
+
+    // Call function/method
+    {
+        if (!Shiboken::Object::isValid(pyArgs[0]))
+            return {};
+        ::QtProperty* cppArg0;
+        pythonToCpp[0](pyArgs[0], &cppArg0);
+        bool cppArg1;
+        pythonToCpp[1](pyArgs[1], &cppArg1);
+
+        if (!PyErr_Occurred()) {
+            // setCheck(QtProperty*,bool)
+            PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
+            cppSelf->setCheck(cppArg0, cppArg1);
+            PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
+        }
+    }
+
+    if (PyErr_Occurred()) {
+        return {};
+    }
+    Py_RETURN_NONE;
+
+    Sbk_QtFilePropertyManagerFunc_setCheck_TypeError:
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtFilePropertyManager.setCheck");
         return {};
 }
 
@@ -1504,11 +1610,13 @@ static PyObject* Sbk_QtFilePropertyManagerFunc_valueText(PyObject* self, PyObjec
 }
 
 static PyMethodDef Sbk_QtFilePropertyManager_methods[] = {
+    {"check", (PyCFunction)Sbk_QtFilePropertyManagerFunc_check, METH_O},
     {"checkIcon", (PyCFunction)Sbk_QtFilePropertyManagerFunc_checkIcon, METH_O},
     {"fileMode", (PyCFunction)Sbk_QtFilePropertyManagerFunc_fileMode, METH_O},
     {"filter", (PyCFunction)Sbk_QtFilePropertyManagerFunc_filter, METH_O},
     {"initializeProperty", (PyCFunction)Sbk_QtFilePropertyManagerFunc_initializeProperty, METH_O},
     {"isReadOnly", (PyCFunction)Sbk_QtFilePropertyManagerFunc_isReadOnly, METH_O},
+    {"setCheck", (PyCFunction)Sbk_QtFilePropertyManagerFunc_setCheck, METH_VARARGS},
     {"setFileMode", (PyCFunction)Sbk_QtFilePropertyManagerFunc_setFileMode, METH_VARARGS},
     {"setFilter", (PyCFunction)Sbk_QtFilePropertyManagerFunc_setFilter, METH_VARARGS},
     {"setReadOnly", (PyCFunction)Sbk_QtFilePropertyManagerFunc_setReadOnly, METH_VARARGS},
@@ -1600,11 +1708,13 @@ static PyObject* QtFilePropertyManager_PTR_CppToPython_QtFilePropertyManager(con
 // Multiple signatures have their index "n:" in front.
 const char QtFilePropertyManager_SignaturesString[] = ""
     "qtpropertybrowser.QtFilePropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
+    "qtpropertybrowser.QtFilePropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
     "qtpropertybrowser.QtFilePropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
     "qtpropertybrowser.QtFilePropertyManager.fileMode(property:qtpropertybrowser.QtProperty)->PySide2.QtWidgets.QFileDialog.FileMode\n"
     "qtpropertybrowser.QtFilePropertyManager.filter(property:qtpropertybrowser.QtProperty)->QString\n"
     "qtpropertybrowser.QtFilePropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
     "qtpropertybrowser.QtFilePropertyManager.isReadOnly(property:qtpropertybrowser.QtProperty)->bool\n"
+    "qtpropertybrowser.QtFilePropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
     "qtpropertybrowser.QtFilePropertyManager.setFileMode(arg__1:qtpropertybrowser.QtProperty,mode:PySide2.QtWidgets.QFileDialog.FileMode)\n"
     "qtpropertybrowser.QtFilePropertyManager.setFilter(arg__1:qtpropertybrowser.QtProperty,arg__2:QString)\n"
     "qtpropertybrowser.QtFilePropertyManager.setReadOnly(property:qtpropertybrowser.QtProperty,readOnly:bool)\n"

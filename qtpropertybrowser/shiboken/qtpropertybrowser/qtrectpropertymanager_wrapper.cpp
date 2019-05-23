@@ -895,6 +895,54 @@ Sbk_QtRectPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds)
         return -1;
 }
 
+static PyObject* Sbk_QtRectPropertyManagerFunc_check(PyObject* self, PyObject* pyArg)
+{
+    QtRectPropertyManagerWrapper* cppSelf = nullptr;
+    SBK_UNUSED(cppSelf)
+    if (!Shiboken::Object::isValid(self))
+        return {};
+    cppSelf = static_cast<QtRectPropertyManagerWrapper *>(reinterpret_cast< ::QtRectPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTRECTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+    PyObject* pyResult{};
+    int overloadId = -1;
+    PythonToCppFunc pythonToCpp{};
+    SBK_UNUSED(pythonToCpp)
+
+    // Overloaded function decisor
+    // 0: QtRectPropertyManager::check(const QtProperty*)const
+    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
+        overloadId = 0; // check(const QtProperty*)const
+    }
+
+    // Function signature not found.
+    if (overloadId == -1) goto Sbk_QtRectPropertyManagerFunc_check_TypeError;
+
+    // Call function/method
+    {
+        if (!Shiboken::Object::isValid(pyArg))
+            return {};
+        ::QtProperty* cppArg0;
+        pythonToCpp(pyArg, &cppArg0);
+
+        if (!PyErr_Occurred()) {
+            // check(const QtProperty*)const
+            PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
+            bool cppResult = const_cast<const ::QtRectPropertyManagerWrapper*>(cppSelf)->check(cppArg0);
+            PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
+            pyResult = Shiboken::Conversions::copyToPython(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), &cppResult);
+        }
+    }
+
+    if (PyErr_Occurred() || !pyResult) {
+        Py_XDECREF(pyResult);
+        return {};
+    }
+    return pyResult;
+
+    Sbk_QtRectPropertyManagerFunc_check_TypeError:
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtRectPropertyManager.check");
+        return {};
+}
+
 static PyObject* Sbk_QtRectPropertyManagerFunc_checkIcon(PyObject* self, PyObject* pyArg)
 {
     QtRectPropertyManagerWrapper* cppSelf = nullptr;
@@ -1033,6 +1081,64 @@ static PyObject* Sbk_QtRectPropertyManagerFunc_initializeProperty(PyObject* self
 
     Sbk_QtRectPropertyManagerFunc_initializeProperty_TypeError:
         Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtRectPropertyManager.initializeProperty");
+        return {};
+}
+
+static PyObject* Sbk_QtRectPropertyManagerFunc_setCheck(PyObject* self, PyObject* args)
+{
+    QtRectPropertyManagerWrapper* cppSelf = nullptr;
+    SBK_UNUSED(cppSelf)
+    if (!Shiboken::Object::isValid(self))
+        return {};
+    cppSelf = static_cast<QtRectPropertyManagerWrapper *>(reinterpret_cast< ::QtRectPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTRECTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+    int overloadId = -1;
+    PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
+    SBK_UNUSED(pythonToCpp)
+    int numArgs = PyTuple_GET_SIZE(args);
+    PyObject* pyArgs[] = {0, 0};
+
+    // invalid argument lengths
+
+
+    if (!PyArg_UnpackTuple(args, "setCheck", 2, 2, &(pyArgs[0]), &(pyArgs[1])))
+        return {};
+
+
+    // Overloaded function decisor
+    // 0: QtRectPropertyManager::setCheck(QtProperty*,bool)
+    if (numArgs == 2
+        && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[0])))
+        && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppConvertible(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), (pyArgs[1])))) {
+        overloadId = 0; // setCheck(QtProperty*,bool)
+    }
+
+    // Function signature not found.
+    if (overloadId == -1) goto Sbk_QtRectPropertyManagerFunc_setCheck_TypeError;
+
+    // Call function/method
+    {
+        if (!Shiboken::Object::isValid(pyArgs[0]))
+            return {};
+        ::QtProperty* cppArg0;
+        pythonToCpp[0](pyArgs[0], &cppArg0);
+        bool cppArg1;
+        pythonToCpp[1](pyArgs[1], &cppArg1);
+
+        if (!PyErr_Occurred()) {
+            // setCheck(QtProperty*,bool)
+            PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
+            cppSelf->setCheck(cppArg0, cppArg1);
+            PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
+        }
+    }
+
+    if (PyErr_Occurred()) {
+        return {};
+    }
+    Py_RETURN_NONE;
+
+    Sbk_QtRectPropertyManagerFunc_setCheck_TypeError:
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtRectPropertyManager.setCheck");
         return {};
 }
 
@@ -1335,9 +1441,11 @@ static PyObject* Sbk_QtRectPropertyManagerFunc_valueText(PyObject* self, PyObjec
 }
 
 static PyMethodDef Sbk_QtRectPropertyManager_methods[] = {
+    {"check", (PyCFunction)Sbk_QtRectPropertyManagerFunc_check, METH_O},
     {"checkIcon", (PyCFunction)Sbk_QtRectPropertyManagerFunc_checkIcon, METH_O},
     {"constraint", (PyCFunction)Sbk_QtRectPropertyManagerFunc_constraint, METH_O},
     {"initializeProperty", (PyCFunction)Sbk_QtRectPropertyManagerFunc_initializeProperty, METH_O},
+    {"setCheck", (PyCFunction)Sbk_QtRectPropertyManagerFunc_setCheck, METH_VARARGS},
     {"setConstraint", (PyCFunction)Sbk_QtRectPropertyManagerFunc_setConstraint, METH_VARARGS},
     {"setValue", (PyCFunction)Sbk_QtRectPropertyManagerFunc_setValue, METH_VARARGS},
     {"subIntPropertyManager", (PyCFunction)Sbk_QtRectPropertyManagerFunc_subIntPropertyManager, METH_NOARGS},
@@ -1428,9 +1536,11 @@ static PyObject* QtRectPropertyManager_PTR_CppToPython_QtRectPropertyManager(con
 // Multiple signatures have their index "n:" in front.
 const char QtRectPropertyManager_SignaturesString[] = ""
     "qtpropertybrowser.QtRectPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
+    "qtpropertybrowser.QtRectPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
     "qtpropertybrowser.QtRectPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
     "qtpropertybrowser.QtRectPropertyManager.constraint(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QRect\n"
     "qtpropertybrowser.QtRectPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtRectPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
     "qtpropertybrowser.QtRectPropertyManager.setConstraint(property:qtpropertybrowser.QtProperty,constraint:PySide2.QtCore.QRect)\n"
     "qtpropertybrowser.QtRectPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtCore.QRect)\n"
     "qtpropertybrowser.QtRectPropertyManager.subIntPropertyManager()->qtpropertybrowser.QtIntPropertyManager\n"

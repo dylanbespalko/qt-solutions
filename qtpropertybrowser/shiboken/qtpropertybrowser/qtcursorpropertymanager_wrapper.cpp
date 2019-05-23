@@ -894,6 +894,54 @@ Sbk_QtCursorPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds)
         return -1;
 }
 
+static PyObject* Sbk_QtCursorPropertyManagerFunc_check(PyObject* self, PyObject* pyArg)
+{
+    QtCursorPropertyManagerWrapper* cppSelf = nullptr;
+    SBK_UNUSED(cppSelf)
+    if (!Shiboken::Object::isValid(self))
+        return {};
+    cppSelf = static_cast<QtCursorPropertyManagerWrapper *>(reinterpret_cast< ::QtCursorPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTCURSORPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+    PyObject* pyResult{};
+    int overloadId = -1;
+    PythonToCppFunc pythonToCpp{};
+    SBK_UNUSED(pythonToCpp)
+
+    // Overloaded function decisor
+    // 0: QtCursorPropertyManager::check(const QtProperty*)const
+    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
+        overloadId = 0; // check(const QtProperty*)const
+    }
+
+    // Function signature not found.
+    if (overloadId == -1) goto Sbk_QtCursorPropertyManagerFunc_check_TypeError;
+
+    // Call function/method
+    {
+        if (!Shiboken::Object::isValid(pyArg))
+            return {};
+        ::QtProperty* cppArg0;
+        pythonToCpp(pyArg, &cppArg0);
+
+        if (!PyErr_Occurred()) {
+            // check(const QtProperty*)const
+            PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
+            bool cppResult = const_cast<const ::QtCursorPropertyManagerWrapper*>(cppSelf)->check(cppArg0);
+            PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
+            pyResult = Shiboken::Conversions::copyToPython(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), &cppResult);
+        }
+    }
+
+    if (PyErr_Occurred() || !pyResult) {
+        Py_XDECREF(pyResult);
+        return {};
+    }
+    return pyResult;
+
+    Sbk_QtCursorPropertyManagerFunc_check_TypeError:
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtCursorPropertyManager.check");
+        return {};
+}
+
 static PyObject* Sbk_QtCursorPropertyManagerFunc_checkIcon(PyObject* self, PyObject* pyArg)
 {
     QtCursorPropertyManagerWrapper* cppSelf = nullptr;
@@ -984,6 +1032,64 @@ static PyObject* Sbk_QtCursorPropertyManagerFunc_initializeProperty(PyObject* se
 
     Sbk_QtCursorPropertyManagerFunc_initializeProperty_TypeError:
         Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtCursorPropertyManager.initializeProperty");
+        return {};
+}
+
+static PyObject* Sbk_QtCursorPropertyManagerFunc_setCheck(PyObject* self, PyObject* args)
+{
+    QtCursorPropertyManagerWrapper* cppSelf = nullptr;
+    SBK_UNUSED(cppSelf)
+    if (!Shiboken::Object::isValid(self))
+        return {};
+    cppSelf = static_cast<QtCursorPropertyManagerWrapper *>(reinterpret_cast< ::QtCursorPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTCURSORPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+    int overloadId = -1;
+    PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
+    SBK_UNUSED(pythonToCpp)
+    int numArgs = PyTuple_GET_SIZE(args);
+    PyObject* pyArgs[] = {0, 0};
+
+    // invalid argument lengths
+
+
+    if (!PyArg_UnpackTuple(args, "setCheck", 2, 2, &(pyArgs[0]), &(pyArgs[1])))
+        return {};
+
+
+    // Overloaded function decisor
+    // 0: QtCursorPropertyManager::setCheck(QtProperty*,bool)
+    if (numArgs == 2
+        && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[0])))
+        && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppConvertible(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), (pyArgs[1])))) {
+        overloadId = 0; // setCheck(QtProperty*,bool)
+    }
+
+    // Function signature not found.
+    if (overloadId == -1) goto Sbk_QtCursorPropertyManagerFunc_setCheck_TypeError;
+
+    // Call function/method
+    {
+        if (!Shiboken::Object::isValid(pyArgs[0]))
+            return {};
+        ::QtProperty* cppArg0;
+        pythonToCpp[0](pyArgs[0], &cppArg0);
+        bool cppArg1;
+        pythonToCpp[1](pyArgs[1], &cppArg1);
+
+        if (!PyErr_Occurred()) {
+            // setCheck(QtProperty*,bool)
+            PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
+            cppSelf->setCheck(cppArg0, cppArg1);
+            PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
+        }
+    }
+
+    if (PyErr_Occurred()) {
+        return {};
+    }
+    Py_RETURN_NONE;
+
+    Sbk_QtCursorPropertyManagerFunc_setCheck_TypeError:
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtCursorPropertyManager.setCheck");
         return {};
 }
 
@@ -1242,8 +1348,10 @@ static PyObject* Sbk_QtCursorPropertyManagerFunc_valueText(PyObject* self, PyObj
 }
 
 static PyMethodDef Sbk_QtCursorPropertyManager_methods[] = {
+    {"check", (PyCFunction)Sbk_QtCursorPropertyManagerFunc_check, METH_O},
     {"checkIcon", (PyCFunction)Sbk_QtCursorPropertyManagerFunc_checkIcon, METH_O},
     {"initializeProperty", (PyCFunction)Sbk_QtCursorPropertyManagerFunc_initializeProperty, METH_O},
+    {"setCheck", (PyCFunction)Sbk_QtCursorPropertyManagerFunc_setCheck, METH_VARARGS},
     {"setValue", (PyCFunction)Sbk_QtCursorPropertyManagerFunc_setValue, METH_VARARGS},
     {"uninitializeProperty", (PyCFunction)Sbk_QtCursorPropertyManagerFunc_uninitializeProperty, METH_O},
     {"value", (PyCFunction)Sbk_QtCursorPropertyManagerFunc_value, METH_O},
@@ -1333,8 +1441,10 @@ static PyObject* QtCursorPropertyManager_PTR_CppToPython_QtCursorPropertyManager
 // Multiple signatures have their index "n:" in front.
 const char QtCursorPropertyManager_SignaturesString[] = ""
     "qtpropertybrowser.QtCursorPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
+    "qtpropertybrowser.QtCursorPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
     "qtpropertybrowser.QtCursorPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
     "qtpropertybrowser.QtCursorPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtCursorPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
     "qtpropertybrowser.QtCursorPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtGui.QCursor)\n"
     "qtpropertybrowser.QtCursorPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
     "qtpropertybrowser.QtCursorPropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QCursor\n"
