@@ -1,12 +1,12 @@
 win32: SRC_DIR = $$system(echo %SRC_DIR%)
 unix: SRC_DIR = $$system(echo $SRC_DIR)
+TEMPLATE = lib
 include($$SRC_DIR/sknrf/root.pri)
 
 ######## Before Script #########
 win32: message($$system(before.bat))
 unix: message($$system(sh before.sh))
 
-TEMPLATE = lib
 TARGET = qtpropertybrowserpy
 DEFINES += QT_QTPROPERTYBROWSER_IMPORT
 
