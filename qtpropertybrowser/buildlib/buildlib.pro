@@ -1,12 +1,12 @@
 win32: SRC_DIR = $$system(echo %SRC_DIR%)
 unix: SRC_DIR = $$system(echo $SRC_DIR)
+TEMPLATE=lib
 include($$SRC_DIR/sknrf/root.pri)
 
 ######## Before Script #########
 win32: message($$system(before.bat))
 unix: message($$system(sh before.sh))
 
-TEMPLATE=lib
 CONFIG += qt dll qtpropertybrowser-buildlib
 CONFIG += shared
 include(../src/qtpropertybrowser.pri)
