@@ -30,6 +30,8 @@
 #include <cctype>
 #include <cstring>
 
+QT_WARNING_DISABLE_DEPRECATED
+
 
 
 template <class T>
@@ -45,12 +47,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -60,7 +64,8 @@ void QtVariantEditorFactoryWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtVariantEditorFactoryWrapper::QtVariantEditorFactoryWrapper(QObject * parent) : QtVariantEditorFactory(parent) {
+QtVariantEditorFactoryWrapper::QtVariantEditorFactoryWrapper(QObject * parent) : QtVariantEditorFactory(parent)
+{
     // ... middle
 }
 
@@ -168,6 +173,7 @@ Sbk_QtVariantEditorFactory_Init(PyObject* self, PyObject* args, PyObject* kwds)
     SBK_UNUSED(pythonToCpp)
     int numNamedArgs = (kwds ? PyDict_Size(kwds) : 0);
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -269,7 +275,7 @@ static PyObject* Sbk_QtVariantEditorFactoryFunc_connectPropertyManager(PyObject*
         if (!PyErr_Occurred()) {
             // connectPropertyManager(QtVariantPropertyManager*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtVariantEditorFactoryWrapper*) cppSelf)->QtVariantEditorFactoryWrapper::connectPropertyManager_protected(cppArg0);
+            static_cast<::QtVariantEditorFactoryWrapper*>(cppSelf)->QtVariantEditorFactoryWrapper::connectPropertyManager_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -296,6 +302,7 @@ static PyObject* Sbk_QtVariantEditorFactoryFunc_createEditor(PyObject* self, PyO
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0, 0};
 
     // invalid argument lengths
@@ -335,7 +342,7 @@ static PyObject* Sbk_QtVariantEditorFactoryFunc_createEditor(PyObject* self, PyO
         if (!PyErr_Occurred()) {
             // createEditor(QtVariantPropertyManager*,QtProperty*,QWidget*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QWidget * cppResult = ((::QtVariantEditorFactoryWrapper*) cppSelf)->QtVariantEditorFactoryWrapper::createEditor_protected(cppArg0, cppArg1, cppArg2);
+            QWidget * cppResult = static_cast<::QtVariantEditorFactoryWrapper*>(cppSelf)->QtVariantEditorFactoryWrapper::createEditor_protected(cppArg0, cppArg1, cppArg2);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), cppResult);
             Shiboken::Object::setParent(self, pyResult);
@@ -383,7 +390,7 @@ static PyObject* Sbk_QtVariantEditorFactoryFunc_disconnectPropertyManager(PyObje
         if (!PyErr_Occurred()) {
             // disconnectPropertyManager(QtVariantPropertyManager*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtVariantEditorFactoryWrapper*) cppSelf)->QtVariantEditorFactoryWrapper::disconnectPropertyManager_protected(cppArg0);
+            static_cast<::QtVariantEditorFactoryWrapper*>(cppSelf)->QtVariantEditorFactoryWrapper::disconnectPropertyManager_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -399,9 +406,9 @@ static PyObject* Sbk_QtVariantEditorFactoryFunc_disconnectPropertyManager(PyObje
 }
 
 static PyMethodDef Sbk_QtVariantEditorFactory_methods[] = {
-    {"connectPropertyManager", (PyCFunction)Sbk_QtVariantEditorFactoryFunc_connectPropertyManager, METH_O},
-    {"createEditor", (PyCFunction)Sbk_QtVariantEditorFactoryFunc_createEditor, METH_VARARGS},
-    {"disconnectPropertyManager", (PyCFunction)Sbk_QtVariantEditorFactoryFunc_disconnectPropertyManager, METH_O},
+    {"connectPropertyManager", reinterpret_cast<PyCFunction>(Sbk_QtVariantEditorFactoryFunc_connectPropertyManager), METH_O},
+    {"createEditor", reinterpret_cast<PyCFunction>(Sbk_QtVariantEditorFactoryFunc_createEditor), METH_VARARGS},
+    {"disconnectPropertyManager", reinterpret_cast<PyCFunction>(Sbk_QtVariantEditorFactoryFunc_disconnectPropertyManager), METH_O},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -464,14 +471,14 @@ static void QtVariantEditorFactory_PythonToCpp_QtVariantEditorFactory_PTR(PyObje
 static PythonToCppFunc is_QtVariantEditorFactory_PythonToCpp_QtVariantEditorFactory_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtVariantEditorFactory_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtVariantEditorFactory_TypeF())))
         return QtVariantEditorFactory_PythonToCpp_QtVariantEditorFactory_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtVariantEditorFactory_PTR_CppToPython_QtVariantEditorFactory(const void* cppIn) {
-    PyObject* pyOut = (PyObject*)Shiboken::BindingManager::instance().retrieveWrapper(cppIn);
+    auto pyOut = reinterpret_cast<PyObject*>(Shiboken::BindingManager::instance().retrieveWrapper(cppIn));
     if (pyOut) {
         Py_INCREF(pyOut);
         return pyOut;
@@ -492,12 +499,12 @@ static PyObject* QtVariantEditorFactory_PTR_CppToPython_QtVariantEditorFactory(c
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtVariantEditorFactory_SignaturesString[] = ""
-    "qtpropertybrowser.QtVariantEditorFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtVariantEditorFactory.connectPropertyManager(manager:qtpropertybrowser.QtVariantPropertyManager)\n"
-    "qtpropertybrowser.QtVariantEditorFactory.createEditor(manager:qtpropertybrowser.QtVariantPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtVariantEditorFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtVariantPropertyManager)\n"
-;
+static const char *QtVariantEditorFactory_SignatureStrings[] = {
+    "qtpropertybrowser.QtVariantEditorFactory(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtVariantEditorFactory.connectPropertyManager(manager:qtpropertybrowser.QtVariantPropertyManager)",
+    "qtpropertybrowser.QtVariantEditorFactory.createEditor(manager:qtpropertybrowser.QtVariantPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtVariantEditorFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtVariantPropertyManager)",
+    nullptr}; // Sentinel
 
 void init_QtVariantEditorFactory(PyObject* module)
 {
@@ -506,7 +513,7 @@ void init_QtVariantEditorFactory(PyObject* module)
         "QtVariantEditorFactory",
         "QtVariantEditorFactory*",
         &Sbk_QtVariantEditorFactory_spec,
-        QtVariantEditorFactory_SignaturesString,
+        QtVariantEditorFactory_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtVariantEditorFactory >,
         0,
         0,

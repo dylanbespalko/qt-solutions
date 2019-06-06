@@ -30,6 +30,8 @@
 #include <cctype>
 #include <cstring>
 
+QT_WARNING_DISABLE_DEPRECATED
+
 
 
 template <class T>
@@ -45,12 +47,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -60,7 +64,8 @@ void QtPropertyWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtPropertyWrapper::QtPropertyWrapper(QtAbstractPropertyManager * manager) : QtProperty(manager) {
+QtPropertyWrapper::QtPropertyWrapper(QtAbstractPropertyManager * manager) : QtProperty(manager)
+{
     // ... middle
 }
 
@@ -85,6 +90,7 @@ Sbk_QtProperty_Init(PyObject* self, PyObject* args, PyObject* kwds)
     PythonToCppFunc pythonToCpp[] = { nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -352,6 +358,7 @@ static PyObject* Sbk_QtPropertyFunc_insertSubProperty(PyObject* self, PyObject* 
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -571,7 +578,7 @@ static PyObject* Sbk_QtPropertyFunc_propertyChanged(PyObject* self)
         if (!PyErr_Occurred()) {
             // propertyChanged()
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtPropertyWrapper*) cppSelf)->QtPropertyWrapper::propertyChanged_protected();
+            static_cast<::QtPropertyWrapper*>(cppSelf)->QtPropertyWrapper::propertyChanged_protected();
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -1164,38 +1171,38 @@ static PyObject* Sbk_QtPropertyFunc_whatsThis(PyObject* self)
 }
 
 static PyMethodDef Sbk_QtProperty_methods[] = {
-    {"addSubProperty", (PyCFunction)Sbk_QtPropertyFunc_addSubProperty, METH_O},
-    {"check", (PyCFunction)Sbk_QtPropertyFunc_check, METH_NOARGS},
-    {"checkIcon", (PyCFunction)Sbk_QtPropertyFunc_checkIcon, METH_NOARGS},
-    {"displayText", (PyCFunction)Sbk_QtPropertyFunc_displayText, METH_NOARGS},
-    {"foreground", (PyCFunction)Sbk_QtPropertyFunc_foreground, METH_NOARGS},
-    {"formatText", (PyCFunction)Sbk_QtPropertyFunc_formatText, METH_NOARGS},
-    {"hasValue", (PyCFunction)Sbk_QtPropertyFunc_hasValue, METH_NOARGS},
-    {"insertSubProperty", (PyCFunction)Sbk_QtPropertyFunc_insertSubProperty, METH_VARARGS},
-    {"isEnabled", (PyCFunction)Sbk_QtPropertyFunc_isEnabled, METH_NOARGS},
-    {"isModified", (PyCFunction)Sbk_QtPropertyFunc_isModified, METH_NOARGS},
-    {"label", (PyCFunction)Sbk_QtPropertyFunc_label, METH_NOARGS},
-    {"maximumText", (PyCFunction)Sbk_QtPropertyFunc_maximumText, METH_NOARGS},
-    {"minimumText", (PyCFunction)Sbk_QtPropertyFunc_minimumText, METH_NOARGS},
-    {"pkAvgText", (PyCFunction)Sbk_QtPropertyFunc_pkAvgText, METH_NOARGS},
-    {"propertyChanged", (PyCFunction)Sbk_QtPropertyFunc_propertyChanged, METH_NOARGS},
-    {"propertyManager", (PyCFunction)Sbk_QtPropertyFunc_propertyManager, METH_NOARGS},
-    {"propertyName", (PyCFunction)Sbk_QtPropertyFunc_propertyName, METH_NOARGS},
-    {"removeSubProperty", (PyCFunction)Sbk_QtPropertyFunc_removeSubProperty, METH_O},
-    {"setEnabled", (PyCFunction)Sbk_QtPropertyFunc_setEnabled, METH_O},
-    {"setLabel", (PyCFunction)Sbk_QtPropertyFunc_setLabel, METH_O},
-    {"setModified", (PyCFunction)Sbk_QtPropertyFunc_setModified, METH_O},
-    {"setPropertyName", (PyCFunction)Sbk_QtPropertyFunc_setPropertyName, METH_O},
-    {"setStatusTip", (PyCFunction)Sbk_QtPropertyFunc_setStatusTip, METH_O},
-    {"setToolTip", (PyCFunction)Sbk_QtPropertyFunc_setToolTip, METH_O},
-    {"setWhatsThis", (PyCFunction)Sbk_QtPropertyFunc_setWhatsThis, METH_O},
-    {"statusTip", (PyCFunction)Sbk_QtPropertyFunc_statusTip, METH_NOARGS},
-    {"subProperties", (PyCFunction)Sbk_QtPropertyFunc_subProperties, METH_NOARGS},
-    {"toolTip", (PyCFunction)Sbk_QtPropertyFunc_toolTip, METH_NOARGS},
-    {"unitText", (PyCFunction)Sbk_QtPropertyFunc_unitText, METH_NOARGS},
-    {"valueIcon", (PyCFunction)Sbk_QtPropertyFunc_valueIcon, METH_NOARGS},
-    {"valueText", (PyCFunction)Sbk_QtPropertyFunc_valueText, METH_NOARGS},
-    {"whatsThis", (PyCFunction)Sbk_QtPropertyFunc_whatsThis, METH_NOARGS},
+    {"addSubProperty", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_addSubProperty), METH_O},
+    {"check", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_check), METH_NOARGS},
+    {"checkIcon", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_checkIcon), METH_NOARGS},
+    {"displayText", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_displayText), METH_NOARGS},
+    {"foreground", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_foreground), METH_NOARGS},
+    {"formatText", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_formatText), METH_NOARGS},
+    {"hasValue", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_hasValue), METH_NOARGS},
+    {"insertSubProperty", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_insertSubProperty), METH_VARARGS},
+    {"isEnabled", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_isEnabled), METH_NOARGS},
+    {"isModified", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_isModified), METH_NOARGS},
+    {"label", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_label), METH_NOARGS},
+    {"maximumText", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_maximumText), METH_NOARGS},
+    {"minimumText", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_minimumText), METH_NOARGS},
+    {"pkAvgText", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_pkAvgText), METH_NOARGS},
+    {"propertyChanged", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_propertyChanged), METH_NOARGS},
+    {"propertyManager", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_propertyManager), METH_NOARGS},
+    {"propertyName", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_propertyName), METH_NOARGS},
+    {"removeSubProperty", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_removeSubProperty), METH_O},
+    {"setEnabled", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_setEnabled), METH_O},
+    {"setLabel", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_setLabel), METH_O},
+    {"setModified", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_setModified), METH_O},
+    {"setPropertyName", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_setPropertyName), METH_O},
+    {"setStatusTip", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_setStatusTip), METH_O},
+    {"setToolTip", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_setToolTip), METH_O},
+    {"setWhatsThis", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_setWhatsThis), METH_O},
+    {"statusTip", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_statusTip), METH_NOARGS},
+    {"subProperties", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_subProperties), METH_NOARGS},
+    {"toolTip", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_toolTip), METH_NOARGS},
+    {"unitText", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_unitText), METH_NOARGS},
+    {"valueIcon", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_valueIcon), METH_NOARGS},
+    {"valueText", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_valueText), METH_NOARGS},
+    {"whatsThis", reinterpret_cast<PyCFunction>(Sbk_QtPropertyFunc_whatsThis), METH_NOARGS},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -1258,14 +1265,14 @@ static void QtProperty_PythonToCpp_QtProperty_PTR(PyObject* pyIn, void* cppOut) 
 static PythonToCppFunc is_QtProperty_PythonToCpp_QtProperty_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtProperty_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtProperty_TypeF())))
         return QtProperty_PythonToCpp_QtProperty_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtProperty_PTR_CppToPython_QtProperty(const void* cppIn) {
-    PyObject* pyOut = (PyObject*)Shiboken::BindingManager::instance().retrieveWrapper(cppIn);
+    auto pyOut = reinterpret_cast<PyObject*>(Shiboken::BindingManager::instance().retrieveWrapper(cppIn));
     if (pyOut) {
         Py_INCREF(pyOut);
         return pyOut;
@@ -1286,41 +1293,41 @@ static PyObject* QtProperty_PTR_CppToPython_QtProperty(const void* cppIn) {
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtProperty_SignaturesString[] = ""
-    "qtpropertybrowser.QtProperty(manager:qtpropertybrowser.QtAbstractPropertyManager)\n"
-    "qtpropertybrowser.QtProperty.addSubProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtProperty.check()->bool\n"
-    "qtpropertybrowser.QtProperty.checkIcon()->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtProperty.displayText()->QString\n"
-    "qtpropertybrowser.QtProperty.foreground()->PySide2.QtGui.QBrush\n"
-    "qtpropertybrowser.QtProperty.formatText()->QString\n"
-    "qtpropertybrowser.QtProperty.hasValue()->bool\n"
-    "qtpropertybrowser.QtProperty.insertSubProperty(property:qtpropertybrowser.QtProperty,afterProperty:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtProperty.isEnabled()->bool\n"
-    "qtpropertybrowser.QtProperty.isModified()->bool\n"
-    "qtpropertybrowser.QtProperty.label()->QString\n"
-    "qtpropertybrowser.QtProperty.maximumText()->QString\n"
-    "qtpropertybrowser.QtProperty.minimumText()->QString\n"
-    "qtpropertybrowser.QtProperty.pkAvgText()->QString\n"
-    "qtpropertybrowser.QtProperty.propertyChanged()\n"
-    "qtpropertybrowser.QtProperty.propertyManager()->qtpropertybrowser.QtAbstractPropertyManager\n"
-    "qtpropertybrowser.QtProperty.propertyName()->QString\n"
-    "qtpropertybrowser.QtProperty.removeSubProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtProperty.setEnabled(enable:bool)\n"
-    "qtpropertybrowser.QtProperty.setLabel(text:QString)\n"
-    "qtpropertybrowser.QtProperty.setModified(modified:bool)\n"
-    "qtpropertybrowser.QtProperty.setPropertyName(text:QString)\n"
-    "qtpropertybrowser.QtProperty.setStatusTip(text:QString)\n"
-    "qtpropertybrowser.QtProperty.setToolTip(text:QString)\n"
-    "qtpropertybrowser.QtProperty.setWhatsThis(text:QString)\n"
-    "qtpropertybrowser.QtProperty.statusTip()->QString\n"
-    "qtpropertybrowser.QtProperty.subProperties()->qtpropertybrowser.QtProperty\n"
-    "qtpropertybrowser.QtProperty.toolTip()->QString\n"
-    "qtpropertybrowser.QtProperty.unitText()->QString\n"
-    "qtpropertybrowser.QtProperty.valueIcon()->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtProperty.valueText()->QString\n"
-    "qtpropertybrowser.QtProperty.whatsThis()->QString\n"
-;
+static const char *QtProperty_SignatureStrings[] = {
+    "qtpropertybrowser.QtProperty(manager:qtpropertybrowser.QtAbstractPropertyManager)",
+    "qtpropertybrowser.QtProperty.addSubProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtProperty.check()->bool",
+    "qtpropertybrowser.QtProperty.checkIcon()->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtProperty.displayText()->QString",
+    "qtpropertybrowser.QtProperty.foreground()->PySide2.QtGui.QBrush",
+    "qtpropertybrowser.QtProperty.formatText()->QString",
+    "qtpropertybrowser.QtProperty.hasValue()->bool",
+    "qtpropertybrowser.QtProperty.insertSubProperty(property:qtpropertybrowser.QtProperty,afterProperty:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtProperty.isEnabled()->bool",
+    "qtpropertybrowser.QtProperty.isModified()->bool",
+    "qtpropertybrowser.QtProperty.label()->QString",
+    "qtpropertybrowser.QtProperty.maximumText()->QString",
+    "qtpropertybrowser.QtProperty.minimumText()->QString",
+    "qtpropertybrowser.QtProperty.pkAvgText()->QString",
+    "qtpropertybrowser.QtProperty.propertyChanged()",
+    "qtpropertybrowser.QtProperty.propertyManager()->qtpropertybrowser.QtAbstractPropertyManager",
+    "qtpropertybrowser.QtProperty.propertyName()->QString",
+    "qtpropertybrowser.QtProperty.removeSubProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtProperty.setEnabled(enable:bool)",
+    "qtpropertybrowser.QtProperty.setLabel(text:QString)",
+    "qtpropertybrowser.QtProperty.setModified(modified:bool)",
+    "qtpropertybrowser.QtProperty.setPropertyName(text:QString)",
+    "qtpropertybrowser.QtProperty.setStatusTip(text:QString)",
+    "qtpropertybrowser.QtProperty.setToolTip(text:QString)",
+    "qtpropertybrowser.QtProperty.setWhatsThis(text:QString)",
+    "qtpropertybrowser.QtProperty.statusTip()->QString",
+    "qtpropertybrowser.QtProperty.subProperties()->QList[qtpropertybrowser.QtProperty]",
+    "qtpropertybrowser.QtProperty.toolTip()->QString",
+    "qtpropertybrowser.QtProperty.unitText()->QString",
+    "qtpropertybrowser.QtProperty.valueIcon()->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtProperty.valueText()->QString",
+    "qtpropertybrowser.QtProperty.whatsThis()->QString",
+    nullptr}; // Sentinel
 
 void init_QtProperty(PyObject* module)
 {
@@ -1329,7 +1336,7 @@ void init_QtProperty(PyObject* module)
         "QtProperty",
         "QtProperty*",
         &Sbk_QtProperty_spec,
-        QtProperty_SignaturesString,
+        QtProperty_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtProperty >,
         0,
         0,

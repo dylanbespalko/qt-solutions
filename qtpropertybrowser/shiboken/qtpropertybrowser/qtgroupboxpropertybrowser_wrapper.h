@@ -22,8 +22,8 @@ public:
     inline void contextMenuEvent_protected(QContextMenuEvent * event) { QtGroupBoxPropertyBrowser::contextMenuEvent(event); }
     void contextMenuEvent(QContextMenuEvent * event) override;
     inline void create_protected(WId arg__1 = 0, bool initializeWindow = true, bool destroyOldWindow = true) { QtGroupBoxPropertyBrowser::create(arg__1, initializeWindow, destroyOldWindow); }
-    inline QWidget * createAttributeEditor_protected(QtProperty * property, QWidget * parent, Attribute attribute) { return QtGroupBoxPropertyBrowser::createAttributeEditor(property, parent, Attribute(attribute)); }
-    QWidget * createAttributeEditor(QtProperty * property, QWidget * parent, Attribute attribute) override;
+    inline QWidget * createAttributeEditor_protected(QtProperty * property, QWidget * parent, BrowserCol attribute) { return QtGroupBoxPropertyBrowser::createAttributeEditor(property, parent, BrowserCol(attribute)); }
+    QWidget * createAttributeEditor(QtProperty * property, QWidget * parent, BrowserCol attribute) override;
     inline QWidget * createEditor_protected(QtProperty * property, QWidget * parent) { return QtGroupBoxPropertyBrowser::createEditor(property, parent); }
     QWidget * createEditor(QtProperty * property, QWidget * parent) override;
     inline void customEvent_protected(QEvent * event) { QtGroupBoxPropertyBrowser::customEvent(event); }
@@ -138,8 +138,8 @@ public:
     inline void contextMenuEvent_protected(QContextMenuEvent * event) { QtAbstractPropertyBrowser::contextMenuEvent(event); }
     void contextMenuEvent(QContextMenuEvent * event) override;
     inline void create_protected(WId arg__1 = 0, bool initializeWindow = true, bool destroyOldWindow = true) { QtAbstractPropertyBrowser::create(arg__1, initializeWindow, destroyOldWindow); }
-    inline QWidget * createAttributeEditor_protected(QtProperty * property, QWidget * parent, Attribute attribute) { return QtAbstractPropertyBrowser::createAttributeEditor(property, parent, Attribute(attribute)); }
-    QWidget * createAttributeEditor(QtProperty * property, QWidget * parent, Attribute attribute) override;
+    inline QWidget * createAttributeEditor_protected(QtProperty * property, QWidget * parent, BrowserCol attribute) { return QtAbstractPropertyBrowser::createAttributeEditor(property, parent, BrowserCol(attribute)); }
+    QWidget * createAttributeEditor(QtProperty * property, QWidget * parent, BrowserCol attribute) override;
     inline QWidget * createEditor_protected(QtProperty * property, QWidget * parent) { return QtAbstractPropertyBrowser::createEditor(property, parent); }
     QWidget * createEditor(QtProperty * property, QWidget * parent) override;
     inline void customEvent_protected(QEvent * event) { QtAbstractPropertyBrowser::customEvent(event); }
@@ -354,7 +354,7 @@ public:
 class QPaintDeviceWrapper : public QPaintDevice
 {
 public:
-    QPaintDeviceWrapper();
+    QPaintDeviceWrapper() noexcept;
     int devType() const override;
     inline void initPainter_protected(QPainter * painter) const { QPaintDevice::initPainter(painter); }
     void initPainter(QPainter * painter) const override;

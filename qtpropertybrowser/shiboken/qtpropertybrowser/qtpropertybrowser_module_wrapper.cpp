@@ -22,6 +22,8 @@ PyObject* SbkqtpropertybrowserModuleObject = nullptr;
 // Current module's converter array.
 SbkConverter** SbkqtpropertybrowserTypeConverters = nullptr;
 void cleanTypesAttributes(void) {
+    if (PY_VERSION_HEX >= 0x03000000 && PY_VERSION_HEX < 0x03060000)
+        return; // PYSIDE-953: testbinding crashes in Python 3.5 when hasattr touches types!
     for (int i = 0, imax = SBK_qtpropertybrowser_IDX_COUNT; i < imax; i++) {
         PyObject *pyType = reinterpret_cast<PyObject*>(SbkqtpropertybrowserTypes[i]);
         if (pyType && PyObject_HasAttrString(pyType, "staticMetaObject"))
@@ -104,24 +106,26 @@ void init_QtTreePropertyBrowser(PyObject* module);
 void init_QtButtonPropertyBrowser(PyObject* module);
 
 // Enum definitions ------------------------------------------------------------
-static void Attribute_PythonToCpp_Attribute(PyObject* pyIn, void* cppOut) {
-    *((::Attribute*)cppOut) = (::Attribute) Shiboken::Enum::getValue(pyIn);
+static void BrowserCol_PythonToCpp_BrowserCol(PyObject* pyIn, void* cppOut) {
+    *reinterpret_cast<::BrowserCol*>(cppOut) =
+        static_cast<::BrowserCol>(Shiboken::Enum::getValue(pyIn));
 
 }
-static PythonToCppFunc is_Attribute_PythonToCpp_Attribute_Convertible(PyObject* pyIn) {
-    if (PyObject_TypeCheck(pyIn, SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX]))
-        return Attribute_PythonToCpp_Attribute;
+static PythonToCppFunc is_BrowserCol_PythonToCpp_BrowserCol_Convertible(PyObject* pyIn) {
+    if (PyObject_TypeCheck(pyIn, SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX]))
+        return BrowserCol_PythonToCpp_BrowserCol;
     return {};
 }
-static PyObject* Attribute_CppToPython_Attribute(const void* cppIn) {
-    const int castCppIn = int(*reinterpret_cast<const ::Attribute *>(cppIn));
-    return Shiboken::Enum::newItem(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX], castCppIn);
+static PyObject* BrowserCol_CppToPython_BrowserCol(const void* cppIn) {
+    const int castCppIn = int(*reinterpret_cast<const ::BrowserCol *>(cppIn));
+    return Shiboken::Enum::newItem(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX], castCppIn);
 
 }
 
 
 static void Domain_PythonToCpp_Domain(PyObject* pyIn, void* cppOut) {
-    *((::Domain*)cppOut) = (::Domain) Shiboken::Enum::getValue(pyIn);
+    *reinterpret_cast<::Domain*>(cppOut) =
+        static_cast<::Domain>(Shiboken::Enum::getValue(pyIn));
 
 }
 static PythonToCppFunc is_Domain_PythonToCpp_Domain_Convertible(PyObject* pyIn) {
@@ -137,7 +141,8 @@ static PyObject* Domain_CppToPython_Domain(const void* cppIn) {
 
 
 static void Format_PythonToCpp_Format(PyObject* pyIn, void* cppOut) {
-    *((::Format*)cppOut) = (::Format) Shiboken::Enum::getValue(pyIn);
+    *reinterpret_cast<::Format*>(cppOut) =
+        static_cast<::Format>(Shiboken::Enum::getValue(pyIn));
 
 }
 static PythonToCppFunc is_Format_PythonToCpp_Format_Convertible(PyObject* pyIn) {
@@ -153,7 +158,8 @@ static PyObject* Format_CppToPython_Format(const void* cppIn) {
 
 
 static void PkAvg_PythonToCpp_PkAvg(PyObject* pyIn, void* cppOut) {
-    *((::PkAvg*)cppOut) = (::PkAvg) Shiboken::Enum::getValue(pyIn);
+    *reinterpret_cast<::PkAvg*>(cppOut) =
+        static_cast<::PkAvg>(Shiboken::Enum::getValue(pyIn));
 
 }
 static PythonToCppFunc is_PkAvg_PythonToCpp_PkAvg_Convertible(PyObject* pyIn) {
@@ -169,7 +175,8 @@ static PyObject* PkAvg_CppToPython_PkAvg(const void* cppIn) {
 
 
 static void Scale_PythonToCpp_Scale(PyObject* pyIn, void* cppOut) {
-    *((::Scale*)cppOut) = (::Scale) Shiboken::Enum::getValue(pyIn);
+    *reinterpret_cast<::Scale*>(cppOut) =
+        static_cast<::Scale>(Shiboken::Enum::getValue(pyIn));
 
 }
 static PythonToCppFunc is_Scale_PythonToCpp_Scale_Convertible(PyObject* pyIn) {
@@ -198,7 +205,7 @@ SbkConverter** SbkPySide2_QtWidgetsTypeConverters;
 
 // C++ to Python conversion for type 'QComplex'.
 static PyObject* QComplex_CppToPython_QComplex(const void* cppIn) {
-    ::QComplex& cppInRef = *((::QComplex*)cppIn);
+    auto &cppInRef = *reinterpret_cast<::QComplex*>(const_cast<void *>(cppIn));
 
                     return PyComplex_FromDoubles(cppInRef.real(), cppInRef.imag());
 
@@ -208,7 +215,7 @@ static void PyComplex_PythonToCpp_QComplex(PyObject* pyIn, void* cppOut) {
 
     double real = PyComplex_RealAsDouble(pyIn);
     double imag = PyComplex_ImagAsDouble(pyIn);
-    *((::QComplex*)cppOut) = QComplex(real, imag);
+    *reinterpret_cast<::QComplex*>(cppOut) = QComplex(real, imag);
 
 }
 static PythonToCppFunc is_PyComplex_PythonToCpp_QComplex_Convertible(PyObject* pyIn) {
@@ -222,7 +229,7 @@ static PythonToCppFunc is_PyComplex_PythonToCpp_QComplex_Convertible(PyObject* p
 
 // C++ to Python conversion for type 'const QList<QObject* > &'.
 static PyObject* _constQList_QObjectPTR_REF_CppToPython__constQList_QObjectPTR_REF(const void* cppIn) {
-    ::QList<QObject* >& cppInRef = *((::QList<QObject* >*)cppIn);
+    auto &cppInRef = *reinterpret_cast<::QList<QObject* >*>(const_cast<void *>(cppIn));
 
                 // TEMPLATE - cpplist_to_pylist_conversion - START
         PyObject* pyOut = PyList_New((int) cppInRef.size());
@@ -236,7 +243,7 @@ static PyObject* _constQList_QObjectPTR_REF_CppToPython__constQList_QObjectPTR_R
 
 }
 static void _constQList_QObjectPTR_REF_PythonToCpp__constQList_QObjectPTR_REF(PyObject* pyIn, void* cppOut) {
-    ::QList<QObject* >& cppOutRef = *((::QList<QObject* >*)cppOut);
+    auto &cppOutRef = *reinterpret_cast<::QList<QObject* >*>(cppOut);
 
                 // TEMPLATE - pyseq_to_cpplist_conversion - START
     for (int i = 0, size = PySequence_Size(pyIn); i < size; i++) {
@@ -257,7 +264,7 @@ static PythonToCppFunc is__constQList_QObjectPTR_REF_PythonToCpp__constQList_QOb
 
 // C++ to Python conversion for type 'QList<QByteArray >'.
 static PyObject* _QList_QByteArray__CppToPython__QList_QByteArray_(const void* cppIn) {
-    ::QList<QByteArray >& cppInRef = *((::QList<QByteArray >*)cppIn);
+    auto &cppInRef = *reinterpret_cast<::QList<QByteArray >*>(const_cast<void *>(cppIn));
 
                 // TEMPLATE - cpplist_to_pylist_conversion - START
         PyObject* pyOut = PyList_New((int) cppInRef.size());
@@ -271,7 +278,7 @@ static PyObject* _QList_QByteArray__CppToPython__QList_QByteArray_(const void* c
 
 }
 static void _QList_QByteArray__PythonToCpp__QList_QByteArray_(PyObject* pyIn, void* cppOut) {
-    ::QList<QByteArray >& cppOutRef = *((::QList<QByteArray >*)cppOut);
+    auto &cppOutRef = *reinterpret_cast<::QList<QByteArray >*>(cppOut);
 
                 // TEMPLATE - pyseq_to_cpplist_conversion - START
     for (int i = 0, size = PySequence_Size(pyIn); i < size; i++) {
@@ -292,7 +299,7 @@ static PythonToCppFunc is__QList_QByteArray__PythonToCpp__QList_QByteArray__Conv
 
 // C++ to Python conversion for type 'QList<QAction* >'.
 static PyObject* _QList_QActionPTR__CppToPython__QList_QActionPTR_(const void* cppIn) {
-    ::QList<QAction* >& cppInRef = *((::QList<QAction* >*)cppIn);
+    auto &cppInRef = *reinterpret_cast<::QList<QAction* >*>(const_cast<void *>(cppIn));
 
                 // TEMPLATE - cpplist_to_pylist_conversion - START
         PyObject* pyOut = PyList_New((int) cppInRef.size());
@@ -306,7 +313,7 @@ static PyObject* _QList_QActionPTR__CppToPython__QList_QActionPTR_(const void* c
 
 }
 static void _QList_QActionPTR__PythonToCpp__QList_QActionPTR_(PyObject* pyIn, void* cppOut) {
-    ::QList<QAction* >& cppOutRef = *((::QList<QAction* >*)cppOut);
+    auto &cppOutRef = *reinterpret_cast<::QList<QAction* >*>(cppOut);
 
                 // TEMPLATE - pyseq_to_cpplist_conversion - START
     for (int i = 0, size = PySequence_Size(pyIn); i < size; i++) {
@@ -327,7 +334,7 @@ static PythonToCppFunc is__QList_QActionPTR__PythonToCpp__QList_QActionPTR__Conv
 
 // C++ to Python conversion for type 'QList<QtBrowserItem* >'.
 static PyObject* _QList_QtBrowserItemPTR__CppToPython__QList_QtBrowserItemPTR_(const void* cppIn) {
-    ::QList<QtBrowserItem* >& cppInRef = *((::QList<QtBrowserItem* >*)cppIn);
+    auto &cppInRef = *reinterpret_cast<::QList<QtBrowserItem* >*>(const_cast<void *>(cppIn));
 
                 // TEMPLATE - cpplist_to_pylist_conversion - START
         PyObject* pyOut = PyList_New((int) cppInRef.size());
@@ -341,7 +348,7 @@ static PyObject* _QList_QtBrowserItemPTR__CppToPython__QList_QtBrowserItemPTR_(c
 
 }
 static void _QList_QtBrowserItemPTR__PythonToCpp__QList_QtBrowserItemPTR_(PyObject* pyIn, void* cppOut) {
-    ::QList<QtBrowserItem* >& cppOutRef = *((::QList<QtBrowserItem* >*)cppOut);
+    auto &cppOutRef = *reinterpret_cast<::QList<QtBrowserItem* >*>(cppOut);
 
                 // TEMPLATE - pyseq_to_cpplist_conversion - START
     for (int i = 0, size = PySequence_Size(pyIn); i < size; i++) {
@@ -362,7 +369,7 @@ static PythonToCppFunc is__QList_QtBrowserItemPTR__PythonToCpp__QList_QtBrowserI
 
 // C++ to Python conversion for type 'QList<QtProperty* >'.
 static PyObject* _QList_QtPropertyPTR__CppToPython__QList_QtPropertyPTR_(const void* cppIn) {
-    ::QList<QtProperty* >& cppInRef = *((::QList<QtProperty* >*)cppIn);
+    auto &cppInRef = *reinterpret_cast<::QList<QtProperty* >*>(const_cast<void *>(cppIn));
 
                 // TEMPLATE - cpplist_to_pylist_conversion - START
         PyObject* pyOut = PyList_New((int) cppInRef.size());
@@ -376,7 +383,7 @@ static PyObject* _QList_QtPropertyPTR__CppToPython__QList_QtPropertyPTR_(const v
 
 }
 static void _QList_QtPropertyPTR__PythonToCpp__QList_QtPropertyPTR_(PyObject* pyIn, void* cppOut) {
-    ::QList<QtProperty* >& cppOutRef = *((::QList<QtProperty* >*)cppOut);
+    auto &cppOutRef = *reinterpret_cast<::QList<QtProperty* >*>(cppOut);
 
                 // TEMPLATE - pyseq_to_cpplist_conversion - START
     for (int i = 0, size = PySequence_Size(pyIn); i < size; i++) {
@@ -397,7 +404,7 @@ static PythonToCppFunc is__QList_QtPropertyPTR__PythonToCpp__QList_QtPropertyPTR
 
 // C++ to Python conversion for type 'QSet<QtProperty* >'.
 static PyObject* _QSet_QtPropertyPTR__CppToPython__QSet_QtPropertyPTR_(const void* cppIn) {
-    ::QSet<QtProperty* >& cppInRef = *((::QSet<QtProperty* >*)cppIn);
+    auto &cppInRef = *reinterpret_cast<::QSet<QtProperty* >*>(const_cast<void *>(cppIn));
 
                 // TEMPLATE - cpplist_to_pylist_conversion - START
         PyObject* pyOut = PyList_New((int) cppInRef.size());
@@ -411,7 +418,7 @@ static PyObject* _QSet_QtPropertyPTR__CppToPython__QSet_QtPropertyPTR_(const voi
 
 }
 static void _QSet_QtPropertyPTR__PythonToCpp__QSet_QtPropertyPTR_(PyObject* pyIn, void* cppOut) {
-    ::QSet<QtProperty* >& cppOutRef = *((::QSet<QtProperty* >*)cppOut);
+    auto &cppOutRef = *reinterpret_cast<::QSet<QtProperty* >*>(cppOut);
 
                 // TEMPLATE - pyseq_to_cpplist_conversion - START
     for (int i = 0, size = PySequence_Size(pyIn); i < size; i++) {
@@ -430,44 +437,44 @@ static PythonToCppFunc is__QSet_QtPropertyPTR__PythonToCpp__QSet_QtPropertyPTR__
     return {};
 }
 
-// C++ to Python conversion for type 'QList<Attribute >'.
-static PyObject* _QList_Attribute__CppToPython__QList_Attribute_(const void* cppIn) {
-    ::QList<Attribute >& cppInRef = *((::QList<Attribute >*)cppIn);
+// C++ to Python conversion for type 'QList<BrowserCol >'.
+static PyObject* _QList_BrowserCol__CppToPython__QList_BrowserCol_(const void* cppIn) {
+    auto &cppInRef = *reinterpret_cast<::QList<BrowserCol >*>(const_cast<void *>(cppIn));
 
                 // TEMPLATE - cpplist_to_pylist_conversion - START
         PyObject* pyOut = PyList_New((int) cppInRef.size());
-        ::QList<Attribute >::const_iterator it = cppInRef.begin();
+        ::QList<BrowserCol >::const_iterator it = cppInRef.begin();
         for (int idx = 0; it != cppInRef.end(); ++it, ++idx) {
-            ::Attribute cppItem(*it);
-            PyList_SET_ITEM(pyOut, idx, Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, &cppItem));
+            ::BrowserCol cppItem(*it);
+            PyList_SET_ITEM(pyOut, idx, Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, &cppItem));
         }
         return pyOut;
     // TEMPLATE - cpplist_to_pylist_conversion - END
 
 }
-static void _QList_Attribute__PythonToCpp__QList_Attribute_(PyObject* pyIn, void* cppOut) {
-    ::QList<Attribute >& cppOutRef = *((::QList<Attribute >*)cppOut);
+static void _QList_BrowserCol__PythonToCpp__QList_BrowserCol_(PyObject* pyIn, void* cppOut) {
+    auto &cppOutRef = *reinterpret_cast<::QList<BrowserCol >*>(cppOut);
 
                 // TEMPLATE - pyseq_to_cpplist_conversion - START
     for (int i = 0, size = PySequence_Size(pyIn); i < size; i++) {
 
         Shiboken::AutoDecRef pyItem(PySequence_GetItem(pyIn, i));
-        ::Attribute cppItem{NONE};
-        Shiboken::Conversions::pythonToCppCopy(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, pyItem, &(cppItem));
+        ::BrowserCol cppItem{NONE};
+        Shiboken::Conversions::pythonToCppCopy(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, pyItem, &(cppItem));
         cppOutRef << cppItem;
     }
     // TEMPLATE - pyseq_to_cpplist_conversion - END
 
 }
-static PythonToCppFunc is__QList_Attribute__PythonToCpp__QList_Attribute__Convertible(PyObject* pyIn) {
-    if (Shiboken::Conversions::convertibleSequenceTypes(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, pyIn))
-        return _QList_Attribute__PythonToCpp__QList_Attribute_;
+static PythonToCppFunc is__QList_BrowserCol__PythonToCpp__QList_BrowserCol__Convertible(PyObject* pyIn) {
+    if (Shiboken::Conversions::convertibleSequenceTypes(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, pyIn))
+        return _QList_BrowserCol__PythonToCpp__QList_BrowserCol_;
     return {};
 }
 
 // C++ to Python conversion for type 'QMap<int,QIcon >'.
 static PyObject* _QMap_int_QIcon__CppToPython__QMap_int_QIcon_(const void* cppIn) {
-    ::QMap<int,QIcon >& cppInRef = *((::QMap<int,QIcon >*)cppIn);
+    auto &cppInRef = *reinterpret_cast<::QMap<int,QIcon >*>(const_cast<void *>(cppIn));
 
                 // TEMPLATE - cppmap_to_pymap_conversion - START
           PyObject *pyOut = PyDict_New();
@@ -485,7 +492,7 @@ static PyObject* _QMap_int_QIcon__CppToPython__QMap_int_QIcon_(const void* cppIn
 
 }
 static void _QMap_int_QIcon__PythonToCpp__QMap_int_QIcon_(PyObject* pyIn, void* cppOut) {
-    ::QMap<int,QIcon >& cppOutRef = *((::QMap<int,QIcon >*)cppOut);
+    auto &cppOutRef = *reinterpret_cast<::QMap<int,QIcon >*>(cppOut);
 
                 // TEMPLATE - pydict_to_cppmap_conversion - START
       PyObject *key;
@@ -509,7 +516,7 @@ static PythonToCppFunc is__QMap_int_QIcon__PythonToCpp__QMap_int_QIcon__Converti
 
 // C++ to Python conversion for type 'QVector<double >'.
 static PyObject* _QVector_double__CppToPython__QVector_double_(const void* cppIn) {
-    ::QVector<double >& cppInRef = *((::QVector<double >*)cppIn);
+    auto &cppInRef = *reinterpret_cast<::QVector<double >*>(const_cast<void *>(cppIn));
 
                 // TEMPLATE - cppvector_to_pylist_conversion - START
         ::QVector<double >::size_type vectorSize = cppInRef.size();
@@ -523,7 +530,7 @@ static PyObject* _QVector_double__CppToPython__QVector_double_(const void* cppIn
 
 }
 static void _QVector_double__PythonToCpp__QVector_double_(PyObject* pyIn, void* cppOut) {
-    ::QVector<double >& cppOutRef = *((::QVector<double >*)cppOut);
+    auto &cppOutRef = *reinterpret_cast<::QVector<double >*>(cppOut);
 
                 // TEMPLATE - pyseq_to_cppvector_conversion - START
     int vectorSize = PySequence_Size(pyIn);
@@ -545,7 +552,7 @@ static PythonToCppFunc is__QVector_double__PythonToCpp__QVector_double__Converti
 
 // C++ to Python conversion for type 'const QVector<QComplex > &'.
 static PyObject* _constQVector_QComplex_REF_CppToPython__constQVector_QComplex_REF(const void* cppIn) {
-    ::QVector<QComplex >& cppInRef = *((::QVector<QComplex >*)cppIn);
+    auto &cppInRef = *reinterpret_cast<::QVector<QComplex >*>(const_cast<void *>(cppIn));
 
                 // TEMPLATE - cppvector_to_pylist_conversion - START
         ::QVector<QComplex >::size_type vectorSize = cppInRef.size();
@@ -559,7 +566,7 @@ static PyObject* _constQVector_QComplex_REF_CppToPython__constQVector_QComplex_R
 
 }
 static void _constQVector_QComplex_REF_PythonToCpp__constQVector_QComplex_REF(PyObject* pyIn, void* cppOut) {
-    ::QVector<QComplex >& cppOutRef = *((::QVector<QComplex >*)cppOut);
+    auto &cppOutRef = *reinterpret_cast<::QVector<QComplex >*>(cppOut);
 
                 // TEMPLATE - pyseq_to_cppvector_conversion - START
     int vectorSize = PySequence_Size(pyIn);
@@ -581,7 +588,7 @@ static PythonToCppFunc is__constQVector_QComplex_REF_PythonToCpp__constQVector_Q
 
 // C++ to Python conversion for type 'QList<QVariant >'.
 static PyObject* _QList_QVariant__CppToPython__QList_QVariant_(const void* cppIn) {
-    ::QList<QVariant >& cppInRef = *((::QList<QVariant >*)cppIn);
+    auto &cppInRef = *reinterpret_cast<::QList<QVariant >*>(const_cast<void *>(cppIn));
 
                 // TEMPLATE - cpplist_to_pylist_conversion - START
         PyObject* pyOut = PyList_New((int) cppInRef.size());
@@ -595,7 +602,7 @@ static PyObject* _QList_QVariant__CppToPython__QList_QVariant_(const void* cppIn
 
 }
 static void _QList_QVariant__PythonToCpp__QList_QVariant_(PyObject* pyIn, void* cppOut) {
-    ::QList<QVariant >& cppOutRef = *((::QList<QVariant >*)cppOut);
+    auto &cppOutRef = *reinterpret_cast<::QList<QVariant >*>(cppOut);
 
                 // TEMPLATE - pyseq_to_cpplist_conversion - START
     for (int i = 0, size = PySequence_Size(pyIn); i < size; i++) {
@@ -616,7 +623,7 @@ static PythonToCppFunc is__QList_QVariant__PythonToCpp__QList_QVariant__Converti
 
 // C++ to Python conversion for type 'QList<QString >'.
 static PyObject* _QList_QString__CppToPython__QList_QString_(const void* cppIn) {
-    ::QList<QString >& cppInRef = *((::QList<QString >*)cppIn);
+    auto &cppInRef = *reinterpret_cast<::QList<QString >*>(const_cast<void *>(cppIn));
 
                 // TEMPLATE - cpplist_to_pylist_conversion - START
         PyObject* pyOut = PyList_New((int) cppInRef.size());
@@ -630,7 +637,7 @@ static PyObject* _QList_QString__CppToPython__QList_QString_(const void* cppIn) 
 
 }
 static void _QList_QString__PythonToCpp__QList_QString_(PyObject* pyIn, void* cppOut) {
-    ::QList<QString >& cppOutRef = *((::QList<QString >*)cppOut);
+    auto &cppOutRef = *reinterpret_cast<::QList<QString >*>(cppOut);
 
                 // TEMPLATE - pyseq_to_cpplist_conversion - START
     for (int i = 0, size = PySequence_Size(pyIn); i < size; i++) {
@@ -651,7 +658,7 @@ static PythonToCppFunc is__QList_QString__PythonToCpp__QList_QString__Convertibl
 
 // C++ to Python conversion for type 'QMap<QString,QVariant >'.
 static PyObject* _QMap_QString_QVariant__CppToPython__QMap_QString_QVariant_(const void* cppIn) {
-    ::QMap<QString,QVariant >& cppInRef = *((::QMap<QString,QVariant >*)cppIn);
+    auto &cppInRef = *reinterpret_cast<::QMap<QString,QVariant >*>(const_cast<void *>(cppIn));
 
                 // TEMPLATE - cppmap_to_pymap_conversion - START
           PyObject *pyOut = PyDict_New();
@@ -669,7 +676,7 @@ static PyObject* _QMap_QString_QVariant__CppToPython__QMap_QString_QVariant_(con
 
 }
 static void _QMap_QString_QVariant__PythonToCpp__QMap_QString_QVariant_(PyObject* pyIn, void* cppOut) {
-    ::QMap<QString,QVariant >& cppOutRef = *((::QMap<QString,QVariant >*)cppOut);
+    auto &cppOutRef = *reinterpret_cast<::QMap<QString,QVariant >*>(cppOut);
 
                 // TEMPLATE - pydict_to_cppmap_conversion - START
       PyObject *key;
@@ -714,6 +721,12 @@ static struct PyModuleDef moduledef = {
 };
 
 #endif
+
+// The signatures string for the global functions.
+// Multiple signatures have their index "n:" in front.
+static const char *qtpropertybrowser_SignatureStrings[] = {
+    nullptr}; // Sentinel
+
 SBK_MODULE_INIT_FUNCTION_BEGIN(qtpropertybrowser)
     {
         Shiboken::AutoDecRef requiredModule(Shiboken::Module::import("PySide2.QtCore"));
@@ -877,12 +890,12 @@ SBK_MODULE_INIT_FUNCTION_BEGIN(qtpropertybrowser)
         _QSet_QtPropertyPTR__PythonToCpp__QSet_QtPropertyPTR_,
         is__QSet_QtPropertyPTR__PythonToCpp__QSet_QtPropertyPTR__Convertible);
 
-    // Register converter for type 'QList<Attribute>'.
-    SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QLIST_ATTRIBUTE_IDX] = Shiboken::Conversions::createConverter(&PyList_Type, _QList_Attribute__CppToPython__QList_Attribute_);
-    Shiboken::Conversions::registerConverterName(SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QLIST_ATTRIBUTE_IDX], "QList<Attribute>");
-    Shiboken::Conversions::addPythonToCppValueConversion(SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QLIST_ATTRIBUTE_IDX],
-        _QList_Attribute__PythonToCpp__QList_Attribute_,
-        is__QList_Attribute__PythonToCpp__QList_Attribute__Convertible);
+    // Register converter for type 'QList<BrowserCol>'.
+    SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QLIST_BROWSERCOL_IDX] = Shiboken::Conversions::createConverter(&PyList_Type, _QList_BrowserCol__CppToPython__QList_BrowserCol_);
+    Shiboken::Conversions::registerConverterName(SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QLIST_BROWSERCOL_IDX], "QList<BrowserCol>");
+    Shiboken::Conversions::addPythonToCppValueConversion(SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QLIST_BROWSERCOL_IDX],
+        _QList_BrowserCol__PythonToCpp__QList_BrowserCol_,
+        is__QList_BrowserCol__PythonToCpp__QList_BrowserCol__Convertible);
 
     // Register converter for type 'QMap<int,QIcon>'.
     SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QMAP_INT_QICON_IDX] = Shiboken::Conversions::createConverter(&PyDict_Type, _QMap_int_QIcon__CppToPython__QMap_int_QIcon_);
@@ -929,46 +942,46 @@ SBK_MODULE_INIT_FUNCTION_BEGIN(qtpropertybrowser)
 
     // Initialization of enums.
 
-    // Initialization of enum 'Attribute'.
-    SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX] = Shiboken::Enum::createGlobalEnum(module,
-        "Attribute",
-        "qtpropertybrowser.Attribute",
-        "Attribute");
-    if (!SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])
+    // Initialization of enum 'BrowserCol'.
+    SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX] = Shiboken::Enum::createGlobalEnum(module,
+        "BrowserCol",
+        "qtpropertybrowser.BrowserCol",
+        "BrowserCol");
+    if (!SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])
         return SBK_MODULE_INIT_ERROR;
 
-    if (!Shiboken::Enum::createGlobalEnumItem(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX],
-        module, "NONE", (long) Attribute::NONE))
+    if (!Shiboken::Enum::createGlobalEnumItem(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX],
+        module, "NONE", (long) BrowserCol::NONE))
         return SBK_MODULE_INIT_ERROR;
-    if (!Shiboken::Enum::createGlobalEnumItem(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX],
-        module, "UNIT", (long) Attribute::UNIT))
+    if (!Shiboken::Enum::createGlobalEnumItem(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX],
+        module, "UNIT", (long) BrowserCol::UNIT))
         return SBK_MODULE_INIT_ERROR;
-    if (!Shiboken::Enum::createGlobalEnumItem(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX],
-        module, "PKAVG", (long) Attribute::PKAVG))
+    if (!Shiboken::Enum::createGlobalEnumItem(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX],
+        module, "PKAVG", (long) BrowserCol::PKAVG))
         return SBK_MODULE_INIT_ERROR;
-    if (!Shiboken::Enum::createGlobalEnumItem(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX],
-        module, "FORMAT", (long) Attribute::FORMAT))
+    if (!Shiboken::Enum::createGlobalEnumItem(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX],
+        module, "FORMAT", (long) BrowserCol::FORMAT))
         return SBK_MODULE_INIT_ERROR;
-    if (!Shiboken::Enum::createGlobalEnumItem(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX],
-        module, "MINIMUM", (long) Attribute::MINIMUM))
+    if (!Shiboken::Enum::createGlobalEnumItem(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX],
+        module, "MINIMUM", (long) BrowserCol::MINIMUM))
         return SBK_MODULE_INIT_ERROR;
-    if (!Shiboken::Enum::createGlobalEnumItem(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX],
-        module, "MAXIMUM", (long) Attribute::MAXIMUM))
+    if (!Shiboken::Enum::createGlobalEnumItem(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX],
+        module, "MAXIMUM", (long) BrowserCol::MAXIMUM))
         return SBK_MODULE_INIT_ERROR;
-    if (!Shiboken::Enum::createGlobalEnumItem(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX],
-        module, "CHECK", (long) Attribute::CHECK))
+    if (!Shiboken::Enum::createGlobalEnumItem(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX],
+        module, "CHECK", (long) BrowserCol::CHECK))
         return SBK_MODULE_INIT_ERROR;
-    // Register converter for enum 'Attribute'.
+    // Register converter for enum 'BrowserCol'.
     {
-        SbkConverter* converter = Shiboken::Conversions::createConverter(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX],
-            Attribute_CppToPython_Attribute);
+        SbkConverter* converter = Shiboken::Conversions::createConverter(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX],
+            BrowserCol_CppToPython_BrowserCol);
         Shiboken::Conversions::addPythonToCppValueConversion(converter,
-            Attribute_PythonToCpp_Attribute,
-            is_Attribute_PythonToCpp_Attribute_Convertible);
-        Shiboken::Enum::setTypeConverter(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX], converter);
-        Shiboken::Conversions::registerConverterName(converter, "Attribute");
+            BrowserCol_PythonToCpp_BrowserCol,
+            is_BrowserCol_PythonToCpp_BrowserCol_Convertible);
+        Shiboken::Enum::setTypeConverter(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX], converter);
+        Shiboken::Conversions::registerConverterName(converter, "BrowserCol");
     }
-    // End of 'Attribute' enum.
+    // End of 'BrowserCol' enum.
 
     // Initialization of enum 'Domain'.
     SbkqtpropertybrowserTypes[SBK_DOMAIN_IDX] = Shiboken::Enum::createGlobalEnum(module,
@@ -1119,18 +1132,14 @@ SBK_MODULE_INIT_FUNCTION_BEGIN(qtpropertybrowser)
         PyErr_Print();
         Py_FatalError("can't initialize module qtpropertybrowser");
     }
-    qRegisterMetaType< ::Attribute >("Attribute");
+    qRegisterMetaType< ::BrowserCol >("BrowserCol");
     qRegisterMetaType< ::Domain >("Domain");
     qRegisterMetaType< ::Format >("Format");
     qRegisterMetaType< ::PkAvg >("PkAvg");
     qRegisterMetaType< ::Scale >("Scale");
     PySide::registerCleanupFunction(cleanTypesAttributes);
 
-// The signatures string for the global functions.
-// Multiple signatures have their index "n:" in front.
-const char qtpropertybrowser_SignaturesString[] = ""
-;
-    FinishSignatureInitialization(module, qtpropertybrowser_SignaturesString);
+    FinishSignatureInitialization(module, qtpropertybrowser_SignatureStrings);
     NotifyModuleForQApp(module);
 
 SBK_MODULE_INIT_FUNCTION_END

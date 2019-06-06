@@ -37,6 +37,8 @@
 #include <cctype>
 #include <cstring>
 
+QT_WARNING_DISABLE_DEPRECATED
+
 
 
 template <class T>
@@ -52,12 +54,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -67,7 +71,8 @@ void QtFlagPropertyManagerWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtFlagPropertyManagerWrapper::QtFlagPropertyManagerWrapper(QObject * parent) : QtFlagPropertyManager(parent) {
+QtFlagPropertyManagerWrapper::QtFlagPropertyManagerWrapper(QObject * parent) : QtFlagPropertyManager(parent)
+{
     // ... middle
 }
 
@@ -845,6 +850,7 @@ Sbk_QtFlagPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds)
     PythonToCppFunc pythonToCpp[] = { nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -1005,7 +1011,7 @@ static PyObject* Sbk_QtFlagPropertyManagerFunc_checkIcon(PyObject* self, PyObjec
         if (!PyErr_Occurred()) {
             // checkIcon(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QIcon cppResult = ((::QtFlagPropertyManagerWrapper*) cppSelf)->QtFlagPropertyManagerWrapper::checkIcon_protected(cppArg0);
+            QIcon cppResult = static_cast<::QtFlagPropertyManagerWrapper*>(cppSelf)->QtFlagPropertyManagerWrapper::checkIcon_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtGuiTypes[SBK_QICON_IDX]), &cppResult);
         }
@@ -1100,7 +1106,7 @@ static PyObject* Sbk_QtFlagPropertyManagerFunc_initializeProperty(PyObject* self
         if (!PyErr_Occurred()) {
             // initializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtFlagPropertyManagerWrapper*) cppSelf)->QtFlagPropertyManagerWrapper::initializeProperty_protected(cppArg0);
+            static_cast<::QtFlagPropertyManagerWrapper*>(cppSelf)->QtFlagPropertyManagerWrapper::initializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -1126,6 +1132,7 @@ static PyObject* Sbk_QtFlagPropertyManagerFunc_setCheck(PyObject* self, PyObject
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1184,6 +1191,7 @@ static PyObject* Sbk_QtFlagPropertyManagerFunc_setFlagNames(PyObject* self, PyOb
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1242,6 +1250,7 @@ static PyObject* Sbk_QtFlagPropertyManagerFunc_setValue(PyObject* self, PyObject
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1346,7 +1355,7 @@ static PyObject* Sbk_QtFlagPropertyManagerFunc_uninitializeProperty(PyObject* se
         if (!PyErr_Occurred()) {
             // uninitializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtFlagPropertyManagerWrapper*) cppSelf)->QtFlagPropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
+            static_cast<::QtFlagPropertyManagerWrapper*>(cppSelf)->QtFlagPropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -1440,7 +1449,7 @@ static PyObject* Sbk_QtFlagPropertyManagerFunc_valueText(PyObject* self, PyObjec
         if (!PyErr_Occurred()) {
             // valueText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = ((::QtFlagPropertyManagerWrapper*) cppSelf)->QtFlagPropertyManagerWrapper::valueText_protected(cppArg0);
+            QString cppResult = static_cast<::QtFlagPropertyManagerWrapper*>(cppSelf)->QtFlagPropertyManagerWrapper::valueText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -1458,17 +1467,17 @@ static PyObject* Sbk_QtFlagPropertyManagerFunc_valueText(PyObject* self, PyObjec
 }
 
 static PyMethodDef Sbk_QtFlagPropertyManager_methods[] = {
-    {"check", (PyCFunction)Sbk_QtFlagPropertyManagerFunc_check, METH_O},
-    {"checkIcon", (PyCFunction)Sbk_QtFlagPropertyManagerFunc_checkIcon, METH_O},
-    {"flagNames", (PyCFunction)Sbk_QtFlagPropertyManagerFunc_flagNames, METH_O},
-    {"initializeProperty", (PyCFunction)Sbk_QtFlagPropertyManagerFunc_initializeProperty, METH_O},
-    {"setCheck", (PyCFunction)Sbk_QtFlagPropertyManagerFunc_setCheck, METH_VARARGS},
-    {"setFlagNames", (PyCFunction)Sbk_QtFlagPropertyManagerFunc_setFlagNames, METH_VARARGS},
-    {"setValue", (PyCFunction)Sbk_QtFlagPropertyManagerFunc_setValue, METH_VARARGS},
-    {"subBoolPropertyManager", (PyCFunction)Sbk_QtFlagPropertyManagerFunc_subBoolPropertyManager, METH_NOARGS},
-    {"uninitializeProperty", (PyCFunction)Sbk_QtFlagPropertyManagerFunc_uninitializeProperty, METH_O},
-    {"value", (PyCFunction)Sbk_QtFlagPropertyManagerFunc_value, METH_O},
-    {"valueText", (PyCFunction)Sbk_QtFlagPropertyManagerFunc_valueText, METH_O},
+    {"check", reinterpret_cast<PyCFunction>(Sbk_QtFlagPropertyManagerFunc_check), METH_O},
+    {"checkIcon", reinterpret_cast<PyCFunction>(Sbk_QtFlagPropertyManagerFunc_checkIcon), METH_O},
+    {"flagNames", reinterpret_cast<PyCFunction>(Sbk_QtFlagPropertyManagerFunc_flagNames), METH_O},
+    {"initializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtFlagPropertyManagerFunc_initializeProperty), METH_O},
+    {"setCheck", reinterpret_cast<PyCFunction>(Sbk_QtFlagPropertyManagerFunc_setCheck), METH_VARARGS},
+    {"setFlagNames", reinterpret_cast<PyCFunction>(Sbk_QtFlagPropertyManagerFunc_setFlagNames), METH_VARARGS},
+    {"setValue", reinterpret_cast<PyCFunction>(Sbk_QtFlagPropertyManagerFunc_setValue), METH_VARARGS},
+    {"subBoolPropertyManager", reinterpret_cast<PyCFunction>(Sbk_QtFlagPropertyManagerFunc_subBoolPropertyManager), METH_NOARGS},
+    {"uninitializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtFlagPropertyManagerFunc_uninitializeProperty), METH_O},
+    {"value", reinterpret_cast<PyCFunction>(Sbk_QtFlagPropertyManagerFunc_value), METH_O},
+    {"valueText", reinterpret_cast<PyCFunction>(Sbk_QtFlagPropertyManagerFunc_valueText), METH_O},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -1538,33 +1547,33 @@ static void QtFlagPropertyManager_PythonToCpp_QtFlagPropertyManager_PTR(PyObject
 static PythonToCppFunc is_QtFlagPropertyManager_PythonToCpp_QtFlagPropertyManager_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtFlagPropertyManager_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtFlagPropertyManager_TypeF())))
         return QtFlagPropertyManager_PythonToCpp_QtFlagPropertyManager_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtFlagPropertyManager_PTR_CppToPython_QtFlagPropertyManager(const void* cppIn) {
-    return PySide::getWrapperForQObject((::QtFlagPropertyManager*)cppIn, Sbk_QtFlagPropertyManager_TypeF());
+    return PySide::getWrapperForQObject(reinterpret_cast<::QtFlagPropertyManager*>(const_cast<void*>(cppIn)), Sbk_QtFlagPropertyManager_TypeF());
 
 }
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtFlagPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtFlagPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtFlagPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtFlagPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtFlagPropertyManager.flagNames(property:qtpropertybrowser.QtProperty)->QStringList\n"
-    "qtpropertybrowser.QtFlagPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtFlagPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
-    "qtpropertybrowser.QtFlagPropertyManager.setFlagNames(property:qtpropertybrowser.QtProperty,names:QStringList)\n"
-    "qtpropertybrowser.QtFlagPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:int)\n"
-    "qtpropertybrowser.QtFlagPropertyManager.subBoolPropertyManager()->qtpropertybrowser.QtBoolPropertyManager\n"
-    "qtpropertybrowser.QtFlagPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtFlagPropertyManager.value(property:qtpropertybrowser.QtProperty)->int\n"
-    "qtpropertybrowser.QtFlagPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
-;
+static const char *QtFlagPropertyManager_SignatureStrings[] = {
+    "qtpropertybrowser.QtFlagPropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtFlagPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtFlagPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtFlagPropertyManager.flagNames(property:qtpropertybrowser.QtProperty)->QStringList",
+    "qtpropertybrowser.QtFlagPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtFlagPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
+    "qtpropertybrowser.QtFlagPropertyManager.setFlagNames(property:qtpropertybrowser.QtProperty,names:QStringList)",
+    "qtpropertybrowser.QtFlagPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:int)",
+    "qtpropertybrowser.QtFlagPropertyManager.subBoolPropertyManager()->qtpropertybrowser.QtBoolPropertyManager",
+    "qtpropertybrowser.QtFlagPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtFlagPropertyManager.value(property:qtpropertybrowser.QtProperty)->int",
+    "qtpropertybrowser.QtFlagPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
+    nullptr}; // Sentinel
 
 void init_QtFlagPropertyManager(PyObject* module)
 {
@@ -1573,7 +1582,7 @@ void init_QtFlagPropertyManager(PyObject* module)
         "QtFlagPropertyManager",
         "QtFlagPropertyManager*",
         &Sbk_QtFlagPropertyManager_spec,
-        QtFlagPropertyManager_SignaturesString,
+        QtFlagPropertyManager_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtFlagPropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

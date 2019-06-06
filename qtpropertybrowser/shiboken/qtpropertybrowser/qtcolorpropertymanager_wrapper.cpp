@@ -38,6 +38,8 @@
 #include <cctype>
 #include <cstring>
 
+QT_WARNING_DISABLE_DEPRECATED
+
 
 
 template <class T>
@@ -53,12 +55,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -68,7 +72,8 @@ void QtColorPropertyManagerWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtColorPropertyManagerWrapper::QtColorPropertyManagerWrapper(QObject * parent) : QtColorPropertyManager(parent) {
+QtColorPropertyManagerWrapper::QtColorPropertyManagerWrapper(QObject * parent) : QtColorPropertyManager(parent)
+{
     // ... middle
 }
 
@@ -846,6 +851,7 @@ Sbk_QtColorPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds)
     PythonToCppFunc pythonToCpp[] = { nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -1006,7 +1012,7 @@ static PyObject* Sbk_QtColorPropertyManagerFunc_checkIcon(PyObject* self, PyObje
         if (!PyErr_Occurred()) {
             // checkIcon(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QIcon cppResult = ((::QtColorPropertyManagerWrapper*) cppSelf)->QtColorPropertyManagerWrapper::checkIcon_protected(cppArg0);
+            QIcon cppResult = static_cast<::QtColorPropertyManagerWrapper*>(cppSelf)->QtColorPropertyManagerWrapper::checkIcon_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtGuiTypes[SBK_QICON_IDX]), &cppResult);
         }
@@ -1053,7 +1059,7 @@ static PyObject* Sbk_QtColorPropertyManagerFunc_initializeProperty(PyObject* sel
         if (!PyErr_Occurred()) {
             // initializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtColorPropertyManagerWrapper*) cppSelf)->QtColorPropertyManagerWrapper::initializeProperty_protected(cppArg0);
+            static_cast<::QtColorPropertyManagerWrapper*>(cppSelf)->QtColorPropertyManagerWrapper::initializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -1079,6 +1085,7 @@ static PyObject* Sbk_QtColorPropertyManagerFunc_setCheck(PyObject* self, PyObjec
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1137,6 +1144,7 @@ static PyObject* Sbk_QtColorPropertyManagerFunc_setValue(PyObject* self, PyObjec
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1248,7 +1256,7 @@ static PyObject* Sbk_QtColorPropertyManagerFunc_uninitializeProperty(PyObject* s
         if (!PyErr_Occurred()) {
             // uninitializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtColorPropertyManagerWrapper*) cppSelf)->QtColorPropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
+            static_cast<::QtColorPropertyManagerWrapper*>(cppSelf)->QtColorPropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -1342,7 +1350,7 @@ static PyObject* Sbk_QtColorPropertyManagerFunc_valueIcon(PyObject* self, PyObje
         if (!PyErr_Occurred()) {
             // valueIcon(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QIcon cppResult = ((::QtColorPropertyManagerWrapper*) cppSelf)->QtColorPropertyManagerWrapper::valueIcon_protected(cppArg0);
+            QIcon cppResult = static_cast<::QtColorPropertyManagerWrapper*>(cppSelf)->QtColorPropertyManagerWrapper::valueIcon_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtGuiTypes[SBK_QICON_IDX]), &cppResult);
         }
@@ -1390,7 +1398,7 @@ static PyObject* Sbk_QtColorPropertyManagerFunc_valueText(PyObject* self, PyObje
         if (!PyErr_Occurred()) {
             // valueText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = ((::QtColorPropertyManagerWrapper*) cppSelf)->QtColorPropertyManagerWrapper::valueText_protected(cppArg0);
+            QString cppResult = static_cast<::QtColorPropertyManagerWrapper*>(cppSelf)->QtColorPropertyManagerWrapper::valueText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -1408,16 +1416,16 @@ static PyObject* Sbk_QtColorPropertyManagerFunc_valueText(PyObject* self, PyObje
 }
 
 static PyMethodDef Sbk_QtColorPropertyManager_methods[] = {
-    {"check", (PyCFunction)Sbk_QtColorPropertyManagerFunc_check, METH_O},
-    {"checkIcon", (PyCFunction)Sbk_QtColorPropertyManagerFunc_checkIcon, METH_O},
-    {"initializeProperty", (PyCFunction)Sbk_QtColorPropertyManagerFunc_initializeProperty, METH_O},
-    {"setCheck", (PyCFunction)Sbk_QtColorPropertyManagerFunc_setCheck, METH_VARARGS},
-    {"setValue", (PyCFunction)Sbk_QtColorPropertyManagerFunc_setValue, METH_VARARGS},
-    {"subIntPropertyManager", (PyCFunction)Sbk_QtColorPropertyManagerFunc_subIntPropertyManager, METH_NOARGS},
-    {"uninitializeProperty", (PyCFunction)Sbk_QtColorPropertyManagerFunc_uninitializeProperty, METH_O},
-    {"value", (PyCFunction)Sbk_QtColorPropertyManagerFunc_value, METH_O},
-    {"valueIcon", (PyCFunction)Sbk_QtColorPropertyManagerFunc_valueIcon, METH_O},
-    {"valueText", (PyCFunction)Sbk_QtColorPropertyManagerFunc_valueText, METH_O},
+    {"check", reinterpret_cast<PyCFunction>(Sbk_QtColorPropertyManagerFunc_check), METH_O},
+    {"checkIcon", reinterpret_cast<PyCFunction>(Sbk_QtColorPropertyManagerFunc_checkIcon), METH_O},
+    {"initializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtColorPropertyManagerFunc_initializeProperty), METH_O},
+    {"setCheck", reinterpret_cast<PyCFunction>(Sbk_QtColorPropertyManagerFunc_setCheck), METH_VARARGS},
+    {"setValue", reinterpret_cast<PyCFunction>(Sbk_QtColorPropertyManagerFunc_setValue), METH_VARARGS},
+    {"subIntPropertyManager", reinterpret_cast<PyCFunction>(Sbk_QtColorPropertyManagerFunc_subIntPropertyManager), METH_NOARGS},
+    {"uninitializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtColorPropertyManagerFunc_uninitializeProperty), METH_O},
+    {"value", reinterpret_cast<PyCFunction>(Sbk_QtColorPropertyManagerFunc_value), METH_O},
+    {"valueIcon", reinterpret_cast<PyCFunction>(Sbk_QtColorPropertyManagerFunc_valueIcon), METH_O},
+    {"valueText", reinterpret_cast<PyCFunction>(Sbk_QtColorPropertyManagerFunc_valueText), METH_O},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -1487,32 +1495,32 @@ static void QtColorPropertyManager_PythonToCpp_QtColorPropertyManager_PTR(PyObje
 static PythonToCppFunc is_QtColorPropertyManager_PythonToCpp_QtColorPropertyManager_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtColorPropertyManager_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtColorPropertyManager_TypeF())))
         return QtColorPropertyManager_PythonToCpp_QtColorPropertyManager_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtColorPropertyManager_PTR_CppToPython_QtColorPropertyManager(const void* cppIn) {
-    return PySide::getWrapperForQObject((::QtColorPropertyManager*)cppIn, Sbk_QtColorPropertyManager_TypeF());
+    return PySide::getWrapperForQObject(reinterpret_cast<::QtColorPropertyManager*>(const_cast<void*>(cppIn)), Sbk_QtColorPropertyManager_TypeF());
 
 }
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtColorPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtColorPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtColorPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtColorPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtColorPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtColorPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
-    "qtpropertybrowser.QtColorPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtGui.QColor)\n"
-    "qtpropertybrowser.QtColorPropertyManager.subIntPropertyManager()->qtpropertybrowser.QtIntPropertyManager\n"
-    "qtpropertybrowser.QtColorPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtColorPropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QColor\n"
-    "qtpropertybrowser.QtColorPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtColorPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
-;
+static const char *QtColorPropertyManager_SignatureStrings[] = {
+    "qtpropertybrowser.QtColorPropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtColorPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtColorPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtColorPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtColorPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
+    "qtpropertybrowser.QtColorPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtGui.QColor)",
+    "qtpropertybrowser.QtColorPropertyManager.subIntPropertyManager()->qtpropertybrowser.QtIntPropertyManager",
+    "qtpropertybrowser.QtColorPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtColorPropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QColor",
+    "qtpropertybrowser.QtColorPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtColorPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
+    nullptr}; // Sentinel
 
 void init_QtColorPropertyManager(PyObject* module)
 {
@@ -1521,7 +1529,7 @@ void init_QtColorPropertyManager(PyObject* module)
         "QtColorPropertyManager",
         "QtColorPropertyManager*",
         &Sbk_QtColorPropertyManager_spec,
-        QtColorPropertyManager_SignaturesString,
+        QtColorPropertyManager_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtColorPropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

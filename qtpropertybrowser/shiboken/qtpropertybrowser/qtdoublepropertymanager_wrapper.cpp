@@ -36,6 +36,8 @@
 #include <cctype>
 #include <cstring>
 
+QT_WARNING_DISABLE_DEPRECATED
+
 
 
 template <class T>
@@ -51,12 +53,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -66,7 +70,8 @@ void QtDoublePropertyManagerWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtDoublePropertyManagerWrapper::QtDoublePropertyManagerWrapper(QObject * parent) : QtDoublePropertyManager(parent) {
+QtDoublePropertyManagerWrapper::QtDoublePropertyManagerWrapper(QObject * parent) : QtDoublePropertyManager(parent)
+{
     // ... middle
 }
 
@@ -844,6 +849,7 @@ Sbk_QtDoublePropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds)
     PythonToCppFunc pythonToCpp[] = { nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -1052,7 +1058,7 @@ static PyObject* Sbk_QtDoublePropertyManagerFunc_checkIcon(PyObject* self, PyObj
         if (!PyErr_Occurred()) {
             // checkIcon(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QIcon cppResult = ((::QtDoublePropertyManagerWrapper*) cppSelf)->QtDoublePropertyManagerWrapper::checkIcon_protected(cppArg0);
+            QIcon cppResult = static_cast<::QtDoublePropertyManagerWrapper*>(cppSelf)->QtDoublePropertyManagerWrapper::checkIcon_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtGuiTypes[SBK_QICON_IDX]), &cppResult);
         }
@@ -1196,7 +1202,7 @@ static PyObject* Sbk_QtDoublePropertyManagerFunc_formatText(PyObject* self, PyOb
         if (!PyErr_Occurred()) {
             // formatText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = ((::QtDoublePropertyManagerWrapper*) cppSelf)->QtDoublePropertyManagerWrapper::formatText_protected(cppArg0);
+            QString cppResult = static_cast<::QtDoublePropertyManagerWrapper*>(cppSelf)->QtDoublePropertyManagerWrapper::formatText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -1243,7 +1249,7 @@ static PyObject* Sbk_QtDoublePropertyManagerFunc_initializeProperty(PyObject* se
         if (!PyErr_Occurred()) {
             // initializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtDoublePropertyManagerWrapper*) cppSelf)->QtDoublePropertyManagerWrapper::initializeProperty_protected(cppArg0);
+            static_cast<::QtDoublePropertyManagerWrapper*>(cppSelf)->QtDoublePropertyManagerWrapper::initializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -1385,7 +1391,7 @@ static PyObject* Sbk_QtDoublePropertyManagerFunc_maximumText(PyObject* self, PyO
         if (!PyErr_Occurred()) {
             // maximumText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = ((::QtDoublePropertyManagerWrapper*) cppSelf)->QtDoublePropertyManagerWrapper::maximumText_protected(cppArg0);
+            QString cppResult = static_cast<::QtDoublePropertyManagerWrapper*>(cppSelf)->QtDoublePropertyManagerWrapper::maximumText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -1481,7 +1487,7 @@ static PyObject* Sbk_QtDoublePropertyManagerFunc_minimumText(PyObject* self, PyO
         if (!PyErr_Occurred()) {
             // minimumText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = ((::QtDoublePropertyManagerWrapper*) cppSelf)->QtDoublePropertyManagerWrapper::minimumText_protected(cppArg0);
+            QString cppResult = static_cast<::QtDoublePropertyManagerWrapper*>(cppSelf)->QtDoublePropertyManagerWrapper::minimumText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -1653,6 +1659,7 @@ static PyObject* Sbk_QtDoublePropertyManagerFunc_setAbsTol(PyObject* self, PyObj
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1711,6 +1718,7 @@ static PyObject* Sbk_QtDoublePropertyManagerFunc_setCheck(PyObject* self, PyObje
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1769,6 +1777,7 @@ static PyObject* Sbk_QtDoublePropertyManagerFunc_setFormat(PyObject* self, PyObj
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1827,6 +1836,7 @@ static PyObject* Sbk_QtDoublePropertyManagerFunc_setMaximum(PyObject* self, PyOb
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1885,6 +1895,7 @@ static PyObject* Sbk_QtDoublePropertyManagerFunc_setMinimum(PyObject* self, PyOb
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1943,6 +1954,7 @@ static PyObject* Sbk_QtDoublePropertyManagerFunc_setPrecision(PyObject* self, Py
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2001,6 +2013,7 @@ static PyObject* Sbk_QtDoublePropertyManagerFunc_setRange(PyObject* self, PyObje
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0, 0};
 
     // invalid argument lengths
@@ -2062,6 +2075,7 @@ static PyObject* Sbk_QtDoublePropertyManagerFunc_setReadOnly(PyObject* self, PyO
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2120,6 +2134,7 @@ static PyObject* Sbk_QtDoublePropertyManagerFunc_setRelTol(PyObject* self, PyObj
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2178,6 +2193,7 @@ static PyObject* Sbk_QtDoublePropertyManagerFunc_setScale(PyObject* self, PyObje
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2236,6 +2252,7 @@ static PyObject* Sbk_QtDoublePropertyManagerFunc_setSingleStep(PyObject* self, P
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2294,6 +2311,7 @@ static PyObject* Sbk_QtDoublePropertyManagerFunc_setUnit(PyObject* self, PyObjec
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2352,6 +2370,7 @@ static PyObject* Sbk_QtDoublePropertyManagerFunc_setValue(PyObject* self, PyObje
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2477,7 +2496,7 @@ static PyObject* Sbk_QtDoublePropertyManagerFunc_uninitializeProperty(PyObject* 
         if (!PyErr_Occurred()) {
             // uninitializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtDoublePropertyManagerWrapper*) cppSelf)->QtDoublePropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
+            static_cast<::QtDoublePropertyManagerWrapper*>(cppSelf)->QtDoublePropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -2571,7 +2590,7 @@ static PyObject* Sbk_QtDoublePropertyManagerFunc_unitText(PyObject* self, PyObje
         if (!PyErr_Occurred()) {
             // unitText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = ((::QtDoublePropertyManagerWrapper*) cppSelf)->QtDoublePropertyManagerWrapper::unitText_protected(cppArg0);
+            QString cppResult = static_cast<::QtDoublePropertyManagerWrapper*>(cppSelf)->QtDoublePropertyManagerWrapper::unitText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -2667,7 +2686,7 @@ static PyObject* Sbk_QtDoublePropertyManagerFunc_valueText(PyObject* self, PyObj
         if (!PyErr_Occurred()) {
             // valueText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = ((::QtDoublePropertyManagerWrapper*) cppSelf)->QtDoublePropertyManagerWrapper::valueText_protected(cppArg0);
+            QString cppResult = static_cast<::QtDoublePropertyManagerWrapper*>(cppSelf)->QtDoublePropertyManagerWrapper::valueText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -2685,40 +2704,40 @@ static PyObject* Sbk_QtDoublePropertyManagerFunc_valueText(PyObject* self, PyObj
 }
 
 static PyMethodDef Sbk_QtDoublePropertyManager_methods[] = {
-    {"absTol", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_absTol, METH_O},
-    {"check", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_check, METH_O},
-    {"checkIcon", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_checkIcon, METH_O},
-    {"foreground", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_foreground, METH_O},
-    {"format", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_format, METH_O},
-    {"formatText", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_formatText, METH_O},
-    {"initializeProperty", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_initializeProperty, METH_O},
-    {"isReadOnly", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_isReadOnly, METH_O},
-    {"maximum", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_maximum, METH_O},
-    {"maximumText", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_maximumText, METH_O},
-    {"minimum", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_minimum, METH_O},
-    {"minimumText", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_minimumText, METH_O},
-    {"precision", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_precision, METH_O},
-    {"relTol", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_relTol, METH_O},
-    {"scale", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_scale, METH_O},
-    {"setAbsTol", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_setAbsTol, METH_VARARGS},
-    {"setCheck", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_setCheck, METH_VARARGS},
-    {"setFormat", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_setFormat, METH_VARARGS},
-    {"setMaximum", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_setMaximum, METH_VARARGS},
-    {"setMinimum", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_setMinimum, METH_VARARGS},
-    {"setPrecision", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_setPrecision, METH_VARARGS},
-    {"setRange", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_setRange, METH_VARARGS},
-    {"setReadOnly", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_setReadOnly, METH_VARARGS},
-    {"setRelTol", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_setRelTol, METH_VARARGS},
-    {"setScale", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_setScale, METH_VARARGS},
-    {"setSingleStep", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_setSingleStep, METH_VARARGS},
-    {"setUnit", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_setUnit, METH_VARARGS},
-    {"setValue", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_setValue, METH_VARARGS},
-    {"singleStep", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_singleStep, METH_O},
-    {"uninitializeProperty", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_uninitializeProperty, METH_O},
-    {"unit", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_unit, METH_O},
-    {"unitText", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_unitText, METH_O},
-    {"value", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_value, METH_O},
-    {"valueText", (PyCFunction)Sbk_QtDoublePropertyManagerFunc_valueText, METH_O},
+    {"absTol", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_absTol), METH_O},
+    {"check", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_check), METH_O},
+    {"checkIcon", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_checkIcon), METH_O},
+    {"foreground", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_foreground), METH_O},
+    {"format", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_format), METH_O},
+    {"formatText", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_formatText), METH_O},
+    {"initializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_initializeProperty), METH_O},
+    {"isReadOnly", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_isReadOnly), METH_O},
+    {"maximum", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_maximum), METH_O},
+    {"maximumText", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_maximumText), METH_O},
+    {"minimum", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_minimum), METH_O},
+    {"minimumText", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_minimumText), METH_O},
+    {"precision", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_precision), METH_O},
+    {"relTol", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_relTol), METH_O},
+    {"scale", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_scale), METH_O},
+    {"setAbsTol", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_setAbsTol), METH_VARARGS},
+    {"setCheck", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_setCheck), METH_VARARGS},
+    {"setFormat", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_setFormat), METH_VARARGS},
+    {"setMaximum", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_setMaximum), METH_VARARGS},
+    {"setMinimum", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_setMinimum), METH_VARARGS},
+    {"setPrecision", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_setPrecision), METH_VARARGS},
+    {"setRange", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_setRange), METH_VARARGS},
+    {"setReadOnly", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_setReadOnly), METH_VARARGS},
+    {"setRelTol", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_setRelTol), METH_VARARGS},
+    {"setScale", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_setScale), METH_VARARGS},
+    {"setSingleStep", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_setSingleStep), METH_VARARGS},
+    {"setUnit", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_setUnit), METH_VARARGS},
+    {"setValue", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_setValue), METH_VARARGS},
+    {"singleStep", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_singleStep), METH_O},
+    {"uninitializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_uninitializeProperty), METH_O},
+    {"unit", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_unit), METH_O},
+    {"unitText", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_unitText), METH_O},
+    {"value", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_value), METH_O},
+    {"valueText", reinterpret_cast<PyCFunction>(Sbk_QtDoublePropertyManagerFunc_valueText), METH_O},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -2788,56 +2807,56 @@ static void QtDoublePropertyManager_PythonToCpp_QtDoublePropertyManager_PTR(PyOb
 static PythonToCppFunc is_QtDoublePropertyManager_PythonToCpp_QtDoublePropertyManager_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtDoublePropertyManager_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtDoublePropertyManager_TypeF())))
         return QtDoublePropertyManager_PythonToCpp_QtDoublePropertyManager_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtDoublePropertyManager_PTR_CppToPython_QtDoublePropertyManager(const void* cppIn) {
-    return PySide::getWrapperForQObject((::QtDoublePropertyManager*)cppIn, Sbk_QtDoublePropertyManager_TypeF());
+    return PySide::getWrapperForQObject(reinterpret_cast<::QtDoublePropertyManager*>(const_cast<void*>(cppIn)), Sbk_QtDoublePropertyManager_TypeF());
 
 }
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtDoublePropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtDoublePropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtDoublePropertyManager.absTol(property:qtpropertybrowser.QtProperty)->double\n"
-    "qtpropertybrowser.QtDoublePropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtDoublePropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtDoublePropertyManager.foreground(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QBrush\n"
-    "qtpropertybrowser.QtDoublePropertyManager.format(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.Format\n"
-    "qtpropertybrowser.QtDoublePropertyManager.formatText(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtDoublePropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtDoublePropertyManager.isReadOnly(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtDoublePropertyManager.maximum(property:qtpropertybrowser.QtProperty)->double\n"
-    "qtpropertybrowser.QtDoublePropertyManager.maximumText(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtDoublePropertyManager.minimum(property:qtpropertybrowser.QtProperty)->double\n"
-    "qtpropertybrowser.QtDoublePropertyManager.minimumText(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtDoublePropertyManager.precision(property:qtpropertybrowser.QtProperty)->int\n"
-    "qtpropertybrowser.QtDoublePropertyManager.relTol(property:qtpropertybrowser.QtProperty)->double\n"
-    "qtpropertybrowser.QtDoublePropertyManager.scale(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.Scale\n"
-    "qtpropertybrowser.QtDoublePropertyManager.setAbsTol(property:qtpropertybrowser.QtProperty,absTol:double)\n"
-    "qtpropertybrowser.QtDoublePropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
-    "qtpropertybrowser.QtDoublePropertyManager.setFormat(property:qtpropertybrowser.QtProperty,format_:qtpropertybrowser.Format)\n"
-    "qtpropertybrowser.QtDoublePropertyManager.setMaximum(property:qtpropertybrowser.QtProperty,maxVal:double)\n"
-    "qtpropertybrowser.QtDoublePropertyManager.setMinimum(property:qtpropertybrowser.QtProperty,minVal:double)\n"
-    "qtpropertybrowser.QtDoublePropertyManager.setPrecision(property:qtpropertybrowser.QtProperty,prec:int)\n"
-    "qtpropertybrowser.QtDoublePropertyManager.setRange(property:qtpropertybrowser.QtProperty,minVal:double,maxVal:double)\n"
-    "qtpropertybrowser.QtDoublePropertyManager.setReadOnly(property:qtpropertybrowser.QtProperty,readOnly:bool)\n"
-    "qtpropertybrowser.QtDoublePropertyManager.setRelTol(property:qtpropertybrowser.QtProperty,relTol:double)\n"
-    "qtpropertybrowser.QtDoublePropertyManager.setScale(property:qtpropertybrowser.QtProperty,scale_:qtpropertybrowser.Scale)\n"
-    "qtpropertybrowser.QtDoublePropertyManager.setSingleStep(property:qtpropertybrowser.QtProperty,step:double)\n"
-    "qtpropertybrowser.QtDoublePropertyManager.setUnit(property:qtpropertybrowser.QtProperty,unit:QString)\n"
-    "qtpropertybrowser.QtDoublePropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:double)\n"
-    "qtpropertybrowser.QtDoublePropertyManager.singleStep(property:qtpropertybrowser.QtProperty)->double\n"
-    "qtpropertybrowser.QtDoublePropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtDoublePropertyManager.unit(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtDoublePropertyManager.unitText(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtDoublePropertyManager.value(property:qtpropertybrowser.QtProperty)->double\n"
-    "qtpropertybrowser.QtDoublePropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
-;
+static const char *QtDoublePropertyManager_SignatureStrings[] = {
+    "qtpropertybrowser.QtDoublePropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtDoublePropertyManager.absTol(property:qtpropertybrowser.QtProperty)->double",
+    "qtpropertybrowser.QtDoublePropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtDoublePropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtDoublePropertyManager.foreground(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QBrush",
+    "qtpropertybrowser.QtDoublePropertyManager.format(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.Format",
+    "qtpropertybrowser.QtDoublePropertyManager.formatText(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtDoublePropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtDoublePropertyManager.isReadOnly(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtDoublePropertyManager.maximum(property:qtpropertybrowser.QtProperty)->double",
+    "qtpropertybrowser.QtDoublePropertyManager.maximumText(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtDoublePropertyManager.minimum(property:qtpropertybrowser.QtProperty)->double",
+    "qtpropertybrowser.QtDoublePropertyManager.minimumText(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtDoublePropertyManager.precision(property:qtpropertybrowser.QtProperty)->int",
+    "qtpropertybrowser.QtDoublePropertyManager.relTol(property:qtpropertybrowser.QtProperty)->double",
+    "qtpropertybrowser.QtDoublePropertyManager.scale(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.Scale",
+    "qtpropertybrowser.QtDoublePropertyManager.setAbsTol(property:qtpropertybrowser.QtProperty,absTol:double)",
+    "qtpropertybrowser.QtDoublePropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
+    "qtpropertybrowser.QtDoublePropertyManager.setFormat(property:qtpropertybrowser.QtProperty,format_:qtpropertybrowser.Format)",
+    "qtpropertybrowser.QtDoublePropertyManager.setMaximum(property:qtpropertybrowser.QtProperty,maxVal:double)",
+    "qtpropertybrowser.QtDoublePropertyManager.setMinimum(property:qtpropertybrowser.QtProperty,minVal:double)",
+    "qtpropertybrowser.QtDoublePropertyManager.setPrecision(property:qtpropertybrowser.QtProperty,prec:int)",
+    "qtpropertybrowser.QtDoublePropertyManager.setRange(property:qtpropertybrowser.QtProperty,minVal:double,maxVal:double)",
+    "qtpropertybrowser.QtDoublePropertyManager.setReadOnly(property:qtpropertybrowser.QtProperty,readOnly:bool)",
+    "qtpropertybrowser.QtDoublePropertyManager.setRelTol(property:qtpropertybrowser.QtProperty,relTol:double)",
+    "qtpropertybrowser.QtDoublePropertyManager.setScale(property:qtpropertybrowser.QtProperty,scale_:qtpropertybrowser.Scale)",
+    "qtpropertybrowser.QtDoublePropertyManager.setSingleStep(property:qtpropertybrowser.QtProperty,step:double)",
+    "qtpropertybrowser.QtDoublePropertyManager.setUnit(property:qtpropertybrowser.QtProperty,unit:QString)",
+    "qtpropertybrowser.QtDoublePropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:double)",
+    "qtpropertybrowser.QtDoublePropertyManager.singleStep(property:qtpropertybrowser.QtProperty)->double",
+    "qtpropertybrowser.QtDoublePropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtDoublePropertyManager.unit(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtDoublePropertyManager.unitText(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtDoublePropertyManager.value(property:qtpropertybrowser.QtProperty)->double",
+    "qtpropertybrowser.QtDoublePropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
+    nullptr}; // Sentinel
 
 void init_QtDoublePropertyManager(PyObject* module)
 {
@@ -2846,7 +2865,7 @@ void init_QtDoublePropertyManager(PyObject* module)
         "QtDoublePropertyManager",
         "QtDoublePropertyManager*",
         &Sbk_QtDoublePropertyManager_spec,
-        QtDoublePropertyManager_SignaturesString,
+        QtDoublePropertyManager_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtDoublePropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

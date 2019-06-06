@@ -313,11 +313,13 @@ public:
     QtComplexPropertyManager *subComplexPropertyManager() const;
 
     QVector<QComplex> value(const QtProperty *property) const;
+
     QVector<double> absTol(const QtProperty *property) const;
     QVector<double> relTol(const QtProperty *property) const;
     QVector<double> minimum(const QtProperty *property) const;
     QVector<double> maximum(const QtProperty *property) const;
     QVector<QComplex> singleStep(const QtProperty *property) const;
+    int size(const QtProperty *property) const;
     int precision(const QtProperty *property) const;
     Scale scale(const QtProperty *property) const;
     QString unit(const QtProperty *property) const;
@@ -335,6 +337,7 @@ public Q_SLOTS:
     void setMaximum(QtProperty *property, const QVector<double>& maxVal);
     void setRange(QtProperty *property, const QVector<double>& minVal, const QVector<double>& maxVal);
     void setSingleStep(QtProperty *property, const QVector<QComplex>& step);
+    void setSize(QtProperty * property, const int size);
     void setPrecision(QtProperty *property, int prec);
     void setScale(QtProperty *property, Scale scale_);
     void setUnit(QtProperty *property, QString unit);
@@ -344,6 +347,7 @@ public Q_SLOTS:
     void setCheck(QtProperty *property, bool check);
 Q_SIGNALS:
     void valueChanged(QtProperty *property, const QVector<QComplex>& val);
+    void sizeChanged(QtProperty *property, int size);
     void precisionChanged(QtProperty *property, int prec);
     void rangeChanged(QtProperty *property, const QVector<double>& minVal, const QVector<double>& maxVal);
     void singleStepChanged(QtProperty *property, const QVector<QComplex>& step);
@@ -351,7 +355,6 @@ Q_SIGNALS:
     void unitChanged(QtProperty *property, const QString& unit);
     void pkAvgChanged(QtProperty *property,PkAvg pkAvg);
     void formatChanged(QtProperty *property,Format format_);
-    void equationChanged(QtProperty *property, const QString& equation);
     void readOnlyChanged(QtProperty *property, bool readOnly);
     void checkChanged(QtProperty *property, bool check);
 protected:

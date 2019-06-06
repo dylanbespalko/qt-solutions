@@ -9,8 +9,8 @@ public:
     QtCursorEditorFactoryWrapper(QObject * parent = nullptr);
     inline void connectPropertyManager_protected(QtCursorPropertyManager * manager) { QtCursorEditorFactory::connectPropertyManager(manager); }
     void connectPropertyManager(QtCursorPropertyManager * manager) override;
-    inline QWidget * createAttributeEditor_protected(QtCursorPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) { return QtCursorEditorFactory::createAttributeEditor(manager, property, parent, Attribute(attribute)); }
-    QWidget * createAttributeEditor(QtCursorPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) override;
+    inline QWidget * createAttributeEditor_protected(QtCursorPropertyManager * manager, QtProperty * property, QWidget * parent, BrowserCol attribute) { return QtCursorEditorFactory::createAttributeEditor(manager, property, parent, BrowserCol(attribute)); }
+    QWidget * createAttributeEditor(QtCursorPropertyManager * manager, QtProperty * property, QWidget * parent, BrowserCol attribute) override;
     inline QWidget * createEditor_protected(QtCursorPropertyManager * manager, QtProperty * property, QWidget * parent) { return QtCursorEditorFactory::createEditor(manager, property, parent); }
     QWidget * createEditor(QtCursorPropertyManager * manager, QtProperty * property, QWidget * parent) override;
     inline void disconnectPropertyManager_protected(QtCursorPropertyManager * manager) { QtCursorEditorFactory::disconnectPropertyManager(manager); }

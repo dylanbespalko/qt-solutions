@@ -37,6 +37,8 @@
 #include <cctype>
 #include <cstring>
 
+QT_WARNING_DISABLE_DEPRECATED
+
 
 
 template <class T>
@@ -52,12 +54,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -67,7 +71,8 @@ void QtVariantPropertyManagerWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtVariantPropertyManagerWrapper::QtVariantPropertyManagerWrapper(QObject * parent) : QtVariantPropertyManager(parent) {
+QtVariantPropertyManagerWrapper::QtVariantPropertyManagerWrapper(QObject * parent) : QtVariantPropertyManager(parent)
+{
     // ... middle
 }
 
@@ -1123,6 +1128,7 @@ Sbk_QtVariantPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds
     PythonToCppFunc pythonToCpp[] = { nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -1217,6 +1223,7 @@ static PyObject* Sbk_QtVariantPropertyManagerFunc_addProperty(PyObject* self, Py
     SBK_UNUSED(pythonToCpp)
     int numNamedArgs = (kwds ? PyDict_Size(kwds) : 0);
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1328,6 +1335,7 @@ static PyObject* Sbk_QtVariantPropertyManagerFunc_attributeType(PyObject* self, 
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1387,6 +1395,7 @@ static PyObject* Sbk_QtVariantPropertyManagerFunc_attributeValue(PyObject* self,
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1497,7 +1506,7 @@ static PyObject* Sbk_QtVariantPropertyManagerFunc_createProperty(PyObject* self)
         if (!PyErr_Occurred()) {
             // createProperty()
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QtProperty * cppResult = ((::QtVariantPropertyManagerWrapper*) cppSelf)->QtVariantPropertyManagerWrapper::createProperty_protected();
+            QtProperty * cppResult = static_cast<::QtVariantPropertyManagerWrapper*>(cppSelf)->QtVariantPropertyManagerWrapper::createProperty_protected();
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), cppResult);
             Shiboken::Object::setParent(self, pyResult);
@@ -1611,7 +1620,7 @@ static PyObject* Sbk_QtVariantPropertyManagerFunc_hasValue(PyObject* self, PyObj
         if (!PyErr_Occurred()) {
             // hasValue(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            bool cppResult = ((::QtVariantPropertyManagerWrapper*) cppSelf)->QtVariantPropertyManagerWrapper::hasValue_protected(cppArg0);
+            bool cppResult = static_cast<::QtVariantPropertyManagerWrapper*>(cppSelf)->QtVariantPropertyManagerWrapper::hasValue_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), &cppResult);
         }
@@ -1681,7 +1690,7 @@ static PyObject* Sbk_QtVariantPropertyManagerFunc_initializeProperty(PyObject* s
         if (!PyErr_Occurred()) {
             // initializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtVariantPropertyManagerWrapper*) cppSelf)->QtVariantPropertyManagerWrapper::initializeProperty_protected(cppArg0);
+            static_cast<::QtVariantPropertyManagerWrapper*>(cppSelf)->QtVariantPropertyManagerWrapper::initializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -1801,6 +1810,7 @@ static PyObject* Sbk_QtVariantPropertyManagerFunc_setAttribute(PyObject* self, P
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0, 0};
 
     // invalid argument lengths
@@ -1862,6 +1872,7 @@ static PyObject* Sbk_QtVariantPropertyManagerFunc_setValue(PyObject* self, PyObj
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1939,7 +1950,7 @@ static PyObject* Sbk_QtVariantPropertyManagerFunc_uninitializeProperty(PyObject*
         if (!PyErr_Occurred()) {
             // uninitializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtVariantPropertyManagerWrapper*) cppSelf)->QtVariantPropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
+            static_cast<::QtVariantPropertyManagerWrapper*>(cppSelf)->QtVariantPropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -2033,7 +2044,7 @@ static PyObject* Sbk_QtVariantPropertyManagerFunc_valueIcon(PyObject* self, PyOb
         if (!PyErr_Occurred()) {
             // valueIcon(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QIcon cppResult = ((::QtVariantPropertyManagerWrapper*) cppSelf)->QtVariantPropertyManagerWrapper::valueIcon_protected(cppArg0);
+            QIcon cppResult = static_cast<::QtVariantPropertyManagerWrapper*>(cppSelf)->QtVariantPropertyManagerWrapper::valueIcon_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtGuiTypes[SBK_QICON_IDX]), &cppResult);
         }
@@ -2081,7 +2092,7 @@ static PyObject* Sbk_QtVariantPropertyManagerFunc_valueText(PyObject* self, PyOb
         if (!PyErr_Occurred()) {
             // valueText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = ((::QtVariantPropertyManagerWrapper*) cppSelf)->QtVariantPropertyManagerWrapper::valueText_protected(cppArg0);
+            QString cppResult = static_cast<::QtVariantPropertyManagerWrapper*>(cppSelf)->QtVariantPropertyManagerWrapper::valueText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -2217,27 +2228,27 @@ static PyObject* Sbk_QtVariantPropertyManagerFunc_variantProperty(PyObject* self
 }
 
 static PyMethodDef Sbk_QtVariantPropertyManager_methods[] = {
-    {"addProperty", (PyCFunction)Sbk_QtVariantPropertyManagerFunc_addProperty, METH_VARARGS|METH_KEYWORDS},
-    {"attributeType", (PyCFunction)Sbk_QtVariantPropertyManagerFunc_attributeType, METH_VARARGS},
-    {"attributeValue", (PyCFunction)Sbk_QtVariantPropertyManagerFunc_attributeValue, METH_VARARGS},
-    {"attributes", (PyCFunction)Sbk_QtVariantPropertyManagerFunc_attributes, METH_O},
-    {"createProperty", (PyCFunction)Sbk_QtVariantPropertyManagerFunc_createProperty, METH_NOARGS},
-    {"enumTypeId", (PyCFunction)Sbk_QtVariantPropertyManagerFunc_enumTypeId, METH_NOARGS|METH_STATIC},
-    {"flagTypeId", (PyCFunction)Sbk_QtVariantPropertyManagerFunc_flagTypeId, METH_NOARGS|METH_STATIC},
-    {"groupTypeId", (PyCFunction)Sbk_QtVariantPropertyManagerFunc_groupTypeId, METH_NOARGS|METH_STATIC},
-    {"hasValue", (PyCFunction)Sbk_QtVariantPropertyManagerFunc_hasValue, METH_O},
-    {"iconMapTypeId", (PyCFunction)Sbk_QtVariantPropertyManagerFunc_iconMapTypeId, METH_NOARGS|METH_STATIC},
-    {"initializeProperty", (PyCFunction)Sbk_QtVariantPropertyManagerFunc_initializeProperty, METH_O},
-    {"isPropertyTypeSupported", (PyCFunction)Sbk_QtVariantPropertyManagerFunc_isPropertyTypeSupported, METH_O},
-    {"propertyType", (PyCFunction)Sbk_QtVariantPropertyManagerFunc_propertyType, METH_O},
-    {"setAttribute", (PyCFunction)Sbk_QtVariantPropertyManagerFunc_setAttribute, METH_VARARGS},
-    {"setValue", (PyCFunction)Sbk_QtVariantPropertyManagerFunc_setValue, METH_VARARGS},
-    {"uninitializeProperty", (PyCFunction)Sbk_QtVariantPropertyManagerFunc_uninitializeProperty, METH_O},
-    {"value", (PyCFunction)Sbk_QtVariantPropertyManagerFunc_value, METH_O},
-    {"valueIcon", (PyCFunction)Sbk_QtVariantPropertyManagerFunc_valueIcon, METH_O},
-    {"valueText", (PyCFunction)Sbk_QtVariantPropertyManagerFunc_valueText, METH_O},
-    {"valueType", (PyCFunction)Sbk_QtVariantPropertyManagerFunc_valueType, METH_O},
-    {"variantProperty", (PyCFunction)Sbk_QtVariantPropertyManagerFunc_variantProperty, METH_O},
+    {"addProperty", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyManagerFunc_addProperty), METH_VARARGS|METH_KEYWORDS},
+    {"attributeType", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyManagerFunc_attributeType), METH_VARARGS},
+    {"attributeValue", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyManagerFunc_attributeValue), METH_VARARGS},
+    {"attributes", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyManagerFunc_attributes), METH_O},
+    {"createProperty", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyManagerFunc_createProperty), METH_NOARGS},
+    {"enumTypeId", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyManagerFunc_enumTypeId), METH_NOARGS|METH_STATIC},
+    {"flagTypeId", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyManagerFunc_flagTypeId), METH_NOARGS|METH_STATIC},
+    {"groupTypeId", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyManagerFunc_groupTypeId), METH_NOARGS|METH_STATIC},
+    {"hasValue", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyManagerFunc_hasValue), METH_O},
+    {"iconMapTypeId", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyManagerFunc_iconMapTypeId), METH_NOARGS|METH_STATIC},
+    {"initializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyManagerFunc_initializeProperty), METH_O},
+    {"isPropertyTypeSupported", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyManagerFunc_isPropertyTypeSupported), METH_O},
+    {"propertyType", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyManagerFunc_propertyType), METH_O},
+    {"setAttribute", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyManagerFunc_setAttribute), METH_VARARGS},
+    {"setValue", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyManagerFunc_setValue), METH_VARARGS},
+    {"uninitializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyManagerFunc_uninitializeProperty), METH_O},
+    {"value", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyManagerFunc_value), METH_O},
+    {"valueIcon", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyManagerFunc_valueIcon), METH_O},
+    {"valueText", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyManagerFunc_valueText), METH_O},
+    {"valueType", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyManagerFunc_valueType), METH_O},
+    {"variantProperty", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyManagerFunc_variantProperty), METH_O},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -2307,45 +2318,45 @@ static void QtVariantPropertyManager_PythonToCpp_QtVariantPropertyManager_PTR(Py
 static PythonToCppFunc is_QtVariantPropertyManager_PythonToCpp_QtVariantPropertyManager_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtVariantPropertyManager_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtVariantPropertyManager_TypeF())))
         return QtVariantPropertyManager_PythonToCpp_QtVariantPropertyManager_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtVariantPropertyManager_PTR_CppToPython_QtVariantPropertyManager(const void* cppIn) {
-    return PySide::getWrapperForQObject((::QtVariantPropertyManager*)cppIn, Sbk_QtVariantPropertyManager_TypeF());
+    return PySide::getWrapperForQObject(reinterpret_cast<::QtVariantPropertyManager*>(const_cast<void*>(cppIn)), Sbk_QtVariantPropertyManager_TypeF());
 
 }
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtVariantPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtVariantPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "1:qtpropertybrowser.QtVariantPropertyManager.addProperty(propertyType:int,name:QString=QString())->qtpropertybrowser.QtVariantProperty\n"
-    "0:qtpropertybrowser.QtVariantPropertyManager.addProperty(name:QString=QString())->qtpropertybrowser.QtProperty\n"
-    "qtpropertybrowser.QtVariantPropertyManager.attributeType(propertyType:int,attribute:QString)->int\n"
-    "qtpropertybrowser.QtVariantPropertyManager.attributeValue(property:qtpropertybrowser.QtProperty,attribute:QString)->QVariant\n"
-    "qtpropertybrowser.QtVariantPropertyManager.attributes(propertyType:int)->QStringList\n"
-    "qtpropertybrowser.QtVariantPropertyManager.createProperty()->qtpropertybrowser.QtProperty\n"
-    "qtpropertybrowser.QtVariantPropertyManager.enumTypeId()->int\n"
-    "qtpropertybrowser.QtVariantPropertyManager.flagTypeId()->int\n"
-    "qtpropertybrowser.QtVariantPropertyManager.groupTypeId()->int\n"
-    "qtpropertybrowser.QtVariantPropertyManager.hasValue(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtVariantPropertyManager.iconMapTypeId()->int\n"
-    "qtpropertybrowser.QtVariantPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtVariantPropertyManager.isPropertyTypeSupported(propertyType:int)->bool\n"
-    "qtpropertybrowser.QtVariantPropertyManager.propertyType(property:qtpropertybrowser.QtProperty)->int\n"
-    "qtpropertybrowser.QtVariantPropertyManager.setAttribute(property:qtpropertybrowser.QtProperty,attribute:QString,value:QVariant)\n"
-    "qtpropertybrowser.QtVariantPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:QVariant)\n"
-    "qtpropertybrowser.QtVariantPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtVariantPropertyManager.value(property:qtpropertybrowser.QtProperty)->QVariant\n"
-    "qtpropertybrowser.QtVariantPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtVariantPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
-    "1:qtpropertybrowser.QtVariantPropertyManager.valueType(propertyType:int)->int\n"
-    "0:qtpropertybrowser.QtVariantPropertyManager.valueType(property:qtpropertybrowser.QtProperty)->int\n"
-    "qtpropertybrowser.QtVariantPropertyManager.variantProperty(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.QtVariantProperty\n"
-;
+static const char *QtVariantPropertyManager_SignatureStrings[] = {
+    "qtpropertybrowser.QtVariantPropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
+    "1:qtpropertybrowser.QtVariantPropertyManager.addProperty(propertyType:int,name:QString=QString())->qtpropertybrowser.QtVariantProperty",
+    "0:qtpropertybrowser.QtVariantPropertyManager.addProperty(name:QString=QString())->qtpropertybrowser.QtProperty",
+    "qtpropertybrowser.QtVariantPropertyManager.attributeType(propertyType:int,attribute:QString)->int",
+    "qtpropertybrowser.QtVariantPropertyManager.attributeValue(property:qtpropertybrowser.QtProperty,attribute:QString)->QVariant",
+    "qtpropertybrowser.QtVariantPropertyManager.attributes(propertyType:int)->QStringList",
+    "qtpropertybrowser.QtVariantPropertyManager.createProperty()->qtpropertybrowser.QtProperty",
+    "qtpropertybrowser.QtVariantPropertyManager.enumTypeId()->int",
+    "qtpropertybrowser.QtVariantPropertyManager.flagTypeId()->int",
+    "qtpropertybrowser.QtVariantPropertyManager.groupTypeId()->int",
+    "qtpropertybrowser.QtVariantPropertyManager.hasValue(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtVariantPropertyManager.iconMapTypeId()->int",
+    "qtpropertybrowser.QtVariantPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtVariantPropertyManager.isPropertyTypeSupported(propertyType:int)->bool",
+    "qtpropertybrowser.QtVariantPropertyManager.propertyType(property:qtpropertybrowser.QtProperty)->int",
+    "qtpropertybrowser.QtVariantPropertyManager.setAttribute(property:qtpropertybrowser.QtProperty,attribute:QString,value:QVariant)",
+    "qtpropertybrowser.QtVariantPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:QVariant)",
+    "qtpropertybrowser.QtVariantPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtVariantPropertyManager.value(property:qtpropertybrowser.QtProperty)->QVariant",
+    "qtpropertybrowser.QtVariantPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtVariantPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
+    "1:qtpropertybrowser.QtVariantPropertyManager.valueType(propertyType:int)->int",
+    "0:qtpropertybrowser.QtVariantPropertyManager.valueType(property:qtpropertybrowser.QtProperty)->int",
+    "qtpropertybrowser.QtVariantPropertyManager.variantProperty(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.QtVariantProperty",
+    nullptr}; // Sentinel
 
 void init_QtVariantPropertyManager(PyObject* module)
 {
@@ -2354,7 +2365,7 @@ void init_QtVariantPropertyManager(PyObject* module)
         "QtVariantPropertyManager",
         "QtVariantPropertyManager*",
         &Sbk_QtVariantPropertyManager_spec,
-        QtVariantPropertyManager_SignaturesString,
+        QtVariantPropertyManager_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtVariantPropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

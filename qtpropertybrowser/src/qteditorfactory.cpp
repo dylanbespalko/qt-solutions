@@ -611,11 +611,11 @@ QWidget *QtGroupEditorFactory::createEditor(QtGroupPropertyManager *manager,
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtGroupEditorFactory::createAttributeEditor(QtGroupPropertyManager *manager,
-                                                     QtProperty *property, QWidget *parent, Attribute attribute)
+                                                     QtProperty *property, QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::CHECK)
+    if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -889,11 +889,11 @@ QWidget *QtSpinBoxFactory::createEditor(QtIntPropertyManager *manager, QtPropert
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtSpinBoxFactory::createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property,
-                                                 QWidget *parent, Attribute attribute)
+                                                 QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::MINIMUM)
+    if (attribute == BrowserCol::MINIMUM)
     {
-        if (!manager->attributesEditable(Attribute::MINIMUM))
+        if (!manager->attributesEditable(BrowserCol::MINIMUM))
             return nullptr;
         QDoubleEdit *editor = d_ptr->createMinimumAttributeEditor(property, parent);
         updateMinimum(manager, property, editor);
@@ -902,9 +902,9 @@ QWidget *QtSpinBoxFactory::createAttributeEditor(QtIntPropertyManager *manager, 
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotMinimumAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    else if (attribute == Attribute::MAXIMUM)
+    else if (attribute == BrowserCol::MAXIMUM)
     {
-        if (!manager->attributesEditable(Attribute::MAXIMUM))
+        if (!manager->attributesEditable(BrowserCol::MAXIMUM))
             return nullptr;
         QDoubleEdit *editor = d_ptr->createMaximumAttributeEditor(property, parent);
         updateMaximum(manager, property, editor);
@@ -913,9 +913,9 @@ QWidget *QtSpinBoxFactory::createAttributeEditor(QtIntPropertyManager *manager, 
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotMaximumAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    else if (attribute == Attribute::CHECK)
+    else if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -1202,11 +1202,11 @@ QWidget *QtIntEditFactory::createEditor(QtIntPropertyManager *manager, QtPropert
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtIntEditFactory::createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property,
-                                                 QWidget *parent, Attribute attribute)
+                                                 QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::MINIMUM)
+    if (attribute == BrowserCol::MINIMUM)
     {
-        if (!manager->attributesEditable(Attribute::MINIMUM))
+        if (!manager->attributesEditable(BrowserCol::MINIMUM))
             return nullptr;
         QDoubleEdit *editor = d_ptr->createMinimumAttributeEditor(property, parent);
         updateMinimum(manager, property, editor);
@@ -1215,9 +1215,9 @@ QWidget *QtIntEditFactory::createAttributeEditor(QtIntPropertyManager *manager, 
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotMinimumAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    else if (attribute == Attribute::MAXIMUM)
+    else if (attribute == BrowserCol::MAXIMUM)
     {
-        if (!manager->attributesEditable(Attribute::MAXIMUM))
+        if (!manager->attributesEditable(BrowserCol::MAXIMUM))
             return nullptr;
         QDoubleEdit *editor = d_ptr->createMaximumAttributeEditor(property, parent);
         updateMaximum(manager, property, editor);
@@ -1226,9 +1226,9 @@ QWidget *QtIntEditFactory::createAttributeEditor(QtIntPropertyManager *manager, 
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotMaximumAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    else if (attribute == Attribute::CHECK)
+    else if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -1481,11 +1481,11 @@ QWidget *QtSliderFactory::createEditor(QtIntPropertyManager *manager, QtProperty
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtSliderFactory::createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property,
-                                                QWidget *parent, Attribute attribute)
+                                                QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::MINIMUM)
+    if (attribute == BrowserCol::MINIMUM)
     {
-        if (!manager->attributesEditable(Attribute::MINIMUM))
+        if (!manager->attributesEditable(BrowserCol::MINIMUM))
             return nullptr;
         QDoubleEdit *editor = d_ptr->createMinimumAttributeEditor(property, parent);
         updateMinimum(manager, property, editor);
@@ -1494,9 +1494,9 @@ QWidget *QtSliderFactory::createAttributeEditor(QtIntPropertyManager *manager, Q
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotMinimumAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    else if (attribute == Attribute::MAXIMUM)
+    else if (attribute == BrowserCol::MAXIMUM)
     {
-        if (!manager->attributesEditable(Attribute::MAXIMUM))
+        if (!manager->attributesEditable(BrowserCol::MAXIMUM))
             return nullptr;
         QDoubleEdit *editor = d_ptr->createMaximumAttributeEditor(property, parent);
         updateMaximum(manager, property, editor);
@@ -1505,9 +1505,9 @@ QWidget *QtSliderFactory::createAttributeEditor(QtIntPropertyManager *manager, Q
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotMaximumAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    else if (attribute == Attribute::CHECK)
+    else if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -1759,11 +1759,11 @@ QWidget *QtScrollBarFactory::createEditor(QtIntPropertyManager *manager, QtPrope
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtScrollBarFactory::createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property,
-                                                   QWidget *parent, Attribute attribute)
+                                                   QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::MINIMUM)
+    if (attribute == BrowserCol::MINIMUM)
     {
-        if (!manager->attributesEditable(Attribute::MINIMUM))
+        if (!manager->attributesEditable(BrowserCol::MINIMUM))
             return nullptr;
         QDoubleEdit *editor = d_ptr->createMinimumAttributeEditor(property, parent);
         updateMinimum(manager, property, editor);
@@ -1772,9 +1772,9 @@ QWidget *QtScrollBarFactory::createAttributeEditor(QtIntPropertyManager *manager
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotMinimumAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    else if (attribute == Attribute::MAXIMUM)
+    else if (attribute == BrowserCol::MAXIMUM)
     {
-        if (!manager->attributesEditable(Attribute::MAXIMUM))
+        if (!manager->attributesEditable(BrowserCol::MAXIMUM))
             return nullptr;
         QDoubleEdit *editor = d_ptr->createMaximumAttributeEditor(property, parent);
         updateMaximum(manager, property, editor);
@@ -1783,9 +1783,9 @@ QWidget *QtScrollBarFactory::createAttributeEditor(QtIntPropertyManager *manager
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotMaximumAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    else if (attribute == Attribute::CHECK)
+    else if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -1960,11 +1960,11 @@ QWidget *QtCheckBoxFactory::createEditor(QtBoolPropertyManager *manager, QtPrope
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtCheckBoxFactory::createAttributeEditor(QtBoolPropertyManager *manager, QtProperty *property,
-                                                  QWidget *parent, Attribute attribute)
+                                                  QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::CHECK)
+    if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -2260,11 +2260,11 @@ QWidget *QtDoubleSpinBoxFactory::createEditor(QtDoublePropertyManager *manager,
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtDoubleSpinBoxFactory::createAttributeEditor(QtDoublePropertyManager *manager, QtProperty *property,
-                                                       QWidget *parent, Attribute attribute)
+                                                       QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::MINIMUM)
+    if (attribute == BrowserCol::MINIMUM)
     {
-        if (!manager->attributesEditable(Attribute::MINIMUM))
+        if (!manager->attributesEditable(BrowserCol::MINIMUM))
             return nullptr;
         QDoubleEdit *editor = d_ptr->createMinimumAttributeEditor(property, parent);
         updateMinimum(manager, property, editor);
@@ -2273,9 +2273,9 @@ QWidget *QtDoubleSpinBoxFactory::createAttributeEditor(QtDoublePropertyManager *
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotMinimumAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    else if (attribute == Attribute::MAXIMUM)
+    else if (attribute == BrowserCol::MAXIMUM)
     {
-        if (!manager->attributesEditable(Attribute::MAXIMUM))
+        if (!manager->attributesEditable(BrowserCol::MAXIMUM))
             return nullptr;
         QDoubleEdit *editor = d_ptr->createMaximumAttributeEditor(property, parent);
         updateMaximum(manager, property, editor);
@@ -2284,9 +2284,9 @@ QWidget *QtDoubleSpinBoxFactory::createAttributeEditor(QtDoublePropertyManager *
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotMaximumAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    else if (attribute == Attribute::CHECK)
+    else if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -2612,11 +2612,11 @@ QWidget *QtDoubleEditFactory::createEditor(QtDoublePropertyManager *manager,
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *manager, QtProperty *property,
-                                                    QWidget *parent, Attribute attribute)
+                                                    QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::UNIT)
+    if (attribute == BrowserCol::UNIT)
     {
-        if (!manager->attributesEditable(Attribute::UNIT))
+        if (!manager->attributesEditable(BrowserCol::UNIT))
             return nullptr;
         QComboBox *editor = d_ptr->createUnitAttributeEditor(property, parent);
         updateUnit(manager, property, editor);
@@ -2625,9 +2625,9 @@ QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *man
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotUnitAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    else if (attribute == Attribute::FORMAT)
+    else if (attribute == BrowserCol::FORMAT)
     {
-        if (!manager->attributesEditable(Attribute::FORMAT))
+        if (!manager->attributesEditable(BrowserCol::FORMAT))
             return nullptr;
         QComboBox *editor = d_ptr->createFormatAttributeEditor(property, parent);
         updateFormat(manager, property, editor);
@@ -2636,9 +2636,9 @@ QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *man
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotFormatAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    else if (attribute == Attribute::MINIMUM)
+    else if (attribute == BrowserCol::MINIMUM)
     {
-        if (!manager->attributesEditable(Attribute::MINIMUM))
+        if (!manager->attributesEditable(BrowserCol::MINIMUM))
             return nullptr;
         QDoubleEdit *editor = d_ptr->createMinimumAttributeEditor(property, parent);
         updateMinimum(manager, property, editor);
@@ -2647,9 +2647,9 @@ QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *man
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotMinimumAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    else if (attribute == Attribute::MAXIMUM)
+    else if (attribute == BrowserCol::MAXIMUM)
     {
-        if (!manager->attributesEditable(Attribute::MAXIMUM))
+        if (!manager->attributesEditable(BrowserCol::MAXIMUM))
             return nullptr;
         QDoubleEdit *editor = d_ptr->createMaximumAttributeEditor(property, parent);
         updateMaximum(manager, property, editor);
@@ -2658,9 +2658,9 @@ QWidget *QtDoubleEditFactory::createAttributeEditor(QtDoublePropertyManager *man
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotMaximumAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    else if (attribute == Attribute::CHECK)
+    else if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -3003,11 +3003,11 @@ QWidget *QtComplexEditFactory::createEditor(QtComplexPropertyManager *manager,
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtComplexEditFactory::createAttributeEditor(QtComplexPropertyManager *manager,
-                                                     QtProperty *property, QWidget *parent, Attribute attribute)
+                                                     QtProperty *property, QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::UNIT)
+    if (attribute == BrowserCol::UNIT)
     {
-        if (!manager->attributesEditable(Attribute::UNIT))
+        if (!manager->attributesEditable(BrowserCol::UNIT))
             return nullptr;
         QComboBox *editor = d_ptr->createUnitAttributeEditor(property, parent);
         updateUnit(manager, property, editor);
@@ -3016,9 +3016,9 @@ QWidget *QtComplexEditFactory::createAttributeEditor(QtComplexPropertyManager *m
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotUnitAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    else if (attribute == Attribute::FORMAT)
+    else if (attribute == BrowserCol::FORMAT)
     {
-        if (!manager->attributesEditable(Attribute::FORMAT))
+        if (!manager->attributesEditable(BrowserCol::FORMAT))
             return nullptr;
         QComboBox *editor = d_ptr->createFormatAttributeEditor(property, parent);
         updateFormat(manager, property, editor);
@@ -3027,9 +3027,9 @@ QWidget *QtComplexEditFactory::createAttributeEditor(QtComplexPropertyManager *m
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotFormatAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    else if (attribute == Attribute::MINIMUM)
+    else if (attribute == BrowserCol::MINIMUM)
     {
-        if (!manager->attributesEditable(Attribute::MINIMUM))
+        if (!manager->attributesEditable(BrowserCol::MINIMUM))
             return nullptr;
         QDoubleEdit *editor = d_ptr->createMinimumAttributeEditor(property, parent);
         updateMinimum(manager, property, editor);
@@ -3038,9 +3038,9 @@ QWidget *QtComplexEditFactory::createAttributeEditor(QtComplexPropertyManager *m
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotMinimumAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    else if (attribute == Attribute::MAXIMUM)
+    else if (attribute == BrowserCol::MAXIMUM)
     {
-        if (!manager->attributesEditable(Attribute::MAXIMUM))
+        if (!manager->attributesEditable(BrowserCol::MAXIMUM))
             return nullptr;
         QDoubleEdit *editor = d_ptr->createMaximumAttributeEditor(property, parent);
         updateMaximum(manager, property, editor);
@@ -3049,9 +3049,9 @@ QWidget *QtComplexEditFactory::createAttributeEditor(QtComplexPropertyManager *m
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotMaximumAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    else if (attribute == Attribute::CHECK)
+    else if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -3259,11 +3259,11 @@ QWidget *QtTFTensorEditFactory::createEditor(QtTFTensorPropertyManager *manager,
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtTFTensorEditFactory::createAttributeEditor(QtTFTensorPropertyManager *manager,
-                                                     QtProperty *property, QWidget *parent, Attribute attribute)
+                                                     QtProperty *property, QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::UNIT)
+    if (attribute == BrowserCol::UNIT)
     {
-        if (!manager->attributesEditable(Attribute::UNIT))
+        if (!manager->attributesEditable(BrowserCol::UNIT))
             return nullptr;
         QComboBox *editor = d_ptr->createUnitAttributeEditor(property, parent);
         updateUnit(manager, property, editor);
@@ -3272,9 +3272,9 @@ QWidget *QtTFTensorEditFactory::createAttributeEditor(QtTFTensorPropertyManager 
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotUnitAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    else if (attribute == Attribute::PKAVG)
+    else if (attribute == BrowserCol::PKAVG)
     {
-        if (!manager->attributesEditable(Attribute::PKAVG))
+        if (!manager->attributesEditable(BrowserCol::PKAVG))
             return nullptr;
         QComboBox *editor = d_ptr->createPkAvgAttributeEditor(property, parent);
         updatePkAvg(manager, property, editor);
@@ -3283,9 +3283,9 @@ QWidget *QtTFTensorEditFactory::createAttributeEditor(QtTFTensorPropertyManager 
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotPkAvgAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    else if (attribute == Attribute::FORMAT)
+    else if (attribute == BrowserCol::FORMAT)
     {
-        if (!manager->attributesEditable(Attribute::FORMAT))
+        if (!manager->attributesEditable(BrowserCol::FORMAT))
             return nullptr;
         QComboBox *editor = d_ptr->createFormatAttributeEditor(property, parent);
         updateFormat(manager, property, editor);
@@ -3294,9 +3294,9 @@ QWidget *QtTFTensorEditFactory::createAttributeEditor(QtTFTensorPropertyManager 
         connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotFormatAttributeEditorDestroyed(QObject *)));
         return editor;
     }
-    else if (attribute == Attribute::CHECK)
+    else if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -3530,11 +3530,11 @@ QWidget *QtLineEditFactory::createEditor(QtStringPropertyManager *manager,
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtLineEditFactory::createAttributeEditor(QtStringPropertyManager *manager, QtProperty *property,
-                                                  QWidget *parent, Attribute attribute)
+                                                  QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::CHECK)
+    if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -3718,11 +3718,11 @@ QWidget *QtDateEditFactory::createEditor(QtDatePropertyManager *manager, QtPrope
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtDateEditFactory::createAttributeEditor(QtDatePropertyManager *manager, QtProperty *property,
-                                                  QWidget *parent, Attribute attribute)
+                                                  QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::CHECK)
+    if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -3875,11 +3875,11 @@ QWidget *QtTimeEditFactory::createEditor(QtTimePropertyManager *manager, QtPrope
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtTimeEditFactory::createAttributeEditor(QtTimePropertyManager *manager, QtProperty *property,
-                                                  QWidget *parent, Attribute attribute)
+                                                  QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::CHECK)
+    if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -4034,11 +4034,11 @@ QWidget *QtDateTimeEditFactory::createEditor(QtDateTimePropertyManager *manager,
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtDateTimeEditFactory::createAttributeEditor(QtDateTimePropertyManager *manager, QtProperty *property,
-                                                  QWidget *parent, Attribute attribute)
+                                                  QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::CHECK)
+    if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -4192,11 +4192,11 @@ QWidget *QtKeySequenceEditorFactory::createEditor(QtKeySequencePropertyManager *
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtKeySequenceEditorFactory::createAttributeEditor(QtKeySequencePropertyManager *manager, QtProperty *property,
-                                                  QWidget *parent, Attribute attribute)
+                                                  QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::CHECK)
+    if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -4529,11 +4529,11 @@ QWidget *QtCharEditorFactory::createEditor(QtCharPropertyManager *manager,
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtCharEditorFactory::createAttributeEditor(QtCharPropertyManager *manager, QtProperty *property,
-                                                  QWidget *parent, Attribute attribute)
+                                                  QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::CHECK)
+    if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -4647,11 +4647,11 @@ QWidget *QtLocaleEditorFactory::createEditor(QtLocalePropertyManager *manager,
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtLocaleEditorFactory::createAttributeEditor(QtLocalePropertyManager *manager,
-                                                     QtProperty *property, QWidget *parent, Attribute attribute)
+                                                     QtProperty *property, QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::CHECK)
+    if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -4764,11 +4764,11 @@ QWidget *QtPointEditorFactory::createEditor(QtPointPropertyManager *manager,
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtPointEditorFactory::createAttributeEditor(QtPointPropertyManager *manager,
-                                                     QtProperty *property, QWidget *parent, Attribute attribute)
+                                                     QtProperty *property, QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::CHECK)
+    if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -4881,11 +4881,11 @@ QWidget *QtPointFEditorFactory::createEditor(QtPointFPropertyManager *manager,
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtPointFEditorFactory::createAttributeEditor(QtPointFPropertyManager *manager,
-                                                     QtProperty *property, QWidget *parent, Attribute attribute)
+                                                     QtProperty *property, QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::CHECK)
+    if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -4998,11 +4998,11 @@ QWidget *QtSizeEditorFactory::createEditor(QtSizePropertyManager *manager,
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtSizeEditorFactory::createAttributeEditor(QtSizePropertyManager *manager,
-                                                     QtProperty *property, QWidget *parent, Attribute attribute)
+                                                     QtProperty *property, QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::CHECK)
+    if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -5115,11 +5115,11 @@ QWidget *QtSizeFEditorFactory::createEditor(QtSizeFPropertyManager *manager,
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtSizeFEditorFactory::createAttributeEditor(QtSizeFPropertyManager *manager,
-                                                     QtProperty *property, QWidget *parent, Attribute attribute)
+                                                     QtProperty *property, QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::CHECK)
+    if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -5232,11 +5232,11 @@ QWidget *QtRectEditorFactory::createEditor(QtRectPropertyManager *manager,
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtRectEditorFactory::createAttributeEditor(QtRectPropertyManager *manager,
-                                                     QtProperty *property, QWidget *parent, Attribute attribute)
+                                                     QtProperty *property, QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::CHECK)
+    if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -5349,11 +5349,11 @@ QWidget *QtRectFEditorFactory::createEditor(QtRectFPropertyManager *manager,
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtRectFEditorFactory::createAttributeEditor(QtRectFPropertyManager *manager,
-                                                     QtProperty *property, QWidget *parent, Attribute attribute)
+                                                     QtProperty *property, QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::CHECK)
+    if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -5566,11 +5566,11 @@ QWidget *QtEnumEditorFactory::createEditor(QtEnumPropertyManager *manager, QtPro
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtEnumEditorFactory::createAttributeEditor(QtEnumPropertyManager *manager, QtProperty *property,
-                                                  QWidget *parent, Attribute attribute)
+                                                  QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::CHECK)
+    if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -5686,11 +5686,11 @@ QWidget *QtFlagEditorFactory::createEditor(QtFlagPropertyManager *manager,
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtFlagEditorFactory::createAttributeEditor(QtFlagPropertyManager *manager,
-                                                     QtProperty *property, QWidget *parent, Attribute attribute)
+                                                     QtProperty *property, QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::CHECK)
+    if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -5803,11 +5803,11 @@ QWidget *QtSizePolicyEditorFactory::createEditor(QtSizePolicyPropertyManager *ma
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtSizePolicyEditorFactory::createAttributeEditor(QtSizePolicyPropertyManager *manager,
-                                                     QtProperty *property, QWidget *parent, Attribute attribute)
+                                                     QtProperty *property, QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::CHECK)
+    if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -6016,11 +6016,11 @@ QWidget *QtCursorEditorFactory::createEditor(QtCursorPropertyManager *manager, Q
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtCursorEditorFactory::createAttributeEditor(QtCursorPropertyManager *manager, QtProperty *property,
-                                                  QWidget *parent, Attribute attribute)
+                                                  QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::CHECK)
+    if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -6272,11 +6272,11 @@ QWidget *QtColorEditorFactory::createEditor(QtColorPropertyManager *manager,
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtColorEditorFactory::createAttributeEditor(QtColorPropertyManager *manager, QtProperty *property,
-                                                  QWidget *parent, Attribute attribute)
+                                                  QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::CHECK)
+    if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -6543,11 +6543,11 @@ QWidget *QtFontEditorFactory::createEditor(QtFontPropertyManager *manager,
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtFontEditorFactory::createAttributeEditor(QtFontPropertyManager *manager, QtProperty *property,
-                                                  QWidget *parent, Attribute attribute)
+                                                  QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::CHECK)
+    if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);
@@ -6726,11 +6726,11 @@ QWidget *QtFileEditorFactory::createEditor(QtFilePropertyManager *manager, QtPro
  Reimplemented from the QtAbstractEditorFactory class.
  */
 QWidget *QtFileEditorFactory::createAttributeEditor(QtFilePropertyManager *manager, QtProperty *property,
-                                                    QWidget *parent, Attribute attribute)
+                                                    QWidget *parent, BrowserCol attribute)
 {
-    if (attribute == Attribute::CHECK)
+    if (attribute == BrowserCol::CHECK)
     {
-        if (!manager->attributesEditable(Attribute::CHECK))
+        if (!manager->attributesEditable(BrowserCol::CHECK))
             return nullptr;
         QtBoolEdit *editor = d_ptr->createCheckAttributeEditor(property, parent);
         updateCheck(manager, property, editor);

@@ -153,26 +153,26 @@ QMap<Format, QString> FormatNameMap = {
 };
 
 QMap<Scale, QString> ScaleNameMap = {
-    {Scale::p, "p"},
-    {Scale::n, "n"},
-    {Scale::u, "u"},
-    {Scale::m, "m"},
-    {Scale::_, " "},
-    {Scale::K, "K"},
-    {Scale::M, "M"},
-    {Scale::G, "G"},
     {Scale::T, "T"},
+    {Scale::G, "G"},
+    {Scale::M, "M"},
+    {Scale::K, "K"},
+    {Scale::_, " "},
+    {Scale::m, "m"},
+    {Scale::u, "u"},
+    {Scale::n, "n"},
+    {Scale::p, "p"},
 };
 QMap<Scale, int> ScaleValueMap = {
-    {Scale::p, -12},
-    {Scale::n, -9},
-    {Scale::u, -6},
-    {Scale::m, -3},
-    {Scale::_, 0},
-    {Scale::K, 3},
-    {Scale::M, 6},
-    {Scale::G, 9},
     {Scale::T, 12},
+    {Scale::G, 9},
+    {Scale::M, 6},
+    {Scale::K, 3},
+    {Scale::_, 0},
+    {Scale::m, -3},
+    {Scale::u, -6},
+    {Scale::n, -9},
+    {Scale::p, -12},
 };
 
 QMap<PkAvg, QString> PkAvgNameMap = {
@@ -186,12 +186,12 @@ QMap<Domain, QString> DomainNameMap = {
     {Domain::TT, "TT"},
     {Domain::TH, "TH"},
 };
-QMap<Attribute, QString> AttributeNameMap = {
-    {Attribute::UNIT, "Unit"},
-    {Attribute::PKAVG, "PkAvg"},
-    {Attribute::FORMAT, "Format"},
-    {Attribute::MINIMUM, "Minimum"},
-    {Attribute::MAXIMUM, "Maximum"},
+QMap<BrowserCol, QString> AttributeNameMap = {
+    {BrowserCol::UNIT, "Unit"},
+    {BrowserCol::PKAVG, "PkAvg"},
+    {BrowserCol::FORMAT, "Format"},
+    {BrowserCol::MINIMUM, "Minimum"},
+    {BrowserCol::MAXIMUM, "Maximum"},
 };
 
 const QRegExp regExps[4] = {

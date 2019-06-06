@@ -28,6 +28,8 @@
 #include <cctype>
 #include <cstring>
 
+QT_WARNING_DISABLE_DEPRECATED
+
 
 
 template <class T>
@@ -43,12 +45,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -164,10 +168,10 @@ static PyObject* Sbk_QtBrowserItemFunc_property(PyObject* self)
 }
 
 static PyMethodDef Sbk_QtBrowserItem_methods[] = {
-    {"browser", (PyCFunction)Sbk_QtBrowserItemFunc_browser, METH_NOARGS},
-    {"children", (PyCFunction)Sbk_QtBrowserItemFunc_children, METH_NOARGS},
-    {"parent", (PyCFunction)Sbk_QtBrowserItemFunc_parent, METH_NOARGS},
-    {"property", (PyCFunction)Sbk_QtBrowserItemFunc_property, METH_NOARGS},
+    {"browser", reinterpret_cast<PyCFunction>(Sbk_QtBrowserItemFunc_browser), METH_NOARGS},
+    {"children", reinterpret_cast<PyCFunction>(Sbk_QtBrowserItemFunc_children), METH_NOARGS},
+    {"parent", reinterpret_cast<PyCFunction>(Sbk_QtBrowserItemFunc_parent), METH_NOARGS},
+    {"property", reinterpret_cast<PyCFunction>(Sbk_QtBrowserItemFunc_property), METH_NOARGS},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -230,14 +234,14 @@ static void QtBrowserItem_PythonToCpp_QtBrowserItem_PTR(PyObject* pyIn, void* cp
 static PythonToCppFunc is_QtBrowserItem_PythonToCpp_QtBrowserItem_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtBrowserItem_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtBrowserItem_TypeF())))
         return QtBrowserItem_PythonToCpp_QtBrowserItem_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtBrowserItem_PTR_CppToPython_QtBrowserItem(const void* cppIn) {
-    PyObject* pyOut = (PyObject*)Shiboken::BindingManager::instance().retrieveWrapper(cppIn);
+    auto pyOut = reinterpret_cast<PyObject*>(Shiboken::BindingManager::instance().retrieveWrapper(cppIn));
     if (pyOut) {
         Py_INCREF(pyOut);
         return pyOut;
@@ -258,12 +262,12 @@ static PyObject* QtBrowserItem_PTR_CppToPython_QtBrowserItem(const void* cppIn) 
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtBrowserItem_SignaturesString[] = ""
-    "qtpropertybrowser.QtBrowserItem.browser()->qtpropertybrowser.QtAbstractPropertyBrowser\n"
-    "qtpropertybrowser.QtBrowserItem.children()->qtpropertybrowser.QtBrowserItem\n"
-    "qtpropertybrowser.QtBrowserItem.parent()->qtpropertybrowser.QtBrowserItem\n"
-    "qtpropertybrowser.QtBrowserItem.property()->qtpropertybrowser.QtProperty\n"
-;
+static const char *QtBrowserItem_SignatureStrings[] = {
+    "qtpropertybrowser.QtBrowserItem.browser()->qtpropertybrowser.QtAbstractPropertyBrowser",
+    "qtpropertybrowser.QtBrowserItem.children()->QList[qtpropertybrowser.QtBrowserItem]",
+    "qtpropertybrowser.QtBrowserItem.parent()->qtpropertybrowser.QtBrowserItem",
+    "qtpropertybrowser.QtBrowserItem.property()->qtpropertybrowser.QtProperty",
+    nullptr}; // Sentinel
 
 void init_QtBrowserItem(PyObject* module)
 {
@@ -272,7 +276,7 @@ void init_QtBrowserItem(PyObject* module)
         "QtBrowserItem",
         "QtBrowserItem*",
         &Sbk_QtBrowserItem_spec,
-        QtBrowserItem_SignaturesString,
+        QtBrowserItem_SignatureStrings,
         0,
         0,
         0,

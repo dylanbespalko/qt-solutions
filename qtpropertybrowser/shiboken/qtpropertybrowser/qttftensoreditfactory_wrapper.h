@@ -9,8 +9,8 @@ public:
     QtTFTensorEditFactoryWrapper(QObject * parent = nullptr);
     inline void connectPropertyManager_protected(QtTFTensorPropertyManager * manager) { QtTFTensorEditFactory::connectPropertyManager(manager); }
     void connectPropertyManager(QtTFTensorPropertyManager * manager) override;
-    inline QWidget * createAttributeEditor_protected(QtTFTensorPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) { return QtTFTensorEditFactory::createAttributeEditor(manager, property, parent, Attribute(attribute)); }
-    QWidget * createAttributeEditor(QtTFTensorPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) override;
+    inline QWidget * createAttributeEditor_protected(QtTFTensorPropertyManager * manager, QtProperty * property, QWidget * parent, BrowserCol attribute) { return QtTFTensorEditFactory::createAttributeEditor(manager, property, parent, BrowserCol(attribute)); }
+    QWidget * createAttributeEditor(QtTFTensorPropertyManager * manager, QtProperty * property, QWidget * parent, BrowserCol attribute) override;
     inline QWidget * createEditor_protected(QtTFTensorPropertyManager * manager, QtProperty * property, QWidget * parent) { return QtTFTensorEditFactory::createEditor(manager, property, parent); }
     QWidget * createEditor(QtTFTensorPropertyManager * manager, QtProperty * property, QWidget * parent) override;
     inline void disconnectPropertyManager_protected(QtTFTensorPropertyManager * manager) { QtTFTensorEditFactory::disconnectPropertyManager(manager); }

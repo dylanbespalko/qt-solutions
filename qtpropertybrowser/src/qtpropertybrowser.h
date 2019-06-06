@@ -139,8 +139,8 @@ public:
     void clear() const;
     virtual bool isReadOnly(const QtProperty *) const{return false;}
     QtProperty *addProperty(const QString &name = QString());
-    bool attributesEditable(const Attribute) const;
-    void setAttributesEditable(const Attribute, bool);
+    bool attributesEditable(const BrowserCol) const;
+    void setAttributesEditable(const BrowserCol, bool);
 Q_SIGNALS:
 
     void propertyInserted(QtProperty *property,
@@ -177,7 +177,7 @@ class QT_QTPROPERTYBROWSER_EXPORT QtAbstractEditorFactoryBase : public QObject
     Q_OBJECT
 public:
     virtual QWidget *createEditor(QtProperty *property, QWidget *parent) = 0;
-    virtual QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, Attribute atttribute) = 0;
+    virtual QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, BrowserCol atttribute) = 0;
 protected:
     explicit QtAbstractEditorFactoryBase(QObject *parent = nullptr)
         : QObject(parent) {}
@@ -205,7 +205,7 @@ public:
         }
         return nullptr;
     }
-    QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, Attribute attribute)
+    QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, BrowserCol attribute)
     {
         QSetIterator<PropertyManager *> it(m_managers);
         while (it.hasNext()) {
@@ -254,7 +254,7 @@ protected:
     virtual void connectPropertyManager(PropertyManager *manager) = 0;
     virtual QWidget *createEditor(PropertyManager *manager, QtProperty *property,
                 QWidget *parent) = 0;
-    virtual QWidget *createAttributeEditor(PropertyManager *manager, QtProperty *property,QWidget *parent, Attribute attribute)
+    virtual QWidget *createAttributeEditor(PropertyManager *manager, QtProperty *property,QWidget *parent, BrowserCol attribute)
     {Q_UNUSED(manager);Q_UNUSED(property);Q_UNUSED(parent);Q_UNUSED(attribute);return nullptr;}
     virtual void disconnectPropertyManager(PropertyManager *manager) = 0;
     void managerDestroyed(QObject *manager)
@@ -349,7 +349,7 @@ protected:
     virtual void itemChanged(QtBrowserItem *item) = 0;
 
     virtual QWidget *createEditor(QtProperty *property, QWidget *parent);
-    virtual QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, Attribute attribute);
+    virtual QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, BrowserCol attribute);
 private:
 
     bool addFactory(QtAbstractPropertyManager *abstractManager,

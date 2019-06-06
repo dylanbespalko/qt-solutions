@@ -9,8 +9,8 @@ public:
     QtCheckBoxFactoryWrapper(QObject * parent = nullptr);
     inline void connectPropertyManager_protected(QtBoolPropertyManager * manager) { QtCheckBoxFactory::connectPropertyManager(manager); }
     void connectPropertyManager(QtBoolPropertyManager * manager) override;
-    inline QWidget * createAttributeEditor_protected(QtBoolPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) { return QtCheckBoxFactory::createAttributeEditor(manager, property, parent, Attribute(attribute)); }
-    QWidget * createAttributeEditor(QtBoolPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) override;
+    inline QWidget * createAttributeEditor_protected(QtBoolPropertyManager * manager, QtProperty * property, QWidget * parent, BrowserCol attribute) { return QtCheckBoxFactory::createAttributeEditor(manager, property, parent, BrowserCol(attribute)); }
+    QWidget * createAttributeEditor(QtBoolPropertyManager * manager, QtProperty * property, QWidget * parent, BrowserCol attribute) override;
     inline QWidget * createEditor_protected(QtBoolPropertyManager * manager, QtProperty * property, QWidget * parent) { return QtCheckBoxFactory::createEditor(manager, property, parent); }
     QWidget * createEditor(QtBoolPropertyManager * manager, QtProperty * property, QWidget * parent) override;
     inline void disconnectPropertyManager_protected(QtBoolPropertyManager * manager) { QtCheckBoxFactory::disconnectPropertyManager(manager); }

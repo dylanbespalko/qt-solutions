@@ -8,7 +8,7 @@ from PySide2.QtWidgets import QApplication, QDialog, QLabel, QGridLayout, QScrol
 
 from enums import PropertyID, id_manager_map, id_factory_map
 from qtpropertybrowser import QtTreePropertyBrowser, QtGroupBoxPropertyBrowser, QtButtonPropertyBrowser
-from qtpropertybrowser import PkAvg, Scale, Format, Domain, Attribute
+from qtpropertybrowser import PkAvg, Scale, Format, Domain, BrowserCol
 
 
 @unique
@@ -42,16 +42,16 @@ if __name__ == "__main__":
 
     tree_scroll_area = QScrollArea()
     tree_browser = QtTreePropertyBrowser()
-    # tree_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM])
-    tree_browser.setAttributes([Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
+    # tree_browser.setAttributes([BrowserCol.MINIMUM, BrowserCol.MAXIMUM])
+    tree_browser.setAttributes([BrowserCol.UNIT, BrowserCol.FORMAT, BrowserCol.CHECK])
     box_scroll_area = QScrollArea()
     box_browser = QtGroupBoxPropertyBrowser()
-    # box_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM])
-    box_browser.setAttributes([Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
+    # box_browser.setAttributes([BrowserCol.MINIMUM, BrowserCol.MAXIMUM])
+    box_browser.setAttributes([BrowserCol.UNIT, BrowserCol.FORMAT, BrowserCol.CHECK])
     button_scroll_area = QScrollArea()
     button_browser = QtButtonPropertyBrowser()
-    # button_browser.setAttributes([Attribute.MINIMUM, Attribute.MAXIMUM])
-    button_browser.setAttributes([Attribute.UNIT, Attribute.FORMAT, Attribute.CHECK])
+    # button_browser.setAttributes([BrowserCol.MINIMUM, BrowserCol.MAXIMUM])
+    button_browser.setAttributes([BrowserCol.UNIT, BrowserCol.FORMAT, BrowserCol.CHECK])
 
     manager_map = {}
     for k, v in id_manager_map.items():
@@ -241,8 +241,11 @@ if __name__ == "__main__":
         # tf_tensor_rw
         manager_map[PropertyID.TF_EDIT].valueChanged.connect(set_value)
         property_ = manager_map[PropertyID.TF_EDIT].addProperty("tf_tensor_rw_%d" % (count + 1,))
+        property_.propertyManager().setSize(property_, 5)
         property_.propertyManager().setReadOnly(property_, False)
+        property_.propertyManager().setScale(property_, Scale.m)
         property_.propertyManager().setUnit(property_, "V")
+        property_.propertyManager().setFormat(property_, Format.LIN_DEG)
         property_.propertyManager().setPrecision(property_, 2)
         property_.propertyManager().setMinimum(property_, [0, 0, 0, 0, 0])
         property_.propertyManager().setMaximum(property_, [2, 2, 2, 2, 2])

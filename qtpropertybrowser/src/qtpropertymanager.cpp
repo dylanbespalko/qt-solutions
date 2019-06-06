@@ -1054,7 +1054,7 @@ QString QtIntPropertyManager::unitText(const QtProperty *property) const
  */
 QIcon QtIntPropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -1636,7 +1636,7 @@ QString QtDoublePropertyManager::formatText(const QtProperty *property) const
  */
 QIcon QtDoublePropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -2302,7 +2302,7 @@ QString QtComplexPropertyManager::maximumText(const QtProperty *property) const
  */
 QString QtComplexPropertyManager::unitText(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::UNIT))
+    if (!attributesEditable(BrowserCol::UNIT))
         return QString();
     const QtComplexPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
@@ -2321,7 +2321,7 @@ QString QtComplexPropertyManager::unitText(const QtProperty *property) const
  */
 QString QtComplexPropertyManager::pkAvgText(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::PKAVG))
+    if (!attributesEditable(BrowserCol::PKAVG))
         return QString();
     const QtComplexPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
@@ -2340,7 +2340,7 @@ QString QtComplexPropertyManager::pkAvgText(const QtProperty *property) const
  */
 QString QtComplexPropertyManager::formatText(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::FORMAT))
+    if (!attributesEditable(BrowserCol::FORMAT))
         return QString();
     const QtComplexPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
@@ -2363,7 +2363,7 @@ QString QtComplexPropertyManager::formatText(const QtProperty *property) const
  */
 QIcon QtComplexPropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -2812,7 +2812,7 @@ public:
         Data()
             :val(QVector<QComplex>(0)), minVal(QVector<double>(0)), maxVal(QVector<double>(0)),
              singleStep(QVector<QComplex>(0)), absTol(QVector<double>(0)), relTol(QVector<double>(0)),
-             precision(2), scale(Scale::_), pkAvg(PkAvg::PK),format(Format::RE_IM), readOnly(false), check(false), unit(QString()),
+             size(0), precision(2), scale(Scale::_), pkAvg(PkAvg::PK),format(Format::RE_IM), readOnly(false), check(false), unit(QString()),
              foreground(QBrush(Qt::black, Qt::SolidPattern)) {}
         QVector<QComplex> val;
         QVector<double> minVal;
@@ -2820,6 +2820,7 @@ public:
         QVector<QComplex> singleStep;
         QVector<double> absTol;
         QVector<double> relTol;
+        int size;
         int precision;
         Scale scale;
         PkAvg pkAvg;
@@ -2956,10 +2957,10 @@ QtTFTensorPropertyManager::QtTFTensorPropertyManager(QObject *parent)
     d_ptr->q_ptr = this;
 
     d_ptr->m_complexPropertyManager = new QtComplexPropertyManager(this);
-    d_ptr->m_complexPropertyManager->setAttributesEditable(Attribute::UNIT, false);
-    d_ptr->m_complexPropertyManager->setAttributesEditable(Attribute::PKAVG, false);
-    d_ptr->m_complexPropertyManager->setAttributesEditable(Attribute::FORMAT, false);
-    d_ptr->m_complexPropertyManager->setAttributesEditable(Attribute::CHECK, false);
+    d_ptr->m_complexPropertyManager->setAttributesEditable(BrowserCol::UNIT, false);
+    d_ptr->m_complexPropertyManager->setAttributesEditable(BrowserCol::PKAVG, false);
+    d_ptr->m_complexPropertyManager->setAttributesEditable(BrowserCol::FORMAT, false);
+    d_ptr->m_complexPropertyManager->setAttributesEditable(BrowserCol::CHECK, false);
     connect_signals();
 }
 
@@ -3080,6 +3081,16 @@ QVector<double> QtTFTensorPropertyManager::maximum(const QtProperty *property) c
 QVector<QComplex> QtTFTensorPropertyManager::singleStep(const QtProperty *property) const
 {
     return getData<QVector<QComplex> >(d_ptr->m_values, &QtTFTensorPropertyManagerPrivate::Data::singleStep, property, QVector<QComplex>(0));
+}
+
+/*!
+ Returns the given \a property's size.
+
+ \sa setSize()
+ */
+int QtTFTensorPropertyManager::size(const QtProperty *property) const
+{
+    return getData<int>(d_ptr->m_values, &QtTFTensorPropertyManagerPrivate::Data::size, property, 0);
 }
 
 /*!
@@ -3212,7 +3223,7 @@ QString QtTFTensorPropertyManager::valueText(const QtProperty *property) const
  */
 QString QtTFTensorPropertyManager::pkAvgText(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::PKAVG))
+    if (!attributesEditable(BrowserCol::PKAVG))
         return QString();
     const QtTFTensorPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
@@ -3231,7 +3242,7 @@ QString QtTFTensorPropertyManager::pkAvgText(const QtProperty *property) const
  */
 QString QtTFTensorPropertyManager::formatText(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::FORMAT))
+    if (!attributesEditable(BrowserCol::FORMAT))
         return QString();
     const QtTFTensorPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
@@ -3254,7 +3265,7 @@ QString QtTFTensorPropertyManager::formatText(const QtProperty *property) const
  */
 QString QtTFTensorPropertyManager::unitText(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::UNIT))
+    if (!attributesEditable(BrowserCol::UNIT))
         return QString();
     const QtTFTensorPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
@@ -3273,7 +3284,7 @@ QString QtTFTensorPropertyManager::unitText(const QtProperty *property) const
  */
 QIcon QtTFTensorPropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -3381,6 +3392,37 @@ void QtTFTensorPropertyManager::setReadOnly(QtProperty *property, bool readOnly)
 
     emit propertyChanged(property);
     emit readOnlyChanged(property, data.readOnly);
+}
+
+/*!
+ \fn void QtComplexArrayPropertyManager::setSize(QtProperty *property, int size)
+
+ Sets the precision of the given \a property to \a size.
+
+ \sa size()
+ */
+void QtTFTensorPropertyManager::setSize(QtProperty *property, int size)
+{
+    const QtTFTensorPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    if (it == d_ptr->m_values.end())
+        return;
+
+    QtTFTensorPropertyManagerPrivate::Data data = it.value();
+
+    if (data.size == size)
+        return;
+
+    const QVector<QComplex> oldVal = data.val;
+    data.size = size;
+    data.val = QVector<QComplex>(size);
+    it.value() = data;
+    reinitializeProperty(property);
+
+    emit sizeChanged(property, data.size);
+    emit propertyChanged(property);
+    if (isclose(oldVal, data.val, data.absTol, data.relTol))
+        return;
+    emit valueChanged(property, data.val);
 }
 
 /*!
@@ -3677,9 +3719,10 @@ void QtTFTensorPropertyManager::setUnit(QtProperty *property, QString unit)
         return;
 
     data.unit = unit;
-
+    for (unsigned short index=0; index < it.value().val.size(); index++) {
+        d_ptr->m_complexPropertyManager->setUnit(it.value().subProperties[index], unit);
+    }
     it.value() = data;
-
 
     emit propertyChanged(property);
     emit unitChanged(property, data.unit);
@@ -3705,7 +3748,7 @@ void QtTFTensorPropertyManager::setPkAvg(QtProperty *property, PkAvg pkAvg)
 
     data.pkAvg = pkAvg;
     for (unsigned short index=0; index < it.value().val.size(); index++) {
-        d_ptr->m_complexPropertyManager->setPkAvg(it.value().subProperties[index],pkAvg);
+        d_ptr->m_complexPropertyManager->setPkAvg(it.value().subProperties[index], pkAvg);
     }
     it.value() = data;
 
@@ -3733,7 +3776,7 @@ void QtTFTensorPropertyManager::setFormat(QtProperty *property, Format format_)
 
     data.format = format_;
     for (unsigned short index=0; index < it.value().val.size(); index++) {
-        d_ptr->m_complexPropertyManager->setFormat(it.value().subProperties[index],format_);
+        d_ptr->m_complexPropertyManager->setFormat(it.value().subProperties[index], format_);
     }
     it.value() = data;
 
@@ -4013,7 +4056,7 @@ QString QtStringPropertyManager::displayText(const QtProperty *property) const
  */
 QIcon QtStringPropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -4301,7 +4344,7 @@ QIcon QtBoolPropertyManager::valueIcon(const QtProperty *property) const
  */
 QIcon QtBoolPropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -4550,7 +4593,7 @@ QString QtDatePropertyManager::valueText(const QtProperty *property) const
  */
 QIcon QtDatePropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -4792,7 +4835,7 @@ QString QtTimePropertyManager::valueText(const QtProperty *property) const
  */
 QIcon QtTimePropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -4967,7 +5010,7 @@ QString QtDateTimePropertyManager::valueText(const QtProperty *property) const
  */
 QIcon QtDateTimePropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -5138,7 +5181,7 @@ QString QtKeySequencePropertyManager::valueText(const QtProperty *property) cons
  */
 QIcon QtKeySequencePropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -5308,7 +5351,7 @@ QString QtCharPropertyManager::valueText(const QtProperty *property) const
  */
 QIcon QtCharPropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -5478,7 +5521,7 @@ QtLocalePropertyManager::QtLocalePropertyManager(QObject *parent)
     d_ptr->q_ptr = this;
 
     d_ptr->m_enumPropertyManager = new QtEnumPropertyManager(this);
-    d_ptr->m_enumPropertyManager->setAttributesEditable(Attribute::CHECK, false);
+    d_ptr->m_enumPropertyManager->setAttributesEditable(BrowserCol::CHECK, false);
     connect(d_ptr->m_enumPropertyManager, SIGNAL(valueChanged(QtProperty *, int)),
                 this, SLOT(slotEnumChanged(QtProperty *, int)));
 
@@ -5565,7 +5608,7 @@ QString QtLocalePropertyManager::valueText(const QtProperty *property) const
  */
 QIcon QtLocalePropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -5775,7 +5818,7 @@ QtPointPropertyManager::QtPointPropertyManager(QObject *parent)
     d_ptr->q_ptr = this;
 
     d_ptr->m_intPropertyManager = new QtIntPropertyManager(this);
-    d_ptr->m_intPropertyManager->setAttributesEditable(Attribute::CHECK, false);
+    d_ptr->m_intPropertyManager->setAttributesEditable(BrowserCol::CHECK, false);
     connect(d_ptr->m_intPropertyManager, SIGNAL(valueChanged(QtProperty *, int)),
                 this, SLOT(slotIntChanged(QtProperty *, int)));
     connect(d_ptr->m_intPropertyManager, SIGNAL(propertyDestroyed(QtProperty *)),
@@ -5854,7 +5897,7 @@ QString QtPointPropertyManager::valueText(const QtProperty *property) const
  */
 QIcon QtPointPropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -6060,7 +6103,7 @@ QtPointFPropertyManager::QtPointFPropertyManager(QObject *parent)
     d_ptr->q_ptr = this;
 
     d_ptr->m_doublePropertyManager = new QtDoublePropertyManager(this);
-    d_ptr->m_doublePropertyManager->setAttributesEditable(Attribute::CHECK, false);
+    d_ptr->m_doublePropertyManager->setAttributesEditable(BrowserCol::CHECK, false);
     connect(d_ptr->m_doublePropertyManager, SIGNAL(valueChanged(QtProperty *, double)),
                 this, SLOT(slotDoubleChanged(QtProperty *, double)));
     connect(d_ptr->m_doublePropertyManager, SIGNAL(propertyDestroyed(QtProperty *)),
@@ -6150,7 +6193,7 @@ QString QtPointFPropertyManager::valueText(const QtProperty *property) const
  */
 QIcon QtPointFPropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -6430,7 +6473,7 @@ QtSizePropertyManager::QtSizePropertyManager(QObject *parent)
     d_ptr->q_ptr = this;
 
     d_ptr->m_intPropertyManager = new QtIntPropertyManager(this);
-    d_ptr->m_intPropertyManager->setAttributesEditable(Attribute::CHECK, false);
+    d_ptr->m_intPropertyManager->setAttributesEditable(BrowserCol::CHECK, false);
     connect(d_ptr->m_intPropertyManager, SIGNAL(valueChanged(QtProperty *, int)),
                 this, SLOT(slotIntChanged(QtProperty *, int)));
     connect(d_ptr->m_intPropertyManager, SIGNAL(propertyDestroyed(QtProperty *)),
@@ -6541,7 +6584,7 @@ QString QtSizePropertyManager::valueText(const QtProperty *property) const
  */
 QIcon QtSizePropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -6877,7 +6920,7 @@ QtSizeFPropertyManager::QtSizeFPropertyManager(QObject *parent)
     d_ptr->q_ptr = this;
 
     d_ptr->m_doublePropertyManager = new QtDoublePropertyManager(this);
-    d_ptr->m_doublePropertyManager->setAttributesEditable(Attribute::CHECK, false);
+    d_ptr->m_doublePropertyManager->setAttributesEditable(BrowserCol::CHECK, false);
     connect(d_ptr->m_doublePropertyManager, SIGNAL(valueChanged(QtProperty *, double)),
                 this, SLOT(slotDoubleChanged(QtProperty *, double)));
     connect(d_ptr->m_doublePropertyManager, SIGNAL(propertyDestroyed(QtProperty *)),
@@ -6999,7 +7042,7 @@ QString QtSizeFPropertyManager::valueText(const QtProperty *property) const
  */
 QIcon QtSizeFPropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -7382,7 +7425,7 @@ QtRectPropertyManager::QtRectPropertyManager(QObject *parent)
     d_ptr->q_ptr = this;
 
     d_ptr->m_intPropertyManager = new QtIntPropertyManager(this);
-    d_ptr->m_intPropertyManager->setAttributesEditable(Attribute::CHECK, false);
+    d_ptr->m_intPropertyManager->setAttributesEditable(BrowserCol::CHECK, false);
     connect(d_ptr->m_intPropertyManager, SIGNAL(valueChanged(QtProperty *, int)),
                 this, SLOT(slotIntChanged(QtProperty *, int)));
     connect(d_ptr->m_intPropertyManager, SIGNAL(propertyDestroyed(QtProperty *)),
@@ -7473,7 +7516,7 @@ QString QtRectPropertyManager::valueText(const QtProperty *property) const
  */
 QIcon QtRectPropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -7858,7 +7901,7 @@ QtRectFPropertyManager::QtRectFPropertyManager(QObject *parent)
     d_ptr->q_ptr = this;
 
     d_ptr->m_doublePropertyManager = new QtDoublePropertyManager(this);
-    d_ptr->m_doublePropertyManager->setAttributesEditable(Attribute::CHECK, false);
+    d_ptr->m_doublePropertyManager->setAttributesEditable(BrowserCol::CHECK, false);
     connect(d_ptr->m_doublePropertyManager, SIGNAL(valueChanged(QtProperty *, double)),
                 this, SLOT(slotDoubleChanged(QtProperty *, double)));
     connect(d_ptr->m_doublePropertyManager, SIGNAL(propertyDestroyed(QtProperty *)),
@@ -7960,7 +8003,7 @@ QString QtRectFPropertyManager::valueText(const QtProperty *property) const
  */
 QIcon QtRectFPropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -8394,7 +8437,7 @@ QIcon QtEnumPropertyManager::valueIcon(const QtProperty *property) const
  */
 QIcon QtEnumPropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -8662,7 +8705,7 @@ QtFlagPropertyManager::QtFlagPropertyManager(QObject *parent)
     d_ptr->q_ptr = this;
 
     d_ptr->m_boolPropertyManager = new QtBoolPropertyManager(this);
-    d_ptr->m_boolPropertyManager->setAttributesEditable(Attribute::CHECK, false);
+    d_ptr->m_boolPropertyManager->setAttributesEditable(BrowserCol::CHECK, false);
     connect(d_ptr->m_boolPropertyManager, SIGNAL(valueChanged(QtProperty *, bool)),
                 this, SLOT(slotBoolChanged(QtProperty *, bool)));
     connect(d_ptr->m_boolPropertyManager, SIGNAL(propertyDestroyed(QtProperty *)),
@@ -8765,7 +8808,7 @@ QString QtFlagPropertyManager::valueText(const QtProperty *property) const
  */
 QIcon QtFlagPropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -9048,11 +9091,11 @@ QtSizePolicyPropertyManager::QtSizePolicyPropertyManager(QObject *parent)
     d_ptr->q_ptr = this;
 
     d_ptr->m_intPropertyManager = new QtIntPropertyManager(this);
-    d_ptr->m_intPropertyManager->setAttributesEditable(Attribute::CHECK, false);
+    d_ptr->m_intPropertyManager->setAttributesEditable(BrowserCol::CHECK, false);
     connect(d_ptr->m_intPropertyManager, SIGNAL(valueChanged(QtProperty *, int)),
                 this, SLOT(slotIntChanged(QtProperty *, int)));
     d_ptr->m_enumPropertyManager = new QtEnumPropertyManager(this);
-    d_ptr->m_enumPropertyManager->setAttributesEditable(Attribute::CHECK, false);
+    d_ptr->m_enumPropertyManager->setAttributesEditable(BrowserCol::CHECK, false);
     connect(d_ptr->m_enumPropertyManager, SIGNAL(valueChanged(QtProperty *, int)),
                 this, SLOT(slotEnumChanged(QtProperty *, int)));
 
@@ -9156,7 +9199,7 @@ QString QtSizePolicyPropertyManager::valueText(const QtProperty *property) const
  */
 QIcon QtSizePolicyPropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -9521,15 +9564,15 @@ QtFontPropertyManager::QtFontPropertyManager(QObject *parent)
 #endif
 
     d_ptr->m_intPropertyManager = new QtIntPropertyManager(this);
-    d_ptr->m_intPropertyManager->setAttributesEditable(Attribute::CHECK, false);
+    d_ptr->m_intPropertyManager->setAttributesEditable(BrowserCol::CHECK, false);
     connect(d_ptr->m_intPropertyManager, SIGNAL(valueChanged(QtProperty *, int)),
                 this, SLOT(slotIntChanged(QtProperty *, int)));
     d_ptr->m_enumPropertyManager = new QtEnumPropertyManager(this);
-    d_ptr->m_enumPropertyManager->setAttributesEditable(Attribute::CHECK, false);
+    d_ptr->m_enumPropertyManager->setAttributesEditable(BrowserCol::CHECK, false);
     connect(d_ptr->m_enumPropertyManager, SIGNAL(valueChanged(QtProperty *, int)),
                 this, SLOT(slotEnumChanged(QtProperty *, int)));
     d_ptr->m_boolPropertyManager = new QtBoolPropertyManager(this);
-    d_ptr->m_boolPropertyManager->setAttributesEditable(Attribute::CHECK, false);
+    d_ptr->m_boolPropertyManager->setAttributesEditable(BrowserCol::CHECK, false);
     connect(d_ptr->m_boolPropertyManager, SIGNAL(valueChanged(QtProperty *, bool)),
                 this, SLOT(slotBoolChanged(QtProperty *, bool)));
 
@@ -9653,7 +9696,7 @@ QIcon QtFontPropertyManager::valueIcon(const QtProperty *property) const
  */
 QIcon QtFontPropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -9957,7 +10000,7 @@ QtColorPropertyManager::QtColorPropertyManager(QObject *parent)
     d_ptr->q_ptr = this;
 
     d_ptr->m_intPropertyManager = new QtIntPropertyManager(this);
-    d_ptr->m_intPropertyManager->setAttributesEditable(Attribute::CHECK, false);
+    d_ptr->m_intPropertyManager->setAttributesEditable(BrowserCol::CHECK, false);
     connect(d_ptr->m_intPropertyManager, SIGNAL(valueChanged(QtProperty *, int)),
                 this, SLOT(slotIntChanged(QtProperty *, int)));
 
@@ -10049,7 +10092,7 @@ QIcon QtColorPropertyManager::valueIcon(const QtProperty *property) const
  */
 QIcon QtColorPropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -10326,7 +10369,7 @@ QIcon QtCursorPropertyManager::valueIcon(const QtProperty *property) const
  */
 QIcon QtCursorPropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }
@@ -10628,7 +10671,7 @@ QString QtFilePropertyManager::valueText(const QtProperty *property) const
  */
 QIcon QtFilePropertyManager::checkIcon(const QtProperty *property) const
 {
-    if (!attributesEditable(Attribute::CHECK))
+    if (!attributesEditable(BrowserCol::CHECK))
         return QIcon();
     return property->check() ? drawCheckBox(true) : drawCheckBox(false);
 }

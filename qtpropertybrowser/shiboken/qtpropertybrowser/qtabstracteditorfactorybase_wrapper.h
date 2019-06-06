@@ -15,7 +15,7 @@ public:
     void childEvent(QChildEvent * event) override;
     inline void connectNotify_protected(const QMetaMethod & signal) { QtAbstractEditorFactoryBase::connectNotify(signal); }
     void connectNotify(const QMetaMethod & signal) override;
-    QWidget * createAttributeEditor(QtProperty * property, QWidget * parent, Attribute atttribute) override;
+    QWidget * createAttributeEditor(QtProperty * property, QWidget * parent, BrowserCol atttribute) override;
     QWidget * createEditor(QtProperty * property, QWidget * parent) override;
     inline void customEvent_protected(QEvent * event) { QtAbstractEditorFactoryBase::customEvent(event); }
     void customEvent(QEvent * event) override;

@@ -9,8 +9,8 @@ public:
     QtColorEditorFactoryWrapper(QObject * parent = nullptr);
     inline void connectPropertyManager_protected(QtColorPropertyManager * manager) { QtColorEditorFactory::connectPropertyManager(manager); }
     void connectPropertyManager(QtColorPropertyManager * manager) override;
-    inline QWidget * createAttributeEditor_protected(QtColorPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) { return QtColorEditorFactory::createAttributeEditor(manager, property, parent, Attribute(attribute)); }
-    QWidget * createAttributeEditor(QtColorPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute) override;
+    inline QWidget * createAttributeEditor_protected(QtColorPropertyManager * manager, QtProperty * property, QWidget * parent, BrowserCol attribute) { return QtColorEditorFactory::createAttributeEditor(manager, property, parent, BrowserCol(attribute)); }
+    QWidget * createAttributeEditor(QtColorPropertyManager * manager, QtProperty * property, QWidget * parent, BrowserCol attribute) override;
     inline QWidget * createEditor_protected(QtColorPropertyManager * manager, QtProperty * property, QWidget * parent) { return QtColorEditorFactory::createEditor(manager, property, parent); }
     QWidget * createEditor(QtColorPropertyManager * manager, QtProperty * property, QWidget * parent) override;
     inline void disconnectPropertyManager_protected(QtColorPropertyManager * manager) { QtColorEditorFactory::disconnectPropertyManager(manager); }

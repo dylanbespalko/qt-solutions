@@ -52,6 +52,8 @@
 #include <cctype>
 #include <cstring>
 
+QT_WARNING_DISABLE_DEPRECATED
+
 
 
 template <class T>
@@ -67,12 +69,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -83,7 +87,8 @@ void QtTreePropertyBrowserWrapper::pysideInitQtMetaTypes()
     qRegisterMetaType< ::QtTreePropertyBrowser::ResizeMode >("QtTreePropertyBrowser::ResizeMode");
 }
 
-QtTreePropertyBrowserWrapper::QtTreePropertyBrowserWrapper(QWidget * parent) : QtTreePropertyBrowser(parent) {
+QtTreePropertyBrowserWrapper::QtTreePropertyBrowserWrapper(QWidget * parent) : QtTreePropertyBrowser(parent)
+{
     // ... middle
 }
 
@@ -246,7 +251,7 @@ void QtTreePropertyBrowserWrapper::contextMenuEvent(QContextMenuEvent * event)
         Shiboken::Object::invalidate(PyTuple_GET_ITEM(pyArgs, 0));
 }
 
-QWidget * QtTreePropertyBrowserWrapper::createAttributeEditor(QtProperty * property, QWidget * parent, Attribute attribute)
+QWidget * QtTreePropertyBrowserWrapper::createAttributeEditor(QtProperty * property, QWidget * parent, BrowserCol attribute)
 {
     Shiboken::GilState gil;
     if (PyErr_Occurred())
@@ -260,7 +265,7 @@ QWidget * QtTreePropertyBrowserWrapper::createAttributeEditor(QtProperty * prope
     Shiboken::AutoDecRef pyArgs(Py_BuildValue("(NNN)",
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property),
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), parent),
-        Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, &attribute)
+        Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, &attribute)
     ));
 
     Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
@@ -1241,8 +1246,10 @@ bool QtTreePropertyBrowserWrapper::nativeEvent(const QByteArray & eventType, voi
     if (PySequence_Check(pyResult) && (PySequence_Size(pyResult) == 2)) {
     Shiboken::AutoDecRef pyItem(PySequence_GetItem(pyResult, 0));
     Shiboken::Conversions::pythonToCppCopy(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), pyItem, &(cppResult));
-    Shiboken::AutoDecRef pyResultItem(PySequence_GetItem(pyResult, 1));
-    Shiboken::Conversions::pythonToCppCopy(Shiboken::Conversions::PrimitiveTypeConverter<long>(), pyResultItem, (result));
+    if (result) {
+        Shiboken::AutoDecRef pyResultItem(PySequence_GetItem(pyResult, 1));
+        Shiboken::Conversions::pythonToCppCopy(Shiboken::Conversions::PrimitiveTypeConverter<long>(), pyResultItem, (result));
+    }
     }
     // TEMPLATE - return_native_eventfilter_conversion - END
 
@@ -1607,6 +1614,7 @@ Sbk_QtTreePropertyBrowser_Init(PyObject* self, PyObject* args, PyObject* kwds)
     PythonToCppFunc pythonToCpp[] = { nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -1728,8 +1736,8 @@ static PyObject* Sbk_QtTreePropertyBrowserFunc_attribute1(PyObject* self)
 
         if (!PyErr_Occurred()) {
             // attribute1()const
-            Attribute cppResult = Attribute(const_cast<const ::QtTreePropertyBrowserWrapper*>(cppSelf)->attribute1());
-            pyResult = Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, &cppResult);
+            BrowserCol cppResult = BrowserCol(const_cast<const ::QtTreePropertyBrowserWrapper*>(cppSelf)->attribute1());
+            pyResult = Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, &cppResult);
         }
     }
 
@@ -1754,8 +1762,8 @@ static PyObject* Sbk_QtTreePropertyBrowserFunc_attribute2(PyObject* self)
 
         if (!PyErr_Occurred()) {
             // attribute2()const
-            Attribute cppResult = Attribute(const_cast<const ::QtTreePropertyBrowserWrapper*>(cppSelf)->attribute2());
-            pyResult = Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, &cppResult);
+            BrowserCol cppResult = BrowserCol(const_cast<const ::QtTreePropertyBrowserWrapper*>(cppSelf)->attribute2());
+            pyResult = Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, &cppResult);
         }
     }
 
@@ -1780,8 +1788,8 @@ static PyObject* Sbk_QtTreePropertyBrowserFunc_attribute3(PyObject* self)
 
         if (!PyErr_Occurred()) {
             // attribute3()const
-            Attribute cppResult = Attribute(const_cast<const ::QtTreePropertyBrowserWrapper*>(cppSelf)->attribute3());
-            pyResult = Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, &cppResult);
+            BrowserCol cppResult = BrowserCol(const_cast<const ::QtTreePropertyBrowserWrapper*>(cppSelf)->attribute3());
+            pyResult = Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, &cppResult);
         }
     }
 
@@ -1806,8 +1814,8 @@ static PyObject* Sbk_QtTreePropertyBrowserFunc_attributes(PyObject* self)
 
         if (!PyErr_Occurred()) {
             // attributes()const
-            QList<Attribute > cppResult = const_cast<const ::QtTreePropertyBrowserWrapper*>(cppSelf)->attributes();
-            pyResult = Shiboken::Conversions::copyToPython(SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QLIST_ATTRIBUTE_IDX], &cppResult);
+            QList<BrowserCol > cppResult = const_cast<const ::QtTreePropertyBrowserWrapper*>(cppSelf)->attributes();
+            pyResult = Shiboken::Conversions::copyToPython(SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QLIST_BROWSERCOL_IDX], &cppResult);
         }
     }
 
@@ -2137,7 +2145,7 @@ static PyObject* Sbk_QtTreePropertyBrowserFunc_itemChanged(PyObject* self, PyObj
         if (!PyErr_Occurred()) {
             // itemChanged(QtBrowserItem*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtTreePropertyBrowserWrapper*) cppSelf)->QtTreePropertyBrowserWrapper::itemChanged_protected(cppArg0);
+            static_cast<::QtTreePropertyBrowserWrapper*>(cppSelf)->QtTreePropertyBrowserWrapper::itemChanged_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -2163,6 +2171,7 @@ static PyObject* Sbk_QtTreePropertyBrowserFunc_itemInserted(PyObject* self, PyOb
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2197,7 +2206,7 @@ static PyObject* Sbk_QtTreePropertyBrowserFunc_itemInserted(PyObject* self, PyOb
         if (!PyErr_Occurred()) {
             // itemInserted(QtBrowserItem*,QtBrowserItem*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtTreePropertyBrowserWrapper*) cppSelf)->QtTreePropertyBrowserWrapper::itemInserted_protected(cppArg0, cppArg1);
+            static_cast<::QtTreePropertyBrowserWrapper*>(cppSelf)->QtTreePropertyBrowserWrapper::itemInserted_protected(cppArg0, cppArg1);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -2242,7 +2251,7 @@ static PyObject* Sbk_QtTreePropertyBrowserFunc_itemRemoved(PyObject* self, PyObj
         if (!PyErr_Occurred()) {
             // itemRemoved(QtBrowserItem*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtTreePropertyBrowserWrapper*) cppSelf)->QtTreePropertyBrowserWrapper::itemRemoved_protected(cppArg0);
+            static_cast<::QtTreePropertyBrowserWrapper*>(cppSelf)->QtTreePropertyBrowserWrapper::itemRemoved_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -2320,6 +2329,7 @@ static PyObject* Sbk_QtTreePropertyBrowserFunc_resizeSection(PyObject* self, PyO
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2492,9 +2502,9 @@ static PyObject* Sbk_QtTreePropertyBrowserFunc_setAttribute1(PyObject* self, PyO
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtTreePropertyBrowser::setAttribute1(Attribute)
-    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, (pyArg)))) {
-        overloadId = 0; // setAttribute1(Attribute)
+    // 0: QtTreePropertyBrowser::setAttribute1(BrowserCol)
+    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, (pyArg)))) {
+        overloadId = 0; // setAttribute1(BrowserCol)
     }
 
     // Function signature not found.
@@ -2502,11 +2512,11 @@ static PyObject* Sbk_QtTreePropertyBrowserFunc_setAttribute1(PyObject* self, PyO
 
     // Call function/method
     {
-        ::Attribute cppArg0{NONE};
+        ::BrowserCol cppArg0{NONE};
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
-            // setAttribute1(Attribute)
+            // setAttribute1(BrowserCol)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
             cppSelf->setAttribute1(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
@@ -2535,9 +2545,9 @@ static PyObject* Sbk_QtTreePropertyBrowserFunc_setAttribute2(PyObject* self, PyO
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtTreePropertyBrowser::setAttribute2(Attribute)
-    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, (pyArg)))) {
-        overloadId = 0; // setAttribute2(Attribute)
+    // 0: QtTreePropertyBrowser::setAttribute2(BrowserCol)
+    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, (pyArg)))) {
+        overloadId = 0; // setAttribute2(BrowserCol)
     }
 
     // Function signature not found.
@@ -2545,11 +2555,11 @@ static PyObject* Sbk_QtTreePropertyBrowserFunc_setAttribute2(PyObject* self, PyO
 
     // Call function/method
     {
-        ::Attribute cppArg0{NONE};
+        ::BrowserCol cppArg0{NONE};
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
-            // setAttribute2(Attribute)
+            // setAttribute2(BrowserCol)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
             cppSelf->setAttribute2(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
@@ -2578,9 +2588,9 @@ static PyObject* Sbk_QtTreePropertyBrowserFunc_setAttribute3(PyObject* self, PyO
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtTreePropertyBrowser::setAttribute3(Attribute)
-    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, (pyArg)))) {
-        overloadId = 0; // setAttribute3(Attribute)
+    // 0: QtTreePropertyBrowser::setAttribute3(BrowserCol)
+    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, (pyArg)))) {
+        overloadId = 0; // setAttribute3(BrowserCol)
     }
 
     // Function signature not found.
@@ -2588,11 +2598,11 @@ static PyObject* Sbk_QtTreePropertyBrowserFunc_setAttribute3(PyObject* self, PyO
 
     // Call function/method
     {
-        ::Attribute cppArg0{NONE};
+        ::BrowserCol cppArg0{NONE};
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
-            // setAttribute3(Attribute)
+            // setAttribute3(BrowserCol)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
             cppSelf->setAttribute3(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
@@ -2621,9 +2631,9 @@ static PyObject* Sbk_QtTreePropertyBrowserFunc_setAttributes(PyObject* self, PyO
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtTreePropertyBrowser::setAttributes(QList<Attribute>)
-    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QLIST_ATTRIBUTE_IDX], (pyArg)))) {
-        overloadId = 0; // setAttributes(QList<Attribute>)
+    // 0: QtTreePropertyBrowser::setAttributes(QList<BrowserCol>)
+    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QLIST_BROWSERCOL_IDX], (pyArg)))) {
+        overloadId = 0; // setAttributes(QList<BrowserCol>)
     }
 
     // Function signature not found.
@@ -2631,11 +2641,11 @@ static PyObject* Sbk_QtTreePropertyBrowserFunc_setAttributes(PyObject* self, PyO
 
     // Call function/method
     {
-        ::QList<Attribute > cppArg0;
+        ::QList<BrowserCol > cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
-            // setAttributes(QList<Attribute>)
+            // setAttributes(QList<BrowserCol>)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
             cppSelf->setAttributes(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
@@ -2663,6 +2673,7 @@ static PyObject* Sbk_QtTreePropertyBrowserFunc_setBackgroundColor(PyObject* self
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2728,6 +2739,7 @@ static PyObject* Sbk_QtTreePropertyBrowserFunc_setExpanded(PyObject* self, PyObj
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2915,6 +2927,7 @@ static PyObject* Sbk_QtTreePropertyBrowserFunc_setItemVisible(PyObject* self, Py
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -3161,42 +3174,42 @@ static PyObject* Sbk_QtTreePropertyBrowserFunc_splitterPosition(PyObject* self)
 }
 
 static PyMethodDef Sbk_QtTreePropertyBrowser_methods[] = {
-    {"alternatingRowColors", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_alternatingRowColors, METH_NOARGS},
-    {"attribute1", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_attribute1, METH_NOARGS},
-    {"attribute2", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_attribute2, METH_NOARGS},
-    {"attribute3", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_attribute3, METH_NOARGS},
-    {"attributes", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_attributes, METH_NOARGS},
-    {"backgroundColor", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_backgroundColor, METH_O},
-    {"calculatedBackgroundColor", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_calculatedBackgroundColor, METH_O},
-    {"editItem", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_editItem, METH_O},
-    {"indentation", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_indentation, METH_NOARGS},
-    {"isExpanded", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_isExpanded, METH_O},
-    {"isHeaderVisible", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_isHeaderVisible, METH_NOARGS},
-    {"isItemVisible", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_isItemVisible, METH_O},
-    {"itemChanged", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_itemChanged, METH_O},
-    {"itemInserted", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_itemInserted, METH_VARARGS},
-    {"itemRemoved", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_itemRemoved, METH_O},
-    {"propertiesWithoutValueMarked", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_propertiesWithoutValueMarked, METH_NOARGS},
-    {"resizeMode", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_resizeMode, METH_NOARGS},
-    {"resizeSection", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_resizeSection, METH_VARARGS},
-    {"rootIsDecorated", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_rootIsDecorated, METH_NOARGS},
-    {"sectionSize", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_sectionSize, METH_O},
-    {"setAlternatingRowColors", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_setAlternatingRowColors, METH_O},
-    {"setAttribute1", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_setAttribute1, METH_O},
-    {"setAttribute2", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_setAttribute2, METH_O},
-    {"setAttribute3", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_setAttribute3, METH_O},
-    {"setAttributes", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_setAttributes, METH_O},
-    {"setBackgroundColor", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_setBackgroundColor, METH_VARARGS},
-    {"setExpanded", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_setExpanded, METH_VARARGS},
-    {"setHeaderLabels", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_setHeaderLabels, METH_O},
-    {"setHeaderVisible", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_setHeaderVisible, METH_O},
-    {"setIndentation", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_setIndentation, METH_O},
-    {"setItemVisible", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_setItemVisible, METH_VARARGS},
-    {"setPropertiesWithoutValueMarked", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_setPropertiesWithoutValueMarked, METH_O},
-    {"setResizeMode", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_setResizeMode, METH_O},
-    {"setRootIsDecorated", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_setRootIsDecorated, METH_O},
-    {"setSplitterPosition", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_setSplitterPosition, METH_O},
-    {"splitterPosition", (PyCFunction)Sbk_QtTreePropertyBrowserFunc_splitterPosition, METH_NOARGS},
+    {"alternatingRowColors", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_alternatingRowColors), METH_NOARGS},
+    {"attribute1", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_attribute1), METH_NOARGS},
+    {"attribute2", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_attribute2), METH_NOARGS},
+    {"attribute3", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_attribute3), METH_NOARGS},
+    {"attributes", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_attributes), METH_NOARGS},
+    {"backgroundColor", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_backgroundColor), METH_O},
+    {"calculatedBackgroundColor", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_calculatedBackgroundColor), METH_O},
+    {"editItem", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_editItem), METH_O},
+    {"indentation", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_indentation), METH_NOARGS},
+    {"isExpanded", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_isExpanded), METH_O},
+    {"isHeaderVisible", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_isHeaderVisible), METH_NOARGS},
+    {"isItemVisible", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_isItemVisible), METH_O},
+    {"itemChanged", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_itemChanged), METH_O},
+    {"itemInserted", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_itemInserted), METH_VARARGS},
+    {"itemRemoved", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_itemRemoved), METH_O},
+    {"propertiesWithoutValueMarked", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_propertiesWithoutValueMarked), METH_NOARGS},
+    {"resizeMode", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_resizeMode), METH_NOARGS},
+    {"resizeSection", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_resizeSection), METH_VARARGS},
+    {"rootIsDecorated", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_rootIsDecorated), METH_NOARGS},
+    {"sectionSize", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_sectionSize), METH_O},
+    {"setAlternatingRowColors", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_setAlternatingRowColors), METH_O},
+    {"setAttribute1", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_setAttribute1), METH_O},
+    {"setAttribute2", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_setAttribute2), METH_O},
+    {"setAttribute3", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_setAttribute3), METH_O},
+    {"setAttributes", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_setAttributes), METH_O},
+    {"setBackgroundColor", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_setBackgroundColor), METH_VARARGS},
+    {"setExpanded", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_setExpanded), METH_VARARGS},
+    {"setHeaderLabels", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_setHeaderLabels), METH_O},
+    {"setHeaderVisible", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_setHeaderVisible), METH_O},
+    {"setIndentation", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_setIndentation), METH_O},
+    {"setItemVisible", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_setItemVisible), METH_VARARGS},
+    {"setPropertiesWithoutValueMarked", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_setPropertiesWithoutValueMarked), METH_O},
+    {"setResizeMode", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_setResizeMode), METH_O},
+    {"setRootIsDecorated", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_setRootIsDecorated), METH_O},
+    {"setSplitterPosition", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_setSplitterPosition), METH_O},
+    {"splitterPosition", reinterpret_cast<PyCFunction>(Sbk_QtTreePropertyBrowserFunc_splitterPosition), METH_NOARGS},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -3278,7 +3291,8 @@ static void* Sbk_QtTreePropertyBrowser_typeDiscovery(void* cptr, SbkObjectType* 
 
 // Python to C++ enum conversion.
 static void QtTreePropertyBrowser_ResizeMode_PythonToCpp_QtTreePropertyBrowser_ResizeMode(PyObject* pyIn, void* cppOut) {
-    *((::QtTreePropertyBrowser::ResizeMode*)cppOut) = (::QtTreePropertyBrowser::ResizeMode) Shiboken::Enum::getValue(pyIn);
+    *reinterpret_cast<::QtTreePropertyBrowser::ResizeMode*>(cppOut) =
+        static_cast<::QtTreePropertyBrowser::ResizeMode>(Shiboken::Enum::getValue(pyIn));
 
 }
 static PythonToCppFunc is_QtTreePropertyBrowser_ResizeMode_PythonToCpp_QtTreePropertyBrowser_ResizeMode_Convertible(PyObject* pyIn) {
@@ -3299,58 +3313,58 @@ static void QtTreePropertyBrowser_PythonToCpp_QtTreePropertyBrowser_PTR(PyObject
 static PythonToCppFunc is_QtTreePropertyBrowser_PythonToCpp_QtTreePropertyBrowser_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtTreePropertyBrowser_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtTreePropertyBrowser_TypeF())))
         return QtTreePropertyBrowser_PythonToCpp_QtTreePropertyBrowser_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtTreePropertyBrowser_PTR_CppToPython_QtTreePropertyBrowser(const void* cppIn) {
-    return PySide::getWrapperForQObject((::QtTreePropertyBrowser*)cppIn, Sbk_QtTreePropertyBrowser_TypeF());
+    return PySide::getWrapperForQObject(reinterpret_cast<::QtTreePropertyBrowser*>(const_cast<void*>(cppIn)), Sbk_QtTreePropertyBrowser_TypeF());
 
 }
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtTreePropertyBrowser_SignaturesString[] = ""
-    "qtpropertybrowser.QtTreePropertyBrowser(parent:PySide2.QtWidgets.QWidget=nullptr)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.alternatingRowColors()->bool\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.attribute1()->qtpropertybrowser.Attribute\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.attribute2()->qtpropertybrowser.Attribute\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.attribute3()->qtpropertybrowser.Attribute\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.attributes()->qtpropertybrowser.Attribute\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.backgroundColor(item:qtpropertybrowser.QtBrowserItem)->PySide2.QtGui.QColor\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.calculatedBackgroundColor(item:qtpropertybrowser.QtBrowserItem)->PySide2.QtGui.QColor\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.editItem(item:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.indentation()->int\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.isExpanded(item:qtpropertybrowser.QtBrowserItem)->bool\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.isHeaderVisible()->bool\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.isItemVisible(item:qtpropertybrowser.QtBrowserItem)->bool\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.itemChanged(item:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.itemInserted(item:qtpropertybrowser.QtBrowserItem,afterItem:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.itemRemoved(item:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.propertiesWithoutValueMarked()->bool\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.resizeMode()->qtpropertybrowser.QtTreePropertyBrowser.ResizeMode\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.resizeSection(logicalIndex:int,size:int)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.rootIsDecorated()->bool\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.sectionSize(logicalIndex:int)->int\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setAlternatingRowColors(enable:bool)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setAttribute1(attribute:qtpropertybrowser.Attribute)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setAttribute2(attribute:qtpropertybrowser.Attribute)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setAttribute3(attribute:qtpropertybrowser.Attribute)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setAttributes(attributeList:QList)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setBackgroundColor(item:qtpropertybrowser.QtBrowserItem,color:PySide2.QtGui.QColor)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setExpanded(item:qtpropertybrowser.QtBrowserItem,expanded:bool)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setHeaderLabels(labels:PySide2.QtCore.QStringList)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setHeaderVisible(visible:bool)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setIndentation(i:int)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setItemVisible(item:qtpropertybrowser.QtBrowserItem,visible:bool)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setPropertiesWithoutValueMarked(mark:bool)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setResizeMode(mode:qtpropertybrowser.QtTreePropertyBrowser.ResizeMode)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setRootIsDecorated(show:bool)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setSplitterPosition(position:int)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.splitterPosition()->int\n"
-;
+static const char *QtTreePropertyBrowser_SignatureStrings[] = {
+    "qtpropertybrowser.QtTreePropertyBrowser(parent:PySide2.QtWidgets.QWidget=nullptr)",
+    "qtpropertybrowser.QtTreePropertyBrowser.alternatingRowColors()->bool",
+    "qtpropertybrowser.QtTreePropertyBrowser.attribute1()->qtpropertybrowser.BrowserCol",
+    "qtpropertybrowser.QtTreePropertyBrowser.attribute2()->qtpropertybrowser.BrowserCol",
+    "qtpropertybrowser.QtTreePropertyBrowser.attribute3()->qtpropertybrowser.BrowserCol",
+    "qtpropertybrowser.QtTreePropertyBrowser.attributes()->QList[qtpropertybrowser.BrowserCol]",
+    "qtpropertybrowser.QtTreePropertyBrowser.backgroundColor(item:qtpropertybrowser.QtBrowserItem)->PySide2.QtGui.QColor",
+    "qtpropertybrowser.QtTreePropertyBrowser.calculatedBackgroundColor(item:qtpropertybrowser.QtBrowserItem)->PySide2.QtGui.QColor",
+    "qtpropertybrowser.QtTreePropertyBrowser.editItem(item:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtTreePropertyBrowser.indentation()->int",
+    "qtpropertybrowser.QtTreePropertyBrowser.isExpanded(item:qtpropertybrowser.QtBrowserItem)->bool",
+    "qtpropertybrowser.QtTreePropertyBrowser.isHeaderVisible()->bool",
+    "qtpropertybrowser.QtTreePropertyBrowser.isItemVisible(item:qtpropertybrowser.QtBrowserItem)->bool",
+    "qtpropertybrowser.QtTreePropertyBrowser.itemChanged(item:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtTreePropertyBrowser.itemInserted(item:qtpropertybrowser.QtBrowserItem,afterItem:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtTreePropertyBrowser.itemRemoved(item:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtTreePropertyBrowser.propertiesWithoutValueMarked()->bool",
+    "qtpropertybrowser.QtTreePropertyBrowser.resizeMode()->qtpropertybrowser.QtTreePropertyBrowser.ResizeMode",
+    "qtpropertybrowser.QtTreePropertyBrowser.resizeSection(logicalIndex:int,size:int)",
+    "qtpropertybrowser.QtTreePropertyBrowser.rootIsDecorated()->bool",
+    "qtpropertybrowser.QtTreePropertyBrowser.sectionSize(logicalIndex:int)->int",
+    "qtpropertybrowser.QtTreePropertyBrowser.setAlternatingRowColors(enable:bool)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setAttribute1(attribute:qtpropertybrowser.BrowserCol)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setAttribute2(attribute:qtpropertybrowser.BrowserCol)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setAttribute3(attribute:qtpropertybrowser.BrowserCol)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setAttributes(attributeList:QList[qtpropertybrowser.BrowserCol])",
+    "qtpropertybrowser.QtTreePropertyBrowser.setBackgroundColor(item:qtpropertybrowser.QtBrowserItem,color:PySide2.QtGui.QColor)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setExpanded(item:qtpropertybrowser.QtBrowserItem,expanded:bool)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setHeaderLabels(labels:PySide2.QtCore.QStringList)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setHeaderVisible(visible:bool)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setIndentation(i:int)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setItemVisible(item:qtpropertybrowser.QtBrowserItem,visible:bool)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setPropertiesWithoutValueMarked(mark:bool)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setResizeMode(mode:qtpropertybrowser.QtTreePropertyBrowser.ResizeMode)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setRootIsDecorated(show:bool)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setSplitterPosition(position:int)",
+    "qtpropertybrowser.QtTreePropertyBrowser.splitterPosition()->int",
+    nullptr}; // Sentinel
 
 void init_QtTreePropertyBrowser(PyObject* module)
 {
@@ -3359,7 +3373,7 @@ void init_QtTreePropertyBrowser(PyObject* module)
         "QtTreePropertyBrowser",
         "QtTreePropertyBrowser*",
         &Sbk_QtTreePropertyBrowser_spec,
-        QtTreePropertyBrowser_SignaturesString,
+        QtTreePropertyBrowser_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtTreePropertyBrowser >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX]),
         0,

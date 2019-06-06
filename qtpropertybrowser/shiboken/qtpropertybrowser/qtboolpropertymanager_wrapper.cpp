@@ -36,6 +36,8 @@
 #include <cctype>
 #include <cstring>
 
+QT_WARNING_DISABLE_DEPRECATED
+
 
 
 template <class T>
@@ -51,12 +53,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -66,7 +70,8 @@ void QtBoolPropertyManagerWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtBoolPropertyManagerWrapper::QtBoolPropertyManagerWrapper(QObject * parent) : QtBoolPropertyManager(parent) {
+QtBoolPropertyManagerWrapper::QtBoolPropertyManagerWrapper(QObject * parent) : QtBoolPropertyManager(parent)
+{
     // ... middle
 }
 
@@ -844,6 +849,7 @@ Sbk_QtBoolPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds)
     PythonToCppFunc pythonToCpp[] = { nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -1004,7 +1010,7 @@ static PyObject* Sbk_QtBoolPropertyManagerFunc_checkIcon(PyObject* self, PyObjec
         if (!PyErr_Occurred()) {
             // checkIcon(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QIcon cppResult = ((::QtBoolPropertyManagerWrapper*) cppSelf)->QtBoolPropertyManagerWrapper::checkIcon_protected(cppArg0);
+            QIcon cppResult = static_cast<::QtBoolPropertyManagerWrapper*>(cppSelf)->QtBoolPropertyManagerWrapper::checkIcon_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtGuiTypes[SBK_QICON_IDX]), &cppResult);
         }
@@ -1051,7 +1057,7 @@ static PyObject* Sbk_QtBoolPropertyManagerFunc_initializeProperty(PyObject* self
         if (!PyErr_Occurred()) {
             // initializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtBoolPropertyManagerWrapper*) cppSelf)->QtBoolPropertyManagerWrapper::initializeProperty_protected(cppArg0);
+            static_cast<::QtBoolPropertyManagerWrapper*>(cppSelf)->QtBoolPropertyManagerWrapper::initializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -1077,6 +1083,7 @@ static PyObject* Sbk_QtBoolPropertyManagerFunc_setCheck(PyObject* self, PyObject
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1135,6 +1142,7 @@ static PyObject* Sbk_QtBoolPropertyManagerFunc_setTextVisible(PyObject* self, Py
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1193,6 +1201,7 @@ static PyObject* Sbk_QtBoolPropertyManagerFunc_setValue(PyObject* self, PyObject
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1318,7 +1327,7 @@ static PyObject* Sbk_QtBoolPropertyManagerFunc_uninitializeProperty(PyObject* se
         if (!PyErr_Occurred()) {
             // uninitializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtBoolPropertyManagerWrapper*) cppSelf)->QtBoolPropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
+            static_cast<::QtBoolPropertyManagerWrapper*>(cppSelf)->QtBoolPropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -1412,7 +1421,7 @@ static PyObject* Sbk_QtBoolPropertyManagerFunc_valueIcon(PyObject* self, PyObjec
         if (!PyErr_Occurred()) {
             // valueIcon(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QIcon cppResult = ((::QtBoolPropertyManagerWrapper*) cppSelf)->QtBoolPropertyManagerWrapper::valueIcon_protected(cppArg0);
+            QIcon cppResult = static_cast<::QtBoolPropertyManagerWrapper*>(cppSelf)->QtBoolPropertyManagerWrapper::valueIcon_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtGuiTypes[SBK_QICON_IDX]), &cppResult);
         }
@@ -1460,7 +1469,7 @@ static PyObject* Sbk_QtBoolPropertyManagerFunc_valueText(PyObject* self, PyObjec
         if (!PyErr_Occurred()) {
             // valueText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = ((::QtBoolPropertyManagerWrapper*) cppSelf)->QtBoolPropertyManagerWrapper::valueText_protected(cppArg0);
+            QString cppResult = static_cast<::QtBoolPropertyManagerWrapper*>(cppSelf)->QtBoolPropertyManagerWrapper::valueText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -1478,17 +1487,17 @@ static PyObject* Sbk_QtBoolPropertyManagerFunc_valueText(PyObject* self, PyObjec
 }
 
 static PyMethodDef Sbk_QtBoolPropertyManager_methods[] = {
-    {"check", (PyCFunction)Sbk_QtBoolPropertyManagerFunc_check, METH_O},
-    {"checkIcon", (PyCFunction)Sbk_QtBoolPropertyManagerFunc_checkIcon, METH_O},
-    {"initializeProperty", (PyCFunction)Sbk_QtBoolPropertyManagerFunc_initializeProperty, METH_O},
-    {"setCheck", (PyCFunction)Sbk_QtBoolPropertyManagerFunc_setCheck, METH_VARARGS},
-    {"setTextVisible", (PyCFunction)Sbk_QtBoolPropertyManagerFunc_setTextVisible, METH_VARARGS},
-    {"setValue", (PyCFunction)Sbk_QtBoolPropertyManagerFunc_setValue, METH_VARARGS},
-    {"textVisible", (PyCFunction)Sbk_QtBoolPropertyManagerFunc_textVisible, METH_O},
-    {"uninitializeProperty", (PyCFunction)Sbk_QtBoolPropertyManagerFunc_uninitializeProperty, METH_O},
-    {"value", (PyCFunction)Sbk_QtBoolPropertyManagerFunc_value, METH_O},
-    {"valueIcon", (PyCFunction)Sbk_QtBoolPropertyManagerFunc_valueIcon, METH_O},
-    {"valueText", (PyCFunction)Sbk_QtBoolPropertyManagerFunc_valueText, METH_O},
+    {"check", reinterpret_cast<PyCFunction>(Sbk_QtBoolPropertyManagerFunc_check), METH_O},
+    {"checkIcon", reinterpret_cast<PyCFunction>(Sbk_QtBoolPropertyManagerFunc_checkIcon), METH_O},
+    {"initializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtBoolPropertyManagerFunc_initializeProperty), METH_O},
+    {"setCheck", reinterpret_cast<PyCFunction>(Sbk_QtBoolPropertyManagerFunc_setCheck), METH_VARARGS},
+    {"setTextVisible", reinterpret_cast<PyCFunction>(Sbk_QtBoolPropertyManagerFunc_setTextVisible), METH_VARARGS},
+    {"setValue", reinterpret_cast<PyCFunction>(Sbk_QtBoolPropertyManagerFunc_setValue), METH_VARARGS},
+    {"textVisible", reinterpret_cast<PyCFunction>(Sbk_QtBoolPropertyManagerFunc_textVisible), METH_O},
+    {"uninitializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtBoolPropertyManagerFunc_uninitializeProperty), METH_O},
+    {"value", reinterpret_cast<PyCFunction>(Sbk_QtBoolPropertyManagerFunc_value), METH_O},
+    {"valueIcon", reinterpret_cast<PyCFunction>(Sbk_QtBoolPropertyManagerFunc_valueIcon), METH_O},
+    {"valueText", reinterpret_cast<PyCFunction>(Sbk_QtBoolPropertyManagerFunc_valueText), METH_O},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -1558,33 +1567,33 @@ static void QtBoolPropertyManager_PythonToCpp_QtBoolPropertyManager_PTR(PyObject
 static PythonToCppFunc is_QtBoolPropertyManager_PythonToCpp_QtBoolPropertyManager_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtBoolPropertyManager_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtBoolPropertyManager_TypeF())))
         return QtBoolPropertyManager_PythonToCpp_QtBoolPropertyManager_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtBoolPropertyManager_PTR_CppToPython_QtBoolPropertyManager(const void* cppIn) {
-    return PySide::getWrapperForQObject((::QtBoolPropertyManager*)cppIn, Sbk_QtBoolPropertyManager_TypeF());
+    return PySide::getWrapperForQObject(reinterpret_cast<::QtBoolPropertyManager*>(const_cast<void*>(cppIn)), Sbk_QtBoolPropertyManager_TypeF());
 
 }
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtBoolPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtBoolPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtBoolPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtBoolPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtBoolPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtBoolPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
-    "qtpropertybrowser.QtBoolPropertyManager.setTextVisible(property:qtpropertybrowser.QtProperty,textVisible:bool)\n"
-    "qtpropertybrowser.QtBoolPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:bool)\n"
-    "qtpropertybrowser.QtBoolPropertyManager.textVisible(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtBoolPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtBoolPropertyManager.value(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtBoolPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtBoolPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
-;
+static const char *QtBoolPropertyManager_SignatureStrings[] = {
+    "qtpropertybrowser.QtBoolPropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtBoolPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtBoolPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtBoolPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtBoolPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
+    "qtpropertybrowser.QtBoolPropertyManager.setTextVisible(property:qtpropertybrowser.QtProperty,textVisible:bool)",
+    "qtpropertybrowser.QtBoolPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:bool)",
+    "qtpropertybrowser.QtBoolPropertyManager.textVisible(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtBoolPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtBoolPropertyManager.value(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtBoolPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtBoolPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
+    nullptr}; // Sentinel
 
 void init_QtBoolPropertyManager(PyObject* module)
 {
@@ -1593,7 +1602,7 @@ void init_QtBoolPropertyManager(PyObject* module)
         "QtBoolPropertyManager",
         "QtBoolPropertyManager*",
         &Sbk_QtBoolPropertyManager_spec,
-        QtBoolPropertyManager_SignaturesString,
+        QtBoolPropertyManager_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtBoolPropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

@@ -38,6 +38,8 @@
 #include <cctype>
 #include <cstring>
 
+QT_WARNING_DISABLE_DEPRECATED
+
 
 
 template <class T>
@@ -53,12 +55,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -68,7 +72,8 @@ void QtRectFPropertyManagerWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtRectFPropertyManagerWrapper::QtRectFPropertyManagerWrapper(QObject * parent) : QtRectFPropertyManager(parent) {
+QtRectFPropertyManagerWrapper::QtRectFPropertyManagerWrapper(QObject * parent) : QtRectFPropertyManager(parent)
+{
     // ... middle
 }
 
@@ -846,6 +851,7 @@ Sbk_QtRectFPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds)
     PythonToCppFunc pythonToCpp[] = { nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -1006,7 +1012,7 @@ static PyObject* Sbk_QtRectFPropertyManagerFunc_checkIcon(PyObject* self, PyObje
         if (!PyErr_Occurred()) {
             // checkIcon(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QIcon cppResult = ((::QtRectFPropertyManagerWrapper*) cppSelf)->QtRectFPropertyManagerWrapper::checkIcon_protected(cppArg0);
+            QIcon cppResult = static_cast<::QtRectFPropertyManagerWrapper*>(cppSelf)->QtRectFPropertyManagerWrapper::checkIcon_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtGuiTypes[SBK_QICON_IDX]), &cppResult);
         }
@@ -1101,7 +1107,7 @@ static PyObject* Sbk_QtRectFPropertyManagerFunc_initializeProperty(PyObject* sel
         if (!PyErr_Occurred()) {
             // initializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtRectFPropertyManagerWrapper*) cppSelf)->QtRectFPropertyManagerWrapper::initializeProperty_protected(cppArg0);
+            static_cast<::QtRectFPropertyManagerWrapper*>(cppSelf)->QtRectFPropertyManagerWrapper::initializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -1175,6 +1181,7 @@ static PyObject* Sbk_QtRectFPropertyManagerFunc_setCheck(PyObject* self, PyObjec
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1233,6 +1240,7 @@ static PyObject* Sbk_QtRectFPropertyManagerFunc_setConstraint(PyObject* self, Py
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1298,6 +1306,7 @@ static PyObject* Sbk_QtRectFPropertyManagerFunc_setPrecision(PyObject* self, PyO
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1356,6 +1365,7 @@ static PyObject* Sbk_QtRectFPropertyManagerFunc_setValue(PyObject* self, PyObjec
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1467,7 +1477,7 @@ static PyObject* Sbk_QtRectFPropertyManagerFunc_uninitializeProperty(PyObject* s
         if (!PyErr_Occurred()) {
             // uninitializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtRectFPropertyManagerWrapper*) cppSelf)->QtRectFPropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
+            static_cast<::QtRectFPropertyManagerWrapper*>(cppSelf)->QtRectFPropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -1561,7 +1571,7 @@ static PyObject* Sbk_QtRectFPropertyManagerFunc_valueText(PyObject* self, PyObje
         if (!PyErr_Occurred()) {
             // valueText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = ((::QtRectFPropertyManagerWrapper*) cppSelf)->QtRectFPropertyManagerWrapper::valueText_protected(cppArg0);
+            QString cppResult = static_cast<::QtRectFPropertyManagerWrapper*>(cppSelf)->QtRectFPropertyManagerWrapper::valueText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -1579,19 +1589,19 @@ static PyObject* Sbk_QtRectFPropertyManagerFunc_valueText(PyObject* self, PyObje
 }
 
 static PyMethodDef Sbk_QtRectFPropertyManager_methods[] = {
-    {"check", (PyCFunction)Sbk_QtRectFPropertyManagerFunc_check, METH_O},
-    {"checkIcon", (PyCFunction)Sbk_QtRectFPropertyManagerFunc_checkIcon, METH_O},
-    {"constraint", (PyCFunction)Sbk_QtRectFPropertyManagerFunc_constraint, METH_O},
-    {"initializeProperty", (PyCFunction)Sbk_QtRectFPropertyManagerFunc_initializeProperty, METH_O},
-    {"precision", (PyCFunction)Sbk_QtRectFPropertyManagerFunc_precision, METH_O},
-    {"setCheck", (PyCFunction)Sbk_QtRectFPropertyManagerFunc_setCheck, METH_VARARGS},
-    {"setConstraint", (PyCFunction)Sbk_QtRectFPropertyManagerFunc_setConstraint, METH_VARARGS},
-    {"setPrecision", (PyCFunction)Sbk_QtRectFPropertyManagerFunc_setPrecision, METH_VARARGS},
-    {"setValue", (PyCFunction)Sbk_QtRectFPropertyManagerFunc_setValue, METH_VARARGS},
-    {"subDoublePropertyManager", (PyCFunction)Sbk_QtRectFPropertyManagerFunc_subDoublePropertyManager, METH_NOARGS},
-    {"uninitializeProperty", (PyCFunction)Sbk_QtRectFPropertyManagerFunc_uninitializeProperty, METH_O},
-    {"value", (PyCFunction)Sbk_QtRectFPropertyManagerFunc_value, METH_O},
-    {"valueText", (PyCFunction)Sbk_QtRectFPropertyManagerFunc_valueText, METH_O},
+    {"check", reinterpret_cast<PyCFunction>(Sbk_QtRectFPropertyManagerFunc_check), METH_O},
+    {"checkIcon", reinterpret_cast<PyCFunction>(Sbk_QtRectFPropertyManagerFunc_checkIcon), METH_O},
+    {"constraint", reinterpret_cast<PyCFunction>(Sbk_QtRectFPropertyManagerFunc_constraint), METH_O},
+    {"initializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtRectFPropertyManagerFunc_initializeProperty), METH_O},
+    {"precision", reinterpret_cast<PyCFunction>(Sbk_QtRectFPropertyManagerFunc_precision), METH_O},
+    {"setCheck", reinterpret_cast<PyCFunction>(Sbk_QtRectFPropertyManagerFunc_setCheck), METH_VARARGS},
+    {"setConstraint", reinterpret_cast<PyCFunction>(Sbk_QtRectFPropertyManagerFunc_setConstraint), METH_VARARGS},
+    {"setPrecision", reinterpret_cast<PyCFunction>(Sbk_QtRectFPropertyManagerFunc_setPrecision), METH_VARARGS},
+    {"setValue", reinterpret_cast<PyCFunction>(Sbk_QtRectFPropertyManagerFunc_setValue), METH_VARARGS},
+    {"subDoublePropertyManager", reinterpret_cast<PyCFunction>(Sbk_QtRectFPropertyManagerFunc_subDoublePropertyManager), METH_NOARGS},
+    {"uninitializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtRectFPropertyManagerFunc_uninitializeProperty), METH_O},
+    {"value", reinterpret_cast<PyCFunction>(Sbk_QtRectFPropertyManagerFunc_value), METH_O},
+    {"valueText", reinterpret_cast<PyCFunction>(Sbk_QtRectFPropertyManagerFunc_valueText), METH_O},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -1661,35 +1671,35 @@ static void QtRectFPropertyManager_PythonToCpp_QtRectFPropertyManager_PTR(PyObje
 static PythonToCppFunc is_QtRectFPropertyManager_PythonToCpp_QtRectFPropertyManager_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtRectFPropertyManager_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtRectFPropertyManager_TypeF())))
         return QtRectFPropertyManager_PythonToCpp_QtRectFPropertyManager_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtRectFPropertyManager_PTR_CppToPython_QtRectFPropertyManager(const void* cppIn) {
-    return PySide::getWrapperForQObject((::QtRectFPropertyManager*)cppIn, Sbk_QtRectFPropertyManager_TypeF());
+    return PySide::getWrapperForQObject(reinterpret_cast<::QtRectFPropertyManager*>(const_cast<void*>(cppIn)), Sbk_QtRectFPropertyManager_TypeF());
 
 }
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtRectFPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtRectFPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtRectFPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtRectFPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtRectFPropertyManager.constraint(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QRectF\n"
-    "qtpropertybrowser.QtRectFPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtRectFPropertyManager.precision(property:qtpropertybrowser.QtProperty)->int\n"
-    "qtpropertybrowser.QtRectFPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
-    "qtpropertybrowser.QtRectFPropertyManager.setConstraint(property:qtpropertybrowser.QtProperty,constraint:PySide2.QtCore.QRectF)\n"
-    "qtpropertybrowser.QtRectFPropertyManager.setPrecision(property:qtpropertybrowser.QtProperty,prec:int)\n"
-    "qtpropertybrowser.QtRectFPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtCore.QRectF)\n"
-    "qtpropertybrowser.QtRectFPropertyManager.subDoublePropertyManager()->qtpropertybrowser.QtDoublePropertyManager\n"
-    "qtpropertybrowser.QtRectFPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtRectFPropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QRectF\n"
-    "qtpropertybrowser.QtRectFPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
-;
+static const char *QtRectFPropertyManager_SignatureStrings[] = {
+    "qtpropertybrowser.QtRectFPropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtRectFPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtRectFPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtRectFPropertyManager.constraint(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QRectF",
+    "qtpropertybrowser.QtRectFPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtRectFPropertyManager.precision(property:qtpropertybrowser.QtProperty)->int",
+    "qtpropertybrowser.QtRectFPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
+    "qtpropertybrowser.QtRectFPropertyManager.setConstraint(property:qtpropertybrowser.QtProperty,constraint:PySide2.QtCore.QRectF)",
+    "qtpropertybrowser.QtRectFPropertyManager.setPrecision(property:qtpropertybrowser.QtProperty,prec:int)",
+    "qtpropertybrowser.QtRectFPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtCore.QRectF)",
+    "qtpropertybrowser.QtRectFPropertyManager.subDoublePropertyManager()->qtpropertybrowser.QtDoublePropertyManager",
+    "qtpropertybrowser.QtRectFPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtRectFPropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QRectF",
+    "qtpropertybrowser.QtRectFPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
+    nullptr}; // Sentinel
 
 void init_QtRectFPropertyManager(PyObject* module)
 {
@@ -1698,7 +1708,7 @@ void init_QtRectFPropertyManager(PyObject* module)
         "QtRectFPropertyManager",
         "QtRectFPropertyManager*",
         &Sbk_QtRectFPropertyManager_spec,
-        QtRectFPropertyManager_SignaturesString,
+        QtRectFPropertyManager_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtRectFPropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

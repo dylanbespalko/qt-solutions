@@ -12,7 +12,7 @@
     <enum-type name="PkAvg"/>
     <enum-type name="Format"/>
     <enum-type name="Domain"/>
-    <enum-type name="Attribute"/>
+    <enum-type name="BrowserCol"/>
  	   
     <!--    Complex Conversion  -->
     <primitive-type name="QComplex" target-lang-api-name="PyComplex">

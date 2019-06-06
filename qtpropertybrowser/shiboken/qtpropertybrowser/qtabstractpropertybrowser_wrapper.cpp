@@ -51,6 +51,8 @@
 #include <cctype>
 #include <cstring>
 
+QT_WARNING_DISABLE_DEPRECATED
+
 
 
 template <class T>
@@ -66,12 +68,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -142,7 +146,8 @@ void QtAbstractPropertyBrowserWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtAbstractPropertyBrowserWrapper::QtAbstractPropertyBrowserWrapper(QWidget * parent) : QtAbstractPropertyBrowser(parent) {
+QtAbstractPropertyBrowserWrapper::QtAbstractPropertyBrowserWrapper(QWidget * parent) : QtAbstractPropertyBrowser(parent)
+{
     // ... middle
 }
 
@@ -305,7 +310,7 @@ void QtAbstractPropertyBrowserWrapper::contextMenuEvent(QContextMenuEvent * even
         Shiboken::Object::invalidate(PyTuple_GET_ITEM(pyArgs, 0));
 }
 
-QWidget * QtAbstractPropertyBrowserWrapper::createAttributeEditor(QtProperty * property, QWidget * parent, Attribute attribute)
+QWidget * QtAbstractPropertyBrowserWrapper::createAttributeEditor(QtProperty * property, QWidget * parent, BrowserCol attribute)
 {
     Shiboken::GilState gil;
     if (PyErr_Occurred())
@@ -319,7 +324,7 @@ QWidget * QtAbstractPropertyBrowserWrapper::createAttributeEditor(QtProperty * p
     Shiboken::AutoDecRef pyArgs(Py_BuildValue("(NNN)",
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property),
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), parent),
-        Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, &attribute)
+        Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, &attribute)
     ));
 
     Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
@@ -1297,8 +1302,10 @@ bool QtAbstractPropertyBrowserWrapper::nativeEvent(const QByteArray & eventType,
     if (PySequence_Check(pyResult) && (PySequence_Size(pyResult) == 2)) {
     Shiboken::AutoDecRef pyItem(PySequence_GetItem(pyResult, 0));
     Shiboken::Conversions::pythonToCppCopy(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), pyItem, &(cppResult));
-    Shiboken::AutoDecRef pyResultItem(PySequence_GetItem(pyResult, 1));
-    Shiboken::Conversions::pythonToCppCopy(Shiboken::Conversions::PrimitiveTypeConverter<long>(), pyResultItem, (result));
+    if (result) {
+        Shiboken::AutoDecRef pyResultItem(PySequence_GetItem(pyResult, 1));
+        Shiboken::Conversions::pythonToCppCopy(Shiboken::Conversions::PrimitiveTypeConverter<long>(), pyResultItem, (result));
+    }
     }
     // TEMPLATE - return_native_eventfilter_conversion - END
 
@@ -1671,6 +1678,7 @@ Sbk_QtAbstractPropertyBrowser_Init(PyObject* self, PyObject* args, PyObject* kwd
     PythonToCppFunc pythonToCpp[] = { nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -1838,6 +1846,7 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_createAttributeEditor(PyObjec
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0, 0};
 
     // invalid argument lengths
@@ -1848,12 +1857,12 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_createAttributeEditor(PyObjec
 
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyBrowser::createAttributeEditor(QtProperty*,QWidget*,Attribute)
+    // 0: QtAbstractPropertyBrowser::createAttributeEditor(QtProperty*,QWidget*,BrowserCol)
     if (numArgs == 3
         && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[0])))
         && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), (pyArgs[1])))
-        && (pythonToCpp[2] = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, (pyArgs[2])))) {
-        overloadId = 0; // createAttributeEditor(QtProperty*,QWidget*,Attribute)
+        && (pythonToCpp[2] = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, (pyArgs[2])))) {
+        overloadId = 0; // createAttributeEditor(QtProperty*,QWidget*,BrowserCol)
     }
 
     // Function signature not found.
@@ -1869,13 +1878,13 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_createAttributeEditor(PyObjec
             return {};
         ::QWidget* cppArg1;
         pythonToCpp[1](pyArgs[1], &cppArg1);
-        ::Attribute cppArg2{NONE};
+        ::BrowserCol cppArg2{NONE};
         pythonToCpp[2](pyArgs[2], &cppArg2);
 
         if (!PyErr_Occurred()) {
-            // createAttributeEditor(QtProperty*,QWidget*,Attribute)
+            // createAttributeEditor(QtProperty*,QWidget*,BrowserCol)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QWidget * cppResult = ((::QtAbstractPropertyBrowserWrapper*) cppSelf)->QtAbstractPropertyBrowserWrapper::createAttributeEditor_protected(cppArg0, cppArg1, cppArg2);
+            QWidget * cppResult = static_cast<::QtAbstractPropertyBrowserWrapper*>(cppSelf)->QtAbstractPropertyBrowserWrapper::createAttributeEditor_protected(cppArg0, cppArg1, cppArg2);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), cppResult);
             Shiboken::Object::setParent(self, pyResult);
@@ -1905,6 +1914,7 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_createEditor(PyObject* self, 
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1939,7 +1949,7 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_createEditor(PyObject* self, 
         if (!PyErr_Occurred()) {
             // createEditor(QtProperty*,QWidget*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QWidget * cppResult = ((::QtAbstractPropertyBrowserWrapper*) cppSelf)->QtAbstractPropertyBrowserWrapper::createEditor_protected(cppArg0, cppArg1);
+            QWidget * cppResult = static_cast<::QtAbstractPropertyBrowserWrapper*>(cppSelf)->QtAbstractPropertyBrowserWrapper::createEditor_protected(cppArg0, cppArg1);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), cppResult);
             Shiboken::Object::setParent(self, pyResult);
@@ -1996,6 +2006,7 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_insertProperty(PyObject* self
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2082,7 +2093,7 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_itemChanged(PyObject* self, P
                 return {};
             }
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtAbstractPropertyBrowserWrapper*) cppSelf)->itemChanged_protected(cppArg0);
+            static_cast<::QtAbstractPropertyBrowserWrapper*>(cppSelf)->itemChanged_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -2108,6 +2119,7 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_itemInserted(PyObject* self, 
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2146,7 +2158,7 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_itemInserted(PyObject* self, 
                 return {};
             }
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtAbstractPropertyBrowserWrapper*) cppSelf)->itemInserted_protected(cppArg0, cppArg1);
+            static_cast<::QtAbstractPropertyBrowserWrapper*>(cppSelf)->itemInserted_protected(cppArg0, cppArg1);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -2195,7 +2207,7 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_itemRemoved(PyObject* self, P
                 return {};
             }
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtAbstractPropertyBrowserWrapper*) cppSelf)->itemRemoved_protected(cppArg0);
+            static_cast<::QtAbstractPropertyBrowserWrapper*>(cppSelf)->itemRemoved_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -2385,6 +2397,7 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_setFactoryForManager(PyObject
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2551,23 +2564,23 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_unsetFactoryForManager(PyObje
 }
 
 static PyMethodDef Sbk_QtAbstractPropertyBrowser_methods[] = {
-    {"addProperty", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_addProperty, METH_O},
-    {"clear", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_clear, METH_NOARGS},
-    {"createAttributeEditor", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_createAttributeEditor, METH_VARARGS},
-    {"createEditor", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_createEditor, METH_VARARGS},
-    {"currentItem", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_currentItem, METH_NOARGS},
-    {"insertProperty", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_insertProperty, METH_VARARGS},
-    {"itemChanged", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_itemChanged, METH_O},
-    {"itemInserted", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_itemInserted, METH_VARARGS},
-    {"itemRemoved", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_itemRemoved, METH_O},
-    {"items", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_items, METH_O},
-    {"properties", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_properties, METH_NOARGS},
-    {"removeProperty", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_removeProperty, METH_O},
-    {"setCurrentItem", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_setCurrentItem, METH_O},
-    {"setFactoryForManager", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_setFactoryForManager, METH_VARARGS},
-    {"topLevelItem", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_topLevelItem, METH_O},
-    {"topLevelItems", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_topLevelItems, METH_NOARGS},
-    {"unsetFactoryForManager", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_unsetFactoryForManager, METH_O},
+    {"addProperty", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_addProperty), METH_O},
+    {"clear", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_clear), METH_NOARGS},
+    {"createAttributeEditor", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_createAttributeEditor), METH_VARARGS},
+    {"createEditor", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_createEditor), METH_VARARGS},
+    {"currentItem", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_currentItem), METH_NOARGS},
+    {"insertProperty", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_insertProperty), METH_VARARGS},
+    {"itemChanged", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_itemChanged), METH_O},
+    {"itemInserted", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_itemInserted), METH_VARARGS},
+    {"itemRemoved", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_itemRemoved), METH_O},
+    {"items", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_items), METH_O},
+    {"properties", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_properties), METH_NOARGS},
+    {"removeProperty", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_removeProperty), METH_O},
+    {"setCurrentItem", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_setCurrentItem), METH_O},
+    {"setFactoryForManager", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_setFactoryForManager), METH_VARARGS},
+    {"topLevelItem", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_topLevelItem), METH_O},
+    {"topLevelItems", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_topLevelItems), METH_NOARGS},
+    {"unsetFactoryForManager", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_unsetFactoryForManager), METH_O},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -2652,39 +2665,39 @@ static void QtAbstractPropertyBrowser_PythonToCpp_QtAbstractPropertyBrowser_PTR(
 static PythonToCppFunc is_QtAbstractPropertyBrowser_PythonToCpp_QtAbstractPropertyBrowser_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtAbstractPropertyBrowser_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtAbstractPropertyBrowser_TypeF())))
         return QtAbstractPropertyBrowser_PythonToCpp_QtAbstractPropertyBrowser_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtAbstractPropertyBrowser_PTR_CppToPython_QtAbstractPropertyBrowser(const void* cppIn) {
-    return PySide::getWrapperForQObject((::QtAbstractPropertyBrowser*)cppIn, Sbk_QtAbstractPropertyBrowser_TypeF());
+    return PySide::getWrapperForQObject(reinterpret_cast<::QtAbstractPropertyBrowser*>(const_cast<void*>(cppIn)), Sbk_QtAbstractPropertyBrowser_TypeF());
 
 }
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtAbstractPropertyBrowser_SignaturesString[] = ""
-    "qtpropertybrowser.QtAbstractPropertyBrowser(parent:PySide2.QtWidgets.QWidget=nullptr)\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.addProperty(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.QtBrowserItem\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.clear()\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.createAttributeEditor(property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.Attribute)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.createEditor(property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.currentItem()->qtpropertybrowser.QtBrowserItem\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.insertProperty(property:qtpropertybrowser.QtProperty,afterProperty:qtpropertybrowser.QtProperty)->qtpropertybrowser.QtBrowserItem\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.itemChanged(item:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.itemInserted(item:qtpropertybrowser.QtBrowserItem,afterItem:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.itemRemoved(item:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.items(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.QtBrowserItem\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.properties()->qtpropertybrowser.QtProperty\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.removeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.setCurrentItem(arg__1:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.setFactoryForManager(arg__1:PyObject,arg__2:PyObject)\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.topLevelItem(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.QtBrowserItem\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.topLevelItems()->qtpropertybrowser.QtBrowserItem\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.unsetFactoryForManager(manager:qtpropertybrowser.QtAbstractPropertyManager)\n"
-;
+static const char *QtAbstractPropertyBrowser_SignatureStrings[] = {
+    "qtpropertybrowser.QtAbstractPropertyBrowser(parent:PySide2.QtWidgets.QWidget=nullptr)",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.addProperty(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.QtBrowserItem",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.clear()",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.createAttributeEditor(property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.createEditor(property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.currentItem()->qtpropertybrowser.QtBrowserItem",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.insertProperty(property:qtpropertybrowser.QtProperty,afterProperty:qtpropertybrowser.QtProperty)->qtpropertybrowser.QtBrowserItem",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.itemChanged(item:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.itemInserted(item:qtpropertybrowser.QtBrowserItem,afterItem:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.itemRemoved(item:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.items(property:qtpropertybrowser.QtProperty)->QList[qtpropertybrowser.QtBrowserItem]",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.properties()->QList[qtpropertybrowser.QtProperty]",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.removeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.setCurrentItem(arg__1:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.setFactoryForManager(arg__1:PyObject,arg__2:PyObject)",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.topLevelItem(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.QtBrowserItem",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.topLevelItems()->QList[qtpropertybrowser.QtBrowserItem]",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.unsetFactoryForManager(manager:qtpropertybrowser.QtAbstractPropertyManager)",
+    nullptr}; // Sentinel
 
 void init_QtAbstractPropertyBrowser(PyObject* module)
 {
@@ -2693,7 +2706,7 @@ void init_QtAbstractPropertyBrowser(PyObject* module)
         "QtAbstractPropertyBrowser",
         "QtAbstractPropertyBrowser*",
         &Sbk_QtAbstractPropertyBrowser_spec,
-        QtAbstractPropertyBrowser_SignaturesString,
+        QtAbstractPropertyBrowser_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtAbstractPropertyBrowser >,
         reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]),
         0,

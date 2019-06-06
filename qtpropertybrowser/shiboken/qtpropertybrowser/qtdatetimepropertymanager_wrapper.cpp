@@ -36,6 +36,8 @@
 #include <cctype>
 #include <cstring>
 
+QT_WARNING_DISABLE_DEPRECATED
+
 
 
 template <class T>
@@ -51,12 +53,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -66,7 +70,8 @@ void QtDateTimePropertyManagerWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtDateTimePropertyManagerWrapper::QtDateTimePropertyManagerWrapper(QObject * parent) : QtDateTimePropertyManager(parent) {
+QtDateTimePropertyManagerWrapper::QtDateTimePropertyManagerWrapper(QObject * parent) : QtDateTimePropertyManager(parent)
+{
     // ... middle
 }
 
@@ -844,6 +849,7 @@ Sbk_QtDateTimePropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwd
     PythonToCppFunc pythonToCpp[] = { nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -1004,7 +1010,7 @@ static PyObject* Sbk_QtDateTimePropertyManagerFunc_checkIcon(PyObject* self, PyO
         if (!PyErr_Occurred()) {
             // checkIcon(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QIcon cppResult = ((::QtDateTimePropertyManagerWrapper*) cppSelf)->QtDateTimePropertyManagerWrapper::checkIcon_protected(cppArg0);
+            QIcon cppResult = static_cast<::QtDateTimePropertyManagerWrapper*>(cppSelf)->QtDateTimePropertyManagerWrapper::checkIcon_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtGuiTypes[SBK_QICON_IDX]), &cppResult);
         }
@@ -1051,7 +1057,7 @@ static PyObject* Sbk_QtDateTimePropertyManagerFunc_initializeProperty(PyObject* 
         if (!PyErr_Occurred()) {
             // initializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtDateTimePropertyManagerWrapper*) cppSelf)->QtDateTimePropertyManagerWrapper::initializeProperty_protected(cppArg0);
+            static_cast<::QtDateTimePropertyManagerWrapper*>(cppSelf)->QtDateTimePropertyManagerWrapper::initializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -1077,6 +1083,7 @@ static PyObject* Sbk_QtDateTimePropertyManagerFunc_setCheck(PyObject* self, PyOb
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1154,7 +1161,7 @@ static PyObject* Sbk_QtDateTimePropertyManagerFunc_uninitializeProperty(PyObject
         if (!PyErr_Occurred()) {
             // uninitializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtDateTimePropertyManagerWrapper*) cppSelf)->QtDateTimePropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
+            static_cast<::QtDateTimePropertyManagerWrapper*>(cppSelf)->QtDateTimePropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -1248,7 +1255,7 @@ static PyObject* Sbk_QtDateTimePropertyManagerFunc_valueText(PyObject* self, PyO
         if (!PyErr_Occurred()) {
             // valueText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = ((::QtDateTimePropertyManagerWrapper*) cppSelf)->QtDateTimePropertyManagerWrapper::valueText_protected(cppArg0);
+            QString cppResult = static_cast<::QtDateTimePropertyManagerWrapper*>(cppSelf)->QtDateTimePropertyManagerWrapper::valueText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -1266,13 +1273,13 @@ static PyObject* Sbk_QtDateTimePropertyManagerFunc_valueText(PyObject* self, PyO
 }
 
 static PyMethodDef Sbk_QtDateTimePropertyManager_methods[] = {
-    {"check", (PyCFunction)Sbk_QtDateTimePropertyManagerFunc_check, METH_O},
-    {"checkIcon", (PyCFunction)Sbk_QtDateTimePropertyManagerFunc_checkIcon, METH_O},
-    {"initializeProperty", (PyCFunction)Sbk_QtDateTimePropertyManagerFunc_initializeProperty, METH_O},
-    {"setCheck", (PyCFunction)Sbk_QtDateTimePropertyManagerFunc_setCheck, METH_VARARGS},
-    {"uninitializeProperty", (PyCFunction)Sbk_QtDateTimePropertyManagerFunc_uninitializeProperty, METH_O},
-    {"value", (PyCFunction)Sbk_QtDateTimePropertyManagerFunc_value, METH_O},
-    {"valueText", (PyCFunction)Sbk_QtDateTimePropertyManagerFunc_valueText, METH_O},
+    {"check", reinterpret_cast<PyCFunction>(Sbk_QtDateTimePropertyManagerFunc_check), METH_O},
+    {"checkIcon", reinterpret_cast<PyCFunction>(Sbk_QtDateTimePropertyManagerFunc_checkIcon), METH_O},
+    {"initializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtDateTimePropertyManagerFunc_initializeProperty), METH_O},
+    {"setCheck", reinterpret_cast<PyCFunction>(Sbk_QtDateTimePropertyManagerFunc_setCheck), METH_VARARGS},
+    {"uninitializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtDateTimePropertyManagerFunc_uninitializeProperty), METH_O},
+    {"value", reinterpret_cast<PyCFunction>(Sbk_QtDateTimePropertyManagerFunc_value), METH_O},
+    {"valueText", reinterpret_cast<PyCFunction>(Sbk_QtDateTimePropertyManagerFunc_valueText), METH_O},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -1342,29 +1349,29 @@ static void QtDateTimePropertyManager_PythonToCpp_QtDateTimePropertyManager_PTR(
 static PythonToCppFunc is_QtDateTimePropertyManager_PythonToCpp_QtDateTimePropertyManager_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtDateTimePropertyManager_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtDateTimePropertyManager_TypeF())))
         return QtDateTimePropertyManager_PythonToCpp_QtDateTimePropertyManager_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtDateTimePropertyManager_PTR_CppToPython_QtDateTimePropertyManager(const void* cppIn) {
-    return PySide::getWrapperForQObject((::QtDateTimePropertyManager*)cppIn, Sbk_QtDateTimePropertyManager_TypeF());
+    return PySide::getWrapperForQObject(reinterpret_cast<::QtDateTimePropertyManager*>(const_cast<void*>(cppIn)), Sbk_QtDateTimePropertyManager_TypeF());
 
 }
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtDateTimePropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtDateTimePropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtDateTimePropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtDateTimePropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtDateTimePropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtDateTimePropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
-    "qtpropertybrowser.QtDateTimePropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtDateTimePropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QDateTime\n"
-    "qtpropertybrowser.QtDateTimePropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
-;
+static const char *QtDateTimePropertyManager_SignatureStrings[] = {
+    "qtpropertybrowser.QtDateTimePropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtDateTimePropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtDateTimePropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtDateTimePropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtDateTimePropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
+    "qtpropertybrowser.QtDateTimePropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtDateTimePropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QDateTime",
+    "qtpropertybrowser.QtDateTimePropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
+    nullptr}; // Sentinel
 
 void init_QtDateTimePropertyManager(PyObject* module)
 {
@@ -1373,7 +1380,7 @@ void init_QtDateTimePropertyManager(PyObject* module)
         "QtDateTimePropertyManager",
         "QtDateTimePropertyManager*",
         &Sbk_QtDateTimePropertyManager_spec,
-        QtDateTimePropertyManager_SignaturesString,
+        QtDateTimePropertyManager_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtDateTimePropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

@@ -31,6 +31,8 @@
 #include <cctype>
 #include <cstring>
 
+QT_WARNING_DISABLE_DEPRECATED
+
 
 
 template <class T>
@@ -46,12 +48,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -61,7 +65,8 @@ void QtVariantPropertyWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtVariantPropertyWrapper::QtVariantPropertyWrapper(QtVariantPropertyManager * manager) : QtVariantProperty(manager) {
+QtVariantPropertyWrapper::QtVariantPropertyWrapper(QtVariantPropertyManager * manager) : QtVariantProperty(manager)
+{
     // ... middle
 }
 
@@ -86,6 +91,7 @@ Sbk_QtVariantProperty_Init(PyObject* self, PyObject* args, PyObject* kwds)
     PythonToCppFunc pythonToCpp[] = { nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -224,6 +230,7 @@ static PyObject* Sbk_QtVariantPropertyFunc_setAttribute(PyObject* self, PyObject
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -365,12 +372,12 @@ static PyObject* Sbk_QtVariantPropertyFunc_valueType(PyObject* self)
 }
 
 static PyMethodDef Sbk_QtVariantProperty_methods[] = {
-    {"attributeValue", (PyCFunction)Sbk_QtVariantPropertyFunc_attributeValue, METH_O},
-    {"propertyType", (PyCFunction)Sbk_QtVariantPropertyFunc_propertyType, METH_NOARGS},
-    {"setAttribute", (PyCFunction)Sbk_QtVariantPropertyFunc_setAttribute, METH_VARARGS},
-    {"setValue", (PyCFunction)Sbk_QtVariantPropertyFunc_setValue, METH_O},
-    {"value", (PyCFunction)Sbk_QtVariantPropertyFunc_value, METH_NOARGS},
-    {"valueType", (PyCFunction)Sbk_QtVariantPropertyFunc_valueType, METH_NOARGS},
+    {"attributeValue", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyFunc_attributeValue), METH_O},
+    {"propertyType", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyFunc_propertyType), METH_NOARGS},
+    {"setAttribute", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyFunc_setAttribute), METH_VARARGS},
+    {"setValue", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyFunc_setValue), METH_O},
+    {"value", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyFunc_value), METH_NOARGS},
+    {"valueType", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyFunc_valueType), METH_NOARGS},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -440,14 +447,14 @@ static void QtVariantProperty_PythonToCpp_QtVariantProperty_PTR(PyObject* pyIn, 
 static PythonToCppFunc is_QtVariantProperty_PythonToCpp_QtVariantProperty_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtVariantProperty_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtVariantProperty_TypeF())))
         return QtVariantProperty_PythonToCpp_QtVariantProperty_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtVariantProperty_PTR_CppToPython_QtVariantProperty(const void* cppIn) {
-    PyObject* pyOut = (PyObject*)Shiboken::BindingManager::instance().retrieveWrapper(cppIn);
+    auto pyOut = reinterpret_cast<PyObject*>(Shiboken::BindingManager::instance().retrieveWrapper(cppIn));
     if (pyOut) {
         Py_INCREF(pyOut);
         return pyOut;
@@ -468,15 +475,15 @@ static PyObject* QtVariantProperty_PTR_CppToPython_QtVariantProperty(const void*
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtVariantProperty_SignaturesString[] = ""
-    "qtpropertybrowser.QtVariantProperty(manager:qtpropertybrowser.QtVariantPropertyManager)\n"
-    "qtpropertybrowser.QtVariantProperty.attributeValue(attribute:QString)->QVariant\n"
-    "qtpropertybrowser.QtVariantProperty.propertyType()->int\n"
-    "qtpropertybrowser.QtVariantProperty.setAttribute(attribute:QString,value:QVariant)\n"
-    "qtpropertybrowser.QtVariantProperty.setValue(value:QVariant)\n"
-    "qtpropertybrowser.QtVariantProperty.value()->QVariant\n"
-    "qtpropertybrowser.QtVariantProperty.valueType()->int\n"
-;
+static const char *QtVariantProperty_SignatureStrings[] = {
+    "qtpropertybrowser.QtVariantProperty(manager:qtpropertybrowser.QtVariantPropertyManager)",
+    "qtpropertybrowser.QtVariantProperty.attributeValue(attribute:QString)->QVariant",
+    "qtpropertybrowser.QtVariantProperty.propertyType()->int",
+    "qtpropertybrowser.QtVariantProperty.setAttribute(attribute:QString,value:QVariant)",
+    "qtpropertybrowser.QtVariantProperty.setValue(value:QVariant)",
+    "qtpropertybrowser.QtVariantProperty.value()->QVariant",
+    "qtpropertybrowser.QtVariantProperty.valueType()->int",
+    nullptr}; // Sentinel
 
 void init_QtVariantProperty(PyObject* module)
 {
@@ -485,7 +492,7 @@ void init_QtVariantProperty(PyObject* module)
         "QtVariantProperty",
         "QtVariantProperty*",
         &Sbk_QtVariantProperty_spec,
-        QtVariantProperty_SignaturesString,
+        QtVariantProperty_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtVariantProperty >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]),
         0,

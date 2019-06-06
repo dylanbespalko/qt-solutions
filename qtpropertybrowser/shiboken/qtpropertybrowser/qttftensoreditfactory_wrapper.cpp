@@ -31,6 +31,8 @@
 #include <cctype>
 #include <cstring>
 
+QT_WARNING_DISABLE_DEPRECATED
+
 
 
 template <class T>
@@ -46,12 +48,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -61,7 +65,8 @@ void QtTFTensorEditFactoryWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtTFTensorEditFactoryWrapper::QtTFTensorEditFactoryWrapper(QObject * parent) : QtTFTensorEditFactory(parent) {
+QtTFTensorEditFactoryWrapper::QtTFTensorEditFactoryWrapper(QObject * parent) : QtTFTensorEditFactory(parent)
+{
     // ... middle
 }
 
@@ -89,7 +94,7 @@ void QtTFTensorEditFactoryWrapper::connectPropertyManager(QtTFTensorPropertyMana
     }
 }
 
-QWidget * QtTFTensorEditFactoryWrapper::createAttributeEditor(QtTFTensorPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute)
+QWidget * QtTFTensorEditFactoryWrapper::createAttributeEditor(QtTFTensorPropertyManager * manager, QtProperty * property, QWidget * parent, BrowserCol attribute)
 {
     Shiboken::GilState gil;
     if (PyErr_Occurred())
@@ -104,7 +109,7 @@ QWidget * QtTFTensorEditFactoryWrapper::createAttributeEditor(QtTFTensorProperty
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTTFTENSORPROPERTYMANAGER_IDX]), manager),
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property),
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), parent),
-        Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, &attribute)
+        Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, &attribute)
     ));
 
     Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
@@ -204,6 +209,7 @@ Sbk_QtTFTensorEditFactory_Init(PyObject* self, PyObject* args, PyObject* kwds)
     SBK_UNUSED(pythonToCpp)
     int numNamedArgs = (kwds ? PyDict_Size(kwds) : 0);
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -305,7 +311,7 @@ static PyObject* Sbk_QtTFTensorEditFactoryFunc_connectPropertyManager(PyObject* 
         if (!PyErr_Occurred()) {
             // connectPropertyManager(QtTFTensorPropertyManager*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtTFTensorEditFactoryWrapper*) cppSelf)->QtTFTensorEditFactoryWrapper::connectPropertyManager_protected(cppArg0);
+            static_cast<::QtTFTensorEditFactoryWrapper*>(cppSelf)->QtTFTensorEditFactoryWrapper::connectPropertyManager_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -332,6 +338,7 @@ static PyObject* Sbk_QtTFTensorEditFactoryFunc_createAttributeEditor(PyObject* s
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr, nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0, 0, 0};
 
     // invalid argument lengths
@@ -342,13 +349,13 @@ static PyObject* Sbk_QtTFTensorEditFactoryFunc_createAttributeEditor(PyObject* s
 
 
     // Overloaded function decisor
-    // 0: QtTFTensorEditFactory::createAttributeEditor(QtTFTensorPropertyManager*,QtProperty*,QWidget*,Attribute)
+    // 0: QtTFTensorEditFactory::createAttributeEditor(QtTFTensorPropertyManager*,QtProperty*,QWidget*,BrowserCol)
     if (numArgs == 4
         && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTTFTENSORPROPERTYMANAGER_IDX]), (pyArgs[0])))
         && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[1])))
         && (pythonToCpp[2] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), (pyArgs[2])))
-        && (pythonToCpp[3] = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, (pyArgs[3])))) {
-        overloadId = 0; // createAttributeEditor(QtTFTensorPropertyManager*,QtProperty*,QWidget*,Attribute)
+        && (pythonToCpp[3] = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, (pyArgs[3])))) {
+        overloadId = 0; // createAttributeEditor(QtTFTensorPropertyManager*,QtProperty*,QWidget*,BrowserCol)
     }
 
     // Function signature not found.
@@ -368,13 +375,13 @@ static PyObject* Sbk_QtTFTensorEditFactoryFunc_createAttributeEditor(PyObject* s
             return {};
         ::QWidget* cppArg2;
         pythonToCpp[2](pyArgs[2], &cppArg2);
-        ::Attribute cppArg3{NONE};
+        ::BrowserCol cppArg3{NONE};
         pythonToCpp[3](pyArgs[3], &cppArg3);
 
         if (!PyErr_Occurred()) {
-            // createAttributeEditor(QtTFTensorPropertyManager*,QtProperty*,QWidget*,Attribute)
+            // createAttributeEditor(QtTFTensorPropertyManager*,QtProperty*,QWidget*,BrowserCol)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QWidget * cppResult = ((::QtTFTensorEditFactoryWrapper*) cppSelf)->QtTFTensorEditFactoryWrapper::createAttributeEditor_protected(cppArg0, cppArg1, cppArg2, cppArg3);
+            QWidget * cppResult = static_cast<::QtTFTensorEditFactoryWrapper*>(cppSelf)->QtTFTensorEditFactoryWrapper::createAttributeEditor_protected(cppArg0, cppArg1, cppArg2, cppArg3);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), cppResult);
             Shiboken::Object::setParent(self, pyResult);
@@ -404,6 +411,7 @@ static PyObject* Sbk_QtTFTensorEditFactoryFunc_createEditor(PyObject* self, PyOb
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0, 0};
 
     // invalid argument lengths
@@ -443,7 +451,7 @@ static PyObject* Sbk_QtTFTensorEditFactoryFunc_createEditor(PyObject* self, PyOb
         if (!PyErr_Occurred()) {
             // createEditor(QtTFTensorPropertyManager*,QtProperty*,QWidget*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QWidget * cppResult = ((::QtTFTensorEditFactoryWrapper*) cppSelf)->QtTFTensorEditFactoryWrapper::createEditor_protected(cppArg0, cppArg1, cppArg2);
+            QWidget * cppResult = static_cast<::QtTFTensorEditFactoryWrapper*>(cppSelf)->QtTFTensorEditFactoryWrapper::createEditor_protected(cppArg0, cppArg1, cppArg2);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), cppResult);
             Shiboken::Object::setParent(self, pyResult);
@@ -491,7 +499,7 @@ static PyObject* Sbk_QtTFTensorEditFactoryFunc_disconnectPropertyManager(PyObjec
         if (!PyErr_Occurred()) {
             // disconnectPropertyManager(QtTFTensorPropertyManager*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtTFTensorEditFactoryWrapper*) cppSelf)->QtTFTensorEditFactoryWrapper::disconnectPropertyManager_protected(cppArg0);
+            static_cast<::QtTFTensorEditFactoryWrapper*>(cppSelf)->QtTFTensorEditFactoryWrapper::disconnectPropertyManager_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -536,7 +544,7 @@ static PyObject* Sbk_QtTFTensorEditFactoryFunc_setSubFactory(PyObject* self, PyO
         if (!PyErr_Occurred()) {
             // setSubFactory(QtComplexEditFactory*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtTFTensorEditFactoryWrapper*) cppSelf)->QtTFTensorEditFactoryWrapper::setSubFactory_protected(cppArg0);
+            static_cast<::QtTFTensorEditFactoryWrapper*>(cppSelf)->QtTFTensorEditFactoryWrapper::setSubFactory_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -565,7 +573,7 @@ static PyObject* Sbk_QtTFTensorEditFactoryFunc_subFactory(PyObject* self)
 
         if (!PyErr_Occurred()) {
             // subFactory()const
-            QtComplexEditFactory * cppResult = ((::QtTFTensorEditFactoryWrapper*) cppSelf)->QtTFTensorEditFactoryWrapper::subFactory_protected();
+            QtComplexEditFactory * cppResult = static_cast<::QtTFTensorEditFactoryWrapper*>(cppSelf)->QtTFTensorEditFactoryWrapper::subFactory_protected();
             pyResult = Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTCOMPLEXEDITFACTORY_IDX]), cppResult);
             Shiboken::Object::setParent(self, pyResult);
         }
@@ -579,12 +587,12 @@ static PyObject* Sbk_QtTFTensorEditFactoryFunc_subFactory(PyObject* self)
 }
 
 static PyMethodDef Sbk_QtTFTensorEditFactory_methods[] = {
-    {"connectPropertyManager", (PyCFunction)Sbk_QtTFTensorEditFactoryFunc_connectPropertyManager, METH_O},
-    {"createAttributeEditor", (PyCFunction)Sbk_QtTFTensorEditFactoryFunc_createAttributeEditor, METH_VARARGS},
-    {"createEditor", (PyCFunction)Sbk_QtTFTensorEditFactoryFunc_createEditor, METH_VARARGS},
-    {"disconnectPropertyManager", (PyCFunction)Sbk_QtTFTensorEditFactoryFunc_disconnectPropertyManager, METH_O},
-    {"setSubFactory", (PyCFunction)Sbk_QtTFTensorEditFactoryFunc_setSubFactory, METH_O},
-    {"subFactory", (PyCFunction)Sbk_QtTFTensorEditFactoryFunc_subFactory, METH_NOARGS},
+    {"connectPropertyManager", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorEditFactoryFunc_connectPropertyManager), METH_O},
+    {"createAttributeEditor", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorEditFactoryFunc_createAttributeEditor), METH_VARARGS},
+    {"createEditor", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorEditFactoryFunc_createEditor), METH_VARARGS},
+    {"disconnectPropertyManager", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorEditFactoryFunc_disconnectPropertyManager), METH_O},
+    {"setSubFactory", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorEditFactoryFunc_setSubFactory), METH_O},
+    {"subFactory", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorEditFactoryFunc_subFactory), METH_NOARGS},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -647,14 +655,14 @@ static void QtTFTensorEditFactory_PythonToCpp_QtTFTensorEditFactory_PTR(PyObject
 static PythonToCppFunc is_QtTFTensorEditFactory_PythonToCpp_QtTFTensorEditFactory_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtTFTensorEditFactory_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtTFTensorEditFactory_TypeF())))
         return QtTFTensorEditFactory_PythonToCpp_QtTFTensorEditFactory_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtTFTensorEditFactory_PTR_CppToPython_QtTFTensorEditFactory(const void* cppIn) {
-    PyObject* pyOut = (PyObject*)Shiboken::BindingManager::instance().retrieveWrapper(cppIn);
+    auto pyOut = reinterpret_cast<PyObject*>(Shiboken::BindingManager::instance().retrieveWrapper(cppIn));
     if (pyOut) {
         Py_INCREF(pyOut);
         return pyOut;
@@ -675,15 +683,15 @@ static PyObject* QtTFTensorEditFactory_PTR_CppToPython_QtTFTensorEditFactory(con
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtTFTensorEditFactory_SignaturesString[] = ""
-    "qtpropertybrowser.QtTFTensorEditFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtTFTensorEditFactory.connectPropertyManager(manager:qtpropertybrowser.QtTFTensorPropertyManager)\n"
-    "qtpropertybrowser.QtTFTensorEditFactory.createAttributeEditor(manager:qtpropertybrowser.QtTFTensorPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.Attribute)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtTFTensorEditFactory.createEditor(manager:qtpropertybrowser.QtTFTensorPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtTFTensorEditFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtTFTensorPropertyManager)\n"
-    "qtpropertybrowser.QtTFTensorEditFactory.setSubFactory(subFactory:qtpropertybrowser.QtComplexEditFactory)\n"
-    "qtpropertybrowser.QtTFTensorEditFactory.subFactory()->qtpropertybrowser.QtComplexEditFactory\n"
-;
+static const char *QtTFTensorEditFactory_SignatureStrings[] = {
+    "qtpropertybrowser.QtTFTensorEditFactory(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtTFTensorEditFactory.connectPropertyManager(manager:qtpropertybrowser.QtTFTensorPropertyManager)",
+    "qtpropertybrowser.QtTFTensorEditFactory.createAttributeEditor(manager:qtpropertybrowser.QtTFTensorPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtTFTensorEditFactory.createEditor(manager:qtpropertybrowser.QtTFTensorPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtTFTensorEditFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtTFTensorPropertyManager)",
+    "qtpropertybrowser.QtTFTensorEditFactory.setSubFactory(subFactory:qtpropertybrowser.QtComplexEditFactory)",
+    "qtpropertybrowser.QtTFTensorEditFactory.subFactory()->qtpropertybrowser.QtComplexEditFactory",
+    nullptr}; // Sentinel
 
 void init_QtTFTensorEditFactory(PyObject* module)
 {
@@ -692,7 +700,7 @@ void init_QtTFTensorEditFactory(PyObject* module)
         "QtTFTensorEditFactory",
         "QtTFTensorEditFactory*",
         &Sbk_QtTFTensorEditFactory_spec,
-        QtTFTensorEditFactory_SignaturesString,
+        QtTFTensorEditFactory_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtTFTensorEditFactory >,
         0,
         0,

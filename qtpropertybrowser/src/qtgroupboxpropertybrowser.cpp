@@ -69,9 +69,9 @@ public:
     void propertyChanged(QtBrowserItem *index);
     QWidget *createEditor(QtProperty *property, QWidget *parent) const
         { return q_ptr->createEditor(property, parent); }
-    QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, Attribute attribute) const
+    QWidget *createAttributeEditor(QtProperty *property, QWidget *parent, BrowserCol attribute) const
     { return q_ptr->createAttributeEditor(property, parent,attribute); }
-    Attribute columnToAttribute(const int col) const;
+    BrowserCol columnToAttribute(const int col) const;
 
     void slotEditorDestroyed();
     void slotUpdate();
@@ -110,7 +110,7 @@ private:
     QGridLayout *m_mainLayout;
     QList<WidgetItem *> m_children;
     QList<WidgetItem *> m_recreateQueue;
-    QList<Attribute> m_attributes;
+    QList<BrowserCol> m_attributes;
 };
 
 void QtGroupBoxPropertyBrowserPrivate::init(QWidget *parent)
@@ -254,28 +254,28 @@ void QtGroupBoxPropertyBrowserPrivate::propertyInserted(QtBrowserItem *index, Qt
                 parentItem->layout->addWidget(parentItem->widget, 0, 0, 1, 2);
                 for (unsigned short ind = 0; ind < m_attributes.count(); ind++) {
                     switch (m_attributes.at(ind)) {
-                    case Attribute::UNIT:
+                    case BrowserCol::UNIT:
                         if (parentItem->unit){
                             l->removeWidget(parentItem->unit);
                             parentItem->unit->setParent(parentItem->groupBox);
                             parentItem->layout->addWidget(parentItem->unit, 0, ind + 2, 1, 1);
                         }
                         break;
-                    case Attribute::PKAVG:
+                    case BrowserCol::PKAVG:
                         if (parentItem->pkAvg){
                             l->removeWidget(parentItem->pkAvg);
                             parentItem->pkAvg->setParent(parentItem->groupBox);
                             parentItem->layout->addWidget(parentItem->pkAvg, 0, ind + 2, 1, 1);
                         }
                         break;
-                    case Attribute::FORMAT:
+                    case BrowserCol::FORMAT:
                         if (parentItem->format){
                             l->removeWidget(parentItem->format);
                             parentItem->format->setParent(parentItem->groupBox);
                             parentItem->layout->addWidget(parentItem->format, 0, ind + 2, 1, 1);
                         }
                         break;
-                    case Attribute::CHECK:
+                    case BrowserCol::CHECK:
                         if (parentItem->check){
                             l->removeWidget(parentItem->check);
                             parentItem->check->setParent(parentItem->groupBox);
@@ -327,33 +327,33 @@ void QtGroupBoxPropertyBrowserPrivate::propertyInserted(QtBrowserItem *index, Qt
     layout->addWidget(newItem->label, row, 0, 1, span);
     for (unsigned short ind = 0; ind < m_attributes.count(); ind++) {
         switch (m_attributes.at(ind)) {
-        case Attribute::UNIT:
-            newItem->unit = dynamic_cast<QComboBox*>(createAttributeEditor(index->property(), parentWidget, Attribute::UNIT));
+        case BrowserCol::UNIT:
+            newItem->unit = dynamic_cast<QComboBox*>(createAttributeEditor(index->property(), parentWidget, BrowserCol::UNIT));
             if (newItem->unit)
                 layout->addWidget(newItem->unit, row, ind+2, 1, 1);
             break;
-        case Attribute::PKAVG:
-            newItem->pkAvg = dynamic_cast<QComboBox*>(createAttributeEditor(index->property(), parentWidget, Attribute::PKAVG));
+        case BrowserCol::PKAVG:
+            newItem->pkAvg = dynamic_cast<QComboBox*>(createAttributeEditor(index->property(), parentWidget, BrowserCol::PKAVG));
             if (newItem->pkAvg)
                 layout->addWidget(newItem->pkAvg, row, ind+2, 1, 1);
             break;
-        case Attribute::FORMAT:
-            newItem->format = dynamic_cast<QComboBox*>(createAttributeEditor(index->property(), parentWidget, Attribute::FORMAT));
+        case BrowserCol::FORMAT:
+            newItem->format = dynamic_cast<QComboBox*>(createAttributeEditor(index->property(), parentWidget, BrowserCol::FORMAT));
             if (newItem->format)
                 layout->addWidget(newItem->format, row, ind+2, 1, 1);
             break;
-        case Attribute::MINIMUM:
-            newItem->minimum = dynamic_cast<QDoubleEdit*>(createAttributeEditor(index->property(), parentWidget, Attribute::MINIMUM));
+        case BrowserCol::MINIMUM:
+            newItem->minimum = dynamic_cast<QDoubleEdit*>(createAttributeEditor(index->property(), parentWidget, BrowserCol::MINIMUM));
             if (newItem->minimum)
                 layout->addWidget(newItem->minimum, row, ind+2, 1, 1);
             break;
-        case Attribute::MAXIMUM:
-           newItem->maximum = dynamic_cast<QDoubleEdit*>(createAttributeEditor(index->property(), parentWidget, Attribute::MAXIMUM));
+        case BrowserCol::MAXIMUM:
+           newItem->maximum = dynamic_cast<QDoubleEdit*>(createAttributeEditor(index->property(), parentWidget, BrowserCol::MAXIMUM));
             if (newItem->maximum)
                 layout->addWidget(newItem->maximum, row, ind+2, 1, 1);
             break;
-        case Attribute::CHECK:
-           newItem->check = dynamic_cast<QtBoolEdit*>(createAttributeEditor(index->property(), parentWidget, Attribute::CHECK));
+        case BrowserCol::CHECK:
+           newItem->check = dynamic_cast<QtBoolEdit*>(createAttributeEditor(index->property(), parentWidget, BrowserCol::CHECK));
             if (newItem->check)
                 layout->addWidget(newItem->check, row, ind+2, 1, 1, Qt::AlignRight);
             break;
@@ -658,12 +658,12 @@ QtGroupBoxPropertyBrowser::~QtGroupBoxPropertyBrowser()
  \sa setAttribute1()
  */
 
-QList<Attribute> QtGroupBoxPropertyBrowser::attributes() const
+QList<BrowserCol> QtGroupBoxPropertyBrowser::attributes() const
 {
     return d_ptr->m_attributes;
 }
 
-void QtGroupBoxPropertyBrowser::setAttributes(const QList<Attribute> &attributeList)
+void QtGroupBoxPropertyBrowser::setAttributes(const QList<BrowserCol> &attributeList)
 {
     if (d_ptr->m_attributes == attributeList)
         return;
@@ -686,13 +686,13 @@ void QtGroupBoxPropertyBrowser::setAttributes(const QList<Attribute> &attributeL
  \sa setAttribute1()
  */
 
-Attribute QtGroupBoxPropertyBrowser::attribute1() const
+BrowserCol QtGroupBoxPropertyBrowser::attribute1() const
 {
     return d_ptr->m_attributes[0];
 }
-void QtGroupBoxPropertyBrowser::setAttribute1(Attribute attribute)
+void QtGroupBoxPropertyBrowser::setAttribute1(BrowserCol attribute)
 {
-    QList<Attribute> &attributeList = d_ptr->m_attributes;
+    QList<BrowserCol> &attributeList = d_ptr->m_attributes;
     attributeList[0] = attribute;
     setAttributes(attributeList);
 }
@@ -705,14 +705,14 @@ void QtGroupBoxPropertyBrowser::setAttribute1(Attribute attribute)
 
  \sa setAttribute2()
  */
-void QtGroupBoxPropertyBrowser::setAttribute2(Attribute attribute)
+void QtGroupBoxPropertyBrowser::setAttribute2(BrowserCol attribute)
 {
-    QList<Attribute> &attributeList = d_ptr->m_attributes;
+    QList<BrowserCol> &attributeList = d_ptr->m_attributes;
     attributeList[1] = attribute;
     setAttributes(attributeList);
 }
 
-Attribute QtGroupBoxPropertyBrowser::attribute2() const
+BrowserCol QtGroupBoxPropertyBrowser::attribute2() const
 {
     return d_ptr->m_attributes[1];
 }
@@ -726,13 +726,13 @@ Attribute QtGroupBoxPropertyBrowser::attribute2() const
  \sa setAttribute3()
  */
 
-Attribute QtGroupBoxPropertyBrowser::attribute3() const
+BrowserCol QtGroupBoxPropertyBrowser::attribute3() const
 {
     return d_ptr->m_attributes[2];
 }
-void QtGroupBoxPropertyBrowser::setAttribute3(Attribute attribute)
+void QtGroupBoxPropertyBrowser::setAttribute3(BrowserCol attribute)
 {
-    QList<Attribute> &attributeList = d_ptr->m_attributes;
+    QList<BrowserCol> &attributeList = d_ptr->m_attributes;
     attributeList[2] = attribute;
     setAttributes(attributeList);
 }

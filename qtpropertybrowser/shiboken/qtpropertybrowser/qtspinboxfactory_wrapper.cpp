@@ -30,6 +30,8 @@
 #include <cctype>
 #include <cstring>
 
+QT_WARNING_DISABLE_DEPRECATED
+
 
 
 template <class T>
@@ -45,12 +47,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -60,7 +64,8 @@ void QtSpinBoxFactoryWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtSpinBoxFactoryWrapper::QtSpinBoxFactoryWrapper(QObject * parent) : QtSpinBoxFactory(parent) {
+QtSpinBoxFactoryWrapper::QtSpinBoxFactoryWrapper(QObject * parent) : QtSpinBoxFactory(parent)
+{
     // ... middle
 }
 
@@ -88,7 +93,7 @@ void QtSpinBoxFactoryWrapper::connectPropertyManager(QtIntPropertyManager * mana
     }
 }
 
-QWidget * QtSpinBoxFactoryWrapper::createAttributeEditor(QtIntPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute)
+QWidget * QtSpinBoxFactoryWrapper::createAttributeEditor(QtIntPropertyManager * manager, QtProperty * property, QWidget * parent, BrowserCol attribute)
 {
     Shiboken::GilState gil;
     if (PyErr_Occurred())
@@ -103,7 +108,7 @@ QWidget * QtSpinBoxFactoryWrapper::createAttributeEditor(QtIntPropertyManager * 
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTINTPROPERTYMANAGER_IDX]), manager),
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property),
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), parent),
-        Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, &attribute)
+        Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, &attribute)
     ));
 
     Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
@@ -203,6 +208,7 @@ Sbk_QtSpinBoxFactory_Init(PyObject* self, PyObject* args, PyObject* kwds)
     SBK_UNUSED(pythonToCpp)
     int numNamedArgs = (kwds ? PyDict_Size(kwds) : 0);
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -304,7 +310,7 @@ static PyObject* Sbk_QtSpinBoxFactoryFunc_connectPropertyManager(PyObject* self,
         if (!PyErr_Occurred()) {
             // connectPropertyManager(QtIntPropertyManager*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtSpinBoxFactoryWrapper*) cppSelf)->QtSpinBoxFactoryWrapper::connectPropertyManager_protected(cppArg0);
+            static_cast<::QtSpinBoxFactoryWrapper*>(cppSelf)->QtSpinBoxFactoryWrapper::connectPropertyManager_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -331,6 +337,7 @@ static PyObject* Sbk_QtSpinBoxFactoryFunc_createAttributeEditor(PyObject* self, 
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr, nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0, 0, 0};
 
     // invalid argument lengths
@@ -341,13 +348,13 @@ static PyObject* Sbk_QtSpinBoxFactoryFunc_createAttributeEditor(PyObject* self, 
 
 
     // Overloaded function decisor
-    // 0: QtSpinBoxFactory::createAttributeEditor(QtIntPropertyManager*,QtProperty*,QWidget*,Attribute)
+    // 0: QtSpinBoxFactory::createAttributeEditor(QtIntPropertyManager*,QtProperty*,QWidget*,BrowserCol)
     if (numArgs == 4
         && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTINTPROPERTYMANAGER_IDX]), (pyArgs[0])))
         && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[1])))
         && (pythonToCpp[2] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), (pyArgs[2])))
-        && (pythonToCpp[3] = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, (pyArgs[3])))) {
-        overloadId = 0; // createAttributeEditor(QtIntPropertyManager*,QtProperty*,QWidget*,Attribute)
+        && (pythonToCpp[3] = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, (pyArgs[3])))) {
+        overloadId = 0; // createAttributeEditor(QtIntPropertyManager*,QtProperty*,QWidget*,BrowserCol)
     }
 
     // Function signature not found.
@@ -367,13 +374,13 @@ static PyObject* Sbk_QtSpinBoxFactoryFunc_createAttributeEditor(PyObject* self, 
             return {};
         ::QWidget* cppArg2;
         pythonToCpp[2](pyArgs[2], &cppArg2);
-        ::Attribute cppArg3{NONE};
+        ::BrowserCol cppArg3{NONE};
         pythonToCpp[3](pyArgs[3], &cppArg3);
 
         if (!PyErr_Occurred()) {
-            // createAttributeEditor(QtIntPropertyManager*,QtProperty*,QWidget*,Attribute)
+            // createAttributeEditor(QtIntPropertyManager*,QtProperty*,QWidget*,BrowserCol)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QWidget * cppResult = ((::QtSpinBoxFactoryWrapper*) cppSelf)->QtSpinBoxFactoryWrapper::createAttributeEditor_protected(cppArg0, cppArg1, cppArg2, cppArg3);
+            QWidget * cppResult = static_cast<::QtSpinBoxFactoryWrapper*>(cppSelf)->QtSpinBoxFactoryWrapper::createAttributeEditor_protected(cppArg0, cppArg1, cppArg2, cppArg3);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), cppResult);
             Shiboken::Object::setParent(self, pyResult);
@@ -403,6 +410,7 @@ static PyObject* Sbk_QtSpinBoxFactoryFunc_createEditor(PyObject* self, PyObject*
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0, 0};
 
     // invalid argument lengths
@@ -442,7 +450,7 @@ static PyObject* Sbk_QtSpinBoxFactoryFunc_createEditor(PyObject* self, PyObject*
         if (!PyErr_Occurred()) {
             // createEditor(QtIntPropertyManager*,QtProperty*,QWidget*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QWidget * cppResult = ((::QtSpinBoxFactoryWrapper*) cppSelf)->QtSpinBoxFactoryWrapper::createEditor_protected(cppArg0, cppArg1, cppArg2);
+            QWidget * cppResult = static_cast<::QtSpinBoxFactoryWrapper*>(cppSelf)->QtSpinBoxFactoryWrapper::createEditor_protected(cppArg0, cppArg1, cppArg2);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), cppResult);
             Shiboken::Object::setParent(self, pyResult);
@@ -490,7 +498,7 @@ static PyObject* Sbk_QtSpinBoxFactoryFunc_disconnectPropertyManager(PyObject* se
         if (!PyErr_Occurred()) {
             // disconnectPropertyManager(QtIntPropertyManager*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtSpinBoxFactoryWrapper*) cppSelf)->QtSpinBoxFactoryWrapper::disconnectPropertyManager_protected(cppArg0);
+            static_cast<::QtSpinBoxFactoryWrapper*>(cppSelf)->QtSpinBoxFactoryWrapper::disconnectPropertyManager_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -506,10 +514,10 @@ static PyObject* Sbk_QtSpinBoxFactoryFunc_disconnectPropertyManager(PyObject* se
 }
 
 static PyMethodDef Sbk_QtSpinBoxFactory_methods[] = {
-    {"connectPropertyManager", (PyCFunction)Sbk_QtSpinBoxFactoryFunc_connectPropertyManager, METH_O},
-    {"createAttributeEditor", (PyCFunction)Sbk_QtSpinBoxFactoryFunc_createAttributeEditor, METH_VARARGS},
-    {"createEditor", (PyCFunction)Sbk_QtSpinBoxFactoryFunc_createEditor, METH_VARARGS},
-    {"disconnectPropertyManager", (PyCFunction)Sbk_QtSpinBoxFactoryFunc_disconnectPropertyManager, METH_O},
+    {"connectPropertyManager", reinterpret_cast<PyCFunction>(Sbk_QtSpinBoxFactoryFunc_connectPropertyManager), METH_O},
+    {"createAttributeEditor", reinterpret_cast<PyCFunction>(Sbk_QtSpinBoxFactoryFunc_createAttributeEditor), METH_VARARGS},
+    {"createEditor", reinterpret_cast<PyCFunction>(Sbk_QtSpinBoxFactoryFunc_createEditor), METH_VARARGS},
+    {"disconnectPropertyManager", reinterpret_cast<PyCFunction>(Sbk_QtSpinBoxFactoryFunc_disconnectPropertyManager), METH_O},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -572,14 +580,14 @@ static void QtSpinBoxFactory_PythonToCpp_QtSpinBoxFactory_PTR(PyObject* pyIn, vo
 static PythonToCppFunc is_QtSpinBoxFactory_PythonToCpp_QtSpinBoxFactory_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtSpinBoxFactory_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtSpinBoxFactory_TypeF())))
         return QtSpinBoxFactory_PythonToCpp_QtSpinBoxFactory_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtSpinBoxFactory_PTR_CppToPython_QtSpinBoxFactory(const void* cppIn) {
-    PyObject* pyOut = (PyObject*)Shiboken::BindingManager::instance().retrieveWrapper(cppIn);
+    auto pyOut = reinterpret_cast<PyObject*>(Shiboken::BindingManager::instance().retrieveWrapper(cppIn));
     if (pyOut) {
         Py_INCREF(pyOut);
         return pyOut;
@@ -600,13 +608,13 @@ static PyObject* QtSpinBoxFactory_PTR_CppToPython_QtSpinBoxFactory(const void* c
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtSpinBoxFactory_SignaturesString[] = ""
-    "qtpropertybrowser.QtSpinBoxFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtSpinBoxFactory.connectPropertyManager(manager:qtpropertybrowser.QtIntPropertyManager)\n"
-    "qtpropertybrowser.QtSpinBoxFactory.createAttributeEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.Attribute)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtSpinBoxFactory.createEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtSpinBoxFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtIntPropertyManager)\n"
-;
+static const char *QtSpinBoxFactory_SignatureStrings[] = {
+    "qtpropertybrowser.QtSpinBoxFactory(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtSpinBoxFactory.connectPropertyManager(manager:qtpropertybrowser.QtIntPropertyManager)",
+    "qtpropertybrowser.QtSpinBoxFactory.createAttributeEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtSpinBoxFactory.createEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtSpinBoxFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtIntPropertyManager)",
+    nullptr}; // Sentinel
 
 void init_QtSpinBoxFactory(PyObject* module)
 {
@@ -615,7 +623,7 @@ void init_QtSpinBoxFactory(PyObject* module)
         "QtSpinBoxFactory",
         "QtSpinBoxFactory*",
         &Sbk_QtSpinBoxFactory_spec,
-        QtSpinBoxFactory_SignaturesString,
+        QtSpinBoxFactory_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtSpinBoxFactory >,
         0,
         0,

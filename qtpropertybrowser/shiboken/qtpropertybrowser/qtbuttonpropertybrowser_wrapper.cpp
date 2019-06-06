@@ -51,6 +51,8 @@
 #include <cctype>
 #include <cstring>
 
+QT_WARNING_DISABLE_DEPRECATED
+
 
 
 template <class T>
@@ -66,12 +68,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -81,7 +85,8 @@ void QtButtonPropertyBrowserWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtButtonPropertyBrowserWrapper::QtButtonPropertyBrowserWrapper(QWidget * parent) : QtButtonPropertyBrowser(parent) {
+QtButtonPropertyBrowserWrapper::QtButtonPropertyBrowserWrapper(QWidget * parent) : QtButtonPropertyBrowser(parent)
+{
     // ... middle
 }
 
@@ -244,7 +249,7 @@ void QtButtonPropertyBrowserWrapper::contextMenuEvent(QContextMenuEvent * event)
         Shiboken::Object::invalidate(PyTuple_GET_ITEM(pyArgs, 0));
 }
 
-QWidget * QtButtonPropertyBrowserWrapper::createAttributeEditor(QtProperty * property, QWidget * parent, Attribute attribute)
+QWidget * QtButtonPropertyBrowserWrapper::createAttributeEditor(QtProperty * property, QWidget * parent, BrowserCol attribute)
 {
     Shiboken::GilState gil;
     if (PyErr_Occurred())
@@ -258,7 +263,7 @@ QWidget * QtButtonPropertyBrowserWrapper::createAttributeEditor(QtProperty * pro
     Shiboken::AutoDecRef pyArgs(Py_BuildValue("(NNN)",
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property),
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), parent),
-        Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, &attribute)
+        Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, &attribute)
     ));
 
     Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
@@ -1239,8 +1244,10 @@ bool QtButtonPropertyBrowserWrapper::nativeEvent(const QByteArray & eventType, v
     if (PySequence_Check(pyResult) && (PySequence_Size(pyResult) == 2)) {
     Shiboken::AutoDecRef pyItem(PySequence_GetItem(pyResult, 0));
     Shiboken::Conversions::pythonToCppCopy(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), pyItem, &(cppResult));
-    Shiboken::AutoDecRef pyResultItem(PySequence_GetItem(pyResult, 1));
-    Shiboken::Conversions::pythonToCppCopy(Shiboken::Conversions::PrimitiveTypeConverter<long>(), pyResultItem, (result));
+    if (result) {
+        Shiboken::AutoDecRef pyResultItem(PySequence_GetItem(pyResult, 1));
+        Shiboken::Conversions::pythonToCppCopy(Shiboken::Conversions::PrimitiveTypeConverter<long>(), pyResultItem, (result));
+    }
     }
     // TEMPLATE - return_native_eventfilter_conversion - END
 
@@ -1605,6 +1612,7 @@ Sbk_QtButtonPropertyBrowser_Init(PyObject* self, PyObject* args, PyObject* kwds)
     PythonToCppFunc pythonToCpp[] = { nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -1700,8 +1708,8 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_attribute1(PyObject* self)
 
         if (!PyErr_Occurred()) {
             // attribute1()const
-            Attribute cppResult = Attribute(const_cast<const ::QtButtonPropertyBrowserWrapper*>(cppSelf)->attribute1());
-            pyResult = Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, &cppResult);
+            BrowserCol cppResult = BrowserCol(const_cast<const ::QtButtonPropertyBrowserWrapper*>(cppSelf)->attribute1());
+            pyResult = Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, &cppResult);
         }
     }
 
@@ -1726,8 +1734,8 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_attribute2(PyObject* self)
 
         if (!PyErr_Occurred()) {
             // attribute2()const
-            Attribute cppResult = Attribute(const_cast<const ::QtButtonPropertyBrowserWrapper*>(cppSelf)->attribute2());
-            pyResult = Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, &cppResult);
+            BrowserCol cppResult = BrowserCol(const_cast<const ::QtButtonPropertyBrowserWrapper*>(cppSelf)->attribute2());
+            pyResult = Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, &cppResult);
         }
     }
 
@@ -1752,8 +1760,8 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_attribute3(PyObject* self)
 
         if (!PyErr_Occurred()) {
             // attribute3()const
-            Attribute cppResult = Attribute(const_cast<const ::QtButtonPropertyBrowserWrapper*>(cppSelf)->attribute3());
-            pyResult = Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, &cppResult);
+            BrowserCol cppResult = BrowserCol(const_cast<const ::QtButtonPropertyBrowserWrapper*>(cppSelf)->attribute3());
+            pyResult = Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, &cppResult);
         }
     }
 
@@ -1778,8 +1786,8 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_attributes(PyObject* self)
 
         if (!PyErr_Occurred()) {
             // attributes()const
-            QList<Attribute > cppResult = const_cast<const ::QtButtonPropertyBrowserWrapper*>(cppSelf)->attributes();
-            pyResult = Shiboken::Conversions::copyToPython(SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QLIST_ATTRIBUTE_IDX], &cppResult);
+            QList<BrowserCol > cppResult = const_cast<const ::QtButtonPropertyBrowserWrapper*>(cppSelf)->attributes();
+            pyResult = Shiboken::Conversions::copyToPython(SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QLIST_BROWSERCOL_IDX], &cppResult);
         }
     }
 
@@ -1868,7 +1876,7 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_itemChanged(PyObject* self, PyO
         if (!PyErr_Occurred()) {
             // itemChanged(QtBrowserItem*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtButtonPropertyBrowserWrapper*) cppSelf)->QtButtonPropertyBrowserWrapper::itemChanged_protected(cppArg0);
+            static_cast<::QtButtonPropertyBrowserWrapper*>(cppSelf)->QtButtonPropertyBrowserWrapper::itemChanged_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -1894,6 +1902,7 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_itemInserted(PyObject* self, Py
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1928,7 +1937,7 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_itemInserted(PyObject* self, Py
         if (!PyErr_Occurred()) {
             // itemInserted(QtBrowserItem*,QtBrowserItem*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtButtonPropertyBrowserWrapper*) cppSelf)->QtButtonPropertyBrowserWrapper::itemInserted_protected(cppArg0, cppArg1);
+            static_cast<::QtButtonPropertyBrowserWrapper*>(cppSelf)->QtButtonPropertyBrowserWrapper::itemInserted_protected(cppArg0, cppArg1);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -1973,7 +1982,7 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_itemRemoved(PyObject* self, PyO
         if (!PyErr_Occurred()) {
             // itemRemoved(QtBrowserItem*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtButtonPropertyBrowserWrapper*) cppSelf)->QtButtonPropertyBrowserWrapper::itemRemoved_protected(cppArg0);
+            static_cast<::QtButtonPropertyBrowserWrapper*>(cppSelf)->QtButtonPropertyBrowserWrapper::itemRemoved_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -2000,9 +2009,9 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_setAttribute1(PyObject* self, P
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtButtonPropertyBrowser::setAttribute1(Attribute)
-    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, (pyArg)))) {
-        overloadId = 0; // setAttribute1(Attribute)
+    // 0: QtButtonPropertyBrowser::setAttribute1(BrowserCol)
+    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, (pyArg)))) {
+        overloadId = 0; // setAttribute1(BrowserCol)
     }
 
     // Function signature not found.
@@ -2010,11 +2019,11 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_setAttribute1(PyObject* self, P
 
     // Call function/method
     {
-        ::Attribute cppArg0{NONE};
+        ::BrowserCol cppArg0{NONE};
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
-            // setAttribute1(Attribute)
+            // setAttribute1(BrowserCol)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
             cppSelf->setAttribute1(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
@@ -2043,9 +2052,9 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_setAttribute2(PyObject* self, P
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtButtonPropertyBrowser::setAttribute2(Attribute)
-    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, (pyArg)))) {
-        overloadId = 0; // setAttribute2(Attribute)
+    // 0: QtButtonPropertyBrowser::setAttribute2(BrowserCol)
+    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, (pyArg)))) {
+        overloadId = 0; // setAttribute2(BrowserCol)
     }
 
     // Function signature not found.
@@ -2053,11 +2062,11 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_setAttribute2(PyObject* self, P
 
     // Call function/method
     {
-        ::Attribute cppArg0{NONE};
+        ::BrowserCol cppArg0{NONE};
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
-            // setAttribute2(Attribute)
+            // setAttribute2(BrowserCol)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
             cppSelf->setAttribute2(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
@@ -2086,9 +2095,9 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_setAttribute3(PyObject* self, P
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtButtonPropertyBrowser::setAttribute3(Attribute)
-    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, (pyArg)))) {
-        overloadId = 0; // setAttribute3(Attribute)
+    // 0: QtButtonPropertyBrowser::setAttribute3(BrowserCol)
+    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, (pyArg)))) {
+        overloadId = 0; // setAttribute3(BrowserCol)
     }
 
     // Function signature not found.
@@ -2096,11 +2105,11 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_setAttribute3(PyObject* self, P
 
     // Call function/method
     {
-        ::Attribute cppArg0{NONE};
+        ::BrowserCol cppArg0{NONE};
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
-            // setAttribute3(Attribute)
+            // setAttribute3(BrowserCol)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
             cppSelf->setAttribute3(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
@@ -2129,9 +2138,9 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_setAttributes(PyObject* self, P
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtButtonPropertyBrowser::setAttributes(QList<Attribute>)
-    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QLIST_ATTRIBUTE_IDX], (pyArg)))) {
-        overloadId = 0; // setAttributes(QList<Attribute>)
+    // 0: QtButtonPropertyBrowser::setAttributes(QList<BrowserCol>)
+    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QLIST_BROWSERCOL_IDX], (pyArg)))) {
+        overloadId = 0; // setAttributes(QList<BrowserCol>)
     }
 
     // Function signature not found.
@@ -2139,11 +2148,11 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_setAttributes(PyObject* self, P
 
     // Call function/method
     {
-        ::QList<Attribute > cppArg0;
+        ::QList<BrowserCol > cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
-            // setAttributes(QList<Attribute>)
+            // setAttributes(QList<BrowserCol>)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
             cppSelf->setAttributes(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
@@ -2171,6 +2180,7 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_setExpanded(PyObject* self, PyO
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2219,19 +2229,19 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_setExpanded(PyObject* self, PyO
 }
 
 static PyMethodDef Sbk_QtButtonPropertyBrowser_methods[] = {
-    {"attribute1", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_attribute1, METH_NOARGS},
-    {"attribute2", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_attribute2, METH_NOARGS},
-    {"attribute3", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_attribute3, METH_NOARGS},
-    {"attributes", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_attributes, METH_NOARGS},
-    {"isExpanded", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_isExpanded, METH_O},
-    {"itemChanged", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_itemChanged, METH_O},
-    {"itemInserted", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_itemInserted, METH_VARARGS},
-    {"itemRemoved", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_itemRemoved, METH_O},
-    {"setAttribute1", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_setAttribute1, METH_O},
-    {"setAttribute2", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_setAttribute2, METH_O},
-    {"setAttribute3", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_setAttribute3, METH_O},
-    {"setAttributes", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_setAttributes, METH_O},
-    {"setExpanded", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_setExpanded, METH_VARARGS},
+    {"attribute1", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_attribute1), METH_NOARGS},
+    {"attribute2", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_attribute2), METH_NOARGS},
+    {"attribute3", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_attribute3), METH_NOARGS},
+    {"attributes", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_attributes), METH_NOARGS},
+    {"isExpanded", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_isExpanded), METH_O},
+    {"itemChanged", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_itemChanged), METH_O},
+    {"itemInserted", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_itemInserted), METH_VARARGS},
+    {"itemRemoved", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_itemRemoved), METH_O},
+    {"setAttribute1", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_setAttribute1), METH_O},
+    {"setAttribute2", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_setAttribute2), METH_O},
+    {"setAttribute3", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_setAttribute3), METH_O},
+    {"setAttributes", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_setAttributes), METH_O},
+    {"setExpanded", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_setExpanded), METH_VARARGS},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -2318,35 +2328,35 @@ static void QtButtonPropertyBrowser_PythonToCpp_QtButtonPropertyBrowser_PTR(PyOb
 static PythonToCppFunc is_QtButtonPropertyBrowser_PythonToCpp_QtButtonPropertyBrowser_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtButtonPropertyBrowser_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtButtonPropertyBrowser_TypeF())))
         return QtButtonPropertyBrowser_PythonToCpp_QtButtonPropertyBrowser_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtButtonPropertyBrowser_PTR_CppToPython_QtButtonPropertyBrowser(const void* cppIn) {
-    return PySide::getWrapperForQObject((::QtButtonPropertyBrowser*)cppIn, Sbk_QtButtonPropertyBrowser_TypeF());
+    return PySide::getWrapperForQObject(reinterpret_cast<::QtButtonPropertyBrowser*>(const_cast<void*>(cppIn)), Sbk_QtButtonPropertyBrowser_TypeF());
 
 }
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtButtonPropertyBrowser_SignaturesString[] = ""
-    "qtpropertybrowser.QtButtonPropertyBrowser(parent:PySide2.QtWidgets.QWidget=nullptr)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.attribute1()->qtpropertybrowser.Attribute\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.attribute2()->qtpropertybrowser.Attribute\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.attribute3()->qtpropertybrowser.Attribute\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.attributes()->qtpropertybrowser.Attribute\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.isExpanded(item:qtpropertybrowser.QtBrowserItem)->bool\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.itemChanged(item:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.itemInserted(item:qtpropertybrowser.QtBrowserItem,afterItem:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.itemRemoved(item:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute1(attribute:qtpropertybrowser.Attribute)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute2(attribute:qtpropertybrowser.Attribute)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute3(attribute:qtpropertybrowser.Attribute)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.setAttributes(attributeList:QList)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.setExpanded(item:qtpropertybrowser.QtBrowserItem,expanded:bool)\n"
-;
+static const char *QtButtonPropertyBrowser_SignatureStrings[] = {
+    "qtpropertybrowser.QtButtonPropertyBrowser(parent:PySide2.QtWidgets.QWidget=nullptr)",
+    "qtpropertybrowser.QtButtonPropertyBrowser.attribute1()->qtpropertybrowser.BrowserCol",
+    "qtpropertybrowser.QtButtonPropertyBrowser.attribute2()->qtpropertybrowser.BrowserCol",
+    "qtpropertybrowser.QtButtonPropertyBrowser.attribute3()->qtpropertybrowser.BrowserCol",
+    "qtpropertybrowser.QtButtonPropertyBrowser.attributes()->QList[qtpropertybrowser.BrowserCol]",
+    "qtpropertybrowser.QtButtonPropertyBrowser.isExpanded(item:qtpropertybrowser.QtBrowserItem)->bool",
+    "qtpropertybrowser.QtButtonPropertyBrowser.itemChanged(item:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtButtonPropertyBrowser.itemInserted(item:qtpropertybrowser.QtBrowserItem,afterItem:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtButtonPropertyBrowser.itemRemoved(item:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute1(attribute:qtpropertybrowser.BrowserCol)",
+    "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute2(attribute:qtpropertybrowser.BrowserCol)",
+    "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute3(attribute:qtpropertybrowser.BrowserCol)",
+    "qtpropertybrowser.QtButtonPropertyBrowser.setAttributes(attributeList:QList[qtpropertybrowser.BrowserCol])",
+    "qtpropertybrowser.QtButtonPropertyBrowser.setExpanded(item:qtpropertybrowser.QtBrowserItem,expanded:bool)",
+    nullptr}; // Sentinel
 
 void init_QtButtonPropertyBrowser(PyObject* module)
 {
@@ -2355,7 +2365,7 @@ void init_QtButtonPropertyBrowser(PyObject* module)
         "QtButtonPropertyBrowser",
         "QtButtonPropertyBrowser*",
         &Sbk_QtButtonPropertyBrowser_spec,
-        QtButtonPropertyBrowser_SignaturesString,
+        QtButtonPropertyBrowser_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtButtonPropertyBrowser >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX]),
         0,

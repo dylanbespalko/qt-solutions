@@ -108,7 +108,7 @@ enum : int {
     SBK_QTVARIANTEDITORFACTORY_IDX                           = 69,
     SBK_QTVARIANTPROPERTY_IDX                                = 70,
     SBK_QTVARIANTPROPERTYMANAGER_IDX                         = 71,
-    SBK_ATTRIBUTE_IDX                                        = 0,
+    SBK_BROWSERCOL_IDX                                       = 0,
     SBK_DOMAIN_IDX                                           = 1,
     SBK_FORMAT_IDX                                           = 2,
     SBK_PKAVG_IDX                                            = 3,
@@ -133,7 +133,7 @@ enum : int {
     SBK_QTPROPERTYBROWSER_QLIST_QTBROWSERITEMPTR_IDX         = 4, // QList<QtBrowserItem* >
     SBK_QTPROPERTYBROWSER_QLIST_QTPROPERTYPTR_IDX            = 5, // QList<QtProperty* >
     SBK_QTPROPERTYBROWSER_QSET_QTPROPERTYPTR_IDX             = 6, // QSet<QtProperty* >
-    SBK_QTPROPERTYBROWSER_QLIST_ATTRIBUTE_IDX                = 7, // QList<Attribute >
+    SBK_QTPROPERTYBROWSER_QLIST_BROWSERCOL_IDX               = 7, // QList<BrowserCol >
     SBK_QTPROPERTYBROWSER_QMAP_INT_QICON_IDX                 = 8, // QMap<int,QIcon >
     SBK_QTPROPERTYBROWSER_QVECTOR_DOUBLE_IDX                 = 9, // QVector<double >
     SBK_QTPROPERTYBROWSER_QVECTOR_QCOMPLEX_IDX               = 10, // const QVector<QComplex > &
@@ -148,7 +148,7 @@ namespace Shiboken
 {
 
 // PyType functions, to get the PyObjectType for a type T
-template<> inline PyTypeObject* SbkType< ::Attribute >() { return SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX]; }
+template<> inline PyTypeObject* SbkType< ::BrowserCol >() { return SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX]; }
 template<> inline PyTypeObject* SbkType< ::Domain >() { return SbkqtpropertybrowserTypes[SBK_DOMAIN_IDX]; }
 template<> inline PyTypeObject* SbkType< ::Format >() { return SbkqtpropertybrowserTypes[SBK_FORMAT_IDX]; }
 template<> inline PyTypeObject* SbkType< ::PkAvg >() { return SbkqtpropertybrowserTypes[SBK_PKAVG_IDX]; }

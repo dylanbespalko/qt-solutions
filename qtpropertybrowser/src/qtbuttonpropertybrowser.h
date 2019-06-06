@@ -57,21 +57,21 @@ public:
 
     QtButtonPropertyBrowser(QWidget *parent = nullptr);
     ~QtButtonPropertyBrowser();
-    Q_PROPERTY(Attribute attribute1 READ attribute1 WRITE setAttribute1)
-    Q_PROPERTY(Attribute attribute2 READ attribute2 WRITE setAttribute2)
-    Q_PROPERTY(Attribute attribute3 READ attribute3 WRITE setAttribute3)
+    Q_PROPERTY(BrowserCol attribute1 READ attribute1 WRITE setAttribute1)
+    Q_PROPERTY(BrowserCol attribute2 READ attribute2 WRITE setAttribute2)
+    Q_PROPERTY(BrowserCol attribute3 READ attribute3 WRITE setAttribute3)
 
     void setExpanded(QtBrowserItem *item, bool expanded);
     bool isExpanded(QtBrowserItem *item) const;
 
-    QList<Attribute> attributes() const;
-    void setAttributes(const QList<Attribute> &attributeList);
-    Attribute attribute1() const;
-    void setAttribute1(Attribute attribute);
-    Attribute attribute2() const;
-    void setAttribute2(Attribute attribute);
-    Attribute attribute3() const;
-    void setAttribute3(Attribute attribute);
+    QList<BrowserCol> attributes() const;
+    void setAttributes(const QList<BrowserCol> &attributeList);
+    BrowserCol attribute1() const;
+    void setAttribute1(BrowserCol attribute);
+    BrowserCol attribute2() const;
+    void setAttribute2(BrowserCol attribute);
+    BrowserCol attribute3() const;
+    void setAttribute3(BrowserCol attribute);
 
 Q_SIGNALS:
 

@@ -85,7 +85,7 @@ class QtAbstractPropertyManagerPrivate
     QtAbstractPropertyManager *q_ptr;
     Q_DECLARE_PUBLIC(QtAbstractPropertyManager)
 public:
-    typedef QMap<Attribute, bool> AttributeToEditableMap;
+    typedef QMap<BrowserCol, bool> AttributeToEditableMap;
     void propertyDestroyed(QtProperty *property);
     void propertyChanged(QtProperty *property) const;
     void propertyRemoved(QtProperty *property,
@@ -783,12 +783,12 @@ QtAbstractPropertyManager::QtAbstractPropertyManager(QObject *parent)
     : QObject(parent)
 {
     d_ptr = new QtAbstractPropertyManagerPrivate;
-    d_ptr->m_attributeToEditable.insert(Attribute::UNIT, true);
-    d_ptr->m_attributeToEditable.insert(Attribute::PKAVG, true);
-    d_ptr->m_attributeToEditable.insert(Attribute::FORMAT, true);
-    d_ptr->m_attributeToEditable.insert(Attribute::MINIMUM, true);
-    d_ptr->m_attributeToEditable.insert(Attribute::MAXIMUM, true);
-    d_ptr->m_attributeToEditable.insert(Attribute::CHECK, true);
+    d_ptr->m_attributeToEditable.insert(BrowserCol::UNIT, true);
+    d_ptr->m_attributeToEditable.insert(BrowserCol::PKAVG, true);
+    d_ptr->m_attributeToEditable.insert(BrowserCol::FORMAT, true);
+    d_ptr->m_attributeToEditable.insert(BrowserCol::MINIMUM, true);
+    d_ptr->m_attributeToEditable.insert(BrowserCol::MAXIMUM, true);
+    d_ptr->m_attributeToEditable.insert(BrowserCol::CHECK, true);
     d_ptr->q_ptr = this;
 
 }
@@ -832,7 +832,7 @@ QSet<QtProperty *> QtAbstractPropertyManager::properties() const
 
  \sa attributeEditable()
  */
-bool QtAbstractPropertyManager::attributesEditable(Attribute attribute) const
+bool QtAbstractPropertyManager::attributesEditable(BrowserCol attribute) const
 {
     return d_ptr->m_attributeToEditable[attribute];
 }
@@ -918,7 +918,7 @@ QtProperty *QtAbstractPropertyManager::addProperty(const QString &name)
 
  \sa attributeEditable()
  */
-void QtAbstractPropertyManager::setAttributesEditable(Attribute attribute, bool enable)
+void QtAbstractPropertyManager::setAttributesEditable(BrowserCol attribute, bool enable)
 {
     d_ptr->m_attributeToEditable[attribute] = enable;
 }
@@ -2144,7 +2144,7 @@ QWidget *QtAbstractPropertyBrowser::createEditor(QtProperty *property,
  \sa setFactoryForManager()
  */
 QWidget *QtAbstractPropertyBrowser::createAttributeEditor(QtProperty *property,
-                                                          QWidget *parent, Attribute attribute)
+                                                          QWidget *parent, BrowserCol attribute)
 {
     QtAbstractEditorFactoryBase *factory = nullptr;
     QtAbstractPropertyManager *manager = property->propertyManager();

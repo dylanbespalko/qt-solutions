@@ -161,7 +161,7 @@ enum Domain
 extern QMap<Domain, QString> DomainNameMap;
 
 
-enum Attribute
+enum BrowserCol
 {
     NONE,
     UNIT,
@@ -171,7 +171,7 @@ enum Attribute
     MAXIMUM,
     CHECK
 };
-extern QMap<Attribute, QString> AttributeNameMap;
+extern QMap<BrowserCol, QString> AttributeNameMap;
 
 class QIntEditPrivate;
 

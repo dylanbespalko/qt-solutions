@@ -36,6 +36,8 @@
 #include <cctype>
 #include <cstring>
 
+QT_WARNING_DISABLE_DEPRECATED
+
 
 
 template <class T>
@@ -51,12 +53,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -66,7 +70,8 @@ void QtGroupPropertyManagerWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtGroupPropertyManagerWrapper::QtGroupPropertyManagerWrapper(QObject * parent) : QtGroupPropertyManager(parent) {
+QtGroupPropertyManagerWrapper::QtGroupPropertyManagerWrapper(QObject * parent) : QtGroupPropertyManager(parent)
+{
     // ... middle
 }
 
@@ -844,6 +849,7 @@ Sbk_QtGroupPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds)
     PythonToCppFunc pythonToCpp[] = { nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -1004,7 +1010,7 @@ static PyObject* Sbk_QtGroupPropertyManagerFunc_hasValue(PyObject* self, PyObjec
         if (!PyErr_Occurred()) {
             // hasValue(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            bool cppResult = ((::QtGroupPropertyManagerWrapper*) cppSelf)->QtGroupPropertyManagerWrapper::hasValue_protected(cppArg0);
+            bool cppResult = static_cast<::QtGroupPropertyManagerWrapper*>(cppSelf)->QtGroupPropertyManagerWrapper::hasValue_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), &cppResult);
         }
@@ -1051,7 +1057,7 @@ static PyObject* Sbk_QtGroupPropertyManagerFunc_initializeProperty(PyObject* sel
         if (!PyErr_Occurred()) {
             // initializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtGroupPropertyManagerWrapper*) cppSelf)->QtGroupPropertyManagerWrapper::initializeProperty_protected(cppArg0);
+            static_cast<::QtGroupPropertyManagerWrapper*>(cppSelf)->QtGroupPropertyManagerWrapper::initializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -1077,6 +1083,7 @@ static PyObject* Sbk_QtGroupPropertyManagerFunc_setCheck(PyObject* self, PyObjec
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1154,7 +1161,7 @@ static PyObject* Sbk_QtGroupPropertyManagerFunc_uninitializeProperty(PyObject* s
         if (!PyErr_Occurred()) {
             // uninitializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtGroupPropertyManagerWrapper*) cppSelf)->QtGroupPropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
+            static_cast<::QtGroupPropertyManagerWrapper*>(cppSelf)->QtGroupPropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -1170,11 +1177,11 @@ static PyObject* Sbk_QtGroupPropertyManagerFunc_uninitializeProperty(PyObject* s
 }
 
 static PyMethodDef Sbk_QtGroupPropertyManager_methods[] = {
-    {"check", (PyCFunction)Sbk_QtGroupPropertyManagerFunc_check, METH_O},
-    {"hasValue", (PyCFunction)Sbk_QtGroupPropertyManagerFunc_hasValue, METH_O},
-    {"initializeProperty", (PyCFunction)Sbk_QtGroupPropertyManagerFunc_initializeProperty, METH_O},
-    {"setCheck", (PyCFunction)Sbk_QtGroupPropertyManagerFunc_setCheck, METH_VARARGS},
-    {"uninitializeProperty", (PyCFunction)Sbk_QtGroupPropertyManagerFunc_uninitializeProperty, METH_O},
+    {"check", reinterpret_cast<PyCFunction>(Sbk_QtGroupPropertyManagerFunc_check), METH_O},
+    {"hasValue", reinterpret_cast<PyCFunction>(Sbk_QtGroupPropertyManagerFunc_hasValue), METH_O},
+    {"initializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtGroupPropertyManagerFunc_initializeProperty), METH_O},
+    {"setCheck", reinterpret_cast<PyCFunction>(Sbk_QtGroupPropertyManagerFunc_setCheck), METH_VARARGS},
+    {"uninitializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtGroupPropertyManagerFunc_uninitializeProperty), METH_O},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -1244,27 +1251,27 @@ static void QtGroupPropertyManager_PythonToCpp_QtGroupPropertyManager_PTR(PyObje
 static PythonToCppFunc is_QtGroupPropertyManager_PythonToCpp_QtGroupPropertyManager_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtGroupPropertyManager_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtGroupPropertyManager_TypeF())))
         return QtGroupPropertyManager_PythonToCpp_QtGroupPropertyManager_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtGroupPropertyManager_PTR_CppToPython_QtGroupPropertyManager(const void* cppIn) {
-    return PySide::getWrapperForQObject((::QtGroupPropertyManager*)cppIn, Sbk_QtGroupPropertyManager_TypeF());
+    return PySide::getWrapperForQObject(reinterpret_cast<::QtGroupPropertyManager*>(const_cast<void*>(cppIn)), Sbk_QtGroupPropertyManager_TypeF());
 
 }
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtGroupPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtGroupPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtGroupPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtGroupPropertyManager.hasValue(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtGroupPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtGroupPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
-    "qtpropertybrowser.QtGroupPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
-;
+static const char *QtGroupPropertyManager_SignatureStrings[] = {
+    "qtpropertybrowser.QtGroupPropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtGroupPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtGroupPropertyManager.hasValue(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtGroupPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtGroupPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
+    "qtpropertybrowser.QtGroupPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
+    nullptr}; // Sentinel
 
 void init_QtGroupPropertyManager(PyObject* module)
 {
@@ -1273,7 +1280,7 @@ void init_QtGroupPropertyManager(PyObject* module)
         "QtGroupPropertyManager",
         "QtGroupPropertyManager*",
         &Sbk_QtGroupPropertyManager_spec,
-        QtGroupPropertyManager_SignaturesString,
+        QtGroupPropertyManager_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtGroupPropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

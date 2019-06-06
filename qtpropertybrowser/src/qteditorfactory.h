@@ -61,7 +61,7 @@ protected:
     void connectPropertyManager(QtGroupPropertyManager *manager);
     QWidget *createEditor(QtGroupPropertyManager *manager, QtProperty *property,
                           QWidget *parent);
-    QWidget *createAttributeEditor(QtGroupPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtGroupPropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtGroupPropertyManager *manager);
 private:
     QtGroupEditorFactoryPrivate *d_ptr;
@@ -84,7 +84,7 @@ protected:
     QWidget *createEditor(QtIntPropertyManager *manager, QtProperty *property,
                 QWidget *parent);
     QWidget *createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property,
-                                   QWidget *parent, Attribute attribute);
+                                   QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtIntPropertyManager *manager);
 private:
     QtSpinBoxFactoryPrivate *d_ptr;
@@ -119,7 +119,7 @@ protected:
     QWidget *createEditor(QtIntPropertyManager *manager, QtProperty *property,
                           QWidget *parent);
     QWidget *createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property,
-                                   QWidget *parent, Attribute attribute);
+                                   QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtIntPropertyManager *manager);
 private:
     QtIntEditFactoryPrivate *d_ptr;
@@ -155,7 +155,7 @@ protected:
     QWidget *createEditor(QtIntPropertyManager *manager, QtProperty *property,
                 QWidget *parent);
     QWidget *createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property,
-                                   QWidget *parent, Attribute attribute);
+                                   QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtIntPropertyManager *manager);
 private:
     QtSliderFactoryPrivate *d_ptr;
@@ -189,7 +189,7 @@ protected:
     QWidget *createEditor(QtIntPropertyManager *manager, QtProperty *property,
                 QWidget *parent);
     QWidget *createAttributeEditor(QtIntPropertyManager *manager, QtProperty *property,
-                                   QWidget *parent, Attribute attribute);
+                                   QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtIntPropertyManager *manager);
 private:
     QtScrollBarFactoryPrivate *d_ptr;
@@ -223,7 +223,7 @@ protected:
     QWidget *createEditor(QtBoolPropertyManager *manager, QtProperty *property,
                 QWidget *parent);
     QWidget *createAttributeEditor(QtBoolPropertyManager *manager, QtProperty *property,
-                                   QWidget *parent, Attribute attribute);
+                                   QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtBoolPropertyManager *manager);
 private:
     QtCheckBoxFactoryPrivate *d_ptr;
@@ -250,7 +250,7 @@ protected:
     QWidget *createEditor(QtDoublePropertyManager *manager, QtProperty *property,
                 QWidget *parent);
     QWidget *createAttributeEditor(QtDoublePropertyManager *manager, QtProperty *property,
-                                   QWidget *parent, Attribute attribute);
+                                   QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtDoublePropertyManager *manager);
 private:
     QtDoubleSpinBoxFactoryPrivate *d_ptr;
@@ -284,7 +284,7 @@ protected:
     QWidget *createEditor(QtDoublePropertyManager *manager, QtProperty *property,
                           QWidget *parent);
     QWidget *createAttributeEditor(QtDoublePropertyManager *manager, QtProperty *property,
-                                   QWidget *parent, Attribute attribute);
+                                   QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtDoublePropertyManager *manager);
 private:
     QtDoubleEditFactoryPrivate *d_ptr;
@@ -320,7 +320,7 @@ protected:
     void connectPropertyManager(QtComplexPropertyManager *manager);
     QWidget *createEditor(QtComplexPropertyManager *manager, QtProperty *property,
                           QWidget *parent);
-    QWidget *createAttributeEditor(QtComplexPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtComplexPropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtComplexPropertyManager *manager);
 private:
     QtComplexEditFactoryPrivate *d_ptr;
@@ -358,7 +358,7 @@ protected:
     void connectPropertyManager(QtTFTensorPropertyManager *manager);
     QWidget *createEditor(QtTFTensorPropertyManager *manager, QtProperty *property,
                           QWidget *parent);
-    QWidget *createAttributeEditor(QtTFTensorPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtTFTensorPropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtTFTensorPropertyManager *manager);
     QtComplexEditFactory* subFactory() const;
     void setSubFactory(QtComplexEditFactory* subFactory);
@@ -391,7 +391,7 @@ protected:
     void connectPropertyManager(QtStringPropertyManager *manager);
     QWidget *createEditor(QtStringPropertyManager *manager, QtProperty *property,
                 QWidget *parent);
-    QWidget *createAttributeEditor(QtStringPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtStringPropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtStringPropertyManager *manager);
 private:
     QtLineEditFactoryPrivate *d_ptr;
@@ -419,7 +419,7 @@ protected:
     void connectPropertyManager(QtDatePropertyManager *manager);
     QWidget *createEditor(QtDatePropertyManager *manager, QtProperty *property,
                 QWidget *parent);
-    QWidget *createAttributeEditor(QtDatePropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtDatePropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtDatePropertyManager *manager);
 private:
     QtDateEditFactoryPrivate *d_ptr;
@@ -446,7 +446,7 @@ protected:
     void connectPropertyManager(QtTimePropertyManager *manager);
     QWidget *createEditor(QtTimePropertyManager *manager, QtProperty *property,
                 QWidget *parent);
-    QWidget *createAttributeEditor(QtTimePropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtTimePropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtTimePropertyManager *manager);
 private:
     QtTimeEditFactoryPrivate *d_ptr;
@@ -471,7 +471,7 @@ protected:
     void connectPropertyManager(QtDateTimePropertyManager *manager);
     QWidget *createEditor(QtDateTimePropertyManager *manager, QtProperty *property,
                 QWidget *parent);
-    QWidget *createAttributeEditor(QtDateTimePropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtDateTimePropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtDateTimePropertyManager *manager);
 private:
     QtDateTimeEditFactoryPrivate *d_ptr;
@@ -496,7 +496,7 @@ protected:
     void connectPropertyManager(QtKeySequencePropertyManager *manager);
     QWidget *createEditor(QtKeySequencePropertyManager *manager, QtProperty *property,
                 QWidget *parent);
-    QWidget *createAttributeEditor(QtKeySequencePropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtKeySequencePropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtKeySequencePropertyManager *manager);
 private:
     QtKeySequenceEditorFactoryPrivate *d_ptr;
@@ -521,7 +521,7 @@ protected:
     void connectPropertyManager(QtCharPropertyManager *manager);
     QWidget *createEditor(QtCharPropertyManager *manager, QtProperty *property,
                 QWidget *parent);
-    QWidget *createAttributeEditor(QtCharPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtCharPropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtCharPropertyManager *manager);
 private:
     QtCharEditorFactoryPrivate *d_ptr;
@@ -546,7 +546,7 @@ protected:
     void connectPropertyManager(QtLocalePropertyManager *manager);
     QWidget *createEditor(QtLocalePropertyManager *manager, QtProperty *property,
                           QWidget *parent);
-    QWidget *createAttributeEditor(QtLocalePropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtLocalePropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtLocalePropertyManager *manager);
 private:
     QtLocaleEditorFactoryPrivate *d_ptr;
@@ -568,7 +568,7 @@ protected:
     void connectPropertyManager(QtPointPropertyManager *manager);
     QWidget *createEditor(QtPointPropertyManager *manager, QtProperty *property,
                           QWidget *parent);
-    QWidget *createAttributeEditor(QtPointPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtPointPropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtPointPropertyManager *manager);
 private:
     QtPointEditorFactoryPrivate *d_ptr;
@@ -590,7 +590,7 @@ protected:
     void connectPropertyManager(QtPointFPropertyManager *manager);
     QWidget *createEditor(QtPointFPropertyManager *manager, QtProperty *property,
                           QWidget *parent);
-    QWidget *createAttributeEditor(QtPointFPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtPointFPropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtPointFPropertyManager *manager);
 private:
     QtPointFEditorFactoryPrivate *d_ptr;
@@ -612,7 +612,7 @@ protected:
     void connectPropertyManager(QtSizePropertyManager *manager);
     QWidget *createEditor(QtSizePropertyManager *manager, QtProperty *property,
                           QWidget *parent);
-    QWidget *createAttributeEditor(QtSizePropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtSizePropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtSizePropertyManager *manager);
 private:
     QtSizeEditorFactoryPrivate *d_ptr;
@@ -634,7 +634,7 @@ protected:
     void connectPropertyManager(QtSizeFPropertyManager *manager);
     QWidget *createEditor(QtSizeFPropertyManager *manager, QtProperty *property,
                           QWidget *parent);
-    QWidget *createAttributeEditor(QtSizeFPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtSizeFPropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtSizeFPropertyManager *manager);
 private:
     QtSizeFEditorFactoryPrivate *d_ptr;
@@ -656,7 +656,7 @@ protected:
     void connectPropertyManager(QtRectPropertyManager *manager);
     QWidget *createEditor(QtRectPropertyManager *manager, QtProperty *property,
                           QWidget *parent);
-    QWidget *createAttributeEditor(QtRectPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtRectPropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtRectPropertyManager *manager);
 private:
     QtRectEditorFactoryPrivate *d_ptr;
@@ -678,7 +678,7 @@ protected:
     void connectPropertyManager(QtRectFPropertyManager *manager);
     QWidget *createEditor(QtRectFPropertyManager *manager, QtProperty *property,
                           QWidget *parent);
-    QWidget *createAttributeEditor(QtRectFPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtRectFPropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtRectFPropertyManager *manager);
 private:
     QtRectFEditorFactoryPrivate *d_ptr;
@@ -699,7 +699,7 @@ public:
 protected:
     void connectPropertyManager(QtEnumPropertyManager *manager);
     QWidget *createEditor(QtEnumPropertyManager *manager, QtProperty *property, QWidget *parent);
-    QWidget *createAttributeEditor(QtEnumPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtEnumPropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtEnumPropertyManager *manager);
 private:
     QtEnumEditorFactoryPrivate *d_ptr;
@@ -728,7 +728,7 @@ protected:
     void connectPropertyManager(QtFlagPropertyManager *manager);
     QWidget *createEditor(QtFlagPropertyManager *manager, QtProperty *property,
                           QWidget *parent);
-    QWidget *createAttributeEditor(QtFlagPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtFlagPropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtFlagPropertyManager *manager);
 private:
     QtFlagEditorFactoryPrivate *d_ptr;
@@ -750,7 +750,7 @@ protected:
     void connectPropertyManager(QtSizePolicyPropertyManager *manager);
     QWidget *createEditor(QtSizePolicyPropertyManager *manager, QtProperty *property,
                           QWidget *parent);
-    QWidget *createAttributeEditor(QtSizePolicyPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtSizePolicyPropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtSizePolicyPropertyManager *manager);
 private:
     QtSizePolicyEditorFactoryPrivate *d_ptr;
@@ -772,7 +772,7 @@ protected:
     void connectPropertyManager(QtCursorPropertyManager *manager);
     QWidget *createEditor(QtCursorPropertyManager *manager, QtProperty *property,
                 QWidget *parent);
-    QWidget *createAttributeEditor(QtCursorPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtCursorPropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtCursorPropertyManager *manager);
 private:
     QtCursorEditorFactoryPrivate *d_ptr;
@@ -797,7 +797,7 @@ protected:
     void connectPropertyManager(QtColorPropertyManager *manager);
     QWidget *createEditor(QtColorPropertyManager *manager, QtProperty *property,
                 QWidget *parent);
-    QWidget *createAttributeEditor(QtColorPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtColorPropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtColorPropertyManager *manager);
 private:
     QtColorEditorFactoryPrivate *d_ptr;
@@ -822,7 +822,7 @@ protected:
     void connectPropertyManager(QtFontPropertyManager *manager);
     QWidget *createEditor(QtFontPropertyManager *manager, QtProperty *property,
                 QWidget *parent);
-    QWidget *createAttributeEditor(QtFontPropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtFontPropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtFontPropertyManager *manager);
 private:
     QtFontEditorFactoryPrivate *d_ptr;
@@ -846,7 +846,7 @@ public:
 protected:
     void connectPropertyManager(QtFilePropertyManager *manager);
     QWidget *createEditor(QtFilePropertyManager *manager, QtProperty *property, QWidget *parent);
-    QWidget *createAttributeEditor(QtFilePropertyManager *manager, QtProperty *property, QWidget *parent, Attribute attribute);
+    QWidget *createAttributeEditor(QtFilePropertyManager *manager, QtProperty *property, QWidget *parent, BrowserCol attribute);
     void disconnectPropertyManager(QtFilePropertyManager *manager);
 private:
     QtFileEditorFactoryPrivate *d_ptr;

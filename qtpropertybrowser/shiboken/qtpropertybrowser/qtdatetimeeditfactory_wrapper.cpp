@@ -30,6 +30,8 @@
 #include <cctype>
 #include <cstring>
 
+QT_WARNING_DISABLE_DEPRECATED
+
 
 
 template <class T>
@@ -45,12 +47,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -60,7 +64,8 @@ void QtDateTimeEditFactoryWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtDateTimeEditFactoryWrapper::QtDateTimeEditFactoryWrapper(QObject * parent) : QtDateTimeEditFactory(parent) {
+QtDateTimeEditFactoryWrapper::QtDateTimeEditFactoryWrapper(QObject * parent) : QtDateTimeEditFactory(parent)
+{
     // ... middle
 }
 
@@ -88,7 +93,7 @@ void QtDateTimeEditFactoryWrapper::connectPropertyManager(QtDateTimePropertyMana
     }
 }
 
-QWidget * QtDateTimeEditFactoryWrapper::createAttributeEditor(QtDateTimePropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute)
+QWidget * QtDateTimeEditFactoryWrapper::createAttributeEditor(QtDateTimePropertyManager * manager, QtProperty * property, QWidget * parent, BrowserCol attribute)
 {
     Shiboken::GilState gil;
     if (PyErr_Occurred())
@@ -103,7 +108,7 @@ QWidget * QtDateTimeEditFactoryWrapper::createAttributeEditor(QtDateTimeProperty
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTDATETIMEPROPERTYMANAGER_IDX]), manager),
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property),
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), parent),
-        Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, &attribute)
+        Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, &attribute)
     ));
 
     Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
@@ -203,6 +208,7 @@ Sbk_QtDateTimeEditFactory_Init(PyObject* self, PyObject* args, PyObject* kwds)
     SBK_UNUSED(pythonToCpp)
     int numNamedArgs = (kwds ? PyDict_Size(kwds) : 0);
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -304,7 +310,7 @@ static PyObject* Sbk_QtDateTimeEditFactoryFunc_connectPropertyManager(PyObject* 
         if (!PyErr_Occurred()) {
             // connectPropertyManager(QtDateTimePropertyManager*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtDateTimeEditFactoryWrapper*) cppSelf)->QtDateTimeEditFactoryWrapper::connectPropertyManager_protected(cppArg0);
+            static_cast<::QtDateTimeEditFactoryWrapper*>(cppSelf)->QtDateTimeEditFactoryWrapper::connectPropertyManager_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -331,6 +337,7 @@ static PyObject* Sbk_QtDateTimeEditFactoryFunc_createAttributeEditor(PyObject* s
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr, nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0, 0, 0};
 
     // invalid argument lengths
@@ -341,13 +348,13 @@ static PyObject* Sbk_QtDateTimeEditFactoryFunc_createAttributeEditor(PyObject* s
 
 
     // Overloaded function decisor
-    // 0: QtDateTimeEditFactory::createAttributeEditor(QtDateTimePropertyManager*,QtProperty*,QWidget*,Attribute)
+    // 0: QtDateTimeEditFactory::createAttributeEditor(QtDateTimePropertyManager*,QtProperty*,QWidget*,BrowserCol)
     if (numArgs == 4
         && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTDATETIMEPROPERTYMANAGER_IDX]), (pyArgs[0])))
         && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[1])))
         && (pythonToCpp[2] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), (pyArgs[2])))
-        && (pythonToCpp[3] = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, (pyArgs[3])))) {
-        overloadId = 0; // createAttributeEditor(QtDateTimePropertyManager*,QtProperty*,QWidget*,Attribute)
+        && (pythonToCpp[3] = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, (pyArgs[3])))) {
+        overloadId = 0; // createAttributeEditor(QtDateTimePropertyManager*,QtProperty*,QWidget*,BrowserCol)
     }
 
     // Function signature not found.
@@ -367,13 +374,13 @@ static PyObject* Sbk_QtDateTimeEditFactoryFunc_createAttributeEditor(PyObject* s
             return {};
         ::QWidget* cppArg2;
         pythonToCpp[2](pyArgs[2], &cppArg2);
-        ::Attribute cppArg3{NONE};
+        ::BrowserCol cppArg3{NONE};
         pythonToCpp[3](pyArgs[3], &cppArg3);
 
         if (!PyErr_Occurred()) {
-            // createAttributeEditor(QtDateTimePropertyManager*,QtProperty*,QWidget*,Attribute)
+            // createAttributeEditor(QtDateTimePropertyManager*,QtProperty*,QWidget*,BrowserCol)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QWidget * cppResult = ((::QtDateTimeEditFactoryWrapper*) cppSelf)->QtDateTimeEditFactoryWrapper::createAttributeEditor_protected(cppArg0, cppArg1, cppArg2, cppArg3);
+            QWidget * cppResult = static_cast<::QtDateTimeEditFactoryWrapper*>(cppSelf)->QtDateTimeEditFactoryWrapper::createAttributeEditor_protected(cppArg0, cppArg1, cppArg2, cppArg3);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), cppResult);
             Shiboken::Object::setParent(self, pyResult);
@@ -403,6 +410,7 @@ static PyObject* Sbk_QtDateTimeEditFactoryFunc_createEditor(PyObject* self, PyOb
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0, 0};
 
     // invalid argument lengths
@@ -442,7 +450,7 @@ static PyObject* Sbk_QtDateTimeEditFactoryFunc_createEditor(PyObject* self, PyOb
         if (!PyErr_Occurred()) {
             // createEditor(QtDateTimePropertyManager*,QtProperty*,QWidget*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QWidget * cppResult = ((::QtDateTimeEditFactoryWrapper*) cppSelf)->QtDateTimeEditFactoryWrapper::createEditor_protected(cppArg0, cppArg1, cppArg2);
+            QWidget * cppResult = static_cast<::QtDateTimeEditFactoryWrapper*>(cppSelf)->QtDateTimeEditFactoryWrapper::createEditor_protected(cppArg0, cppArg1, cppArg2);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), cppResult);
             Shiboken::Object::setParent(self, pyResult);
@@ -490,7 +498,7 @@ static PyObject* Sbk_QtDateTimeEditFactoryFunc_disconnectPropertyManager(PyObjec
         if (!PyErr_Occurred()) {
             // disconnectPropertyManager(QtDateTimePropertyManager*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtDateTimeEditFactoryWrapper*) cppSelf)->QtDateTimeEditFactoryWrapper::disconnectPropertyManager_protected(cppArg0);
+            static_cast<::QtDateTimeEditFactoryWrapper*>(cppSelf)->QtDateTimeEditFactoryWrapper::disconnectPropertyManager_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -506,10 +514,10 @@ static PyObject* Sbk_QtDateTimeEditFactoryFunc_disconnectPropertyManager(PyObjec
 }
 
 static PyMethodDef Sbk_QtDateTimeEditFactory_methods[] = {
-    {"connectPropertyManager", (PyCFunction)Sbk_QtDateTimeEditFactoryFunc_connectPropertyManager, METH_O},
-    {"createAttributeEditor", (PyCFunction)Sbk_QtDateTimeEditFactoryFunc_createAttributeEditor, METH_VARARGS},
-    {"createEditor", (PyCFunction)Sbk_QtDateTimeEditFactoryFunc_createEditor, METH_VARARGS},
-    {"disconnectPropertyManager", (PyCFunction)Sbk_QtDateTimeEditFactoryFunc_disconnectPropertyManager, METH_O},
+    {"connectPropertyManager", reinterpret_cast<PyCFunction>(Sbk_QtDateTimeEditFactoryFunc_connectPropertyManager), METH_O},
+    {"createAttributeEditor", reinterpret_cast<PyCFunction>(Sbk_QtDateTimeEditFactoryFunc_createAttributeEditor), METH_VARARGS},
+    {"createEditor", reinterpret_cast<PyCFunction>(Sbk_QtDateTimeEditFactoryFunc_createEditor), METH_VARARGS},
+    {"disconnectPropertyManager", reinterpret_cast<PyCFunction>(Sbk_QtDateTimeEditFactoryFunc_disconnectPropertyManager), METH_O},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -572,14 +580,14 @@ static void QtDateTimeEditFactory_PythonToCpp_QtDateTimeEditFactory_PTR(PyObject
 static PythonToCppFunc is_QtDateTimeEditFactory_PythonToCpp_QtDateTimeEditFactory_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtDateTimeEditFactory_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtDateTimeEditFactory_TypeF())))
         return QtDateTimeEditFactory_PythonToCpp_QtDateTimeEditFactory_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtDateTimeEditFactory_PTR_CppToPython_QtDateTimeEditFactory(const void* cppIn) {
-    PyObject* pyOut = (PyObject*)Shiboken::BindingManager::instance().retrieveWrapper(cppIn);
+    auto pyOut = reinterpret_cast<PyObject*>(Shiboken::BindingManager::instance().retrieveWrapper(cppIn));
     if (pyOut) {
         Py_INCREF(pyOut);
         return pyOut;
@@ -600,13 +608,13 @@ static PyObject* QtDateTimeEditFactory_PTR_CppToPython_QtDateTimeEditFactory(con
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtDateTimeEditFactory_SignaturesString[] = ""
-    "qtpropertybrowser.QtDateTimeEditFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtDateTimeEditFactory.connectPropertyManager(manager:qtpropertybrowser.QtDateTimePropertyManager)\n"
-    "qtpropertybrowser.QtDateTimeEditFactory.createAttributeEditor(manager:qtpropertybrowser.QtDateTimePropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.Attribute)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtDateTimeEditFactory.createEditor(manager:qtpropertybrowser.QtDateTimePropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtDateTimeEditFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtDateTimePropertyManager)\n"
-;
+static const char *QtDateTimeEditFactory_SignatureStrings[] = {
+    "qtpropertybrowser.QtDateTimeEditFactory(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtDateTimeEditFactory.connectPropertyManager(manager:qtpropertybrowser.QtDateTimePropertyManager)",
+    "qtpropertybrowser.QtDateTimeEditFactory.createAttributeEditor(manager:qtpropertybrowser.QtDateTimePropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtDateTimeEditFactory.createEditor(manager:qtpropertybrowser.QtDateTimePropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtDateTimeEditFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtDateTimePropertyManager)",
+    nullptr}; // Sentinel
 
 void init_QtDateTimeEditFactory(PyObject* module)
 {
@@ -615,7 +623,7 @@ void init_QtDateTimeEditFactory(PyObject* module)
         "QtDateTimeEditFactory",
         "QtDateTimeEditFactory*",
         &Sbk_QtDateTimeEditFactory_spec,
-        QtDateTimeEditFactory_SignaturesString,
+        QtDateTimeEditFactory_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtDateTimeEditFactory >,
         0,
         0,

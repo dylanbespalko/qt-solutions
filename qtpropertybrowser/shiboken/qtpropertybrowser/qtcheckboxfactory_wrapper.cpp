@@ -30,6 +30,8 @@
 #include <cctype>
 #include <cstring>
 
+QT_WARNING_DISABLE_DEPRECATED
+
 
 
 template <class T>
@@ -45,12 +47,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -60,7 +64,8 @@ void QtCheckBoxFactoryWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtCheckBoxFactoryWrapper::QtCheckBoxFactoryWrapper(QObject * parent) : QtCheckBoxFactory(parent) {
+QtCheckBoxFactoryWrapper::QtCheckBoxFactoryWrapper(QObject * parent) : QtCheckBoxFactory(parent)
+{
     // ... middle
 }
 
@@ -88,7 +93,7 @@ void QtCheckBoxFactoryWrapper::connectPropertyManager(QtBoolPropertyManager * ma
     }
 }
 
-QWidget * QtCheckBoxFactoryWrapper::createAttributeEditor(QtBoolPropertyManager * manager, QtProperty * property, QWidget * parent, Attribute attribute)
+QWidget * QtCheckBoxFactoryWrapper::createAttributeEditor(QtBoolPropertyManager * manager, QtProperty * property, QWidget * parent, BrowserCol attribute)
 {
     Shiboken::GilState gil;
     if (PyErr_Occurred())
@@ -103,7 +108,7 @@ QWidget * QtCheckBoxFactoryWrapper::createAttributeEditor(QtBoolPropertyManager 
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTBOOLPROPERTYMANAGER_IDX]), manager),
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property),
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), parent),
-        Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, &attribute)
+        Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, &attribute)
     ));
 
     Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
@@ -203,6 +208,7 @@ Sbk_QtCheckBoxFactory_Init(PyObject* self, PyObject* args, PyObject* kwds)
     SBK_UNUSED(pythonToCpp)
     int numNamedArgs = (kwds ? PyDict_Size(kwds) : 0);
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -304,7 +310,7 @@ static PyObject* Sbk_QtCheckBoxFactoryFunc_connectPropertyManager(PyObject* self
         if (!PyErr_Occurred()) {
             // connectPropertyManager(QtBoolPropertyManager*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtCheckBoxFactoryWrapper*) cppSelf)->QtCheckBoxFactoryWrapper::connectPropertyManager_protected(cppArg0);
+            static_cast<::QtCheckBoxFactoryWrapper*>(cppSelf)->QtCheckBoxFactoryWrapper::connectPropertyManager_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -331,6 +337,7 @@ static PyObject* Sbk_QtCheckBoxFactoryFunc_createAttributeEditor(PyObject* self,
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr, nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0, 0, 0};
 
     // invalid argument lengths
@@ -341,13 +348,13 @@ static PyObject* Sbk_QtCheckBoxFactoryFunc_createAttributeEditor(PyObject* self,
 
 
     // Overloaded function decisor
-    // 0: QtCheckBoxFactory::createAttributeEditor(QtBoolPropertyManager*,QtProperty*,QWidget*,Attribute)
+    // 0: QtCheckBoxFactory::createAttributeEditor(QtBoolPropertyManager*,QtProperty*,QWidget*,BrowserCol)
     if (numArgs == 4
         && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTBOOLPROPERTYMANAGER_IDX]), (pyArgs[0])))
         && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[1])))
         && (pythonToCpp[2] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), (pyArgs[2])))
-        && (pythonToCpp[3] = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, (pyArgs[3])))) {
-        overloadId = 0; // createAttributeEditor(QtBoolPropertyManager*,QtProperty*,QWidget*,Attribute)
+        && (pythonToCpp[3] = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, (pyArgs[3])))) {
+        overloadId = 0; // createAttributeEditor(QtBoolPropertyManager*,QtProperty*,QWidget*,BrowserCol)
     }
 
     // Function signature not found.
@@ -367,13 +374,13 @@ static PyObject* Sbk_QtCheckBoxFactoryFunc_createAttributeEditor(PyObject* self,
             return {};
         ::QWidget* cppArg2;
         pythonToCpp[2](pyArgs[2], &cppArg2);
-        ::Attribute cppArg3{NONE};
+        ::BrowserCol cppArg3{NONE};
         pythonToCpp[3](pyArgs[3], &cppArg3);
 
         if (!PyErr_Occurred()) {
-            // createAttributeEditor(QtBoolPropertyManager*,QtProperty*,QWidget*,Attribute)
+            // createAttributeEditor(QtBoolPropertyManager*,QtProperty*,QWidget*,BrowserCol)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QWidget * cppResult = ((::QtCheckBoxFactoryWrapper*) cppSelf)->QtCheckBoxFactoryWrapper::createAttributeEditor_protected(cppArg0, cppArg1, cppArg2, cppArg3);
+            QWidget * cppResult = static_cast<::QtCheckBoxFactoryWrapper*>(cppSelf)->QtCheckBoxFactoryWrapper::createAttributeEditor_protected(cppArg0, cppArg1, cppArg2, cppArg3);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), cppResult);
             Shiboken::Object::setParent(self, pyResult);
@@ -403,6 +410,7 @@ static PyObject* Sbk_QtCheckBoxFactoryFunc_createEditor(PyObject* self, PyObject
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0, 0};
 
     // invalid argument lengths
@@ -442,7 +450,7 @@ static PyObject* Sbk_QtCheckBoxFactoryFunc_createEditor(PyObject* self, PyObject
         if (!PyErr_Occurred()) {
             // createEditor(QtBoolPropertyManager*,QtProperty*,QWidget*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QWidget * cppResult = ((::QtCheckBoxFactoryWrapper*) cppSelf)->QtCheckBoxFactoryWrapper::createEditor_protected(cppArg0, cppArg1, cppArg2);
+            QWidget * cppResult = static_cast<::QtCheckBoxFactoryWrapper*>(cppSelf)->QtCheckBoxFactoryWrapper::createEditor_protected(cppArg0, cppArg1, cppArg2);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), cppResult);
             Shiboken::Object::setParent(self, pyResult);
@@ -490,7 +498,7 @@ static PyObject* Sbk_QtCheckBoxFactoryFunc_disconnectPropertyManager(PyObject* s
         if (!PyErr_Occurred()) {
             // disconnectPropertyManager(QtBoolPropertyManager*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtCheckBoxFactoryWrapper*) cppSelf)->QtCheckBoxFactoryWrapper::disconnectPropertyManager_protected(cppArg0);
+            static_cast<::QtCheckBoxFactoryWrapper*>(cppSelf)->QtCheckBoxFactoryWrapper::disconnectPropertyManager_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -506,10 +514,10 @@ static PyObject* Sbk_QtCheckBoxFactoryFunc_disconnectPropertyManager(PyObject* s
 }
 
 static PyMethodDef Sbk_QtCheckBoxFactory_methods[] = {
-    {"connectPropertyManager", (PyCFunction)Sbk_QtCheckBoxFactoryFunc_connectPropertyManager, METH_O},
-    {"createAttributeEditor", (PyCFunction)Sbk_QtCheckBoxFactoryFunc_createAttributeEditor, METH_VARARGS},
-    {"createEditor", (PyCFunction)Sbk_QtCheckBoxFactoryFunc_createEditor, METH_VARARGS},
-    {"disconnectPropertyManager", (PyCFunction)Sbk_QtCheckBoxFactoryFunc_disconnectPropertyManager, METH_O},
+    {"connectPropertyManager", reinterpret_cast<PyCFunction>(Sbk_QtCheckBoxFactoryFunc_connectPropertyManager), METH_O},
+    {"createAttributeEditor", reinterpret_cast<PyCFunction>(Sbk_QtCheckBoxFactoryFunc_createAttributeEditor), METH_VARARGS},
+    {"createEditor", reinterpret_cast<PyCFunction>(Sbk_QtCheckBoxFactoryFunc_createEditor), METH_VARARGS},
+    {"disconnectPropertyManager", reinterpret_cast<PyCFunction>(Sbk_QtCheckBoxFactoryFunc_disconnectPropertyManager), METH_O},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -572,14 +580,14 @@ static void QtCheckBoxFactory_PythonToCpp_QtCheckBoxFactory_PTR(PyObject* pyIn, 
 static PythonToCppFunc is_QtCheckBoxFactory_PythonToCpp_QtCheckBoxFactory_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtCheckBoxFactory_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtCheckBoxFactory_TypeF())))
         return QtCheckBoxFactory_PythonToCpp_QtCheckBoxFactory_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtCheckBoxFactory_PTR_CppToPython_QtCheckBoxFactory(const void* cppIn) {
-    PyObject* pyOut = (PyObject*)Shiboken::BindingManager::instance().retrieveWrapper(cppIn);
+    auto pyOut = reinterpret_cast<PyObject*>(Shiboken::BindingManager::instance().retrieveWrapper(cppIn));
     if (pyOut) {
         Py_INCREF(pyOut);
         return pyOut;
@@ -600,13 +608,13 @@ static PyObject* QtCheckBoxFactory_PTR_CppToPython_QtCheckBoxFactory(const void*
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtCheckBoxFactory_SignaturesString[] = ""
-    "qtpropertybrowser.QtCheckBoxFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtCheckBoxFactory.connectPropertyManager(manager:qtpropertybrowser.QtBoolPropertyManager)\n"
-    "qtpropertybrowser.QtCheckBoxFactory.createAttributeEditor(manager:qtpropertybrowser.QtBoolPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.Attribute)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtCheckBoxFactory.createEditor(manager:qtpropertybrowser.QtBoolPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtCheckBoxFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtBoolPropertyManager)\n"
-;
+static const char *QtCheckBoxFactory_SignatureStrings[] = {
+    "qtpropertybrowser.QtCheckBoxFactory(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtCheckBoxFactory.connectPropertyManager(manager:qtpropertybrowser.QtBoolPropertyManager)",
+    "qtpropertybrowser.QtCheckBoxFactory.createAttributeEditor(manager:qtpropertybrowser.QtBoolPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtCheckBoxFactory.createEditor(manager:qtpropertybrowser.QtBoolPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtCheckBoxFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtBoolPropertyManager)",
+    nullptr}; // Sentinel
 
 void init_QtCheckBoxFactory(PyObject* module)
 {
@@ -615,7 +623,7 @@ void init_QtCheckBoxFactory(PyObject* module)
         "QtCheckBoxFactory",
         "QtCheckBoxFactory*",
         &Sbk_QtCheckBoxFactory_spec,
-        QtCheckBoxFactory_SignaturesString,
+        QtCheckBoxFactory_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtCheckBoxFactory >,
         0,
         0,

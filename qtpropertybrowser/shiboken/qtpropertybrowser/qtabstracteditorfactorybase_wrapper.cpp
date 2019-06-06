@@ -34,6 +34,8 @@
 #include <cctype>
 #include <cstring>
 
+QT_WARNING_DISABLE_DEPRECATED
+
 
 
 template <class T>
@@ -49,12 +51,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -64,7 +68,8 @@ void QtAbstractEditorFactoryBaseWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtAbstractEditorFactoryBaseWrapper::QtAbstractEditorFactoryBaseWrapper(QObject * parent) : QtAbstractEditorFactoryBase(parent) {
+QtAbstractEditorFactoryBaseWrapper::QtAbstractEditorFactoryBaseWrapper(QObject * parent) : QtAbstractEditorFactoryBase(parent)
+{
     // ... middle
 }
 
@@ -142,7 +147,7 @@ void QtAbstractEditorFactoryBaseWrapper::connectNotify(const QMetaMethod & signa
     }
 }
 
-QWidget * QtAbstractEditorFactoryBaseWrapper::createAttributeEditor(QtProperty * property, QWidget * parent, Attribute atttribute)
+QWidget * QtAbstractEditorFactoryBaseWrapper::createAttributeEditor(QtProperty * property, QWidget * parent, BrowserCol atttribute)
 {
     Shiboken::GilState gil;
     if (PyErr_Occurred())
@@ -156,7 +161,7 @@ QWidget * QtAbstractEditorFactoryBaseWrapper::createAttributeEditor(QtProperty *
     Shiboken::AutoDecRef pyArgs(Py_BuildValue("(NNN)",
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property),
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), parent),
-        Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, &atttribute)
+        Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, &atttribute)
     ));
 
     Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
@@ -437,6 +442,7 @@ Sbk_QtAbstractEditorFactoryBase_Init(PyObject* self, PyObject* args, PyObject* k
     PythonToCppFunc pythonToCpp[] = { nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -552,7 +558,7 @@ static PyObject* Sbk_QtAbstractEditorFactoryBaseFunc_breakConnection(PyObject* s
                 return {};
             }
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtAbstractEditorFactoryBaseWrapper*) cppSelf)->breakConnection_protected(cppArg0);
+            static_cast<::QtAbstractEditorFactoryBaseWrapper*>(cppSelf)->breakConnection_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -579,6 +585,7 @@ static PyObject* Sbk_QtAbstractEditorFactoryBaseFunc_createAttributeEditor(PyObj
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0, 0};
 
     // invalid argument lengths
@@ -589,12 +596,12 @@ static PyObject* Sbk_QtAbstractEditorFactoryBaseFunc_createAttributeEditor(PyObj
 
 
     // Overloaded function decisor
-    // 0: QtAbstractEditorFactoryBase::createAttributeEditor(QtProperty*,QWidget*,Attribute)
+    // 0: QtAbstractEditorFactoryBase::createAttributeEditor(QtProperty*,QWidget*,BrowserCol)
     if (numArgs == 3
         && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[0])))
         && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), (pyArgs[1])))
-        && (pythonToCpp[2] = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_ATTRIBUTE_IDX])->converter, (pyArgs[2])))) {
-        overloadId = 0; // createAttributeEditor(QtProperty*,QWidget*,Attribute)
+        && (pythonToCpp[2] = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, (pyArgs[2])))) {
+        overloadId = 0; // createAttributeEditor(QtProperty*,QWidget*,BrowserCol)
     }
 
     // Function signature not found.
@@ -610,11 +617,11 @@ static PyObject* Sbk_QtAbstractEditorFactoryBaseFunc_createAttributeEditor(PyObj
             return {};
         ::QWidget* cppArg1;
         pythonToCpp[1](pyArgs[1], &cppArg1);
-        ::Attribute cppArg2{NONE};
+        ::BrowserCol cppArg2{NONE};
         pythonToCpp[2](pyArgs[2], &cppArg2);
 
         if (!PyErr_Occurred()) {
-            // createAttributeEditor(QtProperty*,QWidget*,Attribute)
+            // createAttributeEditor(QtProperty*,QWidget*,BrowserCol)
             if (Shiboken::Object::hasCppWrapper(reinterpret_cast<SbkObject*>(self))) {
                 PyErr_SetString(PyExc_NotImplementedError, "pure virtual method 'QtAbstractEditorFactoryBase.createAttributeEditor()' not implemented.");
                 return {};
@@ -650,6 +657,7 @@ static PyObject* Sbk_QtAbstractEditorFactoryBaseFunc_createEditor(PyObject* self
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -740,7 +748,7 @@ static PyObject* Sbk_QtAbstractEditorFactoryBaseFunc_managerDestroyed(PyObject* 
                 return {};
             }
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtAbstractEditorFactoryBaseWrapper*) cppSelf)->managerDestroyed_protected(cppArg0);
+            static_cast<::QtAbstractEditorFactoryBaseWrapper*>(cppSelf)->managerDestroyed_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -756,10 +764,10 @@ static PyObject* Sbk_QtAbstractEditorFactoryBaseFunc_managerDestroyed(PyObject* 
 }
 
 static PyMethodDef Sbk_QtAbstractEditorFactoryBase_methods[] = {
-    {"breakConnection", (PyCFunction)Sbk_QtAbstractEditorFactoryBaseFunc_breakConnection, METH_O},
-    {"createAttributeEditor", (PyCFunction)Sbk_QtAbstractEditorFactoryBaseFunc_createAttributeEditor, METH_VARARGS},
-    {"createEditor", (PyCFunction)Sbk_QtAbstractEditorFactoryBaseFunc_createEditor, METH_VARARGS},
-    {"managerDestroyed", (PyCFunction)Sbk_QtAbstractEditorFactoryBaseFunc_managerDestroyed, METH_O},
+    {"breakConnection", reinterpret_cast<PyCFunction>(Sbk_QtAbstractEditorFactoryBaseFunc_breakConnection), METH_O},
+    {"createAttributeEditor", reinterpret_cast<PyCFunction>(Sbk_QtAbstractEditorFactoryBaseFunc_createAttributeEditor), METH_VARARGS},
+    {"createEditor", reinterpret_cast<PyCFunction>(Sbk_QtAbstractEditorFactoryBaseFunc_createEditor), METH_VARARGS},
+    {"managerDestroyed", reinterpret_cast<PyCFunction>(Sbk_QtAbstractEditorFactoryBaseFunc_managerDestroyed), METH_O},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -829,26 +837,26 @@ static void QtAbstractEditorFactoryBase_PythonToCpp_QtAbstractEditorFactoryBase_
 static PythonToCppFunc is_QtAbstractEditorFactoryBase_PythonToCpp_QtAbstractEditorFactoryBase_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtAbstractEditorFactoryBase_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtAbstractEditorFactoryBase_TypeF())))
         return QtAbstractEditorFactoryBase_PythonToCpp_QtAbstractEditorFactoryBase_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtAbstractEditorFactoryBase_PTR_CppToPython_QtAbstractEditorFactoryBase(const void* cppIn) {
-    return PySide::getWrapperForQObject((::QtAbstractEditorFactoryBase*)cppIn, Sbk_QtAbstractEditorFactoryBase_TypeF());
+    return PySide::getWrapperForQObject(reinterpret_cast<::QtAbstractEditorFactoryBase*>(const_cast<void*>(cppIn)), Sbk_QtAbstractEditorFactoryBase_TypeF());
 
 }
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtAbstractEditorFactoryBase_SignaturesString[] = ""
-    "qtpropertybrowser.QtAbstractEditorFactoryBase(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtAbstractEditorFactoryBase.breakConnection(manager:qtpropertybrowser.QtAbstractPropertyManager)\n"
-    "qtpropertybrowser.QtAbstractEditorFactoryBase.createAttributeEditor(property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,atttribute:qtpropertybrowser.Attribute)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtAbstractEditorFactoryBase.createEditor(property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtAbstractEditorFactoryBase.managerDestroyed(manager:PySide2.QtCore.QObject)\n"
-;
+static const char *QtAbstractEditorFactoryBase_SignatureStrings[] = {
+    "qtpropertybrowser.QtAbstractEditorFactoryBase(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtAbstractEditorFactoryBase.breakConnection(manager:qtpropertybrowser.QtAbstractPropertyManager)",
+    "qtpropertybrowser.QtAbstractEditorFactoryBase.createAttributeEditor(property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,atttribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtAbstractEditorFactoryBase.createEditor(property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtAbstractEditorFactoryBase.managerDestroyed(manager:PySide2.QtCore.QObject)",
+    nullptr}; // Sentinel
 
 void init_QtAbstractEditorFactoryBase(PyObject* module)
 {
@@ -857,7 +865,7 @@ void init_QtAbstractEditorFactoryBase(PyObject* module)
         "QtAbstractEditorFactoryBase",
         "QtAbstractEditorFactoryBase*",
         &Sbk_QtAbstractEditorFactoryBase_spec,
-        QtAbstractEditorFactoryBase_SignaturesString,
+        QtAbstractEditorFactoryBase_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtAbstractEditorFactoryBase >,
         reinterpret_cast<SbkObjectType *>(SbkPySide2_QtCoreTypes[SBK_QOBJECT_IDX]),
         0,

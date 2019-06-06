@@ -38,6 +38,8 @@
 #include <cctype>
 #include <cstring>
 
+QT_WARNING_DISABLE_DEPRECATED
+
 
 
 template <class T>
@@ -53,12 +55,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -68,7 +72,8 @@ void QtTFTensorPropertyManagerWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtTFTensorPropertyManagerWrapper::QtTFTensorPropertyManagerWrapper(QObject * parent) : QtTFTensorPropertyManager(parent) {
+QtTFTensorPropertyManagerWrapper::QtTFTensorPropertyManagerWrapper(QObject * parent) : QtTFTensorPropertyManager(parent)
+{
     // ... middle
 }
 
@@ -870,6 +875,7 @@ Sbk_QtTFTensorPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwd
     PythonToCppFunc pythonToCpp[] = { nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -1078,7 +1084,7 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_checkIcon(PyObject* self, PyO
         if (!PyErr_Occurred()) {
             // checkIcon(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QIcon cppResult = ((::QtTFTensorPropertyManagerWrapper*) cppSelf)->QtTFTensorPropertyManagerWrapper::checkIcon_protected(cppArg0);
+            QIcon cppResult = static_cast<::QtTFTensorPropertyManagerWrapper*>(cppSelf)->QtTFTensorPropertyManagerWrapper::checkIcon_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtGuiTypes[SBK_QICON_IDX]), &cppResult);
         }
@@ -1272,7 +1278,7 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_formatText(PyObject* self, Py
         if (!PyErr_Occurred()) {
             // formatText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = ((::QtTFTensorPropertyManagerWrapper*) cppSelf)->QtTFTensorPropertyManagerWrapper::formatText_protected(cppArg0);
+            QString cppResult = static_cast<::QtTFTensorPropertyManagerWrapper*>(cppSelf)->QtTFTensorPropertyManagerWrapper::formatText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -1319,7 +1325,7 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_initializeProperty(PyObject* 
         if (!PyErr_Occurred()) {
             // initializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtTFTensorPropertyManagerWrapper*) cppSelf)->QtTFTensorPropertyManagerWrapper::initializeProperty_protected(cppArg0);
+            static_cast<::QtTFTensorPropertyManagerWrapper*>(cppSelf)->QtTFTensorPropertyManagerWrapper::initializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -1557,7 +1563,7 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_pkAvgText(PyObject* self, PyO
         if (!PyErr_Occurred()) {
             // pkAvgText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = ((::QtTFTensorPropertyManagerWrapper*) cppSelf)->QtTFTensorPropertyManagerWrapper::pkAvgText_protected(cppArg0);
+            QString cppResult = static_cast<::QtTFTensorPropertyManagerWrapper*>(cppSelf)->QtTFTensorPropertyManagerWrapper::pkAvgText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -1652,7 +1658,7 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_reinitializeProperty(PyObject
         if (!PyErr_Occurred()) {
             // reinitializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtTFTensorPropertyManagerWrapper*) cppSelf)->QtTFTensorPropertyManagerWrapper::reinitializeProperty_protected(cppArg0);
+            static_cast<::QtTFTensorPropertyManagerWrapper*>(cppSelf)->QtTFTensorPropertyManagerWrapper::reinitializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -1774,6 +1780,7 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_setAbsTol(PyObject* self, PyO
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1832,6 +1839,7 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_setCheck(PyObject* self, PyOb
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1890,6 +1898,7 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_setFormat(PyObject* self, PyO
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1948,6 +1957,7 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_setMaximum(PyObject* self, Py
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2006,6 +2016,7 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_setMinimum(PyObject* self, Py
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2064,6 +2075,7 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_setPkAvg(PyObject* self, PyOb
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2122,6 +2134,7 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_setPrecision(PyObject* self, 
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2180,6 +2193,7 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_setRange(PyObject* self, PyOb
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0, 0};
 
     // invalid argument lengths
@@ -2241,6 +2255,7 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_setReadOnly(PyObject* self, P
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2299,6 +2314,7 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_setRelTol(PyObject* self, PyO
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2357,6 +2373,7 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_setScale(PyObject* self, PyOb
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2415,6 +2432,7 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_setSingleStep(PyObject* self,
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2462,6 +2480,65 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_setSingleStep(PyObject* self,
         return {};
 }
 
+static PyObject* Sbk_QtTFTensorPropertyManagerFunc_setSize(PyObject* self, PyObject* args)
+{
+    QtTFTensorPropertyManagerWrapper* cppSelf = nullptr;
+    SBK_UNUSED(cppSelf)
+    if (!Shiboken::Object::isValid(self))
+        return {};
+    cppSelf = static_cast<QtTFTensorPropertyManagerWrapper *>(reinterpret_cast< ::QtTFTensorPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTTFTENSORPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+    int overloadId = -1;
+    PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
+    SBK_UNUSED(pythonToCpp)
+    int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
+    PyObject* pyArgs[] = {0, 0};
+
+    // invalid argument lengths
+
+
+    if (!PyArg_UnpackTuple(args, "setSize", 2, 2, &(pyArgs[0]), &(pyArgs[1])))
+        return {};
+
+
+    // Overloaded function decisor
+    // 0: QtTFTensorPropertyManager::setSize(QtProperty*,int)
+    if (numArgs == 2
+        && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[0])))
+        && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppConvertible(Shiboken::Conversions::PrimitiveTypeConverter<int>(), (pyArgs[1])))) {
+        overloadId = 0; // setSize(QtProperty*,int)
+    }
+
+    // Function signature not found.
+    if (overloadId == -1) goto Sbk_QtTFTensorPropertyManagerFunc_setSize_TypeError;
+
+    // Call function/method
+    {
+        if (!Shiboken::Object::isValid(pyArgs[0]))
+            return {};
+        ::QtProperty* cppArg0;
+        pythonToCpp[0](pyArgs[0], &cppArg0);
+        int cppArg1;
+        pythonToCpp[1](pyArgs[1], &cppArg1);
+
+        if (!PyErr_Occurred()) {
+            // setSize(QtProperty*,int)
+            PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
+            cppSelf->setSize(cppArg0, cppArg1);
+            PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
+        }
+    }
+
+    if (PyErr_Occurred()) {
+        return {};
+    }
+    Py_RETURN_NONE;
+
+    Sbk_QtTFTensorPropertyManagerFunc_setSize_TypeError:
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtTFTensorPropertyManager.setSize");
+        return {};
+}
+
 static PyObject* Sbk_QtTFTensorPropertyManagerFunc_setUnit(PyObject* self, PyObject* args)
 {
     QtTFTensorPropertyManagerWrapper* cppSelf = nullptr;
@@ -2473,6 +2550,7 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_setUnit(PyObject* self, PyObj
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2531,6 +2609,7 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_setValue(PyObject* self, PyOb
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -2626,6 +2705,54 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_singleStep(PyObject* self, Py
         return {};
 }
 
+static PyObject* Sbk_QtTFTensorPropertyManagerFunc_size(PyObject* self, PyObject* pyArg)
+{
+    QtTFTensorPropertyManagerWrapper* cppSelf = nullptr;
+    SBK_UNUSED(cppSelf)
+    if (!Shiboken::Object::isValid(self))
+        return {};
+    cppSelf = static_cast<QtTFTensorPropertyManagerWrapper *>(reinterpret_cast< ::QtTFTensorPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTTFTENSORPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+    PyObject* pyResult{};
+    int overloadId = -1;
+    PythonToCppFunc pythonToCpp{};
+    SBK_UNUSED(pythonToCpp)
+
+    // Overloaded function decisor
+    // 0: QtTFTensorPropertyManager::size(const QtProperty*)const
+    if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
+        overloadId = 0; // size(const QtProperty*)const
+    }
+
+    // Function signature not found.
+    if (overloadId == -1) goto Sbk_QtTFTensorPropertyManagerFunc_size_TypeError;
+
+    // Call function/method
+    {
+        if (!Shiboken::Object::isValid(pyArg))
+            return {};
+        ::QtProperty* cppArg0;
+        pythonToCpp(pyArg, &cppArg0);
+
+        if (!PyErr_Occurred()) {
+            // size(const QtProperty*)const
+            PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
+            int cppResult = const_cast<const ::QtTFTensorPropertyManagerWrapper*>(cppSelf)->size(cppArg0);
+            PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
+            pyResult = Shiboken::Conversions::copyToPython(Shiboken::Conversions::PrimitiveTypeConverter<int>(), &cppResult);
+        }
+    }
+
+    if (PyErr_Occurred() || !pyResult) {
+        Py_XDECREF(pyResult);
+        return {};
+    }
+    return pyResult;
+
+    Sbk_QtTFTensorPropertyManagerFunc_size_TypeError:
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtTFTensorPropertyManager.size");
+        return {};
+}
+
 static PyObject* Sbk_QtTFTensorPropertyManagerFunc_subComplexPropertyManager(PyObject* self)
 {
     QtTFTensorPropertyManagerWrapper* cppSelf = nullptr;
@@ -2683,7 +2810,7 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_uninitializeProperty(PyObject
         if (!PyErr_Occurred()) {
             // uninitializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtTFTensorPropertyManagerWrapper*) cppSelf)->QtTFTensorPropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
+            static_cast<::QtTFTensorPropertyManagerWrapper*>(cppSelf)->QtTFTensorPropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -2777,7 +2904,7 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_unitText(PyObject* self, PyOb
         if (!PyErr_Occurred()) {
             // unitText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = ((::QtTFTensorPropertyManagerWrapper*) cppSelf)->QtTFTensorPropertyManagerWrapper::unitText_protected(cppArg0);
+            QString cppResult = static_cast<::QtTFTensorPropertyManagerWrapper*>(cppSelf)->QtTFTensorPropertyManagerWrapper::unitText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -2873,7 +3000,7 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_valueText(PyObject* self, PyO
         if (!PyErr_Occurred()) {
             // valueText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = ((::QtTFTensorPropertyManagerWrapper*) cppSelf)->QtTFTensorPropertyManagerWrapper::valueText_protected(cppArg0);
+            QString cppResult = static_cast<::QtTFTensorPropertyManagerWrapper*>(cppSelf)->QtTFTensorPropertyManagerWrapper::valueText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -2891,45 +3018,47 @@ static PyObject* Sbk_QtTFTensorPropertyManagerFunc_valueText(PyObject* self, PyO
 }
 
 static PyMethodDef Sbk_QtTFTensorPropertyManager_methods[] = {
-    {"absTol", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_absTol, METH_O},
-    {"check", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_check, METH_O},
-    {"checkIcon", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_checkIcon, METH_O},
-    {"connect_signals", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_connect_signals, METH_NOARGS},
-    {"disconnect_signals", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_disconnect_signals, METH_NOARGS},
-    {"foreground", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_foreground, METH_O},
-    {"format", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_format, METH_O},
-    {"formatText", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_formatText, METH_O},
-    {"initializeProperty", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_initializeProperty, METH_O},
-    {"isReadOnly", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_isReadOnly, METH_O},
-    {"maximum", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_maximum, METH_O},
-    {"minimum", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_minimum, METH_O},
-    {"pkAvg", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_pkAvg, METH_O},
-    {"pkAvgText", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_pkAvgText, METH_O},
-    {"precision", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_precision, METH_O},
-    {"reinitializeProperty", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_reinitializeProperty, METH_O},
-    {"relTol", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_relTol, METH_O},
-    {"scale", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_scale, METH_O},
-    {"setAbsTol", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_setAbsTol, METH_VARARGS},
-    {"setCheck", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_setCheck, METH_VARARGS},
-    {"setFormat", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_setFormat, METH_VARARGS},
-    {"setMaximum", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_setMaximum, METH_VARARGS},
-    {"setMinimum", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_setMinimum, METH_VARARGS},
-    {"setPkAvg", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_setPkAvg, METH_VARARGS},
-    {"setPrecision", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_setPrecision, METH_VARARGS},
-    {"setRange", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_setRange, METH_VARARGS},
-    {"setReadOnly", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_setReadOnly, METH_VARARGS},
-    {"setRelTol", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_setRelTol, METH_VARARGS},
-    {"setScale", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_setScale, METH_VARARGS},
-    {"setSingleStep", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_setSingleStep, METH_VARARGS},
-    {"setUnit", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_setUnit, METH_VARARGS},
-    {"setValue", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_setValue, METH_VARARGS},
-    {"singleStep", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_singleStep, METH_O},
-    {"subComplexPropertyManager", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_subComplexPropertyManager, METH_NOARGS},
-    {"uninitializeProperty", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_uninitializeProperty, METH_O},
-    {"unit", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_unit, METH_O},
-    {"unitText", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_unitText, METH_O},
-    {"value", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_value, METH_O},
-    {"valueText", (PyCFunction)Sbk_QtTFTensorPropertyManagerFunc_valueText, METH_O},
+    {"absTol", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_absTol), METH_O},
+    {"check", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_check), METH_O},
+    {"checkIcon", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_checkIcon), METH_O},
+    {"connect_signals", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_connect_signals), METH_NOARGS},
+    {"disconnect_signals", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_disconnect_signals), METH_NOARGS},
+    {"foreground", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_foreground), METH_O},
+    {"format", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_format), METH_O},
+    {"formatText", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_formatText), METH_O},
+    {"initializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_initializeProperty), METH_O},
+    {"isReadOnly", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_isReadOnly), METH_O},
+    {"maximum", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_maximum), METH_O},
+    {"minimum", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_minimum), METH_O},
+    {"pkAvg", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_pkAvg), METH_O},
+    {"pkAvgText", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_pkAvgText), METH_O},
+    {"precision", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_precision), METH_O},
+    {"reinitializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_reinitializeProperty), METH_O},
+    {"relTol", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_relTol), METH_O},
+    {"scale", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_scale), METH_O},
+    {"setAbsTol", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_setAbsTol), METH_VARARGS},
+    {"setCheck", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_setCheck), METH_VARARGS},
+    {"setFormat", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_setFormat), METH_VARARGS},
+    {"setMaximum", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_setMaximum), METH_VARARGS},
+    {"setMinimum", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_setMinimum), METH_VARARGS},
+    {"setPkAvg", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_setPkAvg), METH_VARARGS},
+    {"setPrecision", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_setPrecision), METH_VARARGS},
+    {"setRange", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_setRange), METH_VARARGS},
+    {"setReadOnly", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_setReadOnly), METH_VARARGS},
+    {"setRelTol", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_setRelTol), METH_VARARGS},
+    {"setScale", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_setScale), METH_VARARGS},
+    {"setSingleStep", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_setSingleStep), METH_VARARGS},
+    {"setSize", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_setSize), METH_VARARGS},
+    {"setUnit", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_setUnit), METH_VARARGS},
+    {"setValue", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_setValue), METH_VARARGS},
+    {"singleStep", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_singleStep), METH_O},
+    {"size", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_size), METH_O},
+    {"subComplexPropertyManager", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_subComplexPropertyManager), METH_NOARGS},
+    {"uninitializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_uninitializeProperty), METH_O},
+    {"unit", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_unit), METH_O},
+    {"unitText", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_unitText), METH_O},
+    {"value", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_value), METH_O},
+    {"valueText", reinterpret_cast<PyCFunction>(Sbk_QtTFTensorPropertyManagerFunc_valueText), METH_O},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -2999,61 +3128,63 @@ static void QtTFTensorPropertyManager_PythonToCpp_QtTFTensorPropertyManager_PTR(
 static PythonToCppFunc is_QtTFTensorPropertyManager_PythonToCpp_QtTFTensorPropertyManager_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtTFTensorPropertyManager_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtTFTensorPropertyManager_TypeF())))
         return QtTFTensorPropertyManager_PythonToCpp_QtTFTensorPropertyManager_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtTFTensorPropertyManager_PTR_CppToPython_QtTFTensorPropertyManager(const void* cppIn) {
-    return PySide::getWrapperForQObject((::QtTFTensorPropertyManager*)cppIn, Sbk_QtTFTensorPropertyManager_TypeF());
+    return PySide::getWrapperForQObject(reinterpret_cast<::QtTFTensorPropertyManager*>(const_cast<void*>(cppIn)), Sbk_QtTFTensorPropertyManager_TypeF());
 
 }
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtTFTensorPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtTFTensorPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.absTol(property:qtpropertybrowser.QtProperty)->double\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.connect_signals()\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.disconnect_signals()\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.foreground(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QBrush\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.format(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.Format\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.formatText(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.isReadOnly(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.maximum(property:qtpropertybrowser.QtProperty)->double\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.minimum(property:qtpropertybrowser.QtProperty)->double\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.pkAvg(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.PkAvg\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.pkAvgText(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.precision(property:qtpropertybrowser.QtProperty)->int\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.reinitializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.relTol(property:qtpropertybrowser.QtProperty)->double\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.scale(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.Scale\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.setAbsTol(property:qtpropertybrowser.QtProperty,absTol:QVector)\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.setFormat(property:qtpropertybrowser.QtProperty,format_:qtpropertybrowser.Format)\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.setMaximum(property:qtpropertybrowser.QtProperty,maxVal:QVector)\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.setMinimum(property:qtpropertybrowser.QtProperty,minVal:QVector)\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.setPkAvg(property:qtpropertybrowser.QtProperty,pkAvg:qtpropertybrowser.PkAvg)\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.setPrecision(property:qtpropertybrowser.QtProperty,prec:int)\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.setRange(property:qtpropertybrowser.QtProperty,minVal:QVector,maxVal:QVector)\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.setReadOnly(property:qtpropertybrowser.QtProperty,readOnly:bool)\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.setRelTol(property:qtpropertybrowser.QtProperty,relTol:QVector)\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.setScale(property:qtpropertybrowser.QtProperty,scale_:qtpropertybrowser.Scale)\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.setSingleStep(property:qtpropertybrowser.QtProperty,step:QVector)\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.setUnit(property:qtpropertybrowser.QtProperty,unit:QString)\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:QVector)\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.singleStep(property:qtpropertybrowser.QtProperty)->QComplex\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.subComplexPropertyManager()->qtpropertybrowser.QtComplexPropertyManager\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.unit(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.unitText(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.value(property:qtpropertybrowser.QtProperty)->QComplex\n"
-    "qtpropertybrowser.QtTFTensorPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
-;
+static const char *QtTFTensorPropertyManager_SignatureStrings[] = {
+    "qtpropertybrowser.QtTFTensorPropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtTFTensorPropertyManager.absTol(property:qtpropertybrowser.QtProperty)->QVector[double]",
+    "qtpropertybrowser.QtTFTensorPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtTFTensorPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtTFTensorPropertyManager.connect_signals()",
+    "qtpropertybrowser.QtTFTensorPropertyManager.disconnect_signals()",
+    "qtpropertybrowser.QtTFTensorPropertyManager.foreground(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QBrush",
+    "qtpropertybrowser.QtTFTensorPropertyManager.format(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.Format",
+    "qtpropertybrowser.QtTFTensorPropertyManager.formatText(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtTFTensorPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtTFTensorPropertyManager.isReadOnly(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtTFTensorPropertyManager.maximum(property:qtpropertybrowser.QtProperty)->QVector[double]",
+    "qtpropertybrowser.QtTFTensorPropertyManager.minimum(property:qtpropertybrowser.QtProperty)->QVector[double]",
+    "qtpropertybrowser.QtTFTensorPropertyManager.pkAvg(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.PkAvg",
+    "qtpropertybrowser.QtTFTensorPropertyManager.pkAvgText(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtTFTensorPropertyManager.precision(property:qtpropertybrowser.QtProperty)->int",
+    "qtpropertybrowser.QtTFTensorPropertyManager.reinitializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtTFTensorPropertyManager.relTol(property:qtpropertybrowser.QtProperty)->QVector[double]",
+    "qtpropertybrowser.QtTFTensorPropertyManager.scale(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.Scale",
+    "qtpropertybrowser.QtTFTensorPropertyManager.setAbsTol(property:qtpropertybrowser.QtProperty,absTol:QVector[double])",
+    "qtpropertybrowser.QtTFTensorPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
+    "qtpropertybrowser.QtTFTensorPropertyManager.setFormat(property:qtpropertybrowser.QtProperty,format_:qtpropertybrowser.Format)",
+    "qtpropertybrowser.QtTFTensorPropertyManager.setMaximum(property:qtpropertybrowser.QtProperty,maxVal:QVector[double])",
+    "qtpropertybrowser.QtTFTensorPropertyManager.setMinimum(property:qtpropertybrowser.QtProperty,minVal:QVector[double])",
+    "qtpropertybrowser.QtTFTensorPropertyManager.setPkAvg(property:qtpropertybrowser.QtProperty,pkAvg:qtpropertybrowser.PkAvg)",
+    "qtpropertybrowser.QtTFTensorPropertyManager.setPrecision(property:qtpropertybrowser.QtProperty,prec:int)",
+    "qtpropertybrowser.QtTFTensorPropertyManager.setRange(property:qtpropertybrowser.QtProperty,minVal:QVector[double],maxVal:QVector[double])",
+    "qtpropertybrowser.QtTFTensorPropertyManager.setReadOnly(property:qtpropertybrowser.QtProperty,readOnly:bool)",
+    "qtpropertybrowser.QtTFTensorPropertyManager.setRelTol(property:qtpropertybrowser.QtProperty,relTol:QVector[double])",
+    "qtpropertybrowser.QtTFTensorPropertyManager.setScale(property:qtpropertybrowser.QtProperty,scale_:qtpropertybrowser.Scale)",
+    "qtpropertybrowser.QtTFTensorPropertyManager.setSingleStep(property:qtpropertybrowser.QtProperty,step:QVector[QComplex])",
+    "qtpropertybrowser.QtTFTensorPropertyManager.setSize(property:qtpropertybrowser.QtProperty,size:int)",
+    "qtpropertybrowser.QtTFTensorPropertyManager.setUnit(property:qtpropertybrowser.QtProperty,unit:QString)",
+    "qtpropertybrowser.QtTFTensorPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:QVector[QComplex])",
+    "qtpropertybrowser.QtTFTensorPropertyManager.singleStep(property:qtpropertybrowser.QtProperty)->QVector[QComplex]",
+    "qtpropertybrowser.QtTFTensorPropertyManager.size(property:qtpropertybrowser.QtProperty)->int",
+    "qtpropertybrowser.QtTFTensorPropertyManager.subComplexPropertyManager()->qtpropertybrowser.QtComplexPropertyManager",
+    "qtpropertybrowser.QtTFTensorPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtTFTensorPropertyManager.unit(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtTFTensorPropertyManager.unitText(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtTFTensorPropertyManager.value(property:qtpropertybrowser.QtProperty)->QVector[QComplex]",
+    "qtpropertybrowser.QtTFTensorPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
+    nullptr}; // Sentinel
 
 void init_QtTFTensorPropertyManager(PyObject* module)
 {
@@ -3062,7 +3193,7 @@ void init_QtTFTensorPropertyManager(PyObject* module)
         "QtTFTensorPropertyManager",
         "QtTFTensorPropertyManager*",
         &Sbk_QtTFTensorPropertyManager_spec,
-        QtTFTensorPropertyManager_SignaturesString,
+        QtTFTensorPropertyManager_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtTFTensorPropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

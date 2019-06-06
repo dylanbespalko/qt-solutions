@@ -38,6 +38,8 @@
 #include <cctype>
 #include <cstring>
 
+QT_WARNING_DISABLE_DEPRECATED
+
 
 
 template <class T>
@@ -53,12 +55,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -68,7 +72,8 @@ void QtFontPropertyManagerWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtFontPropertyManagerWrapper::QtFontPropertyManagerWrapper(QObject * parent) : QtFontPropertyManager(parent) {
+QtFontPropertyManagerWrapper::QtFontPropertyManagerWrapper(QObject * parent) : QtFontPropertyManager(parent)
+{
     // ... middle
 }
 
@@ -846,6 +851,7 @@ Sbk_QtFontPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwds)
     PythonToCppFunc pythonToCpp[] = { nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -1006,7 +1012,7 @@ static PyObject* Sbk_QtFontPropertyManagerFunc_checkIcon(PyObject* self, PyObjec
         if (!PyErr_Occurred()) {
             // checkIcon(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QIcon cppResult = ((::QtFontPropertyManagerWrapper*) cppSelf)->QtFontPropertyManagerWrapper::checkIcon_protected(cppArg0);
+            QIcon cppResult = static_cast<::QtFontPropertyManagerWrapper*>(cppSelf)->QtFontPropertyManagerWrapper::checkIcon_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtGuiTypes[SBK_QICON_IDX]), &cppResult);
         }
@@ -1053,7 +1059,7 @@ static PyObject* Sbk_QtFontPropertyManagerFunc_initializeProperty(PyObject* self
         if (!PyErr_Occurred()) {
             // initializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtFontPropertyManagerWrapper*) cppSelf)->QtFontPropertyManagerWrapper::initializeProperty_protected(cppArg0);
+            static_cast<::QtFontPropertyManagerWrapper*>(cppSelf)->QtFontPropertyManagerWrapper::initializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -1079,6 +1085,7 @@ static PyObject* Sbk_QtFontPropertyManagerFunc_setCheck(PyObject* self, PyObject
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1137,6 +1144,7 @@ static PyObject* Sbk_QtFontPropertyManagerFunc_setValue(PyObject* self, PyObject
     PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
@@ -1302,7 +1310,7 @@ static PyObject* Sbk_QtFontPropertyManagerFunc_uninitializeProperty(PyObject* se
         if (!PyErr_Occurred()) {
             // uninitializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtFontPropertyManagerWrapper*) cppSelf)->QtFontPropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
+            static_cast<::QtFontPropertyManagerWrapper*>(cppSelf)->QtFontPropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
@@ -1396,7 +1404,7 @@ static PyObject* Sbk_QtFontPropertyManagerFunc_valueIcon(PyObject* self, PyObjec
         if (!PyErr_Occurred()) {
             // valueIcon(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QIcon cppResult = ((::QtFontPropertyManagerWrapper*) cppSelf)->QtFontPropertyManagerWrapper::valueIcon_protected(cppArg0);
+            QIcon cppResult = static_cast<::QtFontPropertyManagerWrapper*>(cppSelf)->QtFontPropertyManagerWrapper::valueIcon_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtGuiTypes[SBK_QICON_IDX]), &cppResult);
         }
@@ -1444,7 +1452,7 @@ static PyObject* Sbk_QtFontPropertyManagerFunc_valueText(PyObject* self, PyObjec
         if (!PyErr_Occurred()) {
             // valueText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = ((::QtFontPropertyManagerWrapper*) cppSelf)->QtFontPropertyManagerWrapper::valueText_protected(cppArg0);
+            QString cppResult = static_cast<::QtFontPropertyManagerWrapper*>(cppSelf)->QtFontPropertyManagerWrapper::valueText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -1462,18 +1470,18 @@ static PyObject* Sbk_QtFontPropertyManagerFunc_valueText(PyObject* self, PyObjec
 }
 
 static PyMethodDef Sbk_QtFontPropertyManager_methods[] = {
-    {"check", (PyCFunction)Sbk_QtFontPropertyManagerFunc_check, METH_O},
-    {"checkIcon", (PyCFunction)Sbk_QtFontPropertyManagerFunc_checkIcon, METH_O},
-    {"initializeProperty", (PyCFunction)Sbk_QtFontPropertyManagerFunc_initializeProperty, METH_O},
-    {"setCheck", (PyCFunction)Sbk_QtFontPropertyManagerFunc_setCheck, METH_VARARGS},
-    {"setValue", (PyCFunction)Sbk_QtFontPropertyManagerFunc_setValue, METH_VARARGS},
-    {"subBoolPropertyManager", (PyCFunction)Sbk_QtFontPropertyManagerFunc_subBoolPropertyManager, METH_NOARGS},
-    {"subEnumPropertyManager", (PyCFunction)Sbk_QtFontPropertyManagerFunc_subEnumPropertyManager, METH_NOARGS},
-    {"subIntPropertyManager", (PyCFunction)Sbk_QtFontPropertyManagerFunc_subIntPropertyManager, METH_NOARGS},
-    {"uninitializeProperty", (PyCFunction)Sbk_QtFontPropertyManagerFunc_uninitializeProperty, METH_O},
-    {"value", (PyCFunction)Sbk_QtFontPropertyManagerFunc_value, METH_O},
-    {"valueIcon", (PyCFunction)Sbk_QtFontPropertyManagerFunc_valueIcon, METH_O},
-    {"valueText", (PyCFunction)Sbk_QtFontPropertyManagerFunc_valueText, METH_O},
+    {"check", reinterpret_cast<PyCFunction>(Sbk_QtFontPropertyManagerFunc_check), METH_O},
+    {"checkIcon", reinterpret_cast<PyCFunction>(Sbk_QtFontPropertyManagerFunc_checkIcon), METH_O},
+    {"initializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtFontPropertyManagerFunc_initializeProperty), METH_O},
+    {"setCheck", reinterpret_cast<PyCFunction>(Sbk_QtFontPropertyManagerFunc_setCheck), METH_VARARGS},
+    {"setValue", reinterpret_cast<PyCFunction>(Sbk_QtFontPropertyManagerFunc_setValue), METH_VARARGS},
+    {"subBoolPropertyManager", reinterpret_cast<PyCFunction>(Sbk_QtFontPropertyManagerFunc_subBoolPropertyManager), METH_NOARGS},
+    {"subEnumPropertyManager", reinterpret_cast<PyCFunction>(Sbk_QtFontPropertyManagerFunc_subEnumPropertyManager), METH_NOARGS},
+    {"subIntPropertyManager", reinterpret_cast<PyCFunction>(Sbk_QtFontPropertyManagerFunc_subIntPropertyManager), METH_NOARGS},
+    {"uninitializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtFontPropertyManagerFunc_uninitializeProperty), METH_O},
+    {"value", reinterpret_cast<PyCFunction>(Sbk_QtFontPropertyManagerFunc_value), METH_O},
+    {"valueIcon", reinterpret_cast<PyCFunction>(Sbk_QtFontPropertyManagerFunc_valueIcon), METH_O},
+    {"valueText", reinterpret_cast<PyCFunction>(Sbk_QtFontPropertyManagerFunc_valueText), METH_O},
 
     {nullptr, nullptr} // Sentinel
 };
@@ -1543,34 +1551,34 @@ static void QtFontPropertyManager_PythonToCpp_QtFontPropertyManager_PTR(PyObject
 static PythonToCppFunc is_QtFontPropertyManager_PythonToCpp_QtFontPropertyManager_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtFontPropertyManager_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtFontPropertyManager_TypeF())))
         return QtFontPropertyManager_PythonToCpp_QtFontPropertyManager_PTR;
     return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtFontPropertyManager_PTR_CppToPython_QtFontPropertyManager(const void* cppIn) {
-    return PySide::getWrapperForQObject((::QtFontPropertyManager*)cppIn, Sbk_QtFontPropertyManager_TypeF());
+    return PySide::getWrapperForQObject(reinterpret_cast<::QtFontPropertyManager*>(const_cast<void*>(cppIn)), Sbk_QtFontPropertyManager_TypeF());
 
 }
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtFontPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtFontPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtFontPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtFontPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtFontPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtFontPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
-    "qtpropertybrowser.QtFontPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtGui.QFont)\n"
-    "qtpropertybrowser.QtFontPropertyManager.subBoolPropertyManager()->qtpropertybrowser.QtBoolPropertyManager\n"
-    "qtpropertybrowser.QtFontPropertyManager.subEnumPropertyManager()->qtpropertybrowser.QtEnumPropertyManager\n"
-    "qtpropertybrowser.QtFontPropertyManager.subIntPropertyManager()->qtpropertybrowser.QtIntPropertyManager\n"
-    "qtpropertybrowser.QtFontPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtFontPropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QFont\n"
-    "qtpropertybrowser.QtFontPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtFontPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
-;
+static const char *QtFontPropertyManager_SignatureStrings[] = {
+    "qtpropertybrowser.QtFontPropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtFontPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtFontPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtFontPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtFontPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
+    "qtpropertybrowser.QtFontPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtGui.QFont)",
+    "qtpropertybrowser.QtFontPropertyManager.subBoolPropertyManager()->qtpropertybrowser.QtBoolPropertyManager",
+    "qtpropertybrowser.QtFontPropertyManager.subEnumPropertyManager()->qtpropertybrowser.QtEnumPropertyManager",
+    "qtpropertybrowser.QtFontPropertyManager.subIntPropertyManager()->qtpropertybrowser.QtIntPropertyManager",
+    "qtpropertybrowser.QtFontPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtFontPropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QFont",
+    "qtpropertybrowser.QtFontPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtFontPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
+    nullptr}; // Sentinel
 
 void init_QtFontPropertyManager(PyObject* module)
 {
@@ -1579,7 +1587,7 @@ void init_QtFontPropertyManager(PyObject* module)
         "QtFontPropertyManager",
         "QtFontPropertyManager*",
         &Sbk_QtFontPropertyManager_spec,
-        QtFontPropertyManager_SignaturesString,
+        QtFontPropertyManager_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtFontPropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,
