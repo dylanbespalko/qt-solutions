@@ -507,8 +507,8 @@ void QtTreePropertyBrowserPrivate::init(QWidget *parent)
     m_delegate = new QtPropertyEditorDelegate(parent);
     m_delegate->setEditorPrivate(this);
     m_treeWidget->setItemDelegate(m_delegate);
-    m_treeWidget->header()->setMovable(false);
-    m_treeWidget->header()->setResizeMode(QHeaderView::Interactive);
+    m_treeWidget->header()->setSectionsMovable(false);
+    m_treeWidget->header()->setSectionResizeMode(QHeaderView::Interactive);
     m_treeWidget->header()->setMinimumSectionSize(40);
     m_treeWidget->header()->setCascadingSectionResizes(true);
 
@@ -534,11 +534,11 @@ void QtTreePropertyBrowserPrivate::updateAttributes()
     labels.append(QCoreApplication::translate("QtTreePropertyBrowser", "Value"));
     if (m_treeWidget->columnCount() > 0){
         m_treeWidget->header()->setStretchLastSection(true);
-        m_treeWidget->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+        m_treeWidget->header()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
     }
     if (m_treeWidget->columnCount() > 1){
         m_treeWidget->header()->setStretchLastSection(false);
-        m_treeWidget->header()->setResizeMode(1, QHeaderView::Stretch); // QHeaderView::Interactive
+        m_treeWidget->header()->setSectionResizeMode(1, QHeaderView::Stretch); // QHeaderView::Interactive
         attributeWidth = metrics.width("12.34<-180.00");
         m_treeWidget->header()->resizeSection(1, attributeWidth);
     }
@@ -548,7 +548,7 @@ void QtTreePropertyBrowserPrivate::updateAttributes()
                 attributeNames << "Unit";
                 m_treeWidget->setColumnCount(2+index+1);
                 labels.append(QCoreApplication::translate("QtTreePropertyBrowser",
-                                                          attributeNames.at(index).toAscii()));
+                                                          attributeNames.at(index).toUtf8()));
                 attributeWidth = 40+metrics.width("dBmrW");
                 m_treeWidget->header()->resizeSection(2+index, attributeWidth);
                 break;
@@ -556,7 +556,7 @@ void QtTreePropertyBrowserPrivate::updateAttributes()
                 attributeNames << "PkAvg";
                 m_treeWidget->setColumnCount(2+index+1);
                 labels.append(QCoreApplication::translate("QtTreePropertyBrowser",
-                                                          attributeNames.at(index).toAscii()));
+                                                          attributeNames.at(index).toUtf8()));
                 attributeWidth = 40+metrics.width("avg");
                 m_treeWidget->header()->resizeSection(2+index, attributeWidth);
                 break;
@@ -564,7 +564,7 @@ void QtTreePropertyBrowserPrivate::updateAttributes()
                 attributeNames << "Format";
                 m_treeWidget->setColumnCount(2+index+1);
                 labels.append(QCoreApplication::translate("QtTreePropertyBrowser",
-                                                          attributeNames.at(index).toAscii()));
+                                                          attributeNames.at(index).toUtf8()));
                 attributeWidth = 45+metrics.width("Log<Deg");
                 m_treeWidget->header()->resizeSection(2+index, attributeWidth);
                 break;
@@ -572,7 +572,7 @@ void QtTreePropertyBrowserPrivate::updateAttributes()
                 attributeNames << "Min";
                 m_treeWidget->setColumnCount(2+index+1);
                 labels.append(QCoreApplication::translate("QtTreePropertyBrowser",
-                                                          attributeNames.at(index).toAscii()));
+                                                          attributeNames.at(index).toUtf8()));
                 attributeWidth = metrics.width("-12.3e10");
                 m_treeWidget->header()->resizeSection(2+index, attributeWidth);
                 break;
@@ -580,7 +580,7 @@ void QtTreePropertyBrowserPrivate::updateAttributes()
                 attributeNames << "Max";
                 m_treeWidget->setColumnCount(2+index+1);
                 labels.append(QCoreApplication::translate("QtTreePropertyBrowser",
-                                                          attributeNames.at(index).toAscii()));
+                                                          attributeNames.at(index).toUtf8()));
                 attributeWidth = metrics.width("+12.3e10");
                 m_treeWidget->header()->resizeSection(2+index, attributeWidth);
                 break;
@@ -588,7 +588,7 @@ void QtTreePropertyBrowserPrivate::updateAttributes()
                 attributeNames << "?";
                 m_treeWidget->setColumnCount(2+index+1);
                 labels.append(QCoreApplication::translate("QtTreePropertyBrowser",
-                                                          attributeNames.at(index).toAscii()));
+                                                          attributeNames.at(index).toUtf8()));
                 attributeWidth = metrics.width("?");
                 m_treeWidget->header()->resizeSection(2+index, attributeWidth);
                 break;
@@ -1048,7 +1048,7 @@ void QtTreePropertyBrowser::setResizeMode(QtTreePropertyBrowser::ResizeMode mode
         case QtTreePropertyBrowser::ResizeToContents: m = QHeaderView::ResizeToContents; break;
         default:                                      m = QHeaderView::Stretch;          break;
     }
-    d_ptr->m_treeWidget->header()->setResizeMode(m);
+    d_ptr->m_treeWidget->header()->setSectionResizeMode(m);
 }
 
 /*!
