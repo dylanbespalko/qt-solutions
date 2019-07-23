@@ -45,14 +45,12 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
         ++typeName;
-        --size;
-    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    memcpy(result, typeName, size);
+    strncpy(result, typeName, size);
     return result;
 }
 
@@ -262,12 +260,12 @@ static PyObject* QtBrowserItem_PTR_CppToPython_QtBrowserItem(const void* cppIn) 
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-static const char *QtBrowserItem_SignatureStrings[] = {
-    "qtpropertybrowser.QtBrowserItem.browser()->qtpropertybrowser.QtAbstractPropertyBrowser",
-    "qtpropertybrowser.QtBrowserItem.children()->QList[qtpropertybrowser.QtBrowserItem]",
-    "qtpropertybrowser.QtBrowserItem.parent()->qtpropertybrowser.QtBrowserItem",
-    "qtpropertybrowser.QtBrowserItem.property()->qtpropertybrowser.QtProperty",
-    nullptr}; // Sentinel
+const char QtBrowserItem_SignaturesString[] = ""
+    "qtpropertybrowser.QtBrowserItem.browser()->qtpropertybrowser.QtAbstractPropertyBrowser\n"
+    "qtpropertybrowser.QtBrowserItem.children()->QList[qtpropertybrowser.QtBrowserItem]\n"
+    "qtpropertybrowser.QtBrowserItem.parent()->qtpropertybrowser.QtBrowserItem\n"
+    "qtpropertybrowser.QtBrowserItem.property()->qtpropertybrowser.QtProperty\n"
+;
 
 void init_QtBrowserItem(PyObject* module)
 {
@@ -276,7 +274,7 @@ void init_QtBrowserItem(PyObject* module)
         "QtBrowserItem",
         "QtBrowserItem*",
         &Sbk_QtBrowserItem_spec,
-        QtBrowserItem_SignatureStrings,
+        QtBrowserItem_SignaturesString,
         0,
         0,
         0,

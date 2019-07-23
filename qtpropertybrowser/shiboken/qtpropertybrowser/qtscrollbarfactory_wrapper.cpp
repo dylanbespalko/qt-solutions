@@ -47,14 +47,12 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
         ++typeName;
-        --size;
-    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    memcpy(result, typeName, size);
+    strncpy(result, typeName, size);
     return result;
 }
 
@@ -608,13 +606,13 @@ static PyObject* QtScrollBarFactory_PTR_CppToPython_QtScrollBarFactory(const voi
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-static const char *QtScrollBarFactory_SignatureStrings[] = {
-    "qtpropertybrowser.QtScrollBarFactory(parent:PySide2.QtCore.QObject=nullptr)",
-    "qtpropertybrowser.QtScrollBarFactory.connectPropertyManager(manager:qtpropertybrowser.QtIntPropertyManager)",
-    "qtpropertybrowser.QtScrollBarFactory.createAttributeEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget",
-    "qtpropertybrowser.QtScrollBarFactory.createEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget",
-    "qtpropertybrowser.QtScrollBarFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtIntPropertyManager)",
-    nullptr}; // Sentinel
+const char QtScrollBarFactory_SignaturesString[] = ""
+    "qtpropertybrowser.QtScrollBarFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
+    "qtpropertybrowser.QtScrollBarFactory.connectPropertyManager(manager:qtpropertybrowser.QtIntPropertyManager)\n"
+    "qtpropertybrowser.QtScrollBarFactory.createAttributeEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget\n"
+    "qtpropertybrowser.QtScrollBarFactory.createEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
+    "qtpropertybrowser.QtScrollBarFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtIntPropertyManager)\n"
+;
 
 void init_QtScrollBarFactory(PyObject* module)
 {
@@ -623,7 +621,7 @@ void init_QtScrollBarFactory(PyObject* module)
         "QtScrollBarFactory",
         "QtScrollBarFactory*",
         &Sbk_QtScrollBarFactory_spec,
-        QtScrollBarFactory_SignatureStrings,
+        QtScrollBarFactory_SignaturesString,
         &Shiboken::callCppDestructor< ::QtScrollBarFactory >,
         0,
         0,

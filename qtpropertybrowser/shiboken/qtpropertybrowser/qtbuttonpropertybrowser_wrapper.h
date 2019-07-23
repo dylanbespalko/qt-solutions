@@ -354,7 +354,7 @@ public:
 class QPaintDeviceWrapper : public QPaintDevice
 {
 public:
-    QPaintDeviceWrapper() noexcept;
+    QPaintDeviceWrapper();
     int devType() const override;
     inline void initPainter_protected(QPainter * painter) const { QPaintDevice::initPainter(painter); }
     void initPainter(QPainter * painter) const override;

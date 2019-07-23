@@ -68,14 +68,12 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
         ++typeName;
-        --size;
-    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    memcpy(result, typeName, size);
+    strncpy(result, typeName, size);
     return result;
 }
 
@@ -2232,20 +2230,20 @@ static PyObject* QtGroupBoxPropertyBrowser_PTR_CppToPython_QtGroupBoxPropertyBro
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-static const char *QtGroupBoxPropertyBrowser_SignatureStrings[] = {
-    "qtpropertybrowser.QtGroupBoxPropertyBrowser(parent:PySide2.QtWidgets.QWidget=nullptr)",
-    "qtpropertybrowser.QtGroupBoxPropertyBrowser.attribute1()->qtpropertybrowser.BrowserCol",
-    "qtpropertybrowser.QtGroupBoxPropertyBrowser.attribute2()->qtpropertybrowser.BrowserCol",
-    "qtpropertybrowser.QtGroupBoxPropertyBrowser.attribute3()->qtpropertybrowser.BrowserCol",
-    "qtpropertybrowser.QtGroupBoxPropertyBrowser.attributes()->QList[qtpropertybrowser.BrowserCol]",
-    "qtpropertybrowser.QtGroupBoxPropertyBrowser.itemChanged(item:qtpropertybrowser.QtBrowserItem)",
-    "qtpropertybrowser.QtGroupBoxPropertyBrowser.itemInserted(item:qtpropertybrowser.QtBrowserItem,afterItem:qtpropertybrowser.QtBrowserItem)",
-    "qtpropertybrowser.QtGroupBoxPropertyBrowser.itemRemoved(item:qtpropertybrowser.QtBrowserItem)",
-    "qtpropertybrowser.QtGroupBoxPropertyBrowser.setAttribute1(attribute:qtpropertybrowser.BrowserCol)",
-    "qtpropertybrowser.QtGroupBoxPropertyBrowser.setAttribute2(attribute:qtpropertybrowser.BrowserCol)",
-    "qtpropertybrowser.QtGroupBoxPropertyBrowser.setAttribute3(attribute:qtpropertybrowser.BrowserCol)",
-    "qtpropertybrowser.QtGroupBoxPropertyBrowser.setAttributes(attributeList:QList[qtpropertybrowser.BrowserCol])",
-    nullptr}; // Sentinel
+const char QtGroupBoxPropertyBrowser_SignaturesString[] = ""
+    "qtpropertybrowser.QtGroupBoxPropertyBrowser(parent:PySide2.QtWidgets.QWidget=nullptr)\n"
+    "qtpropertybrowser.QtGroupBoxPropertyBrowser.attribute1()->qtpropertybrowser.BrowserCol\n"
+    "qtpropertybrowser.QtGroupBoxPropertyBrowser.attribute2()->qtpropertybrowser.BrowserCol\n"
+    "qtpropertybrowser.QtGroupBoxPropertyBrowser.attribute3()->qtpropertybrowser.BrowserCol\n"
+    "qtpropertybrowser.QtGroupBoxPropertyBrowser.attributes()->QList[qtpropertybrowser.BrowserCol]\n"
+    "qtpropertybrowser.QtGroupBoxPropertyBrowser.itemChanged(item:qtpropertybrowser.QtBrowserItem)\n"
+    "qtpropertybrowser.QtGroupBoxPropertyBrowser.itemInserted(item:qtpropertybrowser.QtBrowserItem,afterItem:qtpropertybrowser.QtBrowserItem)\n"
+    "qtpropertybrowser.QtGroupBoxPropertyBrowser.itemRemoved(item:qtpropertybrowser.QtBrowserItem)\n"
+    "qtpropertybrowser.QtGroupBoxPropertyBrowser.setAttribute1(attribute:qtpropertybrowser.BrowserCol)\n"
+    "qtpropertybrowser.QtGroupBoxPropertyBrowser.setAttribute2(attribute:qtpropertybrowser.BrowserCol)\n"
+    "qtpropertybrowser.QtGroupBoxPropertyBrowser.setAttribute3(attribute:qtpropertybrowser.BrowserCol)\n"
+    "qtpropertybrowser.QtGroupBoxPropertyBrowser.setAttributes(attributeList:QList[qtpropertybrowser.BrowserCol])\n"
+;
 
 void init_QtGroupBoxPropertyBrowser(PyObject* module)
 {
@@ -2254,7 +2252,7 @@ void init_QtGroupBoxPropertyBrowser(PyObject* module)
         "QtGroupBoxPropertyBrowser",
         "QtGroupBoxPropertyBrowser*",
         &Sbk_QtGroupBoxPropertyBrowser_spec,
-        QtGroupBoxPropertyBrowser_SignatureStrings,
+        QtGroupBoxPropertyBrowser_SignaturesString,
         &Shiboken::callCppDestructor< ::QtGroupBoxPropertyBrowser >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX]),
         0,

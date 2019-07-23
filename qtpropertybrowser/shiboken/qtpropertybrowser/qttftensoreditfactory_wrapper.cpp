@@ -48,14 +48,12 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
         ++typeName;
-        --size;
-    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    memcpy(result, typeName, size);
+    strncpy(result, typeName, size);
     return result;
 }
 
@@ -683,15 +681,15 @@ static PyObject* QtTFTensorEditFactory_PTR_CppToPython_QtTFTensorEditFactory(con
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-static const char *QtTFTensorEditFactory_SignatureStrings[] = {
-    "qtpropertybrowser.QtTFTensorEditFactory(parent:PySide2.QtCore.QObject=nullptr)",
-    "qtpropertybrowser.QtTFTensorEditFactory.connectPropertyManager(manager:qtpropertybrowser.QtTFTensorPropertyManager)",
-    "qtpropertybrowser.QtTFTensorEditFactory.createAttributeEditor(manager:qtpropertybrowser.QtTFTensorPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget",
-    "qtpropertybrowser.QtTFTensorEditFactory.createEditor(manager:qtpropertybrowser.QtTFTensorPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget",
-    "qtpropertybrowser.QtTFTensorEditFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtTFTensorPropertyManager)",
-    "qtpropertybrowser.QtTFTensorEditFactory.setSubFactory(subFactory:qtpropertybrowser.QtComplexEditFactory)",
-    "qtpropertybrowser.QtTFTensorEditFactory.subFactory()->qtpropertybrowser.QtComplexEditFactory",
-    nullptr}; // Sentinel
+const char QtTFTensorEditFactory_SignaturesString[] = ""
+    "qtpropertybrowser.QtTFTensorEditFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
+    "qtpropertybrowser.QtTFTensorEditFactory.connectPropertyManager(manager:qtpropertybrowser.QtTFTensorPropertyManager)\n"
+    "qtpropertybrowser.QtTFTensorEditFactory.createAttributeEditor(manager:qtpropertybrowser.QtTFTensorPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget\n"
+    "qtpropertybrowser.QtTFTensorEditFactory.createEditor(manager:qtpropertybrowser.QtTFTensorPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
+    "qtpropertybrowser.QtTFTensorEditFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtTFTensorPropertyManager)\n"
+    "qtpropertybrowser.QtTFTensorEditFactory.setSubFactory(subFactory:qtpropertybrowser.QtComplexEditFactory)\n"
+    "qtpropertybrowser.QtTFTensorEditFactory.subFactory()->qtpropertybrowser.QtComplexEditFactory\n"
+;
 
 void init_QtTFTensorEditFactory(PyObject* module)
 {
@@ -700,7 +698,7 @@ void init_QtTFTensorEditFactory(PyObject* module)
         "QtTFTensorEditFactory",
         "QtTFTensorEditFactory*",
         &Sbk_QtTFTensorEditFactory_spec,
-        QtTFTensorEditFactory_SignatureStrings,
+        QtTFTensorEditFactory_SignaturesString,
         &Shiboken::callCppDestructor< ::QtTFTensorEditFactory >,
         0,
         0,

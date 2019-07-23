@@ -55,14 +55,12 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
         ++typeName;
-        --size;
-    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    memcpy(result, typeName, size);
+    strncpy(result, typeName, size);
     return result;
 }
 
@@ -1568,20 +1566,20 @@ static PyObject* QtPointFPropertyManager_PTR_CppToPython_QtPointFPropertyManager
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-static const char *QtPointFPropertyManager_SignatureStrings[] = {
-    "qtpropertybrowser.QtPointFPropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
-    "qtpropertybrowser.QtPointFPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
-    "qtpropertybrowser.QtPointFPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
-    "qtpropertybrowser.QtPointFPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
-    "qtpropertybrowser.QtPointFPropertyManager.precision(property:qtpropertybrowser.QtProperty)->int",
-    "qtpropertybrowser.QtPointFPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
-    "qtpropertybrowser.QtPointFPropertyManager.setPrecision(property:qtpropertybrowser.QtProperty,prec:int)",
-    "qtpropertybrowser.QtPointFPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtCore.QPointF)",
-    "qtpropertybrowser.QtPointFPropertyManager.subDoublePropertyManager()->qtpropertybrowser.QtDoublePropertyManager",
-    "qtpropertybrowser.QtPointFPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
-    "qtpropertybrowser.QtPointFPropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QPointF",
-    "qtpropertybrowser.QtPointFPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
-    nullptr}; // Sentinel
+const char QtPointFPropertyManager_SignaturesString[] = ""
+    "qtpropertybrowser.QtPointFPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
+    "qtpropertybrowser.QtPointFPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
+    "qtpropertybrowser.QtPointFPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
+    "qtpropertybrowser.QtPointFPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtPointFPropertyManager.precision(property:qtpropertybrowser.QtProperty)->int\n"
+    "qtpropertybrowser.QtPointFPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
+    "qtpropertybrowser.QtPointFPropertyManager.setPrecision(property:qtpropertybrowser.QtProperty,prec:int)\n"
+    "qtpropertybrowser.QtPointFPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtCore.QPointF)\n"
+    "qtpropertybrowser.QtPointFPropertyManager.subDoublePropertyManager()->qtpropertybrowser.QtDoublePropertyManager\n"
+    "qtpropertybrowser.QtPointFPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtPointFPropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QPointF\n"
+    "qtpropertybrowser.QtPointFPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
+;
 
 void init_QtPointFPropertyManager(PyObject* module)
 {
@@ -1590,7 +1588,7 @@ void init_QtPointFPropertyManager(PyObject* module)
         "QtPointFPropertyManager",
         "QtPointFPropertyManager*",
         &Sbk_QtPointFPropertyManager_spec,
-        QtPointFPropertyManager_SignatureStrings,
+        QtPointFPropertyManager_SignaturesString,
         &Shiboken::callCppDestructor< ::QtPointFPropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

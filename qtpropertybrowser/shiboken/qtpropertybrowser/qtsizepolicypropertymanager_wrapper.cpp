@@ -55,14 +55,12 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
         ++typeName;
-        --size;
-    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    memcpy(result, typeName, size);
+    strncpy(result, typeName, size);
     return result;
 }
 
@@ -1487,19 +1485,19 @@ static PyObject* QtSizePolicyPropertyManager_PTR_CppToPython_QtSizePolicyPropert
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-static const char *QtSizePolicyPropertyManager_SignatureStrings[] = {
-    "qtpropertybrowser.QtSizePolicyPropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
-    "qtpropertybrowser.QtSizePolicyPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
-    "qtpropertybrowser.QtSizePolicyPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
-    "qtpropertybrowser.QtSizePolicyPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
-    "qtpropertybrowser.QtSizePolicyPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
-    "qtpropertybrowser.QtSizePolicyPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtWidgets.QSizePolicy)",
-    "qtpropertybrowser.QtSizePolicyPropertyManager.subEnumPropertyManager()->qtpropertybrowser.QtEnumPropertyManager",
-    "qtpropertybrowser.QtSizePolicyPropertyManager.subIntPropertyManager()->qtpropertybrowser.QtIntPropertyManager",
-    "qtpropertybrowser.QtSizePolicyPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
-    "qtpropertybrowser.QtSizePolicyPropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtWidgets.QSizePolicy",
-    "qtpropertybrowser.QtSizePolicyPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
-    nullptr}; // Sentinel
+const char QtSizePolicyPropertyManager_SignaturesString[] = ""
+    "qtpropertybrowser.QtSizePolicyPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
+    "qtpropertybrowser.QtSizePolicyPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
+    "qtpropertybrowser.QtSizePolicyPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
+    "qtpropertybrowser.QtSizePolicyPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtSizePolicyPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
+    "qtpropertybrowser.QtSizePolicyPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtWidgets.QSizePolicy)\n"
+    "qtpropertybrowser.QtSizePolicyPropertyManager.subEnumPropertyManager()->qtpropertybrowser.QtEnumPropertyManager\n"
+    "qtpropertybrowser.QtSizePolicyPropertyManager.subIntPropertyManager()->qtpropertybrowser.QtIntPropertyManager\n"
+    "qtpropertybrowser.QtSizePolicyPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtSizePolicyPropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtWidgets.QSizePolicy\n"
+    "qtpropertybrowser.QtSizePolicyPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
+;
 
 void init_QtSizePolicyPropertyManager(PyObject* module)
 {
@@ -1508,7 +1506,7 @@ void init_QtSizePolicyPropertyManager(PyObject* module)
         "QtSizePolicyPropertyManager",
         "QtSizePolicyPropertyManager*",
         &Sbk_QtSizePolicyPropertyManager_spec,
-        QtSizePolicyPropertyManager_SignatureStrings,
+        QtSizePolicyPropertyManager_SignaturesString,
         &Shiboken::callCppDestructor< ::QtSizePolicyPropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

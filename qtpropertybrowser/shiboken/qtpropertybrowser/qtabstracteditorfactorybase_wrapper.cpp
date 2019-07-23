@@ -51,14 +51,12 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
         ++typeName;
-        --size;
-    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    memcpy(result, typeName, size);
+    strncpy(result, typeName, size);
     return result;
 }
 
@@ -850,13 +848,13 @@ static PyObject* QtAbstractEditorFactoryBase_PTR_CppToPython_QtAbstractEditorFac
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-static const char *QtAbstractEditorFactoryBase_SignatureStrings[] = {
-    "qtpropertybrowser.QtAbstractEditorFactoryBase(parent:PySide2.QtCore.QObject=nullptr)",
-    "qtpropertybrowser.QtAbstractEditorFactoryBase.breakConnection(manager:qtpropertybrowser.QtAbstractPropertyManager)",
-    "qtpropertybrowser.QtAbstractEditorFactoryBase.createAttributeEditor(property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,atttribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget",
-    "qtpropertybrowser.QtAbstractEditorFactoryBase.createEditor(property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget",
-    "qtpropertybrowser.QtAbstractEditorFactoryBase.managerDestroyed(manager:PySide2.QtCore.QObject)",
-    nullptr}; // Sentinel
+const char QtAbstractEditorFactoryBase_SignaturesString[] = ""
+    "qtpropertybrowser.QtAbstractEditorFactoryBase(parent:PySide2.QtCore.QObject=nullptr)\n"
+    "qtpropertybrowser.QtAbstractEditorFactoryBase.breakConnection(manager:qtpropertybrowser.QtAbstractPropertyManager)\n"
+    "qtpropertybrowser.QtAbstractEditorFactoryBase.createAttributeEditor(property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,atttribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget\n"
+    "qtpropertybrowser.QtAbstractEditorFactoryBase.createEditor(property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
+    "qtpropertybrowser.QtAbstractEditorFactoryBase.managerDestroyed(manager:PySide2.QtCore.QObject)\n"
+;
 
 void init_QtAbstractEditorFactoryBase(PyObject* module)
 {
@@ -865,7 +863,7 @@ void init_QtAbstractEditorFactoryBase(PyObject* module)
         "QtAbstractEditorFactoryBase",
         "QtAbstractEditorFactoryBase*",
         &Sbk_QtAbstractEditorFactoryBase_spec,
-        QtAbstractEditorFactoryBase_SignatureStrings,
+        QtAbstractEditorFactoryBase_SignaturesString,
         &Shiboken::callCppDestructor< ::QtAbstractEditorFactoryBase >,
         reinterpret_cast<SbkObjectType *>(SbkPySide2_QtCoreTypes[SBK_QOBJECT_IDX]),
         0,
