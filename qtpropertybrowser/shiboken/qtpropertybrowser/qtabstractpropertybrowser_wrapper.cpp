@@ -68,12 +68,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -2676,26 +2678,26 @@ static PyObject* QtAbstractPropertyBrowser_PTR_CppToPython_QtAbstractPropertyBro
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtAbstractPropertyBrowser_SignaturesString[] = ""
-    "qtpropertybrowser.QtAbstractPropertyBrowser(parent:PySide2.QtWidgets.QWidget=nullptr)\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.addProperty(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.QtBrowserItem\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.clear()\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.createAttributeEditor(property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.createEditor(property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.currentItem()->qtpropertybrowser.QtBrowserItem\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.insertProperty(property:qtpropertybrowser.QtProperty,afterProperty:qtpropertybrowser.QtProperty)->qtpropertybrowser.QtBrowserItem\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.itemChanged(item:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.itemInserted(item:qtpropertybrowser.QtBrowserItem,afterItem:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.itemRemoved(item:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.items(property:qtpropertybrowser.QtProperty)->QList[qtpropertybrowser.QtBrowserItem]\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.properties()->QList[qtpropertybrowser.QtProperty]\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.removeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.setCurrentItem(arg__1:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.setFactoryForManager(arg__1:PyObject,arg__2:PyObject)\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.topLevelItem(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.QtBrowserItem\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.topLevelItems()->QList[qtpropertybrowser.QtBrowserItem]\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.unsetFactoryForManager(manager:qtpropertybrowser.QtAbstractPropertyManager)\n"
-;
+static const char *QtAbstractPropertyBrowser_SignatureStrings[] = {
+    "qtpropertybrowser.QtAbstractPropertyBrowser(parent:PySide2.QtWidgets.QWidget=nullptr)",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.addProperty(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.QtBrowserItem",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.clear()",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.createAttributeEditor(property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.createEditor(property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.currentItem()->qtpropertybrowser.QtBrowserItem",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.insertProperty(property:qtpropertybrowser.QtProperty,afterProperty:qtpropertybrowser.QtProperty)->qtpropertybrowser.QtBrowserItem",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.itemChanged(item:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.itemInserted(item:qtpropertybrowser.QtBrowserItem,afterItem:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.itemRemoved(item:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.items(property:qtpropertybrowser.QtProperty)->QList[qtpropertybrowser.QtBrowserItem]",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.properties()->QList[qtpropertybrowser.QtProperty]",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.removeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.setCurrentItem(arg__1:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.setFactoryForManager(arg__1:PyObject,arg__2:PyObject)",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.topLevelItem(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.QtBrowserItem",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.topLevelItems()->QList[qtpropertybrowser.QtBrowserItem]",
+    "qtpropertybrowser.QtAbstractPropertyBrowser.unsetFactoryForManager(manager:qtpropertybrowser.QtAbstractPropertyManager)",
+    nullptr}; // Sentinel
 
 void init_QtAbstractPropertyBrowser(PyObject* module)
 {
@@ -2704,7 +2706,7 @@ void init_QtAbstractPropertyBrowser(PyObject* module)
         "QtAbstractPropertyBrowser",
         "QtAbstractPropertyBrowser*",
         &Sbk_QtAbstractPropertyBrowser_spec,
-        QtAbstractPropertyBrowser_SignaturesString,
+        QtAbstractPropertyBrowser_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtAbstractPropertyBrowser >,
         reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]),
         0,

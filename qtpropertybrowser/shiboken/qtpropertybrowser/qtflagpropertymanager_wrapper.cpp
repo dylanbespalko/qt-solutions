@@ -54,12 +54,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -1558,20 +1560,20 @@ static PyObject* QtFlagPropertyManager_PTR_CppToPython_QtFlagPropertyManager(con
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtFlagPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtFlagPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtFlagPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtFlagPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtFlagPropertyManager.flagNames(property:qtpropertybrowser.QtProperty)->QStringList\n"
-    "qtpropertybrowser.QtFlagPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtFlagPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
-    "qtpropertybrowser.QtFlagPropertyManager.setFlagNames(property:qtpropertybrowser.QtProperty,names:QStringList)\n"
-    "qtpropertybrowser.QtFlagPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:int)\n"
-    "qtpropertybrowser.QtFlagPropertyManager.subBoolPropertyManager()->qtpropertybrowser.QtBoolPropertyManager\n"
-    "qtpropertybrowser.QtFlagPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtFlagPropertyManager.value(property:qtpropertybrowser.QtProperty)->int\n"
-    "qtpropertybrowser.QtFlagPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
-;
+static const char *QtFlagPropertyManager_SignatureStrings[] = {
+    "qtpropertybrowser.QtFlagPropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtFlagPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtFlagPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtFlagPropertyManager.flagNames(property:qtpropertybrowser.QtProperty)->QStringList",
+    "qtpropertybrowser.QtFlagPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtFlagPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
+    "qtpropertybrowser.QtFlagPropertyManager.setFlagNames(property:qtpropertybrowser.QtProperty,names:QStringList)",
+    "qtpropertybrowser.QtFlagPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:int)",
+    "qtpropertybrowser.QtFlagPropertyManager.subBoolPropertyManager()->qtpropertybrowser.QtBoolPropertyManager",
+    "qtpropertybrowser.QtFlagPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtFlagPropertyManager.value(property:qtpropertybrowser.QtProperty)->int",
+    "qtpropertybrowser.QtFlagPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
+    nullptr}; // Sentinel
 
 void init_QtFlagPropertyManager(PyObject* module)
 {
@@ -1580,7 +1582,7 @@ void init_QtFlagPropertyManager(PyObject* module)
         "QtFlagPropertyManager",
         "QtFlagPropertyManager*",
         &Sbk_QtFlagPropertyManager_spec,
-        QtFlagPropertyManager_SignaturesString,
+        QtFlagPropertyManager_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtFlagPropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

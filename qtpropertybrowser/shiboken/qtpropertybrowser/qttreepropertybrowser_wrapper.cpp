@@ -69,12 +69,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -3324,45 +3326,45 @@ static PyObject* QtTreePropertyBrowser_PTR_CppToPython_QtTreePropertyBrowser(con
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtTreePropertyBrowser_SignaturesString[] = ""
-    "qtpropertybrowser.QtTreePropertyBrowser(parent:PySide2.QtWidgets.QWidget=nullptr)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.alternatingRowColors()->bool\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.attribute1()->qtpropertybrowser.BrowserCol\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.attribute2()->qtpropertybrowser.BrowserCol\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.attribute3()->qtpropertybrowser.BrowserCol\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.attributes()->QList[qtpropertybrowser.BrowserCol]\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.backgroundColor(item:qtpropertybrowser.QtBrowserItem)->PySide2.QtGui.QColor\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.calculatedBackgroundColor(item:qtpropertybrowser.QtBrowserItem)->PySide2.QtGui.QColor\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.editItem(item:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.indentation()->int\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.isExpanded(item:qtpropertybrowser.QtBrowserItem)->bool\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.isHeaderVisible()->bool\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.isItemVisible(item:qtpropertybrowser.QtBrowserItem)->bool\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.itemChanged(item:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.itemInserted(item:qtpropertybrowser.QtBrowserItem,afterItem:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.itemRemoved(item:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.propertiesWithoutValueMarked()->bool\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.resizeMode()->qtpropertybrowser.QtTreePropertyBrowser.ResizeMode\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.resizeSection(logicalIndex:int,size:int)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.rootIsDecorated()->bool\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.sectionSize(logicalIndex:int)->int\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setAlternatingRowColors(enable:bool)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setAttribute1(attribute:qtpropertybrowser.BrowserCol)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setAttribute2(attribute:qtpropertybrowser.BrowserCol)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setAttribute3(attribute:qtpropertybrowser.BrowserCol)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setAttributes(attributeList:QList[qtpropertybrowser.BrowserCol])\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setBackgroundColor(item:qtpropertybrowser.QtBrowserItem,color:PySide2.QtGui.QColor)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setExpanded(item:qtpropertybrowser.QtBrowserItem,expanded:bool)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setHeaderLabels(labels:PySide2.QtCore.QStringList)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setHeaderVisible(visible:bool)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setIndentation(i:int)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setItemVisible(item:qtpropertybrowser.QtBrowserItem,visible:bool)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setPropertiesWithoutValueMarked(mark:bool)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setResizeMode(mode:qtpropertybrowser.QtTreePropertyBrowser.ResizeMode)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setRootIsDecorated(show:bool)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.setSplitterPosition(position:int)\n"
-    "qtpropertybrowser.QtTreePropertyBrowser.splitterPosition()->int\n"
-;
+static const char *QtTreePropertyBrowser_SignatureStrings[] = {
+    "qtpropertybrowser.QtTreePropertyBrowser(parent:PySide2.QtWidgets.QWidget=nullptr)",
+    "qtpropertybrowser.QtTreePropertyBrowser.alternatingRowColors()->bool",
+    "qtpropertybrowser.QtTreePropertyBrowser.attribute1()->qtpropertybrowser.BrowserCol",
+    "qtpropertybrowser.QtTreePropertyBrowser.attribute2()->qtpropertybrowser.BrowserCol",
+    "qtpropertybrowser.QtTreePropertyBrowser.attribute3()->qtpropertybrowser.BrowserCol",
+    "qtpropertybrowser.QtTreePropertyBrowser.attributes()->QList[qtpropertybrowser.BrowserCol]",
+    "qtpropertybrowser.QtTreePropertyBrowser.backgroundColor(item:qtpropertybrowser.QtBrowserItem)->PySide2.QtGui.QColor",
+    "qtpropertybrowser.QtTreePropertyBrowser.calculatedBackgroundColor(item:qtpropertybrowser.QtBrowserItem)->PySide2.QtGui.QColor",
+    "qtpropertybrowser.QtTreePropertyBrowser.editItem(item:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtTreePropertyBrowser.indentation()->int",
+    "qtpropertybrowser.QtTreePropertyBrowser.isExpanded(item:qtpropertybrowser.QtBrowserItem)->bool",
+    "qtpropertybrowser.QtTreePropertyBrowser.isHeaderVisible()->bool",
+    "qtpropertybrowser.QtTreePropertyBrowser.isItemVisible(item:qtpropertybrowser.QtBrowserItem)->bool",
+    "qtpropertybrowser.QtTreePropertyBrowser.itemChanged(item:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtTreePropertyBrowser.itemInserted(item:qtpropertybrowser.QtBrowserItem,afterItem:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtTreePropertyBrowser.itemRemoved(item:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtTreePropertyBrowser.propertiesWithoutValueMarked()->bool",
+    "qtpropertybrowser.QtTreePropertyBrowser.resizeMode()->qtpropertybrowser.QtTreePropertyBrowser.ResizeMode",
+    "qtpropertybrowser.QtTreePropertyBrowser.resizeSection(logicalIndex:int,size:int)",
+    "qtpropertybrowser.QtTreePropertyBrowser.rootIsDecorated()->bool",
+    "qtpropertybrowser.QtTreePropertyBrowser.sectionSize(logicalIndex:int)->int",
+    "qtpropertybrowser.QtTreePropertyBrowser.setAlternatingRowColors(enable:bool)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setAttribute1(attribute:qtpropertybrowser.BrowserCol)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setAttribute2(attribute:qtpropertybrowser.BrowserCol)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setAttribute3(attribute:qtpropertybrowser.BrowserCol)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setAttributes(attributeList:QList[qtpropertybrowser.BrowserCol])",
+    "qtpropertybrowser.QtTreePropertyBrowser.setBackgroundColor(item:qtpropertybrowser.QtBrowserItem,color:PySide2.QtGui.QColor)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setExpanded(item:qtpropertybrowser.QtBrowserItem,expanded:bool)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setHeaderLabels(labels:PySide2.QtCore.QStringList)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setHeaderVisible(visible:bool)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setIndentation(i:int)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setItemVisible(item:qtpropertybrowser.QtBrowserItem,visible:bool)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setPropertiesWithoutValueMarked(mark:bool)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setResizeMode(mode:qtpropertybrowser.QtTreePropertyBrowser.ResizeMode)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setRootIsDecorated(show:bool)",
+    "qtpropertybrowser.QtTreePropertyBrowser.setSplitterPosition(position:int)",
+    "qtpropertybrowser.QtTreePropertyBrowser.splitterPosition()->int",
+    nullptr}; // Sentinel
 
 void init_QtTreePropertyBrowser(PyObject* module)
 {
@@ -3371,7 +3373,7 @@ void init_QtTreePropertyBrowser(PyObject* module)
         "QtTreePropertyBrowser",
         "QtTreePropertyBrowser*",
         &Sbk_QtTreePropertyBrowser_spec,
-        QtTreePropertyBrowser_SignaturesString,
+        QtTreePropertyBrowser_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtTreePropertyBrowser >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX]),
         0,

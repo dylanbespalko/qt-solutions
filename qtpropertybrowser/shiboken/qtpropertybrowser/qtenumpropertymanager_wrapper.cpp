@@ -54,12 +54,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -1688,22 +1690,22 @@ static PyObject* QtEnumPropertyManager_PTR_CppToPython_QtEnumPropertyManager(con
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtEnumPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtEnumPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtEnumPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtEnumPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtEnumPropertyManager.enumIcons(property:qtpropertybrowser.QtProperty)->QMap\n"
-    "qtpropertybrowser.QtEnumPropertyManager.enumNames(property:qtpropertybrowser.QtProperty)->QStringList\n"
-    "qtpropertybrowser.QtEnumPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtEnumPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
-    "qtpropertybrowser.QtEnumPropertyManager.setEnumIcons(property:qtpropertybrowser.QtProperty,icons:QMap)\n"
-    "qtpropertybrowser.QtEnumPropertyManager.setEnumNames(property:qtpropertybrowser.QtProperty,names:QStringList)\n"
-    "qtpropertybrowser.QtEnumPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:int)\n"
-    "qtpropertybrowser.QtEnumPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtEnumPropertyManager.value(property:qtpropertybrowser.QtProperty)->int\n"
-    "qtpropertybrowser.QtEnumPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtEnumPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
-;
+static const char *QtEnumPropertyManager_SignatureStrings[] = {
+    "qtpropertybrowser.QtEnumPropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtEnumPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtEnumPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtEnumPropertyManager.enumIcons(property:qtpropertybrowser.QtProperty)->QMap",
+    "qtpropertybrowser.QtEnumPropertyManager.enumNames(property:qtpropertybrowser.QtProperty)->QStringList",
+    "qtpropertybrowser.QtEnumPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtEnumPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
+    "qtpropertybrowser.QtEnumPropertyManager.setEnumIcons(property:qtpropertybrowser.QtProperty,icons:QMap)",
+    "qtpropertybrowser.QtEnumPropertyManager.setEnumNames(property:qtpropertybrowser.QtProperty,names:QStringList)",
+    "qtpropertybrowser.QtEnumPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:int)",
+    "qtpropertybrowser.QtEnumPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtEnumPropertyManager.value(property:qtpropertybrowser.QtProperty)->int",
+    "qtpropertybrowser.QtEnumPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtEnumPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
+    nullptr}; // Sentinel
 
 void init_QtEnumPropertyManager(PyObject* module)
 {
@@ -1712,7 +1714,7 @@ void init_QtEnumPropertyManager(PyObject* module)
         "QtEnumPropertyManager",
         "QtEnumPropertyManager*",
         &Sbk_QtEnumPropertyManager_spec,
-        QtEnumPropertyManager_SignaturesString,
+        QtEnumPropertyManager_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtEnumPropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

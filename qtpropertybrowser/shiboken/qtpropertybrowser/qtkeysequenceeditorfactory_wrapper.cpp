@@ -47,12 +47,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -606,13 +608,13 @@ static PyObject* QtKeySequenceEditorFactory_PTR_CppToPython_QtKeySequenceEditorF
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtKeySequenceEditorFactory_SignaturesString[] = ""
-    "qtpropertybrowser.QtKeySequenceEditorFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtKeySequenceEditorFactory.connectPropertyManager(manager:qtpropertybrowser.QtKeySequencePropertyManager)\n"
-    "qtpropertybrowser.QtKeySequenceEditorFactory.createAttributeEditor(manager:qtpropertybrowser.QtKeySequencePropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtKeySequenceEditorFactory.createEditor(manager:qtpropertybrowser.QtKeySequencePropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtKeySequenceEditorFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtKeySequencePropertyManager)\n"
-;
+static const char *QtKeySequenceEditorFactory_SignatureStrings[] = {
+    "qtpropertybrowser.QtKeySequenceEditorFactory(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtKeySequenceEditorFactory.connectPropertyManager(manager:qtpropertybrowser.QtKeySequencePropertyManager)",
+    "qtpropertybrowser.QtKeySequenceEditorFactory.createAttributeEditor(manager:qtpropertybrowser.QtKeySequencePropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtKeySequenceEditorFactory.createEditor(manager:qtpropertybrowser.QtKeySequencePropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtKeySequenceEditorFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtKeySequencePropertyManager)",
+    nullptr}; // Sentinel
 
 void init_QtKeySequenceEditorFactory(PyObject* module)
 {
@@ -621,7 +623,7 @@ void init_QtKeySequenceEditorFactory(PyObject* module)
         "QtKeySequenceEditorFactory",
         "QtKeySequenceEditorFactory*",
         &Sbk_QtKeySequenceEditorFactory_spec,
-        QtKeySequenceEditorFactory_SignaturesString,
+        QtKeySequenceEditorFactory_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtKeySequenceEditorFactory >,
         0,
         0,

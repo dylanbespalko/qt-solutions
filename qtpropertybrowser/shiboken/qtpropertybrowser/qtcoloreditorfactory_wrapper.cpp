@@ -47,12 +47,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -606,13 +608,13 @@ static PyObject* QtColorEditorFactory_PTR_CppToPython_QtColorEditorFactory(const
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtColorEditorFactory_SignaturesString[] = ""
-    "qtpropertybrowser.QtColorEditorFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtColorEditorFactory.connectPropertyManager(manager:qtpropertybrowser.QtColorPropertyManager)\n"
-    "qtpropertybrowser.QtColorEditorFactory.createAttributeEditor(manager:qtpropertybrowser.QtColorPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtColorEditorFactory.createEditor(manager:qtpropertybrowser.QtColorPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtColorEditorFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtColorPropertyManager)\n"
-;
+static const char *QtColorEditorFactory_SignatureStrings[] = {
+    "qtpropertybrowser.QtColorEditorFactory(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtColorEditorFactory.connectPropertyManager(manager:qtpropertybrowser.QtColorPropertyManager)",
+    "qtpropertybrowser.QtColorEditorFactory.createAttributeEditor(manager:qtpropertybrowser.QtColorPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtColorEditorFactory.createEditor(manager:qtpropertybrowser.QtColorPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtColorEditorFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtColorPropertyManager)",
+    nullptr}; // Sentinel
 
 void init_QtColorEditorFactory(PyObject* module)
 {
@@ -621,7 +623,7 @@ void init_QtColorEditorFactory(PyObject* module)
         "QtColorEditorFactory",
         "QtColorEditorFactory*",
         &Sbk_QtColorEditorFactory_spec,
-        QtColorEditorFactory_SignaturesString,
+        QtColorEditorFactory_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtColorEditorFactory >,
         0,
         0,

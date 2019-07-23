@@ -47,12 +47,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -606,13 +608,13 @@ static PyObject* QtDateEditFactory_PTR_CppToPython_QtDateEditFactory(const void*
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtDateEditFactory_SignaturesString[] = ""
-    "qtpropertybrowser.QtDateEditFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtDateEditFactory.connectPropertyManager(manager:qtpropertybrowser.QtDatePropertyManager)\n"
-    "qtpropertybrowser.QtDateEditFactory.createAttributeEditor(manager:qtpropertybrowser.QtDatePropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtDateEditFactory.createEditor(manager:qtpropertybrowser.QtDatePropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtDateEditFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtDatePropertyManager)\n"
-;
+static const char *QtDateEditFactory_SignatureStrings[] = {
+    "qtpropertybrowser.QtDateEditFactory(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtDateEditFactory.connectPropertyManager(manager:qtpropertybrowser.QtDatePropertyManager)",
+    "qtpropertybrowser.QtDateEditFactory.createAttributeEditor(manager:qtpropertybrowser.QtDatePropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtDateEditFactory.createEditor(manager:qtpropertybrowser.QtDatePropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtDateEditFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtDatePropertyManager)",
+    nullptr}; // Sentinel
 
 void init_QtDateEditFactory(PyObject* module)
 {
@@ -621,7 +623,7 @@ void init_QtDateEditFactory(PyObject* module)
         "QtDateEditFactory",
         "QtDateEditFactory*",
         &Sbk_QtDateEditFactory_spec,
-        QtDateEditFactory_SignaturesString,
+        QtDateEditFactory_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtDateEditFactory >,
         0,
         0,

@@ -68,12 +68,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -2339,22 +2341,22 @@ static PyObject* QtButtonPropertyBrowser_PTR_CppToPython_QtButtonPropertyBrowser
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtButtonPropertyBrowser_SignaturesString[] = ""
-    "qtpropertybrowser.QtButtonPropertyBrowser(parent:PySide2.QtWidgets.QWidget=nullptr)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.attribute1()->qtpropertybrowser.BrowserCol\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.attribute2()->qtpropertybrowser.BrowserCol\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.attribute3()->qtpropertybrowser.BrowserCol\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.attributes()->QList[qtpropertybrowser.BrowserCol]\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.isExpanded(item:qtpropertybrowser.QtBrowserItem)->bool\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.itemChanged(item:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.itemInserted(item:qtpropertybrowser.QtBrowserItem,afterItem:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.itemRemoved(item:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute1(attribute:qtpropertybrowser.BrowserCol)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute2(attribute:qtpropertybrowser.BrowserCol)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute3(attribute:qtpropertybrowser.BrowserCol)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.setAttributes(attributeList:QList[qtpropertybrowser.BrowserCol])\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.setExpanded(item:qtpropertybrowser.QtBrowserItem,expanded:bool)\n"
-;
+static const char *QtButtonPropertyBrowser_SignatureStrings[] = {
+    "qtpropertybrowser.QtButtonPropertyBrowser(parent:PySide2.QtWidgets.QWidget=nullptr)",
+    "qtpropertybrowser.QtButtonPropertyBrowser.attribute1()->qtpropertybrowser.BrowserCol",
+    "qtpropertybrowser.QtButtonPropertyBrowser.attribute2()->qtpropertybrowser.BrowserCol",
+    "qtpropertybrowser.QtButtonPropertyBrowser.attribute3()->qtpropertybrowser.BrowserCol",
+    "qtpropertybrowser.QtButtonPropertyBrowser.attributes()->QList[qtpropertybrowser.BrowserCol]",
+    "qtpropertybrowser.QtButtonPropertyBrowser.isExpanded(item:qtpropertybrowser.QtBrowserItem)->bool",
+    "qtpropertybrowser.QtButtonPropertyBrowser.itemChanged(item:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtButtonPropertyBrowser.itemInserted(item:qtpropertybrowser.QtBrowserItem,afterItem:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtButtonPropertyBrowser.itemRemoved(item:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute1(attribute:qtpropertybrowser.BrowserCol)",
+    "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute2(attribute:qtpropertybrowser.BrowserCol)",
+    "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute3(attribute:qtpropertybrowser.BrowserCol)",
+    "qtpropertybrowser.QtButtonPropertyBrowser.setAttributes(attributeList:QList[qtpropertybrowser.BrowserCol])",
+    "qtpropertybrowser.QtButtonPropertyBrowser.setExpanded(item:qtpropertybrowser.QtBrowserItem,expanded:bool)",
+    nullptr}; // Sentinel
 
 void init_QtButtonPropertyBrowser(PyObject* module)
 {
@@ -2363,7 +2365,7 @@ void init_QtButtonPropertyBrowser(PyObject* module)
         "QtButtonPropertyBrowser",
         "QtButtonPropertyBrowser*",
         &Sbk_QtButtonPropertyBrowser_spec,
-        QtButtonPropertyBrowser_SignaturesString,
+        QtButtonPropertyBrowser_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtButtonPropertyBrowser >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX]),
         0,

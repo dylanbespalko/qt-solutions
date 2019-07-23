@@ -53,12 +53,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -2116,33 +2118,33 @@ static PyObject* QtAbstractPropertyManager_PTR_CppToPython_QtAbstractPropertyMan
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtAbstractPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtAbstractPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.addProperty(name:QString=QString())->qtpropertybrowser.QtProperty\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.attributesEditable(arg__1:qtpropertybrowser.BrowserCol)->bool\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.clear()\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.connect_signals()\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.createProperty()->qtpropertybrowser.QtProperty\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.disconnect_signals()\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.displayText(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.echoMode(arg__1:qtpropertybrowser.QtProperty)->PySide2.QtWidgets.QLineEdit.EchoMode\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.foreground(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QBrush\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.formatText(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.hasValue(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.isReadOnly(arg__1:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.maximumText(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.minimumText(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.pkAvgText(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.properties()->QSet[qtpropertybrowser.QtProperty]\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.setAttributesEditable(arg__1:qtpropertybrowser.BrowserCol,arg__2:bool)\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.unitText(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtAbstractPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
-;
+static const char *QtAbstractPropertyManager_SignatureStrings[] = {
+    "qtpropertybrowser.QtAbstractPropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtAbstractPropertyManager.addProperty(name:QString=QString())->qtpropertybrowser.QtProperty",
+    "qtpropertybrowser.QtAbstractPropertyManager.attributesEditable(arg__1:qtpropertybrowser.BrowserCol)->bool",
+    "qtpropertybrowser.QtAbstractPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtAbstractPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtAbstractPropertyManager.clear()",
+    "qtpropertybrowser.QtAbstractPropertyManager.connect_signals()",
+    "qtpropertybrowser.QtAbstractPropertyManager.createProperty()->qtpropertybrowser.QtProperty",
+    "qtpropertybrowser.QtAbstractPropertyManager.disconnect_signals()",
+    "qtpropertybrowser.QtAbstractPropertyManager.displayText(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtAbstractPropertyManager.echoMode(arg__1:qtpropertybrowser.QtProperty)->PySide2.QtWidgets.QLineEdit.EchoMode",
+    "qtpropertybrowser.QtAbstractPropertyManager.foreground(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QBrush",
+    "qtpropertybrowser.QtAbstractPropertyManager.formatText(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtAbstractPropertyManager.hasValue(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtAbstractPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtAbstractPropertyManager.isReadOnly(arg__1:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtAbstractPropertyManager.maximumText(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtAbstractPropertyManager.minimumText(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtAbstractPropertyManager.pkAvgText(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtAbstractPropertyManager.properties()->QSet[qtpropertybrowser.QtProperty]",
+    "qtpropertybrowser.QtAbstractPropertyManager.setAttributesEditable(arg__1:qtpropertybrowser.BrowserCol,arg__2:bool)",
+    "qtpropertybrowser.QtAbstractPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtAbstractPropertyManager.unitText(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtAbstractPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtAbstractPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
+    nullptr}; // Sentinel
 
 void init_QtAbstractPropertyManager(PyObject* module)
 {
@@ -2151,7 +2153,7 @@ void init_QtAbstractPropertyManager(PyObject* module)
         "QtAbstractPropertyManager",
         "QtAbstractPropertyManager*",
         &Sbk_QtAbstractPropertyManager_spec,
-        QtAbstractPropertyManager_SignaturesString,
+        QtAbstractPropertyManager_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtAbstractPropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkPySide2_QtCoreTypes[SBK_QOBJECT_IDX]),
         0,

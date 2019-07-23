@@ -55,12 +55,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -1573,20 +1575,20 @@ static PyObject* QtRectPropertyManager_PTR_CppToPython_QtRectPropertyManager(con
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtRectPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtRectPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtRectPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtRectPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtRectPropertyManager.constraint(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QRect\n"
-    "qtpropertybrowser.QtRectPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtRectPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
-    "qtpropertybrowser.QtRectPropertyManager.setConstraint(property:qtpropertybrowser.QtProperty,constraint:PySide2.QtCore.QRect)\n"
-    "qtpropertybrowser.QtRectPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtCore.QRect)\n"
-    "qtpropertybrowser.QtRectPropertyManager.subIntPropertyManager()->qtpropertybrowser.QtIntPropertyManager\n"
-    "qtpropertybrowser.QtRectPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtRectPropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QRect\n"
-    "qtpropertybrowser.QtRectPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
-;
+static const char *QtRectPropertyManager_SignatureStrings[] = {
+    "qtpropertybrowser.QtRectPropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtRectPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtRectPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtRectPropertyManager.constraint(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QRect",
+    "qtpropertybrowser.QtRectPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtRectPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
+    "qtpropertybrowser.QtRectPropertyManager.setConstraint(property:qtpropertybrowser.QtProperty,constraint:PySide2.QtCore.QRect)",
+    "qtpropertybrowser.QtRectPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtCore.QRect)",
+    "qtpropertybrowser.QtRectPropertyManager.subIntPropertyManager()->qtpropertybrowser.QtIntPropertyManager",
+    "qtpropertybrowser.QtRectPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtRectPropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QRect",
+    "qtpropertybrowser.QtRectPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
+    nullptr}; // Sentinel
 
 void init_QtRectPropertyManager(PyObject* module)
 {
@@ -1595,7 +1597,7 @@ void init_QtRectPropertyManager(PyObject* module)
         "QtRectPropertyManager",
         "QtRectPropertyManager*",
         &Sbk_QtRectPropertyManager_spec,
-        QtRectPropertyManager_SignaturesString,
+        QtRectPropertyManager_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtRectPropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

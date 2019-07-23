@@ -53,12 +53,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -2976,46 +2978,46 @@ static PyObject* QtComplexPropertyManager_PTR_CppToPython_QtComplexPropertyManag
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtComplexPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtComplexPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtComplexPropertyManager.absTol(property:qtpropertybrowser.QtProperty)->double\n"
-    "qtpropertybrowser.QtComplexPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtComplexPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtComplexPropertyManager.foreground(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QBrush\n"
-    "qtpropertybrowser.QtComplexPropertyManager.format(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.Format\n"
-    "qtpropertybrowser.QtComplexPropertyManager.formatText(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtComplexPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtComplexPropertyManager.isReadOnly(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtComplexPropertyManager.maximum(property:qtpropertybrowser.QtProperty)->double\n"
-    "qtpropertybrowser.QtComplexPropertyManager.maximumText(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtComplexPropertyManager.minimum(property:qtpropertybrowser.QtProperty)->double\n"
-    "qtpropertybrowser.QtComplexPropertyManager.minimumText(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtComplexPropertyManager.pkAvg(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.PkAvg\n"
-    "qtpropertybrowser.QtComplexPropertyManager.pkAvgText(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtComplexPropertyManager.precision(property:qtpropertybrowser.QtProperty)->int\n"
-    "qtpropertybrowser.QtComplexPropertyManager.relTol(property:qtpropertybrowser.QtProperty)->double\n"
-    "qtpropertybrowser.QtComplexPropertyManager.scale(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.Scale\n"
-    "qtpropertybrowser.QtComplexPropertyManager.setAbsTol(property:qtpropertybrowser.QtProperty,absTol:double)\n"
-    "qtpropertybrowser.QtComplexPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
-    "qtpropertybrowser.QtComplexPropertyManager.setFormat(property:qtpropertybrowser.QtProperty,format_:qtpropertybrowser.Format)\n"
-    "qtpropertybrowser.QtComplexPropertyManager.setMaximum(property:qtpropertybrowser.QtProperty,maxVal:double)\n"
-    "qtpropertybrowser.QtComplexPropertyManager.setMinimum(property:qtpropertybrowser.QtProperty,minVal:double)\n"
-    "qtpropertybrowser.QtComplexPropertyManager.setPkAvg(property:qtpropertybrowser.QtProperty,pkAvg:qtpropertybrowser.PkAvg)\n"
-    "qtpropertybrowser.QtComplexPropertyManager.setPrecision(property:qtpropertybrowser.QtProperty,prec:int)\n"
-    "qtpropertybrowser.QtComplexPropertyManager.setRange(property:qtpropertybrowser.QtProperty,minVal:double,maxVal:double)\n"
-    "qtpropertybrowser.QtComplexPropertyManager.setReadOnly(property:qtpropertybrowser.QtProperty,readOnly:bool)\n"
-    "qtpropertybrowser.QtComplexPropertyManager.setRelTol(property:qtpropertybrowser.QtProperty,relTol:double)\n"
-    "qtpropertybrowser.QtComplexPropertyManager.setScale(property:qtpropertybrowser.QtProperty,scale_:qtpropertybrowser.Scale)\n"
-    "qtpropertybrowser.QtComplexPropertyManager.setSingleStep(property:qtpropertybrowser.QtProperty,step:QComplex)\n"
-    "qtpropertybrowser.QtComplexPropertyManager.setUnit(property:qtpropertybrowser.QtProperty,unit:QString)\n"
-    "qtpropertybrowser.QtComplexPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:QComplex)\n"
-    "qtpropertybrowser.QtComplexPropertyManager.singleStep(property:qtpropertybrowser.QtProperty)->QComplex\n"
-    "qtpropertybrowser.QtComplexPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtComplexPropertyManager.unit(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtComplexPropertyManager.unitText(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtComplexPropertyManager.value(property:qtpropertybrowser.QtProperty)->QComplex\n"
-    "qtpropertybrowser.QtComplexPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
-;
+static const char *QtComplexPropertyManager_SignatureStrings[] = {
+    "qtpropertybrowser.QtComplexPropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtComplexPropertyManager.absTol(property:qtpropertybrowser.QtProperty)->double",
+    "qtpropertybrowser.QtComplexPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtComplexPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtComplexPropertyManager.foreground(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QBrush",
+    "qtpropertybrowser.QtComplexPropertyManager.format(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.Format",
+    "qtpropertybrowser.QtComplexPropertyManager.formatText(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtComplexPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtComplexPropertyManager.isReadOnly(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtComplexPropertyManager.maximum(property:qtpropertybrowser.QtProperty)->double",
+    "qtpropertybrowser.QtComplexPropertyManager.maximumText(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtComplexPropertyManager.minimum(property:qtpropertybrowser.QtProperty)->double",
+    "qtpropertybrowser.QtComplexPropertyManager.minimumText(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtComplexPropertyManager.pkAvg(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.PkAvg",
+    "qtpropertybrowser.QtComplexPropertyManager.pkAvgText(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtComplexPropertyManager.precision(property:qtpropertybrowser.QtProperty)->int",
+    "qtpropertybrowser.QtComplexPropertyManager.relTol(property:qtpropertybrowser.QtProperty)->double",
+    "qtpropertybrowser.QtComplexPropertyManager.scale(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.Scale",
+    "qtpropertybrowser.QtComplexPropertyManager.setAbsTol(property:qtpropertybrowser.QtProperty,absTol:double)",
+    "qtpropertybrowser.QtComplexPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
+    "qtpropertybrowser.QtComplexPropertyManager.setFormat(property:qtpropertybrowser.QtProperty,format_:qtpropertybrowser.Format)",
+    "qtpropertybrowser.QtComplexPropertyManager.setMaximum(property:qtpropertybrowser.QtProperty,maxVal:double)",
+    "qtpropertybrowser.QtComplexPropertyManager.setMinimum(property:qtpropertybrowser.QtProperty,minVal:double)",
+    "qtpropertybrowser.QtComplexPropertyManager.setPkAvg(property:qtpropertybrowser.QtProperty,pkAvg:qtpropertybrowser.PkAvg)",
+    "qtpropertybrowser.QtComplexPropertyManager.setPrecision(property:qtpropertybrowser.QtProperty,prec:int)",
+    "qtpropertybrowser.QtComplexPropertyManager.setRange(property:qtpropertybrowser.QtProperty,minVal:double,maxVal:double)",
+    "qtpropertybrowser.QtComplexPropertyManager.setReadOnly(property:qtpropertybrowser.QtProperty,readOnly:bool)",
+    "qtpropertybrowser.QtComplexPropertyManager.setRelTol(property:qtpropertybrowser.QtProperty,relTol:double)",
+    "qtpropertybrowser.QtComplexPropertyManager.setScale(property:qtpropertybrowser.QtProperty,scale_:qtpropertybrowser.Scale)",
+    "qtpropertybrowser.QtComplexPropertyManager.setSingleStep(property:qtpropertybrowser.QtProperty,step:QComplex)",
+    "qtpropertybrowser.QtComplexPropertyManager.setUnit(property:qtpropertybrowser.QtProperty,unit:QString)",
+    "qtpropertybrowser.QtComplexPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:QComplex)",
+    "qtpropertybrowser.QtComplexPropertyManager.singleStep(property:qtpropertybrowser.QtProperty)->QComplex",
+    "qtpropertybrowser.QtComplexPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtComplexPropertyManager.unit(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtComplexPropertyManager.unitText(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtComplexPropertyManager.value(property:qtpropertybrowser.QtProperty)->QComplex",
+    "qtpropertybrowser.QtComplexPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
+    nullptr}; // Sentinel
 
 void init_QtComplexPropertyManager(PyObject* module)
 {
@@ -3024,7 +3026,7 @@ void init_QtComplexPropertyManager(PyObject* module)
         "QtComplexPropertyManager",
         "QtComplexPropertyManager*",
         &Sbk_QtComplexPropertyManager_spec,
-        QtComplexPropertyManager_SignaturesString,
+        QtComplexPropertyManager_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtComplexPropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

@@ -47,12 +47,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -606,13 +608,13 @@ static PyObject* QtCheckBoxFactory_PTR_CppToPython_QtCheckBoxFactory(const void*
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtCheckBoxFactory_SignaturesString[] = ""
-    "qtpropertybrowser.QtCheckBoxFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtCheckBoxFactory.connectPropertyManager(manager:qtpropertybrowser.QtBoolPropertyManager)\n"
-    "qtpropertybrowser.QtCheckBoxFactory.createAttributeEditor(manager:qtpropertybrowser.QtBoolPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtCheckBoxFactory.createEditor(manager:qtpropertybrowser.QtBoolPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtCheckBoxFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtBoolPropertyManager)\n"
-;
+static const char *QtCheckBoxFactory_SignatureStrings[] = {
+    "qtpropertybrowser.QtCheckBoxFactory(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtCheckBoxFactory.connectPropertyManager(manager:qtpropertybrowser.QtBoolPropertyManager)",
+    "qtpropertybrowser.QtCheckBoxFactory.createAttributeEditor(manager:qtpropertybrowser.QtBoolPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtCheckBoxFactory.createEditor(manager:qtpropertybrowser.QtBoolPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtCheckBoxFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtBoolPropertyManager)",
+    nullptr}; // Sentinel
 
 void init_QtCheckBoxFactory(PyObject* module)
 {
@@ -621,7 +623,7 @@ void init_QtCheckBoxFactory(PyObject* module)
         "QtCheckBoxFactory",
         "QtCheckBoxFactory*",
         &Sbk_QtCheckBoxFactory_spec,
-        QtCheckBoxFactory_SignaturesString,
+        QtCheckBoxFactory_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtCheckBoxFactory >,
         0,
         0,

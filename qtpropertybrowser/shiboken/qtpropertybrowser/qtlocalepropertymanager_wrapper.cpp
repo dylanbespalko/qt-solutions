@@ -55,12 +55,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -1457,18 +1459,18 @@ static PyObject* QtLocalePropertyManager_PTR_CppToPython_QtLocalePropertyManager
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtLocalePropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtLocalePropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtLocalePropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtLocalePropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtLocalePropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtLocalePropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
-    "qtpropertybrowser.QtLocalePropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtCore.QLocale)\n"
-    "qtpropertybrowser.QtLocalePropertyManager.subEnumPropertyManager()->qtpropertybrowser.QtEnumPropertyManager\n"
-    "qtpropertybrowser.QtLocalePropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtLocalePropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QLocale\n"
-    "qtpropertybrowser.QtLocalePropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
-;
+static const char *QtLocalePropertyManager_SignatureStrings[] = {
+    "qtpropertybrowser.QtLocalePropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtLocalePropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtLocalePropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtLocalePropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtLocalePropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
+    "qtpropertybrowser.QtLocalePropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtCore.QLocale)",
+    "qtpropertybrowser.QtLocalePropertyManager.subEnumPropertyManager()->qtpropertybrowser.QtEnumPropertyManager",
+    "qtpropertybrowser.QtLocalePropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtLocalePropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QLocale",
+    "qtpropertybrowser.QtLocalePropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
+    nullptr}; // Sentinel
 
 void init_QtLocalePropertyManager(PyObject* module)
 {
@@ -1477,7 +1479,7 @@ void init_QtLocalePropertyManager(PyObject* module)
         "QtLocalePropertyManager",
         "QtLocalePropertyManager*",
         &Sbk_QtLocalePropertyManager_spec,
-        QtLocalePropertyManager_SignaturesString,
+        QtLocalePropertyManager_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtLocalePropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

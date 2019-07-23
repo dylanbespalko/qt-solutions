@@ -54,12 +54,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -2329,32 +2331,32 @@ static PyObject* QtVariantPropertyManager_PTR_CppToPython_QtVariantPropertyManag
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtVariantPropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtVariantPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "1:qtpropertybrowser.QtVariantPropertyManager.addProperty(propertyType:int,name:QString=QString())->qtpropertybrowser.QtVariantProperty\n"
-    "0:qtpropertybrowser.QtVariantPropertyManager.addProperty(name:QString=QString())->qtpropertybrowser.QtProperty\n"
-    "qtpropertybrowser.QtVariantPropertyManager.attributeType(propertyType:int,attribute:QString)->int\n"
-    "qtpropertybrowser.QtVariantPropertyManager.attributeValue(property:qtpropertybrowser.QtProperty,attribute:QString)->QVariant\n"
-    "qtpropertybrowser.QtVariantPropertyManager.attributes(propertyType:int)->QStringList\n"
-    "qtpropertybrowser.QtVariantPropertyManager.createProperty()->qtpropertybrowser.QtProperty\n"
-    "qtpropertybrowser.QtVariantPropertyManager.enumTypeId()->int\n"
-    "qtpropertybrowser.QtVariantPropertyManager.flagTypeId()->int\n"
-    "qtpropertybrowser.QtVariantPropertyManager.groupTypeId()->int\n"
-    "qtpropertybrowser.QtVariantPropertyManager.hasValue(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtVariantPropertyManager.iconMapTypeId()->int\n"
-    "qtpropertybrowser.QtVariantPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtVariantPropertyManager.isPropertyTypeSupported(propertyType:int)->bool\n"
-    "qtpropertybrowser.QtVariantPropertyManager.propertyType(property:qtpropertybrowser.QtProperty)->int\n"
-    "qtpropertybrowser.QtVariantPropertyManager.setAttribute(property:qtpropertybrowser.QtProperty,attribute:QString,value:QVariant)\n"
-    "qtpropertybrowser.QtVariantPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:QVariant)\n"
-    "qtpropertybrowser.QtVariantPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtVariantPropertyManager.value(property:qtpropertybrowser.QtProperty)->QVariant\n"
-    "qtpropertybrowser.QtVariantPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtVariantPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
-    "1:qtpropertybrowser.QtVariantPropertyManager.valueType(propertyType:int)->int\n"
-    "0:qtpropertybrowser.QtVariantPropertyManager.valueType(property:qtpropertybrowser.QtProperty)->int\n"
-    "qtpropertybrowser.QtVariantPropertyManager.variantProperty(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.QtVariantProperty\n"
-;
+static const char *QtVariantPropertyManager_SignatureStrings[] = {
+    "qtpropertybrowser.QtVariantPropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
+    "1:qtpropertybrowser.QtVariantPropertyManager.addProperty(propertyType:int,name:QString=QString())->qtpropertybrowser.QtVariantProperty",
+    "0:qtpropertybrowser.QtVariantPropertyManager.addProperty(name:QString=QString())->qtpropertybrowser.QtProperty",
+    "qtpropertybrowser.QtVariantPropertyManager.attributeType(propertyType:int,attribute:QString)->int",
+    "qtpropertybrowser.QtVariantPropertyManager.attributeValue(property:qtpropertybrowser.QtProperty,attribute:QString)->QVariant",
+    "qtpropertybrowser.QtVariantPropertyManager.attributes(propertyType:int)->QStringList",
+    "qtpropertybrowser.QtVariantPropertyManager.createProperty()->qtpropertybrowser.QtProperty",
+    "qtpropertybrowser.QtVariantPropertyManager.enumTypeId()->int",
+    "qtpropertybrowser.QtVariantPropertyManager.flagTypeId()->int",
+    "qtpropertybrowser.QtVariantPropertyManager.groupTypeId()->int",
+    "qtpropertybrowser.QtVariantPropertyManager.hasValue(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtVariantPropertyManager.iconMapTypeId()->int",
+    "qtpropertybrowser.QtVariantPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtVariantPropertyManager.isPropertyTypeSupported(propertyType:int)->bool",
+    "qtpropertybrowser.QtVariantPropertyManager.propertyType(property:qtpropertybrowser.QtProperty)->int",
+    "qtpropertybrowser.QtVariantPropertyManager.setAttribute(property:qtpropertybrowser.QtProperty,attribute:QString,value:QVariant)",
+    "qtpropertybrowser.QtVariantPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:QVariant)",
+    "qtpropertybrowser.QtVariantPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtVariantPropertyManager.value(property:qtpropertybrowser.QtProperty)->QVariant",
+    "qtpropertybrowser.QtVariantPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtVariantPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
+    "1:qtpropertybrowser.QtVariantPropertyManager.valueType(propertyType:int)->int",
+    "0:qtpropertybrowser.QtVariantPropertyManager.valueType(property:qtpropertybrowser.QtProperty)->int",
+    "qtpropertybrowser.QtVariantPropertyManager.variantProperty(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.QtVariantProperty",
+    nullptr}; // Sentinel
 
 void init_QtVariantPropertyManager(PyObject* module)
 {
@@ -2363,7 +2365,7 @@ void init_QtVariantPropertyManager(PyObject* module)
         "QtVariantPropertyManager",
         "QtVariantPropertyManager*",
         &Sbk_QtVariantPropertyManager_spec,
-        QtVariantPropertyManager_SignaturesString,
+        QtVariantPropertyManager_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtVariantPropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

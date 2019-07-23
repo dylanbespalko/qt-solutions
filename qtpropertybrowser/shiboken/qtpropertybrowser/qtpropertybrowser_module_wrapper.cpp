@@ -72,10 +72,6 @@ void init_QtCheckBoxFactory(PyObject* module);
 void init_QtCharEditorFactory(PyObject* module);
 void init_QtBrowserItem(PyObject* module);
 void init_QtAbstractPropertyManager(PyObject* module);
-void init_QtTimePropertyManager(PyObject* module);
-void init_QtFilePropertyManager(PyObject* module);
-void init_QtTFTensorPropertyManager(PyObject* module);
-void init_QtEnumPropertyManager(PyObject* module);
 void init_QtStringPropertyManager(PyObject* module);
 void init_QtDoublePropertyManager(PyObject* module);
 void init_QtSizePropertyManager(PyObject* module);
@@ -99,6 +95,10 @@ void init_QtGroupPropertyManager(PyObject* module);
 void init_QtVariantPropertyManager(PyObject* module);
 void init_QtFontPropertyManager(PyObject* module);
 void init_QtFlagPropertyManager(PyObject* module);
+void init_QtTimePropertyManager(PyObject* module);
+void init_QtFilePropertyManager(PyObject* module);
+void init_QtTFTensorPropertyManager(PyObject* module);
+void init_QtEnumPropertyManager(PyObject* module);
 void init_QtAbstractEditorFactoryBase(PyObject* module);
 void init_QtAbstractPropertyBrowser(PyObject* module);
 void init_QtGroupBoxPropertyBrowser(PyObject* module);
@@ -721,6 +721,12 @@ static struct PyModuleDef moduledef = {
 };
 
 #endif
+
+// The signatures string for the global functions.
+// Multiple signatures have their index "n:" in front.
+static const char *qtpropertybrowser_SignatureStrings[] = {
+    nullptr}; // Sentinel
+
 SBK_MODULE_INIT_FUNCTION_BEGIN(qtpropertybrowser)
     {
         Shiboken::AutoDecRef requiredModule(Shiboken::Module::import("PySide2.QtCore"));
@@ -799,10 +805,6 @@ SBK_MODULE_INIT_FUNCTION_BEGIN(qtpropertybrowser)
     init_QtCharEditorFactory(module);
     init_QtBrowserItem(module);
     init_QtAbstractPropertyManager(module);
-    init_QtTimePropertyManager(module);
-    init_QtFilePropertyManager(module);
-    init_QtTFTensorPropertyManager(module);
-    init_QtEnumPropertyManager(module);
     init_QtStringPropertyManager(module);
     init_QtDoublePropertyManager(module);
     init_QtSizePropertyManager(module);
@@ -826,6 +828,10 @@ SBK_MODULE_INIT_FUNCTION_BEGIN(qtpropertybrowser)
     init_QtVariantPropertyManager(module);
     init_QtFontPropertyManager(module);
     init_QtFlagPropertyManager(module);
+    init_QtTimePropertyManager(module);
+    init_QtFilePropertyManager(module);
+    init_QtTFTensorPropertyManager(module);
+    init_QtEnumPropertyManager(module);
     init_QtAbstractEditorFactoryBase(module);
     init_QtAbstractPropertyBrowser(module);
     init_QtGroupBoxPropertyBrowser(module);
@@ -1133,11 +1139,7 @@ SBK_MODULE_INIT_FUNCTION_BEGIN(qtpropertybrowser)
     qRegisterMetaType< ::Scale >("Scale");
     PySide::registerCleanupFunction(cleanTypesAttributes);
 
-// The signatures string for the global functions.
-// Multiple signatures have their index "n:" in front.
-const char qtpropertybrowser_SignaturesString[] = ""
-;
-    FinishSignatureInitialization(module, qtpropertybrowser_SignaturesString);
+    FinishSignatureInitialization(module, qtpropertybrowser_SignatureStrings);
     NotifyModuleForQApp(module);
 
 SBK_MODULE_INIT_FUNCTION_END

@@ -47,12 +47,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -606,13 +608,13 @@ static PyObject* QtTimeEditFactory_PTR_CppToPython_QtTimeEditFactory(const void*
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtTimeEditFactory_SignaturesString[] = ""
-    "qtpropertybrowser.QtTimeEditFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtTimeEditFactory.connectPropertyManager(manager:qtpropertybrowser.QtTimePropertyManager)\n"
-    "qtpropertybrowser.QtTimeEditFactory.createAttributeEditor(manager:qtpropertybrowser.QtTimePropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtTimeEditFactory.createEditor(manager:qtpropertybrowser.QtTimePropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
-    "qtpropertybrowser.QtTimeEditFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtTimePropertyManager)\n"
-;
+static const char *QtTimeEditFactory_SignatureStrings[] = {
+    "qtpropertybrowser.QtTimeEditFactory(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtTimeEditFactory.connectPropertyManager(manager:qtpropertybrowser.QtTimePropertyManager)",
+    "qtpropertybrowser.QtTimeEditFactory.createAttributeEditor(manager:qtpropertybrowser.QtTimePropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtTimeEditFactory.createEditor(manager:qtpropertybrowser.QtTimePropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget",
+    "qtpropertybrowser.QtTimeEditFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtTimePropertyManager)",
+    nullptr}; // Sentinel
 
 void init_QtTimeEditFactory(PyObject* module)
 {
@@ -621,7 +623,7 @@ void init_QtTimeEditFactory(PyObject* module)
         "QtTimeEditFactory",
         "QtTimeEditFactory*",
         &Sbk_QtTimeEditFactory_spec,
-        QtTimeEditFactory_SignaturesString,
+        QtTimeEditFactory_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtTimeEditFactory >,
         0,
         0,

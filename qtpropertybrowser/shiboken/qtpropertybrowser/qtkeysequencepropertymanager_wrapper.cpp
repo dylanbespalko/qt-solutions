@@ -54,12 +54,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -1428,17 +1430,17 @@ static PyObject* QtKeySequencePropertyManager_PTR_CppToPython_QtKeySequencePrope
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtKeySequencePropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtKeySequencePropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtKeySequencePropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtKeySequencePropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtKeySequencePropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtKeySequencePropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
-    "qtpropertybrowser.QtKeySequencePropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtGui.QKeySequence)\n"
-    "qtpropertybrowser.QtKeySequencePropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtKeySequencePropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QKeySequence\n"
-    "qtpropertybrowser.QtKeySequencePropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
-;
+static const char *QtKeySequencePropertyManager_SignatureStrings[] = {
+    "qtpropertybrowser.QtKeySequencePropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtKeySequencePropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtKeySequencePropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtKeySequencePropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtKeySequencePropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
+    "qtpropertybrowser.QtKeySequencePropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtGui.QKeySequence)",
+    "qtpropertybrowser.QtKeySequencePropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtKeySequencePropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QKeySequence",
+    "qtpropertybrowser.QtKeySequencePropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
+    nullptr}; // Sentinel
 
 void init_QtKeySequencePropertyManager(PyObject* module)
 {
@@ -1447,7 +1449,7 @@ void init_QtKeySequencePropertyManager(PyObject* module)
         "QtKeySequencePropertyManager",
         "QtKeySequencePropertyManager*",
         &Sbk_QtKeySequencePropertyManager_spec,
-        QtKeySequencePropertyManager_SignaturesString,
+        QtKeySequencePropertyManager_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtKeySequencePropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

@@ -53,12 +53,14 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
         ++typeName;
+        --size;
+    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    strncpy(result, typeName, size);
+    memcpy(result, typeName, size);
     return result;
 }
 
@@ -1747,23 +1749,23 @@ static PyObject* QtFilePropertyManager_PTR_CppToPython_QtFilePropertyManager(con
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtFilePropertyManager_SignaturesString[] = ""
-    "qtpropertybrowser.QtFilePropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
-    "qtpropertybrowser.QtFilePropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtFilePropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
-    "qtpropertybrowser.QtFilePropertyManager.fileMode(property:qtpropertybrowser.QtProperty)->PySide2.QtWidgets.QFileDialog.FileMode\n"
-    "qtpropertybrowser.QtFilePropertyManager.filter(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtFilePropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtFilePropertyManager.isReadOnly(property:qtpropertybrowser.QtProperty)->bool\n"
-    "qtpropertybrowser.QtFilePropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
-    "qtpropertybrowser.QtFilePropertyManager.setFileMode(arg__1:qtpropertybrowser.QtProperty,mode:PySide2.QtWidgets.QFileDialog.FileMode)\n"
-    "qtpropertybrowser.QtFilePropertyManager.setFilter(arg__1:qtpropertybrowser.QtProperty,arg__2:QString)\n"
-    "qtpropertybrowser.QtFilePropertyManager.setReadOnly(property:qtpropertybrowser.QtProperty,readOnly:bool)\n"
-    "qtpropertybrowser.QtFilePropertyManager.setValue(arg__1:qtpropertybrowser.QtProperty,arg__2:QString)\n"
-    "qtpropertybrowser.QtFilePropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
-    "qtpropertybrowser.QtFilePropertyManager.value(property:qtpropertybrowser.QtProperty)->QString\n"
-    "qtpropertybrowser.QtFilePropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
-;
+static const char *QtFilePropertyManager_SignatureStrings[] = {
+    "qtpropertybrowser.QtFilePropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
+    "qtpropertybrowser.QtFilePropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtFilePropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
+    "qtpropertybrowser.QtFilePropertyManager.fileMode(property:qtpropertybrowser.QtProperty)->PySide2.QtWidgets.QFileDialog.FileMode",
+    "qtpropertybrowser.QtFilePropertyManager.filter(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtFilePropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtFilePropertyManager.isReadOnly(property:qtpropertybrowser.QtProperty)->bool",
+    "qtpropertybrowser.QtFilePropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
+    "qtpropertybrowser.QtFilePropertyManager.setFileMode(arg__1:qtpropertybrowser.QtProperty,mode:PySide2.QtWidgets.QFileDialog.FileMode)",
+    "qtpropertybrowser.QtFilePropertyManager.setFilter(arg__1:qtpropertybrowser.QtProperty,arg__2:QString)",
+    "qtpropertybrowser.QtFilePropertyManager.setReadOnly(property:qtpropertybrowser.QtProperty,readOnly:bool)",
+    "qtpropertybrowser.QtFilePropertyManager.setValue(arg__1:qtpropertybrowser.QtProperty,arg__2:QString)",
+    "qtpropertybrowser.QtFilePropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
+    "qtpropertybrowser.QtFilePropertyManager.value(property:qtpropertybrowser.QtProperty)->QString",
+    "qtpropertybrowser.QtFilePropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
+    nullptr}; // Sentinel
 
 void init_QtFilePropertyManager(PyObject* module)
 {
@@ -1772,7 +1774,7 @@ void init_QtFilePropertyManager(PyObject* module)
         "QtFilePropertyManager",
         "QtFilePropertyManager*",
         &Sbk_QtFilePropertyManager_spec,
-        QtFilePropertyManager_SignaturesString,
+        QtFilePropertyManager_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtFilePropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,
