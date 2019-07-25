@@ -25,49 +25,18 @@
 #include <qtpropertybrowser.h>
 
 
-#include <cctype>
-#include <cstring>
-
-QT_WARNING_DISABLE_DEPRECATED
-
-
-
-template <class T>
-static const char *typeNameOf(const T &t)
-{
-    const char *typeName =  typeid(t).name();
-    auto size = std::strlen(typeName);
-#if defined(Q_CC_MSVC) // MSVC: "class QPaintDevice * __ptr64"
-    if (auto lastStar = strchr(typeName, '*')) {
-        // MSVC: "class QPaintDevice * __ptr64"
-        while (*--lastStar == ' ') {
-        }
-        size = lastStar - typeName + 1;
-    }
-#else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
-        ++typeName;
-        --size;
-    }
-#endif
-    char *result = new char[size + 1];
-    result[size] = '\0';
-    memcpy(result, typeName, size);
-    return result;
-}
-
 
 // Target ---------------------------------------------------------
 
 extern "C" {
 static PyObject* Sbk_QtBrowserItemFunc_browser(PyObject* self)
 {
-    ::QtBrowserItem* cppSelf = nullptr;
+    ::QtBrowserItem* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
+        return 0;
     cppSelf = reinterpret_cast< ::QtBrowserItem *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBROWSERITEM_IDX], reinterpret_cast<SbkObject *>(self)));
-    PyObject* pyResult{};
+    PyObject* pyResult = 0;
 
     // Call function/method
     {
@@ -82,19 +51,19 @@ static PyObject* Sbk_QtBrowserItemFunc_browser(PyObject* self)
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 }
 
 static PyObject* Sbk_QtBrowserItemFunc_children(PyObject* self)
 {
-    ::QtBrowserItem* cppSelf = nullptr;
+    ::QtBrowserItem* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
+        return 0;
     cppSelf = reinterpret_cast< ::QtBrowserItem *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBROWSERITEM_IDX], reinterpret_cast<SbkObject *>(self)));
-    PyObject* pyResult{};
+    PyObject* pyResult = 0;
 
     // Call function/method
     {
@@ -108,19 +77,19 @@ static PyObject* Sbk_QtBrowserItemFunc_children(PyObject* self)
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 }
 
 static PyObject* Sbk_QtBrowserItemFunc_parent(PyObject* self)
 {
-    ::QtBrowserItem* cppSelf = nullptr;
+    ::QtBrowserItem* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
+        return 0;
     cppSelf = reinterpret_cast< ::QtBrowserItem *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBROWSERITEM_IDX], reinterpret_cast<SbkObject *>(self)));
-    PyObject* pyResult{};
+    PyObject* pyResult = 0;
 
     // Call function/method
     {
@@ -135,19 +104,19 @@ static PyObject* Sbk_QtBrowserItemFunc_parent(PyObject* self)
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 }
 
 static PyObject* Sbk_QtBrowserItemFunc_property(PyObject* self)
 {
-    ::QtBrowserItem* cppSelf = nullptr;
+    ::QtBrowserItem* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
+        return 0;
     cppSelf = reinterpret_cast< ::QtBrowserItem *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBROWSERITEM_IDX], reinterpret_cast<SbkObject *>(self)));
-    PyObject* pyResult{};
+    PyObject* pyResult = 0;
 
     // Call function/method
     {
@@ -162,18 +131,18 @@ static PyObject* Sbk_QtBrowserItemFunc_property(PyObject* self)
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 }
 
 static PyMethodDef Sbk_QtBrowserItem_methods[] = {
-    {"browser", reinterpret_cast<PyCFunction>(Sbk_QtBrowserItemFunc_browser), METH_NOARGS},
-    {"children", reinterpret_cast<PyCFunction>(Sbk_QtBrowserItemFunc_children), METH_NOARGS},
-    {"parent", reinterpret_cast<PyCFunction>(Sbk_QtBrowserItemFunc_parent), METH_NOARGS},
-    {"property", reinterpret_cast<PyCFunction>(Sbk_QtBrowserItemFunc_property), METH_NOARGS},
+    {"browser", (PyCFunction)Sbk_QtBrowserItemFunc_browser, METH_NOARGS},
+    {"children", (PyCFunction)Sbk_QtBrowserItemFunc_children, METH_NOARGS},
+    {"parent", (PyCFunction)Sbk_QtBrowserItemFunc_parent, METH_NOARGS},
+    {"property", (PyCFunction)Sbk_QtBrowserItemFunc_property, METH_NOARGS},
 
-    {nullptr, nullptr} // Sentinel
+    {0} // Sentinel
 };
 
 } // extern "C"
@@ -195,24 +164,24 @@ static SbkObjectType *Sbk_QtBrowserItem_TypeF(void)
 }
 
 static PyType_Slot Sbk_QtBrowserItem_slots[] = {
-    {Py_tp_base,        nullptr}, // inserted by introduceWrapperType
-    {Py_tp_dealloc,     reinterpret_cast<void*>(SbkDeallocWrapperWithPrivateDtor)},
-    {Py_tp_repr,        nullptr},
-    {Py_tp_hash,        nullptr},
-    {Py_tp_call,        nullptr},
-    {Py_tp_str,         nullptr},
-    {Py_tp_getattro,    nullptr},
-    {Py_tp_setattro,    nullptr},
-    {Py_tp_traverse,    reinterpret_cast<void*>(Sbk_QtBrowserItem_traverse)},
-    {Py_tp_clear,       reinterpret_cast<void*>(Sbk_QtBrowserItem_clear)},
-    {Py_tp_richcompare, nullptr},
-    {Py_tp_iter,        nullptr},
-    {Py_tp_iternext,    nullptr},
-    {Py_tp_methods,     reinterpret_cast<void*>(Sbk_QtBrowserItem_methods)},
-    {Py_tp_getset,      nullptr},
-    {Py_tp_init,        nullptr},
-    {Py_tp_new,         reinterpret_cast<void*>(SbkDummyNew /* PYSIDE-595: Prevent replacement of "0" with base->tp_new. */)},
-    {0, nullptr}
+    {Py_tp_base,        (void *)0}, // inserted by introduceWrapperType
+    {Py_tp_dealloc,     (void *)SbkDeallocWrapperWithPrivateDtor},
+    {Py_tp_repr,        (void *)0},
+    {Py_tp_hash,        (void *)0},
+    {Py_tp_call,        (void *)0},
+    {Py_tp_str,         (void *)0},
+    {Py_tp_getattro,    (void *)0},
+    {Py_tp_setattro,    (void *)0},
+    {Py_tp_traverse,    (void *)Sbk_QtBrowserItem_traverse},
+    {Py_tp_clear,       (void *)Sbk_QtBrowserItem_clear},
+    {Py_tp_richcompare, (void *)0},
+    {Py_tp_iter,        (void *)0},
+    {Py_tp_iternext,    (void *)0},
+    {Py_tp_methods,     (void *)Sbk_QtBrowserItem_methods},
+    {Py_tp_getset,      (void *)0},
+    {Py_tp_init,        (void *)0},
+    {Py_tp_new,         (void *)SbkDummyNew /* PYSIDE-595: Prevent replacement of "0" with base->tp_new. */},
+    {0, 0}
 };
 static PyType_Spec Sbk_QtBrowserItem_spec = {
     "qtpropertybrowser.QtBrowserItem",
@@ -234,40 +203,30 @@ static void QtBrowserItem_PythonToCpp_QtBrowserItem_PTR(PyObject* pyIn, void* cp
 static PythonToCppFunc is_QtBrowserItem_PythonToCpp_QtBrowserItem_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtBrowserItem_TypeF())))
+    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtBrowserItem_TypeF()))
         return QtBrowserItem_PythonToCpp_QtBrowserItem_PTR;
-    return {};
+    return 0;
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtBrowserItem_PTR_CppToPython_QtBrowserItem(const void* cppIn) {
-    auto pyOut = reinterpret_cast<PyObject*>(Shiboken::BindingManager::instance().retrieveWrapper(cppIn));
+    PyObject* pyOut = (PyObject*)Shiboken::BindingManager::instance().retrieveWrapper(cppIn);
     if (pyOut) {
         Py_INCREF(pyOut);
         return pyOut;
     }
-    bool changedTypeName = false;
-    auto tCppIn = reinterpret_cast<const ::QtBrowserItem *>(cppIn);
-    const char *typeName = typeid(*tCppIn).name();
-    auto sbkType = Shiboken::ObjectType::typeForTypeName(typeName);
-    if (sbkType && Shiboken::ObjectType::hasSpecialCastFunction(sbkType)) {
-        typeName = typeNameOf(tCppIn);
-        changedTypeName = true;
-     }
-    PyObject *result = Shiboken::Object::newObject(Sbk_QtBrowserItem_TypeF(), const_cast<void*>(cppIn), false, /* exactType */ changedTypeName, typeName);
-    if (changedTypeName)
-        delete [] typeName;
-    return result;
+    const char* typeName = typeid(*((::QtBrowserItem*)cppIn)).name();
+    return Shiboken::Object::newObject(Sbk_QtBrowserItem_TypeF(), const_cast<void*>(cppIn), false, false, typeName);
 }
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-static const char *QtBrowserItem_SignatureStrings[] = {
-    "qtpropertybrowser.QtBrowserItem.browser()->qtpropertybrowser.QtAbstractPropertyBrowser",
-    "qtpropertybrowser.QtBrowserItem.children()->QList[qtpropertybrowser.QtBrowserItem]",
-    "qtpropertybrowser.QtBrowserItem.parent()->qtpropertybrowser.QtBrowserItem",
-    "qtpropertybrowser.QtBrowserItem.property()->qtpropertybrowser.QtProperty",
-    nullptr}; // Sentinel
+const char QtBrowserItem_SignaturesString[] = ""
+    "qtpropertybrowser.QtBrowserItem.browser()->qtpropertybrowser.QtAbstractPropertyBrowser\n"
+    "qtpropertybrowser.QtBrowserItem.children()->qtpropertybrowser.QtBrowserItem\n"
+    "qtpropertybrowser.QtBrowserItem.parent()->qtpropertybrowser.QtBrowserItem\n"
+    "qtpropertybrowser.QtBrowserItem.property()->qtpropertybrowser.QtProperty\n"
+;
 
 void init_QtBrowserItem(PyObject* module)
 {
@@ -276,7 +235,7 @@ void init_QtBrowserItem(PyObject* module)
         "QtBrowserItem",
         "QtBrowserItem*",
         &Sbk_QtBrowserItem_spec,
-        QtBrowserItem_SignatureStrings,
+        QtBrowserItem_SignaturesString,
         0,
         0,
         0,

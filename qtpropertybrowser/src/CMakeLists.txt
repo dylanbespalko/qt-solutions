@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13.0)
+cmake_minimum_required(VERSION 3.12.0)
 project(qtpropertybrowser)
 
 # Include
@@ -28,16 +28,27 @@ set(headers
     qttreepropertybrowser.h
     qtbuttonpropertybrowser.h
     qtgroupboxpropertybrowser.h
+    qtpropertybrowserutils_p.h
     qtpropertybrowser.h
     qtpropertymanager.h
     qtvariantproperty.h
-    qteditorfactory.h
-    qtpropertybrowserutils_p.h)
+    qteditorfactory.h)
 set_target_properties(qtpropertybrowser PROPERTIES PUBLIC_HEADER "${headers}")
-target_compile_definitions(qtpropertybrowser PRIVATE BINDINGS_BUILD) # export WIN32 symbols in .lib file
+target_compile_definitions(qtpropertybrowser PRIVATE QT_QTPROPERTYBROWSER_EXPORT) # export WIN32 symbols in .lib file
+target_compile_definitions(qtpropertybrowser PRIVATE _USE_MATH_DEFINES)
+target_compile_definitions(qtpropertybrowser PRIVATE UNICODE)
+target_compile_definitions(qtpropertybrowser PRIVATE _UNICODE)
+target_compile_definitions(qtpropertybrowser PRIVATE _ENABLE_EXTENDED_ALIGNED_STORAGE)
+target_compile_definitions(qtpropertybrowser PRIVATE WIN64)
+target_compile_definitions(qtpropertybrowser PRIVATE QT_DISABLE_DEPRECATED_BEFORE=0)
+target_compile_definitions(qtpropertybrowser PRIVATE NDEBUG)
+target_compile_definitions(qtpropertybrowser PRIVATE _WINDLL)
+
 
 # Linking Flags
 target_link_libraries(qtpropertybrowser Qt5::Widgets)
+target_link_libraries(qtpropertybrowser Qt5::Gui)
+target_link_libraries(qtpropertybrowser Qt5::Core)
 
 # Install
 install (TARGETS qtpropertybrowser EXPORT qtpropertybrowser-targets
