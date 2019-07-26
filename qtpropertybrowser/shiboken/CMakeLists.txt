@@ -93,7 +93,7 @@ add_custom_command(OUTPUT ${generated_sources}
                    COMMAND ${shiboken_generator}
                    "--enable-pyside-extensions "
                    ${SHIBOKEN_OPT} ${BINDINGS_H} ${BINDINGS_XML}
-                   DEPENDS ${BINDINGS_H} ${BINDINGS_XML}
+                   DEPENDS ${BINDINGS_H} ${BINDINGS_XML} qtpropertybrowser::qtpropertybrowser
                    IMPLICIT_DEPENDS CXX ${BINDINGS_H}
                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                    COMMENT "Running binding generator for ${CMAKE_CURRENT_SOURCE_DIR}.")
@@ -107,7 +107,7 @@ if(WIN32)
 endif()
 
 # Include Flags
-target_include_directories(qtpropertybrowserpy PRIVATE ../src)
+target_include_directories(qtpropertybrowserpy PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
 target_include_directories(qtpropertybrowserpy PRIVATE ${SP_DIR}/PySide2/include)
 target_include_directories(qtpropertybrowserpy PRIVATE ${SP_DIR}/PySide2/include/QtWidgets)
 target_include_directories(qtpropertybrowserpy PRIVATE ${SP_DIR}/PySide2/include/QtGui)
