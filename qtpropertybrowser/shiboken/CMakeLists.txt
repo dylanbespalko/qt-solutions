@@ -104,16 +104,8 @@ set_target_properties(qtpropertybrowserpy PROPERTIES PREFIX "")
 set_target_properties(qtpropertybrowserpy PROPERTIES OUTPUT_NAME "qtpropertybrowser")
 if(WIN32)
     set_target_properties(qtpropertybrowserpy PROPERTIES SUFFIX ".pyd")
-    target_compile_definitions(qtpropertybrowserpy PRIVATE QT_QTPROPERTYBROWSER_EXPORT) # export WIN32 symbols in .lib file
-
-   target_compile_definitions(qtpropertybrowserpy PRIVATE _USE_MATH_DEFINES)
-   target_compile_definitions(qtpropertybrowserpy PRIVATE UNICODE)
-   target_compile_definitions(qtpropertybrowserpy PRIVATE _UNICODE)
-   target_compile_definitions(qtpropertybrowserpy PRIVATE _ENABLE_EXTENDED_ALIGNED_STORAGE)
-   target_compile_definitions(qtpropertybrowserpy PRIVATE WIN64)
-   target_compile_definitions(qtpropertybrowserpy PRIVATE QT_DISABLE_DEPRECATED_BEFORE=0)
-   target_compile_definitions(qtpropertybrowserpy PRIVATE NDEBUG)
-   target_compile_definitions(qtpropertybrowserpy PRIVATE _WINDLL)
+    target_compile_definitions(qtpropertybrowserpy PRIVATE QT_QTPROPERTYBROWSER_IMPORT) # export WIN32 symbols in .lib file
+    target_compile_definitions(qtpropertybrowserpy PRIVATE _USE_MATH_DEFINES)
 endif()
 
 # Include Flags
