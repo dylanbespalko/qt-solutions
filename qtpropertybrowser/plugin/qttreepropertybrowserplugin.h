@@ -41,15 +41,19 @@
 #ifndef QTTREEPROPERTYBROWSERPLUGIN_H
 #define QTTREEPROPERTYBROWSERPLUGIN_H
 
+#include "qttreepropertybrowser.h"
 #include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 class QtTreePropertyBrowserPlugin : public QObject, public QDesignerCustomWidgetInterface
 {
     Q_OBJECT
     Q_INTERFACES(QDesignerCustomWidgetInterface)
+#if QT_VERSION >= 0x050000
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidgetInterface")
+#endif // QT_VERSION >= 0x050000
     
 public:
-    QtTreePropertyBrowserPlugin(QObject *parent = 0);
+    QtTreePropertyBrowserPlugin(QObject *parent = nullptr);
     
     bool isContainer() const;
     bool isInitialized() const;
@@ -60,11 +64,14 @@ public:
     QString name() const;
     QString toolTip() const;
     QString whatsThis() const;
+    BrowserCol attribute1() const;
+    BrowserCol attribute2() const;
+    BrowserCol attribute3() const;
     QWidget *createWidget(QWidget *parent);
     void initialize(QDesignerFormEditorInterface *core);
     
 private:
-    bool initialized;
+    bool m_initialized;
 };
 
 #endif

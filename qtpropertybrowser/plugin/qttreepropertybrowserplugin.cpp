@@ -45,20 +45,20 @@
 QtTreePropertyBrowserPlugin::QtTreePropertyBrowserPlugin(QObject *parent)
 : QObject(parent)
 {
-    initialized = false;
+    m_initialized = false;
 }
 
 void QtTreePropertyBrowserPlugin::initialize(QDesignerFormEditorInterface * /* core */)
 {
-    if (initialized)
+    if (m_initialized)
         return;
     
-    initialized = true;
+    m_initialized = true;
 }
 
 bool QtTreePropertyBrowserPlugin::isInitialized() const
 {
-    return initialized;
+    return m_initialized;
 }
 
 QWidget *QtTreePropertyBrowserPlugin::createWidget(QWidget *parent)
@@ -73,7 +73,7 @@ QString QtTreePropertyBrowserPlugin::name() const
 
 QString QtTreePropertyBrowserPlugin::group() const
 {
-    return "nimimo";
+    return "Scikit Nonlinear";
 }
 
 QIcon QtTreePropertyBrowserPlugin::icon() const
@@ -83,12 +83,27 @@ QIcon QtTreePropertyBrowserPlugin::icon() const
 
 QString QtTreePropertyBrowserPlugin::toolTip() const
 {
-    return "";
+    return QLatin1String("");
 }
 
 QString QtTreePropertyBrowserPlugin::whatsThis() const
 {
-    return "";
+    return QLatin1String("");
+}
+
+BrowserCol QtTreePropertyBrowserPlugin::attribute1() const
+{
+    return BrowserCol::NONE;
+}
+
+BrowserCol QtTreePropertyBrowserPlugin::attribute2() const
+{
+    return BrowserCol::NONE;
+}
+
+BrowserCol QtTreePropertyBrowserPlugin::attribute3() const
+{
+    return BrowserCol::NONE;
 }
 
 bool QtTreePropertyBrowserPlugin::isContainer() const
@@ -120,7 +135,7 @@ QString QtTreePropertyBrowserPlugin::domXml() const
 
 QString QtTreePropertyBrowserPlugin::includeFile() const
 {
-    return "nimimo/view/desktop/device/propertybrowser.h";
+    return "propertybrowser.h";
 }
 
 #if QT_VERSION < 0x050000

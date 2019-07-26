@@ -12,6 +12,7 @@ macro(find_package)
 endmacro()
 
 # List Subprojects
-set(subprojects qtpropertybrowser)
+set(subprojects qtpropertybrowser qttreepropertybrowserplugin)
 add_subdirectory(src)
+add_subdirectory(plugin)
 add_subdirectory(shiboken)
