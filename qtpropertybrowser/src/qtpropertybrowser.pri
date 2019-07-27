@@ -2,6 +2,7 @@ include(../common.pri)
 greaterThan(QT_MAJOR_VERSION, 4): QT *= widgets
 INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
+DEFINES += _USE_MATH_DEFINES
 
 qtpropertybrowser-uselib:!qtpropertybrowser-buildlib {
     LIBS += -L$$QTPROPERTYBROWSER_LIBDIR -l$$QTPROPERTYBROWSER_LIBNAME

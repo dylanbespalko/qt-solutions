@@ -35,45 +35,13 @@
 #include <qtpropertymanager.h>
 
 
-#include <cctype>
-#include <cstring>
-
-QT_WARNING_DISABLE_DEPRECATED
-
-
-
-template <class T>
-static const char *typeNameOf(const T &t)
-{
-    const char *typeName =  typeid(t).name();
-    auto size = std::strlen(typeName);
-#if defined(Q_CC_MSVC) // MSVC: "class QPaintDevice * __ptr64"
-    if (auto lastStar = strchr(typeName, '*')) {
-        // MSVC: "class QPaintDevice * __ptr64"
-        while (*--lastStar == ' ') {
-        }
-        size = lastStar - typeName + 1;
-    }
-#else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
-        ++typeName;
-        --size;
-    }
-#endif
-    char *result = new char[size + 1];
-    result[size] = '\0';
-    memcpy(result, typeName, size);
-    return result;
-}
-
 // Native ---------------------------------------------------------
 
 void QtSizePolicyPropertyManagerWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtSizePolicyPropertyManagerWrapper::QtSizePolicyPropertyManagerWrapper(QObject * parent) : QtSizePolicyPropertyManager(parent)
-{
+QtSizePolicyPropertyManagerWrapper::QtSizePolicyPropertyManagerWrapper(QObject * parent) : QtSizePolicyPropertyManager(parent) {
     // ... middle
 }
 
@@ -92,7 +60,7 @@ bool QtSizePolicyPropertyManagerWrapper::check(const QtProperty * property) cons
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -124,7 +92,7 @@ QIcon QtSizePolicyPropertyManagerWrapper::checkIcon(const QtProperty * property)
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -158,7 +126,7 @@ void QtSizePolicyPropertyManagerWrapper::childEvent(QChildEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -184,7 +152,7 @@ void QtSizePolicyPropertyManagerWrapper::connectNotify(const QMetaMethod & signa
         Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtCoreTypes[SBK_QMETAMETHOD_IDX]), &signal)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -205,7 +173,7 @@ QtProperty * QtSizePolicyPropertyManagerWrapper::createProperty()
 
     Shiboken::AutoDecRef pyArgs(PyTuple_New(0));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -239,7 +207,7 @@ void QtSizePolicyPropertyManagerWrapper::customEvent(QEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -265,7 +233,7 @@ void QtSizePolicyPropertyManagerWrapper::disconnectNotify(const QMetaMethod & si
         Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtCoreTypes[SBK_QMETAMETHOD_IDX]), &signal)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -288,7 +256,7 @@ QString QtSizePolicyPropertyManagerWrapper::displayText(const QtProperty * prope
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -320,7 +288,7 @@ QLineEdit::EchoMode QtSizePolicyPropertyManagerWrapper::echoMode(const QtPropert
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), arg__1)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -353,7 +321,7 @@ bool QtSizePolicyPropertyManagerWrapper::event(QEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -389,7 +357,7 @@ bool QtSizePolicyPropertyManagerWrapper::eventFilter(QObject * watched, QEvent *
     ));
     bool invalidateArg2 = PyTuple_GET_ITEM(pyArgs, 1)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -423,7 +391,7 @@ QBrush QtSizePolicyPropertyManagerWrapper::foreground(const QtProperty * propert
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -455,7 +423,7 @@ QString QtSizePolicyPropertyManagerWrapper::formatText(const QtProperty * proper
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -487,7 +455,7 @@ bool QtSizePolicyPropertyManagerWrapper::hasValue(const QtProperty * property) c
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -520,7 +488,7 @@ void QtSizePolicyPropertyManagerWrapper::initializeProperty(QtProperty * propert
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -543,7 +511,7 @@ bool QtSizePolicyPropertyManagerWrapper::isReadOnly(const QtProperty * arg__1) c
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), arg__1)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -575,7 +543,7 @@ QString QtSizePolicyPropertyManagerWrapper::maximumText(const QtProperty * prope
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -607,7 +575,7 @@ QString QtSizePolicyPropertyManagerWrapper::minimumText(const QtProperty * prope
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -639,7 +607,7 @@ QString QtSizePolicyPropertyManagerWrapper::pkAvgText(const QtProperty * propert
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -673,7 +641,7 @@ void QtSizePolicyPropertyManagerWrapper::timerEvent(QTimerEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -699,7 +667,7 @@ void QtSizePolicyPropertyManagerWrapper::uninitializeProperty(QtProperty * prope
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -722,7 +690,7 @@ QString QtSizePolicyPropertyManagerWrapper::unitText(const QtProperty * property
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -754,7 +722,7 @@ QIcon QtSizePolicyPropertyManagerWrapper::valueIcon(const QtProperty * property)
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -786,7 +754,7 @@ QString QtSizePolicyPropertyManagerWrapper::valueText(const QtProperty * propert
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -808,7 +776,7 @@ const QMetaObject* QtSizePolicyPropertyManagerWrapper::metaObject() const
     if (QObject::d_ptr->metaObject)
         return QObject::d_ptr->dynamicMetaObject();
     SbkObject* pySelf = Shiboken::BindingManager::instance().retrieveWrapper(this);
-    if (pySelf == nullptr)
+    if (pySelf == NULL)
         return QtSizePolicyPropertyManager::metaObject();
     return PySide::SignalManager::retrieveMetaObject(reinterpret_cast<PyObject*>(pySelf));
 }
@@ -821,7 +789,7 @@ int QtSizePolicyPropertyManagerWrapper::qt_metacall(QMetaObject::Call call, int 
 
 void* QtSizePolicyPropertyManagerWrapper::qt_metacast(const char* _clname)
 {
-        if (!_clname) return {};
+        if (!_clname) return 0;
         SbkObject* pySelf = Shiboken::BindingManager::instance().retrieveWrapper(this);
         if (pySelf && PySide::inherits(Py_TYPE(pySelf), _clname))
                 return static_cast<void*>(const_cast< QtSizePolicyPropertyManagerWrapper* >(this));
@@ -846,12 +814,11 @@ Sbk_QtSizePolicyPropertyManager_Init(PyObject* self, PyObject* args, PyObject* k
     if (Shiboken::Object::isUserType(self) && !Shiboken::ObjectType::canCallConstructor(self->ob_type, Shiboken::SbkType< ::QtSizePolicyPropertyManager >()))
         return -1;
 
-    ::QtSizePolicyPropertyManagerWrapper* cptr{};
+    ::QtSizePolicyPropertyManagerWrapper* cptr = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp[] = { nullptr };
+    PythonToCppFunc pythonToCpp[] = { 0 };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
-    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -862,7 +829,7 @@ Sbk_QtSizePolicyPropertyManager_Init(PyObject* self, PyObject* args, PyObject* k
 
 
     // Overloaded function decisor
-    // 0: QtSizePolicyPropertyManager::QtSizePolicyPropertyManager(QObject*)
+    // 0: QtSizePolicyPropertyManager(QObject*)
     if (numArgs == 0) {
         overloadId = 0; // QtSizePolicyPropertyManager(QObject*)
     } else if ((pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtCoreTypes[SBK_QOBJECT_IDX]), (pyArgs[0])))) {
@@ -929,24 +896,25 @@ Sbk_QtSizePolicyPropertyManager_Init(PyObject* self, PyObject* args, PyObject* k
     return 1;
 
     Sbk_QtSizePolicyPropertyManager_Init_TypeError:
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtSizePolicyPropertyManager");
+        const char* overloads[] = {"PySide2.QtCore.QObject = nullptr", 0};
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtSizePolicyPropertyManager", overloads);
         return -1;
 }
 
 static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_check(PyObject* self, PyObject* pyArg)
 {
-    QtSizePolicyPropertyManagerWrapper* cppSelf = nullptr;
+    QtSizePolicyPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtSizePolicyPropertyManagerWrapper *>(reinterpret_cast< ::QtSizePolicyPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtSizePolicyPropertyManagerWrapper*)reinterpret_cast< ::QtSizePolicyPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::check(const QtProperty*)const
+    // 0: check(const QtProperty*)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // check(const QtProperty*)const
     }
@@ -957,7 +925,7 @@ static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_check(PyObject* self, PyObj
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
@@ -972,29 +940,30 @@ static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_check(PyObject* self, PyObj
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtSizePolicyPropertyManagerFunc_check_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtSizePolicyPropertyManager.check");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtSizePolicyPropertyManager.check", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_checkIcon(PyObject* self, PyObject* pyArg)
 {
-    QtSizePolicyPropertyManagerWrapper* cppSelf = nullptr;
+    QtSizePolicyPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtSizePolicyPropertyManagerWrapper *>(reinterpret_cast< ::QtSizePolicyPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtSizePolicyPropertyManagerWrapper*)reinterpret_cast< ::QtSizePolicyPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::checkIcon(const QtProperty*)const
+    // 0: checkIcon(const QtProperty*)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // checkIcon(const QtProperty*)const
     }
@@ -1005,14 +974,14 @@ static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_checkIcon(PyObject* self, P
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
             // checkIcon(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QIcon cppResult = static_cast<::QtSizePolicyPropertyManagerWrapper*>(cppSelf)->QtSizePolicyPropertyManagerWrapper::checkIcon_protected(cppArg0);
+            QIcon cppResult = ((::QtSizePolicyPropertyManagerWrapper*) cppSelf)->QtSizePolicyPropertyManagerWrapper::checkIcon_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtGuiTypes[SBK_QICON_IDX]), &cppResult);
         }
@@ -1020,28 +989,29 @@ static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_checkIcon(PyObject* self, P
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtSizePolicyPropertyManagerFunc_checkIcon_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtSizePolicyPropertyManager.checkIcon");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtSizePolicyPropertyManager.checkIcon", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_initializeProperty(PyObject* self, PyObject* pyArg)
 {
-    QtSizePolicyPropertyManagerWrapper* cppSelf = nullptr;
+    QtSizePolicyPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtSizePolicyPropertyManagerWrapper *>(reinterpret_cast< ::QtSizePolicyPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+        return 0;
+    cppSelf = (QtSizePolicyPropertyManagerWrapper*)reinterpret_cast< ::QtSizePolicyPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::initializeProperty(QtProperty*)
+    // 0: initializeProperty(QtProperty*)
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // initializeProperty(QtProperty*)
     }
@@ -1052,51 +1022,51 @@ static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_initializeProperty(PyObject
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
             // initializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            static_cast<::QtSizePolicyPropertyManagerWrapper*>(cppSelf)->QtSizePolicyPropertyManagerWrapper::initializeProperty_protected(cppArg0);
+            ((::QtSizePolicyPropertyManagerWrapper*) cppSelf)->QtSizePolicyPropertyManagerWrapper::initializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
 
     if (PyErr_Occurred()) {
-        return {};
+        return 0;
     }
     Py_RETURN_NONE;
 
     Sbk_QtSizePolicyPropertyManagerFunc_initializeProperty_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtSizePolicyPropertyManager.initializeProperty");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtSizePolicyPropertyManager.initializeProperty", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_setCheck(PyObject* self, PyObject* args)
 {
-    QtSizePolicyPropertyManagerWrapper* cppSelf = nullptr;
+    QtSizePolicyPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtSizePolicyPropertyManagerWrapper *>(reinterpret_cast< ::QtSizePolicyPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+        return 0;
+    cppSelf = (QtSizePolicyPropertyManagerWrapper*)reinterpret_cast< ::QtSizePolicyPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
+    PythonToCppFunc pythonToCpp[] = { 0, 0 };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
-    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
 
 
     if (!PyArg_UnpackTuple(args, "setCheck", 2, 2, &(pyArgs[0]), &(pyArgs[1])))
-        return {};
+        return 0;
 
 
     // Overloaded function decisor
-    // 0: QtSizePolicyPropertyManager::setCheck(QtProperty*,bool)
+    // 0: setCheck(QtProperty*,bool)
     if (numArgs == 2
         && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[0])))
         && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppConvertible(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), (pyArgs[1])))) {
@@ -1109,7 +1079,7 @@ static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_setCheck(PyObject* self, Py
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArgs[0]))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp[0](pyArgs[0], &cppArg0);
         bool cppArg1;
@@ -1124,38 +1094,38 @@ static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_setCheck(PyObject* self, Py
     }
 
     if (PyErr_Occurred()) {
-        return {};
+        return 0;
     }
     Py_RETURN_NONE;
 
     Sbk_QtSizePolicyPropertyManagerFunc_setCheck_TypeError:
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtSizePolicyPropertyManager.setCheck");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty, bool", 0};
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtSizePolicyPropertyManager.setCheck", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_setValue(PyObject* self, PyObject* args)
 {
-    QtSizePolicyPropertyManagerWrapper* cppSelf = nullptr;
+    QtSizePolicyPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtSizePolicyPropertyManagerWrapper *>(reinterpret_cast< ::QtSizePolicyPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+        return 0;
+    cppSelf = (QtSizePolicyPropertyManagerWrapper*)reinterpret_cast< ::QtSizePolicyPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
+    PythonToCppFunc pythonToCpp[] = { 0, 0 };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
-    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
 
 
     if (!PyArg_UnpackTuple(args, "setValue", 2, 2, &(pyArgs[0]), &(pyArgs[1])))
-        return {};
+        return 0;
 
 
     // Overloaded function decisor
-    // 0: QtSizePolicyPropertyManager::setValue(QtProperty*,QSizePolicy)
+    // 0: setValue(QtProperty*,QSizePolicy)
     if (numArgs == 2
         && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[0])))
         && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppReferenceConvertible(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QSIZEPOLICY_IDX]), (pyArgs[1])))) {
@@ -1168,11 +1138,11 @@ static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_setValue(PyObject* self, Py
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArgs[0]))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp[0](pyArgs[0], &cppArg0);
         if (!Shiboken::Object::isValid(pyArgs[1]))
-            return {};
+            return 0;
         ::QSizePolicy cppArg1_local;
         ::QSizePolicy* cppArg1 = &cppArg1_local;
         if (Shiboken::Conversions::isImplicitConversion(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QSIZEPOLICY_IDX]), pythonToCpp[1]))
@@ -1190,23 +1160,24 @@ static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_setValue(PyObject* self, Py
     }
 
     if (PyErr_Occurred()) {
-        return {};
+        return 0;
     }
     Py_RETURN_NONE;
 
     Sbk_QtSizePolicyPropertyManagerFunc_setValue_TypeError:
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtSizePolicyPropertyManager.setValue");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty, PySide2.QtWidgets.QSizePolicy", 0};
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtSizePolicyPropertyManager.setValue", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_subEnumPropertyManager(PyObject* self)
 {
-    QtSizePolicyPropertyManagerWrapper* cppSelf = nullptr;
+    QtSizePolicyPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtSizePolicyPropertyManagerWrapper *>(reinterpret_cast< ::QtSizePolicyPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtSizePolicyPropertyManagerWrapper*)reinterpret_cast< ::QtSizePolicyPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
 
     // Call function/method
     {
@@ -1221,19 +1192,19 @@ static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_subEnumPropertyManager(PyOb
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 }
 
 static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_subIntPropertyManager(PyObject* self)
 {
-    QtSizePolicyPropertyManagerWrapper* cppSelf = nullptr;
+    QtSizePolicyPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtSizePolicyPropertyManagerWrapper *>(reinterpret_cast< ::QtSizePolicyPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtSizePolicyPropertyManagerWrapper*)reinterpret_cast< ::QtSizePolicyPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
 
     // Call function/method
     {
@@ -1248,24 +1219,24 @@ static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_subIntPropertyManager(PyObj
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 }
 
 static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_uninitializeProperty(PyObject* self, PyObject* pyArg)
 {
-    QtSizePolicyPropertyManagerWrapper* cppSelf = nullptr;
+    QtSizePolicyPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtSizePolicyPropertyManagerWrapper *>(reinterpret_cast< ::QtSizePolicyPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+        return 0;
+    cppSelf = (QtSizePolicyPropertyManagerWrapper*)reinterpret_cast< ::QtSizePolicyPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::uninitializeProperty(QtProperty*)
+    // 0: uninitializeProperty(QtProperty*)
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // uninitializeProperty(QtProperty*)
     }
@@ -1276,42 +1247,43 @@ static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_uninitializeProperty(PyObje
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
             // uninitializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            static_cast<::QtSizePolicyPropertyManagerWrapper*>(cppSelf)->QtSizePolicyPropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
+            ((::QtSizePolicyPropertyManagerWrapper*) cppSelf)->QtSizePolicyPropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
 
     if (PyErr_Occurred()) {
-        return {};
+        return 0;
     }
     Py_RETURN_NONE;
 
     Sbk_QtSizePolicyPropertyManagerFunc_uninitializeProperty_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtSizePolicyPropertyManager.uninitializeProperty");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtSizePolicyPropertyManager.uninitializeProperty", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_value(PyObject* self, PyObject* pyArg)
 {
-    QtSizePolicyPropertyManagerWrapper* cppSelf = nullptr;
+    QtSizePolicyPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtSizePolicyPropertyManagerWrapper *>(reinterpret_cast< ::QtSizePolicyPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtSizePolicyPropertyManagerWrapper*)reinterpret_cast< ::QtSizePolicyPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtSizePolicyPropertyManager::value(const QtProperty*)const
+    // 0: value(const QtProperty*)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // value(const QtProperty*)const
     }
@@ -1322,7 +1294,7 @@ static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_value(PyObject* self, PyObj
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
@@ -1337,29 +1309,30 @@ static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_value(PyObject* self, PyObj
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtSizePolicyPropertyManagerFunc_value_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtSizePolicyPropertyManager.value");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtSizePolicyPropertyManager.value", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_valueText(PyObject* self, PyObject* pyArg)
 {
-    QtSizePolicyPropertyManagerWrapper* cppSelf = nullptr;
+    QtSizePolicyPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtSizePolicyPropertyManagerWrapper *>(reinterpret_cast< ::QtSizePolicyPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtSizePolicyPropertyManagerWrapper*)reinterpret_cast< ::QtSizePolicyPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSIZEPOLICYPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::valueText(const QtProperty*)const
+    // 0: valueText(const QtProperty*)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // valueText(const QtProperty*)const
     }
@@ -1370,14 +1343,14 @@ static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_valueText(PyObject* self, P
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
             // valueText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = static_cast<::QtSizePolicyPropertyManagerWrapper*>(cppSelf)->QtSizePolicyPropertyManagerWrapper::valueText_protected(cppArg0);
+            QString cppResult = ((::QtSizePolicyPropertyManagerWrapper*) cppSelf)->QtSizePolicyPropertyManagerWrapper::valueText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -1385,28 +1358,29 @@ static PyObject* Sbk_QtSizePolicyPropertyManagerFunc_valueText(PyObject* self, P
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtSizePolicyPropertyManagerFunc_valueText_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtSizePolicyPropertyManager.valueText");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtSizePolicyPropertyManager.valueText", overloads);
+        return 0;
 }
 
 static PyMethodDef Sbk_QtSizePolicyPropertyManager_methods[] = {
-    {"check", reinterpret_cast<PyCFunction>(Sbk_QtSizePolicyPropertyManagerFunc_check), METH_O},
-    {"checkIcon", reinterpret_cast<PyCFunction>(Sbk_QtSizePolicyPropertyManagerFunc_checkIcon), METH_O},
-    {"initializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtSizePolicyPropertyManagerFunc_initializeProperty), METH_O},
-    {"setCheck", reinterpret_cast<PyCFunction>(Sbk_QtSizePolicyPropertyManagerFunc_setCheck), METH_VARARGS},
-    {"setValue", reinterpret_cast<PyCFunction>(Sbk_QtSizePolicyPropertyManagerFunc_setValue), METH_VARARGS},
-    {"subEnumPropertyManager", reinterpret_cast<PyCFunction>(Sbk_QtSizePolicyPropertyManagerFunc_subEnumPropertyManager), METH_NOARGS},
-    {"subIntPropertyManager", reinterpret_cast<PyCFunction>(Sbk_QtSizePolicyPropertyManagerFunc_subIntPropertyManager), METH_NOARGS},
-    {"uninitializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtSizePolicyPropertyManagerFunc_uninitializeProperty), METH_O},
-    {"value", reinterpret_cast<PyCFunction>(Sbk_QtSizePolicyPropertyManagerFunc_value), METH_O},
-    {"valueText", reinterpret_cast<PyCFunction>(Sbk_QtSizePolicyPropertyManagerFunc_valueText), METH_O},
+    {"check", (PyCFunction)Sbk_QtSizePolicyPropertyManagerFunc_check, METH_O},
+    {"checkIcon", (PyCFunction)Sbk_QtSizePolicyPropertyManagerFunc_checkIcon, METH_O},
+    {"initializeProperty", (PyCFunction)Sbk_QtSizePolicyPropertyManagerFunc_initializeProperty, METH_O},
+    {"setCheck", (PyCFunction)Sbk_QtSizePolicyPropertyManagerFunc_setCheck, METH_VARARGS},
+    {"setValue", (PyCFunction)Sbk_QtSizePolicyPropertyManagerFunc_setValue, METH_VARARGS},
+    {"subEnumPropertyManager", (PyCFunction)Sbk_QtSizePolicyPropertyManagerFunc_subEnumPropertyManager, METH_NOARGS},
+    {"subIntPropertyManager", (PyCFunction)Sbk_QtSizePolicyPropertyManagerFunc_subIntPropertyManager, METH_NOARGS},
+    {"uninitializeProperty", (PyCFunction)Sbk_QtSizePolicyPropertyManagerFunc_uninitializeProperty, METH_O},
+    {"value", (PyCFunction)Sbk_QtSizePolicyPropertyManagerFunc_value, METH_O},
+    {"valueText", (PyCFunction)Sbk_QtSizePolicyPropertyManagerFunc_valueText, METH_O},
 
-    {nullptr, nullptr} // Sentinel
+    {0} // Sentinel
 };
 
 } // extern "C"
@@ -1428,24 +1402,24 @@ static SbkObjectType *Sbk_QtSizePolicyPropertyManager_TypeF(void)
 }
 
 static PyType_Slot Sbk_QtSizePolicyPropertyManager_slots[] = {
-    {Py_tp_base,        nullptr}, // inserted by introduceWrapperType
-    {Py_tp_dealloc,     reinterpret_cast<void*>(&SbkDeallocWrapper)},
-    {Py_tp_repr,        nullptr},
-    {Py_tp_hash,        nullptr},
-    {Py_tp_call,        nullptr},
-    {Py_tp_str,         nullptr},
-    {Py_tp_getattro,    nullptr},
-    {Py_tp_setattro,    nullptr},
-    {Py_tp_traverse,    reinterpret_cast<void*>(Sbk_QtSizePolicyPropertyManager_traverse)},
-    {Py_tp_clear,       reinterpret_cast<void*>(Sbk_QtSizePolicyPropertyManager_clear)},
-    {Py_tp_richcompare, nullptr},
-    {Py_tp_iter,        nullptr},
-    {Py_tp_iternext,    nullptr},
-    {Py_tp_methods,     reinterpret_cast<void*>(Sbk_QtSizePolicyPropertyManager_methods)},
-    {Py_tp_getset,      nullptr},
-    {Py_tp_init,        reinterpret_cast<void*>(Sbk_QtSizePolicyPropertyManager_Init)},
-    {Py_tp_new,         reinterpret_cast<void*>(SbkObjectTpNew)},
-    {0, nullptr}
+    {Py_tp_base,        (void *)0}, // inserted by introduceWrapperType
+    {Py_tp_dealloc,     (void *)&SbkDeallocWrapper},
+    {Py_tp_repr,        (void *)0},
+    {Py_tp_hash,        (void *)0},
+    {Py_tp_call,        (void *)0},
+    {Py_tp_str,         (void *)0},
+    {Py_tp_getattro,    (void *)0},
+    {Py_tp_setattro,    (void *)0},
+    {Py_tp_traverse,    (void *)Sbk_QtSizePolicyPropertyManager_traverse},
+    {Py_tp_clear,       (void *)Sbk_QtSizePolicyPropertyManager_clear},
+    {Py_tp_richcompare, (void *)0},
+    {Py_tp_iter,        (void *)0},
+    {Py_tp_iternext,    (void *)0},
+    {Py_tp_methods,     (void *)Sbk_QtSizePolicyPropertyManager_methods},
+    {Py_tp_getset,      (void *)0},
+    {Py_tp_init,        (void *)Sbk_QtSizePolicyPropertyManager_Init},
+    {Py_tp_new,         (void *)SbkObjectTpNew},
+    {0, 0}
 };
 static PyType_Spec Sbk_QtSizePolicyPropertyManager_spec = {
     "qtpropertybrowser.QtSizePolicyPropertyManager",
@@ -1461,7 +1435,7 @@ static void* Sbk_QtSizePolicyPropertyManager_typeDiscovery(void* cptr, SbkObject
 {
     if (instanceType == reinterpret_cast<SbkObjectType*>(Shiboken::SbkType< ::QObject >()))
         return dynamic_cast< ::QtSizePolicyPropertyManager*>(reinterpret_cast< ::QObject*>(cptr));
-    return {};
+    return 0;
 }
 
 
@@ -1474,32 +1448,32 @@ static void QtSizePolicyPropertyManager_PythonToCpp_QtSizePolicyPropertyManager_
 static PythonToCppFunc is_QtSizePolicyPropertyManager_PythonToCpp_QtSizePolicyPropertyManager_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtSizePolicyPropertyManager_TypeF())))
+    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtSizePolicyPropertyManager_TypeF()))
         return QtSizePolicyPropertyManager_PythonToCpp_QtSizePolicyPropertyManager_PTR;
-    return {};
+    return 0;
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtSizePolicyPropertyManager_PTR_CppToPython_QtSizePolicyPropertyManager(const void* cppIn) {
-    return PySide::getWrapperForQObject(reinterpret_cast<::QtSizePolicyPropertyManager*>(const_cast<void*>(cppIn)), Sbk_QtSizePolicyPropertyManager_TypeF());
+    return PySide::getWrapperForQObject((::QtSizePolicyPropertyManager*)cppIn, Sbk_QtSizePolicyPropertyManager_TypeF());
 
 }
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-static const char *QtSizePolicyPropertyManager_SignatureStrings[] = {
-    "qtpropertybrowser.QtSizePolicyPropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
-    "qtpropertybrowser.QtSizePolicyPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
-    "qtpropertybrowser.QtSizePolicyPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
-    "qtpropertybrowser.QtSizePolicyPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
-    "qtpropertybrowser.QtSizePolicyPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
-    "qtpropertybrowser.QtSizePolicyPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtWidgets.QSizePolicy)",
-    "qtpropertybrowser.QtSizePolicyPropertyManager.subEnumPropertyManager()->qtpropertybrowser.QtEnumPropertyManager",
-    "qtpropertybrowser.QtSizePolicyPropertyManager.subIntPropertyManager()->qtpropertybrowser.QtIntPropertyManager",
-    "qtpropertybrowser.QtSizePolicyPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
-    "qtpropertybrowser.QtSizePolicyPropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtWidgets.QSizePolicy",
-    "qtpropertybrowser.QtSizePolicyPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
-    nullptr}; // Sentinel
+const char QtSizePolicyPropertyManager_SignaturesString[] = ""
+    "qtpropertybrowser.QtSizePolicyPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
+    "qtpropertybrowser.QtSizePolicyPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
+    "qtpropertybrowser.QtSizePolicyPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
+    "qtpropertybrowser.QtSizePolicyPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtSizePolicyPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
+    "qtpropertybrowser.QtSizePolicyPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtWidgets.QSizePolicy)\n"
+    "qtpropertybrowser.QtSizePolicyPropertyManager.subEnumPropertyManager()->qtpropertybrowser.QtEnumPropertyManager\n"
+    "qtpropertybrowser.QtSizePolicyPropertyManager.subIntPropertyManager()->qtpropertybrowser.QtIntPropertyManager\n"
+    "qtpropertybrowser.QtSizePolicyPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtSizePolicyPropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtWidgets.QSizePolicy\n"
+    "qtpropertybrowser.QtSizePolicyPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
+;
 
 void init_QtSizePolicyPropertyManager(PyObject* module)
 {
@@ -1508,7 +1482,7 @@ void init_QtSizePolicyPropertyManager(PyObject* module)
         "QtSizePolicyPropertyManager",
         "QtSizePolicyPropertyManager*",
         &Sbk_QtSizePolicyPropertyManager_spec,
-        QtSizePolicyPropertyManager_SignatureStrings,
+        QtSizePolicyPropertyManager_SignaturesString,
         &Shiboken::callCppDestructor< ::QtSizePolicyPropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

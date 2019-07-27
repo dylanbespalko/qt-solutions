@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13.0)
+cmake_minimum_required(VERSION 3.12.0)
 project(qtpropertybrowserpy)
 
 # Include
@@ -87,11 +87,11 @@ set(generated_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/qtpropertybrowser/qtgroupboxpropertybrowser_wrapper.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/qtpropertybrowser/qtbuttonpropertybrowser_wrapper.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/qtpropertybrowser/qtpropertybrowser_module_wrapper.cpp)
-set(BINDINGS_H bindings.h)
-set(BINDINGS_XML bindings.xml)
+set(BINDINGS_H ${CMAKE_CURRENT_SOURCE_DIR}/bindings.h)
+set(BINDINGS_XML ${CMAKE_CURRENT_SOURCE_DIR}/bindings.xml)
 add_custom_command(OUTPUT ${generated_sources}
                    COMMAND ${shiboken_generator}
-                   "--enable-pyside-extensions "
+                   "--enable-pyside-extensions"
                    ${SHIBOKEN_OPT} ${BINDINGS_H} ${BINDINGS_XML}
                    DEPENDS ${BINDINGS_H} ${BINDINGS_XML} qtpropertybrowser::qtpropertybrowser
                    IMPLICIT_DEPENDS CXX ${BINDINGS_H}
@@ -104,30 +104,37 @@ set_target_properties(qtpropertybrowserpy PROPERTIES PREFIX "")
 set_target_properties(qtpropertybrowserpy PROPERTIES OUTPUT_NAME "qtpropertybrowser")
 if(WIN32)
     set_target_properties(qtpropertybrowserpy PROPERTIES SUFFIX ".pyd")
+    target_compile_definitions(qtpropertybrowserpy PRIVATE QT_QTPROPERTYBROWSER_IMPORT) # export WIN32 symbols in .lib file
+    target_compile_definitions(qtpropertybrowserpy PRIVATE _USE_MATH_DEFINES)
 endif()
 
 # Include Flags
 target_include_directories(qtpropertybrowserpy PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
-target_include_directories(qtpropertybrowserpy PRIVATE ${SP_DIR}/PySide2/include)
-target_include_directories(qtpropertybrowserpy PRIVATE ${SP_DIR}/PySide2/include/QtWidgets)
-target_include_directories(qtpropertybrowserpy PRIVATE ${SP_DIR}/PySide2/include/QtGui)
-target_include_directories(qtpropertybrowserpy PRIVATE ${SP_DIR}/PySide2/include/QtCore)
+target_include_directories(qtpropertybrowserpy PRIVATE ${PYTHON_SP_DIR}/PySide2/include)
+target_include_directories(qtpropertybrowserpy PRIVATE ${PYTHON_SP_DIR}/PySide2/include/QtWidgets)
+target_include_directories(qtpropertybrowserpy PRIVATE ${PYTHON_SP_DIR}/PySide2/include/QtGui)
+target_include_directories(qtpropertybrowserpy PRIVATE ${PYTHON_SP_DIR}/PySide2/include/QtCore)
 target_include_directories(qtpropertybrowserpy PRIVATE ${shiboken_include_dir})
 target_include_directories(qtpropertybrowserpy PRIVATE ${PYTHON_INC})
 target_include_directories(qtpropertybrowserpy PRIVATE ${Qt5Widgets_INCLUDE_DIRS})
 
 # Link Flags
 target_link_libraries(qtpropertybrowserpy PRIVATE qtpropertybrowser::qtpropertybrowser)
-target_link_libraries(qtpropertybrowserpy PRIVATE ${shiboken_shared_libraries})
-target_link_libraries(qtpropertybrowserpy PRIVATE Qt5::Widgets)
 if(WIN32)
-    target_link_libraries(qtpropertybrowserpy PRIVATE ${SP_DIR}/PySide2/pyside2.cp36-win_amd64.dll)
+    target_link_libraries(qtpropertybrowserpy PRIVATE ${PYTHON_SP_DIR}/PySide2/pyside2.cp36-win_amd64${CMAKE_STATIC_LIBRARY_SUFFIX})
+    target_link_libraries(qtpropertybrowserpy PRIVATE ${CONDA_PREFIX}/libs/python${PYTHONVERSION}${CMAKE_STATIC_LIBRARY_SUFFIX})
 elseif(APPLE)
-    target_link_libraries(qtpropertybrowserpy PRIVATE ${SP_DIR}/PySide2/libpyside2.cpython-36m-darwin.5.12.dylib)
+    target_link_libraries(qtpropertybrowserpy PRIVATE ${PYTHON_SP_DIR}/PySide2/libpyside2.cpython-36m-darwin.5.12${CMAKE_SHARED_LIBRARY_SUFFIX})
     set_target_properties(qtpropertybrowserpy PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
 else()
-    target_link_libraries(qtpropertybrowserpy PRIVATE ${SP_DIR}/PySide2/libpyside2.cpython-36m-x86_64-linux-gnu.so.5.12)
+    target_link_libraries(qtpropertybrowserpy PRIVATE ${PYTHON_SP_DIR}/PySide2/libpyside2.cpython-36m-x86_64-linux-gnu${CMAKE_SHARED_LIBRARY_SUFFIX}.5.12)
 endif() 
+target_link_libraries(qtpropertybrowserpy PRIVATE ${shiboken_shared_libraries})
+target_link_libraries(qtpropertybrowserpy PRIVATE Qt5::Widgets)
 
 # Install
-install (TARGETS qtpropertybrowserpy DESTINATION lib)
+if (WIN32)
+    install (TARGETS qtpropertybrowserpy DESTINATION bin)
+else()
+    install (TARGETS qtpropertybrowserpy DESTINATION lib)
+endif()

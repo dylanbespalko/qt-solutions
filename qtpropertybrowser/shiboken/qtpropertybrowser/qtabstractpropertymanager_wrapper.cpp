@@ -33,45 +33,13 @@
 #include <qtpropertybrowser.h>
 
 
-#include <cctype>
-#include <cstring>
-
-QT_WARNING_DISABLE_DEPRECATED
-
-
-
-template <class T>
-static const char *typeNameOf(const T &t)
-{
-    const char *typeName =  typeid(t).name();
-    auto size = std::strlen(typeName);
-#if defined(Q_CC_MSVC) // MSVC: "class QPaintDevice * __ptr64"
-    if (auto lastStar = strchr(typeName, '*')) {
-        // MSVC: "class QPaintDevice * __ptr64"
-        while (*--lastStar == ' ') {
-        }
-        size = lastStar - typeName + 1;
-    }
-#else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
-        ++typeName;
-        --size;
-    }
-#endif
-    char *result = new char[size + 1];
-    result[size] = '\0';
-    memcpy(result, typeName, size);
-    return result;
-}
-
 // Native ---------------------------------------------------------
 
 void QtAbstractPropertyManagerWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtAbstractPropertyManagerWrapper::QtAbstractPropertyManagerWrapper(QObject * parent) : QtAbstractPropertyManager(parent)
-{
+QtAbstractPropertyManagerWrapper::QtAbstractPropertyManagerWrapper(QObject * parent) : QtAbstractPropertyManager(parent) {
     // ... middle
 }
 
@@ -90,7 +58,7 @@ bool QtAbstractPropertyManagerWrapper::check(const QtProperty * property) const
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -122,7 +90,7 @@ QIcon QtAbstractPropertyManagerWrapper::checkIcon(const QtProperty * property) c
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -156,7 +124,7 @@ void QtAbstractPropertyManagerWrapper::childEvent(QChildEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -182,7 +150,7 @@ void QtAbstractPropertyManagerWrapper::connectNotify(const QMetaMethod & signal)
         Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtCoreTypes[SBK_QMETAMETHOD_IDX]), &signal)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -203,7 +171,7 @@ QtProperty * QtAbstractPropertyManagerWrapper::createProperty()
 
     Shiboken::AutoDecRef pyArgs(PyTuple_New(0));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -237,7 +205,7 @@ void QtAbstractPropertyManagerWrapper::customEvent(QEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -263,7 +231,7 @@ void QtAbstractPropertyManagerWrapper::disconnectNotify(const QMetaMethod & sign
         Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtCoreTypes[SBK_QMETAMETHOD_IDX]), &signal)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -286,7 +254,7 @@ QString QtAbstractPropertyManagerWrapper::displayText(const QtProperty * propert
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -318,7 +286,7 @@ QLineEdit::EchoMode QtAbstractPropertyManagerWrapper::echoMode(const QtProperty 
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), arg__1)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -351,7 +319,7 @@ bool QtAbstractPropertyManagerWrapper::event(QEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -387,7 +355,7 @@ bool QtAbstractPropertyManagerWrapper::eventFilter(QObject * watched, QEvent * e
     ));
     bool invalidateArg2 = PyTuple_GET_ITEM(pyArgs, 1)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -421,7 +389,7 @@ QBrush QtAbstractPropertyManagerWrapper::foreground(const QtProperty * property)
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -453,7 +421,7 @@ QString QtAbstractPropertyManagerWrapper::formatText(const QtProperty * property
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -485,7 +453,7 @@ bool QtAbstractPropertyManagerWrapper::hasValue(const QtProperty * property) con
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -517,7 +485,7 @@ void QtAbstractPropertyManagerWrapper::initializeProperty(QtProperty * property)
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -540,7 +508,7 @@ bool QtAbstractPropertyManagerWrapper::isReadOnly(const QtProperty * arg__1) con
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), arg__1)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -572,7 +540,7 @@ QString QtAbstractPropertyManagerWrapper::maximumText(const QtProperty * propert
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -604,7 +572,7 @@ QString QtAbstractPropertyManagerWrapper::minimumText(const QtProperty * propert
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -636,7 +604,7 @@ QString QtAbstractPropertyManagerWrapper::pkAvgText(const QtProperty * property)
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -670,7 +638,7 @@ void QtAbstractPropertyManagerWrapper::timerEvent(QTimerEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -696,7 +664,7 @@ void QtAbstractPropertyManagerWrapper::uninitializeProperty(QtProperty * propert
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -719,7 +687,7 @@ QString QtAbstractPropertyManagerWrapper::unitText(const QtProperty * property) 
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -751,7 +719,7 @@ QIcon QtAbstractPropertyManagerWrapper::valueIcon(const QtProperty * property) c
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -783,7 +751,7 @@ QString QtAbstractPropertyManagerWrapper::valueText(const QtProperty * property)
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), property)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -805,7 +773,7 @@ const QMetaObject* QtAbstractPropertyManagerWrapper::metaObject() const
     if (QObject::d_ptr->metaObject)
         return QObject::d_ptr->dynamicMetaObject();
     SbkObject* pySelf = Shiboken::BindingManager::instance().retrieveWrapper(this);
-    if (pySelf == nullptr)
+    if (pySelf == NULL)
         return QtAbstractPropertyManager::metaObject();
     return PySide::SignalManager::retrieveMetaObject(reinterpret_cast<PyObject*>(pySelf));
 }
@@ -818,7 +786,7 @@ int QtAbstractPropertyManagerWrapper::qt_metacall(QMetaObject::Call call, int id
 
 void* QtAbstractPropertyManagerWrapper::qt_metacast(const char* _clname)
 {
-        if (!_clname) return {};
+        if (!_clname) return 0;
         SbkObject* pySelf = Shiboken::BindingManager::instance().retrieveWrapper(this);
         if (pySelf && PySide::inherits(Py_TYPE(pySelf), _clname))
                 return static_cast<void*>(const_cast< QtAbstractPropertyManagerWrapper* >(this));
@@ -851,12 +819,11 @@ Sbk_QtAbstractPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwd
     if (Shiboken::Object::isUserType(self) && !Shiboken::ObjectType::canCallConstructor(self->ob_type, Shiboken::SbkType< ::QtAbstractPropertyManager >()))
         return -1;
 
-    ::QtAbstractPropertyManagerWrapper* cptr{};
+    ::QtAbstractPropertyManagerWrapper* cptr = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp[] = { nullptr };
+    PythonToCppFunc pythonToCpp[] = { 0 };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
-    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -867,7 +834,7 @@ Sbk_QtAbstractPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwd
 
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::QtAbstractPropertyManager(QObject*)
+    // 0: QtAbstractPropertyManager(QObject*)
     if (numArgs == 0) {
         overloadId = 0; // QtAbstractPropertyManager(QObject*)
     } else if ((pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtCoreTypes[SBK_QOBJECT_IDX]), (pyArgs[0])))) {
@@ -934,38 +901,38 @@ Sbk_QtAbstractPropertyManager_Init(PyObject* self, PyObject* args, PyObject* kwd
     return 1;
 
     Sbk_QtAbstractPropertyManager_Init_TypeError:
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtAbstractPropertyManager");
+        const char* overloads[] = {"PySide2.QtCore.QObject = nullptr", 0};
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtAbstractPropertyManager", overloads);
         return -1;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_addProperty(PyObject* self, PyObject* args, PyObject* kwds)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp[] = { nullptr };
+    PythonToCppFunc pythonToCpp[] = { 0 };
     SBK_UNUSED(pythonToCpp)
     int numNamedArgs = (kwds ? PyDict_Size(kwds) : 0);
     int numArgs = PyTuple_GET_SIZE(args);
-    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
     if (numArgs + numNamedArgs > 1) {
         PyErr_SetString(PyExc_TypeError, "qtpropertybrowser.QtAbstractPropertyManager.addProperty(): too many arguments");
-        return {};
+        return 0;
     }
 
     if (!PyArg_ParseTuple(args, "|O:addProperty", &(pyArgs[0])))
-        return {};
+        return 0;
 
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::addProperty(QString)
+    // 0: addProperty(QString)
     if (numArgs == 0) {
         overloadId = 0; // addProperty(QString)
     } else if ((pythonToCpp[0] = Shiboken::Conversions::isPythonToCppConvertible(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], (pyArgs[0])))) {
@@ -981,7 +948,7 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_addProperty(PyObject* self, P
             PyObject* value = PyDict_GetItemString(kwds, "name");
             if (value && pyArgs[0]) {
                 PyErr_SetString(PyExc_TypeError, "qtpropertybrowser.QtAbstractPropertyManager.addProperty(): got multiple values for keyword argument 'name'.");
-                return {};
+                return 0;
             } else if (value) {
                 pyArgs[0] = value;
                 if (!(pythonToCpp[0] = Shiboken::Conversions::isPythonToCppConvertible(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], (pyArgs[0]))))
@@ -1003,29 +970,30 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_addProperty(PyObject* self, P
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtAbstractPropertyManagerFunc_addProperty_TypeError:
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtAbstractPropertyManager.addProperty");
-        return {};
+        const char* overloads[] = {"unicode = QString()", 0};
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtAbstractPropertyManager.addProperty", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_attributesEditable(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::attributesEditable(BrowserCol)const
+    // 0: attributesEditable(BrowserCol)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, (pyArg)))) {
         overloadId = 0; // attributesEditable(BrowserCol)const
     }
@@ -1049,29 +1017,30 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_attributesEditable(PyObject* 
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtAbstractPropertyManagerFunc_attributesEditable_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.attributesEditable");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.BrowserCol", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.attributesEditable", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_check(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::check(const QtProperty*)const
+    // 0: check(const QtProperty*)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // check(const QtProperty*)const
     }
@@ -1082,14 +1051,14 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_check(PyObject* self, PyObjec
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
             // check(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            bool cppResult = static_cast<::QtAbstractPropertyManagerWrapper*>(cppSelf)->QtAbstractPropertyManagerWrapper::check_protected(cppArg0);
+            bool cppResult = ((::QtAbstractPropertyManagerWrapper*) cppSelf)->QtAbstractPropertyManagerWrapper::check_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), &cppResult);
         }
@@ -1097,29 +1066,30 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_check(PyObject* self, PyObjec
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtAbstractPropertyManagerFunc_check_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.check");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.check", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_checkIcon(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::checkIcon(const QtProperty*)const
+    // 0: checkIcon(const QtProperty*)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // checkIcon(const QtProperty*)const
     }
@@ -1130,14 +1100,14 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_checkIcon(PyObject* self, PyO
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
             // checkIcon(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QIcon cppResult = static_cast<::QtAbstractPropertyManagerWrapper*>(cppSelf)->QtAbstractPropertyManagerWrapper::checkIcon_protected(cppArg0);
+            QIcon cppResult = ((::QtAbstractPropertyManagerWrapper*) cppSelf)->QtAbstractPropertyManagerWrapper::checkIcon_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtGuiTypes[SBK_QICON_IDX]), &cppResult);
         }
@@ -1145,22 +1115,23 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_checkIcon(PyObject* self, PyO
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtAbstractPropertyManagerFunc_checkIcon_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.checkIcon");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.checkIcon", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_clear(PyObject* self)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
 
     // Call function/method
     {
@@ -1174,18 +1145,18 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_clear(PyObject* self)
     }
 
     if (PyErr_Occurred()) {
-        return {};
+        return 0;
     }
     Py_RETURN_NONE;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_connect_signals(PyObject* self)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
 
     // Call function/method
     {
@@ -1199,19 +1170,19 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_connect_signals(PyObject* sel
     }
 
     if (PyErr_Occurred()) {
-        return {};
+        return 0;
     }
     Py_RETURN_NONE;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_createProperty(PyObject* self)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
 
     // Call function/method
     {
@@ -1219,7 +1190,7 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_createProperty(PyObject* self
         if (!PyErr_Occurred()) {
             // createProperty()
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QtProperty * cppResult = static_cast<::QtAbstractPropertyManagerWrapper*>(cppSelf)->QtAbstractPropertyManagerWrapper::createProperty_protected();
+            QtProperty * cppResult = ((::QtAbstractPropertyManagerWrapper*) cppSelf)->QtAbstractPropertyManagerWrapper::createProperty_protected();
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), cppResult);
             Shiboken::Object::setParent(self, pyResult);
@@ -1228,18 +1199,18 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_createProperty(PyObject* self
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_disconnect_signals(PyObject* self)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
 
     // Call function/method
     {
@@ -1253,25 +1224,25 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_disconnect_signals(PyObject* 
     }
 
     if (PyErr_Occurred()) {
-        return {};
+        return 0;
     }
     Py_RETURN_NONE;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_displayText(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::displayText(const QtProperty*)const
+    // 0: displayText(const QtProperty*)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // displayText(const QtProperty*)const
     }
@@ -1282,14 +1253,14 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_displayText(PyObject* self, P
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
             // displayText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = static_cast<::QtAbstractPropertyManagerWrapper*>(cppSelf)->QtAbstractPropertyManagerWrapper::displayText_protected(cppArg0);
+            QString cppResult = ((::QtAbstractPropertyManagerWrapper*) cppSelf)->QtAbstractPropertyManagerWrapper::displayText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -1297,29 +1268,30 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_displayText(PyObject* self, P
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtAbstractPropertyManagerFunc_displayText_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.displayText");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.displayText", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_echoMode(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::echoMode(const QtProperty*)const
+    // 0: echoMode(const QtProperty*)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // echoMode(const QtProperty*)const
     }
@@ -1330,14 +1302,14 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_echoMode(PyObject* self, PyOb
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
             // echoMode(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QLineEdit::EchoMode cppResult = QLineEdit::EchoMode(static_cast<::QtAbstractPropertyManagerWrapper*>(cppSelf)->QtAbstractPropertyManagerWrapper::echoMode_protected(cppArg0));
+            QLineEdit::EchoMode cppResult = QLineEdit::EchoMode(((::QtAbstractPropertyManagerWrapper*) cppSelf)->QtAbstractPropertyManagerWrapper::echoMode_protected(cppArg0));
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkPySide2_QtWidgetsTypes[SBK_QLINEEDIT_ECHOMODE_IDX])->converter, &cppResult);
         }
@@ -1345,29 +1317,30 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_echoMode(PyObject* self, PyOb
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtAbstractPropertyManagerFunc_echoMode_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.echoMode");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.echoMode", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_foreground(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::foreground(const QtProperty*)const
+    // 0: foreground(const QtProperty*)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // foreground(const QtProperty*)const
     }
@@ -1378,14 +1351,14 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_foreground(PyObject* self, Py
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
             // foreground(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QBrush cppResult = static_cast<::QtAbstractPropertyManagerWrapper*>(cppSelf)->QtAbstractPropertyManagerWrapper::foreground_protected(cppArg0);
+            QBrush cppResult = ((::QtAbstractPropertyManagerWrapper*) cppSelf)->QtAbstractPropertyManagerWrapper::foreground_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtGuiTypes[SBK_QBRUSH_IDX]), &cppResult);
         }
@@ -1393,29 +1366,30 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_foreground(PyObject* self, Py
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtAbstractPropertyManagerFunc_foreground_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.foreground");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.foreground", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_formatText(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::formatText(const QtProperty*)const
+    // 0: formatText(const QtProperty*)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // formatText(const QtProperty*)const
     }
@@ -1426,14 +1400,14 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_formatText(PyObject* self, Py
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
             // formatText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = static_cast<::QtAbstractPropertyManagerWrapper*>(cppSelf)->QtAbstractPropertyManagerWrapper::formatText_protected(cppArg0);
+            QString cppResult = ((::QtAbstractPropertyManagerWrapper*) cppSelf)->QtAbstractPropertyManagerWrapper::formatText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -1441,29 +1415,30 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_formatText(PyObject* self, Py
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtAbstractPropertyManagerFunc_formatText_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.formatText");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.formatText", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_hasValue(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::hasValue(const QtProperty*)const
+    // 0: hasValue(const QtProperty*)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // hasValue(const QtProperty*)const
     }
@@ -1474,14 +1449,14 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_hasValue(PyObject* self, PyOb
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
             // hasValue(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            bool cppResult = static_cast<::QtAbstractPropertyManagerWrapper*>(cppSelf)->QtAbstractPropertyManagerWrapper::hasValue_protected(cppArg0);
+            bool cppResult = ((::QtAbstractPropertyManagerWrapper*) cppSelf)->QtAbstractPropertyManagerWrapper::hasValue_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), &cppResult);
         }
@@ -1489,28 +1464,29 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_hasValue(PyObject* self, PyOb
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtAbstractPropertyManagerFunc_hasValue_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.hasValue");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.hasValue", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_initializeProperty(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::initializeProperty(QtProperty*)
+    // 0: initializeProperty(QtProperty*)
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // initializeProperty(QtProperty*)
     }
@@ -1521,7 +1497,7 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_initializeProperty(PyObject* 
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
@@ -1529,38 +1505,39 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_initializeProperty(PyObject* 
             // initializeProperty(QtProperty*)
             if (Shiboken::Object::hasCppWrapper(reinterpret_cast<SbkObject*>(self))) {
                 PyErr_SetString(PyExc_NotImplementedError, "pure virtual method 'QtAbstractPropertyManager.initializeProperty()' not implemented.");
-                return {};
+                return 0;
             }
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            static_cast<::QtAbstractPropertyManagerWrapper*>(cppSelf)->initializeProperty_protected(cppArg0);
+            ((::QtAbstractPropertyManagerWrapper*) cppSelf)->initializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
 
     if (PyErr_Occurred()) {
-        return {};
+        return 0;
     }
     Py_RETURN_NONE;
 
     Sbk_QtAbstractPropertyManagerFunc_initializeProperty_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.initializeProperty");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.initializeProperty", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_isReadOnly(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::isReadOnly(const QtProperty*)const
+    // 0: isReadOnly(const QtProperty*)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // isReadOnly(const QtProperty*)const
     }
@@ -1571,7 +1548,7 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_isReadOnly(PyObject* self, Py
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
@@ -1586,29 +1563,30 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_isReadOnly(PyObject* self, Py
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtAbstractPropertyManagerFunc_isReadOnly_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.isReadOnly");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.isReadOnly", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_maximumText(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::maximumText(const QtProperty*)const
+    // 0: maximumText(const QtProperty*)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // maximumText(const QtProperty*)const
     }
@@ -1619,14 +1597,14 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_maximumText(PyObject* self, P
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
             // maximumText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = static_cast<::QtAbstractPropertyManagerWrapper*>(cppSelf)->QtAbstractPropertyManagerWrapper::maximumText_protected(cppArg0);
+            QString cppResult = ((::QtAbstractPropertyManagerWrapper*) cppSelf)->QtAbstractPropertyManagerWrapper::maximumText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -1634,29 +1612,30 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_maximumText(PyObject* self, P
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtAbstractPropertyManagerFunc_maximumText_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.maximumText");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.maximumText", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_minimumText(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::minimumText(const QtProperty*)const
+    // 0: minimumText(const QtProperty*)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // minimumText(const QtProperty*)const
     }
@@ -1667,14 +1646,14 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_minimumText(PyObject* self, P
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
             // minimumText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = static_cast<::QtAbstractPropertyManagerWrapper*>(cppSelf)->QtAbstractPropertyManagerWrapper::minimumText_protected(cppArg0);
+            QString cppResult = ((::QtAbstractPropertyManagerWrapper*) cppSelf)->QtAbstractPropertyManagerWrapper::minimumText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -1682,29 +1661,30 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_minimumText(PyObject* self, P
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtAbstractPropertyManagerFunc_minimumText_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.minimumText");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.minimumText", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_pkAvgText(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::pkAvgText(const QtProperty*)const
+    // 0: pkAvgText(const QtProperty*)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // pkAvgText(const QtProperty*)const
     }
@@ -1715,14 +1695,14 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_pkAvgText(PyObject* self, PyO
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
             // pkAvgText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = static_cast<::QtAbstractPropertyManagerWrapper*>(cppSelf)->QtAbstractPropertyManagerWrapper::pkAvgText_protected(cppArg0);
+            QString cppResult = ((::QtAbstractPropertyManagerWrapper*) cppSelf)->QtAbstractPropertyManagerWrapper::pkAvgText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -1730,23 +1710,24 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_pkAvgText(PyObject* self, PyO
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtAbstractPropertyManagerFunc_pkAvgText_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.pkAvgText");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.pkAvgText", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_properties(PyObject* self)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
 
     // Call function/method
     {
@@ -1760,34 +1741,33 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_properties(PyObject* self)
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_setAttributesEditable(PyObject* self, PyObject* args)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
+    PythonToCppFunc pythonToCpp[] = { 0, 0 };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
-    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
 
 
     if (!PyArg_UnpackTuple(args, "setAttributesEditable", 2, 2, &(pyArgs[0]), &(pyArgs[1])))
-        return {};
+        return 0;
 
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::setAttributesEditable(BrowserCol,bool)
+    // 0: setAttributesEditable(BrowserCol,bool)
     if (numArgs == 2
         && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, (pyArgs[0])))
         && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppConvertible(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), (pyArgs[1])))) {
@@ -1813,28 +1793,29 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_setAttributesEditable(PyObjec
     }
 
     if (PyErr_Occurred()) {
-        return {};
+        return 0;
     }
     Py_RETURN_NONE;
 
     Sbk_QtAbstractPropertyManagerFunc_setAttributesEditable_TypeError:
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtAbstractPropertyManager.setAttributesEditable");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.BrowserCol, bool", 0};
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtAbstractPropertyManager.setAttributesEditable", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_uninitializeProperty(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::uninitializeProperty(QtProperty*)
+    // 0: uninitializeProperty(QtProperty*)
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // uninitializeProperty(QtProperty*)
     }
@@ -1845,42 +1826,43 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_uninitializeProperty(PyObject
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
             // uninitializeProperty(QtProperty*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            static_cast<::QtAbstractPropertyManagerWrapper*>(cppSelf)->QtAbstractPropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
+            ((::QtAbstractPropertyManagerWrapper*) cppSelf)->QtAbstractPropertyManagerWrapper::uninitializeProperty_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
 
     if (PyErr_Occurred()) {
-        return {};
+        return 0;
     }
     Py_RETURN_NONE;
 
     Sbk_QtAbstractPropertyManagerFunc_uninitializeProperty_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.uninitializeProperty");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.uninitializeProperty", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_unitText(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::unitText(const QtProperty*)const
+    // 0: unitText(const QtProperty*)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // unitText(const QtProperty*)const
     }
@@ -1891,14 +1873,14 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_unitText(PyObject* self, PyOb
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
             // unitText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = static_cast<::QtAbstractPropertyManagerWrapper*>(cppSelf)->QtAbstractPropertyManagerWrapper::unitText_protected(cppArg0);
+            QString cppResult = ((::QtAbstractPropertyManagerWrapper*) cppSelf)->QtAbstractPropertyManagerWrapper::unitText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -1906,29 +1888,30 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_unitText(PyObject* self, PyOb
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtAbstractPropertyManagerFunc_unitText_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.unitText");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.unitText", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_valueIcon(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::valueIcon(const QtProperty*)const
+    // 0: valueIcon(const QtProperty*)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // valueIcon(const QtProperty*)const
     }
@@ -1939,14 +1922,14 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_valueIcon(PyObject* self, PyO
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
             // valueIcon(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QIcon cppResult = static_cast<::QtAbstractPropertyManagerWrapper*>(cppSelf)->QtAbstractPropertyManagerWrapper::valueIcon_protected(cppArg0);
+            QIcon cppResult = ((::QtAbstractPropertyManagerWrapper*) cppSelf)->QtAbstractPropertyManagerWrapper::valueIcon_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtGuiTypes[SBK_QICON_IDX]), &cppResult);
         }
@@ -1954,29 +1937,30 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_valueIcon(PyObject* self, PyO
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtAbstractPropertyManagerFunc_valueIcon_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.valueIcon");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.valueIcon", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyManagerFunc_valueText(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyManagerWrapper* cppSelf = nullptr;
+    QtAbstractPropertyManagerWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyManagerWrapper *>(reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyManagerWrapper*)reinterpret_cast< ::QtAbstractPropertyManager *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyManager::valueText(const QtProperty*)const
+    // 0: valueText(const QtProperty*)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // valueText(const QtProperty*)const
     }
@@ -1987,14 +1971,14 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_valueText(PyObject* self, PyO
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
             // valueText(const QtProperty*)const
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QString cppResult = static_cast<::QtAbstractPropertyManagerWrapper*>(cppSelf)->QtAbstractPropertyManagerWrapper::valueText_protected(cppArg0);
+            QString cppResult = ((::QtAbstractPropertyManagerWrapper*) cppSelf)->QtAbstractPropertyManagerWrapper::valueText_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::copyToPython(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], &cppResult);
         }
@@ -2002,42 +1986,43 @@ static PyObject* Sbk_QtAbstractPropertyManagerFunc_valueText(PyObject* self, PyO
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtAbstractPropertyManagerFunc_valueText_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.valueText");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyManager.valueText", overloads);
+        return 0;
 }
 
 static PyMethodDef Sbk_QtAbstractPropertyManager_methods[] = {
-    {"addProperty", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_addProperty), METH_VARARGS|METH_KEYWORDS},
-    {"attributesEditable", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_attributesEditable), METH_O},
-    {"check", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_check), METH_O},
-    {"checkIcon", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_checkIcon), METH_O},
-    {"clear", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_clear), METH_NOARGS},
-    {"connect_signals", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_connect_signals), METH_NOARGS},
-    {"createProperty", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_createProperty), METH_NOARGS},
-    {"disconnect_signals", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_disconnect_signals), METH_NOARGS},
-    {"displayText", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_displayText), METH_O},
-    {"echoMode", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_echoMode), METH_O},
-    {"foreground", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_foreground), METH_O},
-    {"formatText", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_formatText), METH_O},
-    {"hasValue", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_hasValue), METH_O},
-    {"initializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_initializeProperty), METH_O},
-    {"isReadOnly", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_isReadOnly), METH_O},
-    {"maximumText", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_maximumText), METH_O},
-    {"minimumText", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_minimumText), METH_O},
-    {"pkAvgText", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_pkAvgText), METH_O},
-    {"properties", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_properties), METH_NOARGS},
-    {"setAttributesEditable", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_setAttributesEditable), METH_VARARGS},
-    {"uninitializeProperty", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_uninitializeProperty), METH_O},
-    {"unitText", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_unitText), METH_O},
-    {"valueIcon", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_valueIcon), METH_O},
-    {"valueText", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyManagerFunc_valueText), METH_O},
+    {"addProperty", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_addProperty, METH_VARARGS|METH_KEYWORDS},
+    {"attributesEditable", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_attributesEditable, METH_O},
+    {"check", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_check, METH_O},
+    {"checkIcon", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_checkIcon, METH_O},
+    {"clear", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_clear, METH_NOARGS},
+    {"connect_signals", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_connect_signals, METH_NOARGS},
+    {"createProperty", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_createProperty, METH_NOARGS},
+    {"disconnect_signals", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_disconnect_signals, METH_NOARGS},
+    {"displayText", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_displayText, METH_O},
+    {"echoMode", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_echoMode, METH_O},
+    {"foreground", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_foreground, METH_O},
+    {"formatText", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_formatText, METH_O},
+    {"hasValue", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_hasValue, METH_O},
+    {"initializeProperty", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_initializeProperty, METH_O},
+    {"isReadOnly", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_isReadOnly, METH_O},
+    {"maximumText", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_maximumText, METH_O},
+    {"minimumText", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_minimumText, METH_O},
+    {"pkAvgText", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_pkAvgText, METH_O},
+    {"properties", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_properties, METH_NOARGS},
+    {"setAttributesEditable", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_setAttributesEditable, METH_VARARGS},
+    {"uninitializeProperty", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_uninitializeProperty, METH_O},
+    {"unitText", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_unitText, METH_O},
+    {"valueIcon", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_valueIcon, METH_O},
+    {"valueText", (PyCFunction)Sbk_QtAbstractPropertyManagerFunc_valueText, METH_O},
 
-    {nullptr, nullptr} // Sentinel
+    {0} // Sentinel
 };
 
 } // extern "C"
@@ -2059,24 +2044,24 @@ static SbkObjectType *Sbk_QtAbstractPropertyManager_TypeF(void)
 }
 
 static PyType_Slot Sbk_QtAbstractPropertyManager_slots[] = {
-    {Py_tp_base,        nullptr}, // inserted by introduceWrapperType
-    {Py_tp_dealloc,     reinterpret_cast<void*>(&SbkDeallocWrapper)},
-    {Py_tp_repr,        nullptr},
-    {Py_tp_hash,        nullptr},
-    {Py_tp_call,        nullptr},
-    {Py_tp_str,         nullptr},
-    {Py_tp_getattro,    nullptr},
-    {Py_tp_setattro,    nullptr},
-    {Py_tp_traverse,    reinterpret_cast<void*>(Sbk_QtAbstractPropertyManager_traverse)},
-    {Py_tp_clear,       reinterpret_cast<void*>(Sbk_QtAbstractPropertyManager_clear)},
-    {Py_tp_richcompare, nullptr},
-    {Py_tp_iter,        nullptr},
-    {Py_tp_iternext,    nullptr},
-    {Py_tp_methods,     reinterpret_cast<void*>(Sbk_QtAbstractPropertyManager_methods)},
-    {Py_tp_getset,      nullptr},
-    {Py_tp_init,        reinterpret_cast<void*>(Sbk_QtAbstractPropertyManager_Init)},
-    {Py_tp_new,         reinterpret_cast<void*>(SbkObjectTpNew)},
-    {0, nullptr}
+    {Py_tp_base,        (void *)0}, // inserted by introduceWrapperType
+    {Py_tp_dealloc,     (void *)&SbkDeallocWrapper},
+    {Py_tp_repr,        (void *)0},
+    {Py_tp_hash,        (void *)0},
+    {Py_tp_call,        (void *)0},
+    {Py_tp_str,         (void *)0},
+    {Py_tp_getattro,    (void *)0},
+    {Py_tp_setattro,    (void *)0},
+    {Py_tp_traverse,    (void *)Sbk_QtAbstractPropertyManager_traverse},
+    {Py_tp_clear,       (void *)Sbk_QtAbstractPropertyManager_clear},
+    {Py_tp_richcompare, (void *)0},
+    {Py_tp_iter,        (void *)0},
+    {Py_tp_iternext,    (void *)0},
+    {Py_tp_methods,     (void *)Sbk_QtAbstractPropertyManager_methods},
+    {Py_tp_getset,      (void *)0},
+    {Py_tp_init,        (void *)Sbk_QtAbstractPropertyManager_Init},
+    {Py_tp_new,         (void *)SbkObjectTpNew},
+    {0, 0}
 };
 static PyType_Spec Sbk_QtAbstractPropertyManager_spec = {
     "qtpropertybrowser.QtAbstractPropertyManager",
@@ -2092,7 +2077,7 @@ static void* Sbk_QtAbstractPropertyManager_typeDiscovery(void* cptr, SbkObjectTy
 {
     if (instanceType == reinterpret_cast<SbkObjectType*>(Shiboken::SbkType< ::QObject >()))
         return dynamic_cast< ::QtAbstractPropertyManager*>(reinterpret_cast< ::QObject*>(cptr));
-    return {};
+    return 0;
 }
 
 
@@ -2105,46 +2090,46 @@ static void QtAbstractPropertyManager_PythonToCpp_QtAbstractPropertyManager_PTR(
 static PythonToCppFunc is_QtAbstractPropertyManager_PythonToCpp_QtAbstractPropertyManager_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtAbstractPropertyManager_TypeF())))
+    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtAbstractPropertyManager_TypeF()))
         return QtAbstractPropertyManager_PythonToCpp_QtAbstractPropertyManager_PTR;
-    return {};
+    return 0;
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtAbstractPropertyManager_PTR_CppToPython_QtAbstractPropertyManager(const void* cppIn) {
-    return PySide::getWrapperForQObject(reinterpret_cast<::QtAbstractPropertyManager*>(const_cast<void*>(cppIn)), Sbk_QtAbstractPropertyManager_TypeF());
+    return PySide::getWrapperForQObject((::QtAbstractPropertyManager*)cppIn, Sbk_QtAbstractPropertyManager_TypeF());
 
 }
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-static const char *QtAbstractPropertyManager_SignatureStrings[] = {
-    "qtpropertybrowser.QtAbstractPropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
-    "qtpropertybrowser.QtAbstractPropertyManager.addProperty(name:QString=QString())->qtpropertybrowser.QtProperty",
-    "qtpropertybrowser.QtAbstractPropertyManager.attributesEditable(arg__1:qtpropertybrowser.BrowserCol)->bool",
-    "qtpropertybrowser.QtAbstractPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
-    "qtpropertybrowser.QtAbstractPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
-    "qtpropertybrowser.QtAbstractPropertyManager.clear()",
-    "qtpropertybrowser.QtAbstractPropertyManager.connect_signals()",
-    "qtpropertybrowser.QtAbstractPropertyManager.createProperty()->qtpropertybrowser.QtProperty",
-    "qtpropertybrowser.QtAbstractPropertyManager.disconnect_signals()",
-    "qtpropertybrowser.QtAbstractPropertyManager.displayText(property:qtpropertybrowser.QtProperty)->QString",
-    "qtpropertybrowser.QtAbstractPropertyManager.echoMode(arg__1:qtpropertybrowser.QtProperty)->PySide2.QtWidgets.QLineEdit.EchoMode",
-    "qtpropertybrowser.QtAbstractPropertyManager.foreground(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QBrush",
-    "qtpropertybrowser.QtAbstractPropertyManager.formatText(property:qtpropertybrowser.QtProperty)->QString",
-    "qtpropertybrowser.QtAbstractPropertyManager.hasValue(property:qtpropertybrowser.QtProperty)->bool",
-    "qtpropertybrowser.QtAbstractPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
-    "qtpropertybrowser.QtAbstractPropertyManager.isReadOnly(arg__1:qtpropertybrowser.QtProperty)->bool",
-    "qtpropertybrowser.QtAbstractPropertyManager.maximumText(property:qtpropertybrowser.QtProperty)->QString",
-    "qtpropertybrowser.QtAbstractPropertyManager.minimumText(property:qtpropertybrowser.QtProperty)->QString",
-    "qtpropertybrowser.QtAbstractPropertyManager.pkAvgText(property:qtpropertybrowser.QtProperty)->QString",
-    "qtpropertybrowser.QtAbstractPropertyManager.properties()->QSet[qtpropertybrowser.QtProperty]",
-    "qtpropertybrowser.QtAbstractPropertyManager.setAttributesEditable(arg__1:qtpropertybrowser.BrowserCol,arg__2:bool)",
-    "qtpropertybrowser.QtAbstractPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
-    "qtpropertybrowser.QtAbstractPropertyManager.unitText(property:qtpropertybrowser.QtProperty)->QString",
-    "qtpropertybrowser.QtAbstractPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
-    "qtpropertybrowser.QtAbstractPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
-    nullptr}; // Sentinel
+const char QtAbstractPropertyManager_SignaturesString[] = ""
+    "qtpropertybrowser.QtAbstractPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.addProperty(name:QString=QString())->qtpropertybrowser.QtProperty\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.attributesEditable(arg__1:qtpropertybrowser.BrowserCol)->bool\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.clear()\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.connect_signals()\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.createProperty()->qtpropertybrowser.QtProperty\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.disconnect_signals()\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.displayText(property:qtpropertybrowser.QtProperty)->QString\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.echoMode(arg__1:qtpropertybrowser.QtProperty)->PySide2.QtWidgets.QLineEdit.EchoMode\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.foreground(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QBrush\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.formatText(property:qtpropertybrowser.QtProperty)->QString\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.hasValue(property:qtpropertybrowser.QtProperty)->bool\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.isReadOnly(arg__1:qtpropertybrowser.QtProperty)->bool\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.maximumText(property:qtpropertybrowser.QtProperty)->QString\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.minimumText(property:qtpropertybrowser.QtProperty)->QString\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.pkAvgText(property:qtpropertybrowser.QtProperty)->QString\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.properties()->qtpropertybrowser.QtProperty\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.setAttributesEditable(arg__1:qtpropertybrowser.BrowserCol,arg__2:bool)\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.unitText(property:qtpropertybrowser.QtProperty)->QString\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
+    "qtpropertybrowser.QtAbstractPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
+;
 
 void init_QtAbstractPropertyManager(PyObject* module)
 {
@@ -2153,7 +2138,7 @@ void init_QtAbstractPropertyManager(PyObject* module)
         "QtAbstractPropertyManager",
         "QtAbstractPropertyManager*",
         &Sbk_QtAbstractPropertyManager_spec,
-        QtAbstractPropertyManager_SignatureStrings,
+        QtAbstractPropertyManager_SignaturesString,
         &Shiboken::callCppDestructor< ::QtAbstractPropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkPySide2_QtCoreTypes[SBK_QOBJECT_IDX]),
         0,

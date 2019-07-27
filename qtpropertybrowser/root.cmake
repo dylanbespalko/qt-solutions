@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.12.0)
 # Global Variables
+set(CMAKE_VERBOSE_MAKEFILE ON)
 if (CMAKE_SYSTEM_NAME MATCHES "Windows")
   set(SEP "\\")
   set(PATH_SEP "\\;")
@@ -33,15 +34,6 @@ set(QT_INC ${QT_DIR}/include)
 set(QTCORE_INC ${QT_INC}/QtCore)
 set(QTGUI_INC ${QT_INC}/QtGui)
 set(QTWIDGETS_INC ${QT_INC}/QtWidgets)
-set(Qt5_DIR ${QT_DIR}/lib/cmake/Qt5)
-if(WIN32)
-    message("!!!SET_QT_CREATOR_DIR!!")
-elseif(APPLE)
-    set(QT_CREATOR_DIR "${QT_DIR}/../../Qt Creator.app/Contents")
-else()
-    message("!!!SET_QT_CREATOR_DIR!!")
-endif()
-set(QT_PLUGIN_DIR ${QT_CREATOR_DIR}/PlugIns/designer)
 
 ## Python
 set(PYTHON_VERSION_MAJOR 3)

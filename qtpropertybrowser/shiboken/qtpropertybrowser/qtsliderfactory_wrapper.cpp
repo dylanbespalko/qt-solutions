@@ -27,45 +27,13 @@
 #include <qwidget.h>
 
 
-#include <cctype>
-#include <cstring>
-
-QT_WARNING_DISABLE_DEPRECATED
-
-
-
-template <class T>
-static const char *typeNameOf(const T &t)
-{
-    const char *typeName =  typeid(t).name();
-    auto size = std::strlen(typeName);
-#if defined(Q_CC_MSVC) // MSVC: "class QPaintDevice * __ptr64"
-    if (auto lastStar = strchr(typeName, '*')) {
-        // MSVC: "class QPaintDevice * __ptr64"
-        while (*--lastStar == ' ') {
-        }
-        size = lastStar - typeName + 1;
-    }
-#else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
-        ++typeName;
-        --size;
-    }
-#endif
-    char *result = new char[size + 1];
-    result[size] = '\0';
-    memcpy(result, typeName, size);
-    return result;
-}
-
 // Native ---------------------------------------------------------
 
 void QtSliderFactoryWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtSliderFactoryWrapper::QtSliderFactoryWrapper(QObject * parent) : QtSliderFactory(parent)
-{
+QtSliderFactoryWrapper::QtSliderFactoryWrapper(QObject * parent) : QtSliderFactory(parent) {
     // ... middle
 }
 
@@ -85,7 +53,7 @@ void QtSliderFactoryWrapper::connectPropertyManager(QtIntPropertyManager * manag
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTINTPROPERTYMANAGER_IDX]), manager)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -111,7 +79,7 @@ QWidget * QtSliderFactoryWrapper::createAttributeEditor(QtIntPropertyManager * m
         Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, &attribute)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -145,7 +113,7 @@ QWidget * QtSliderFactoryWrapper::createEditor(QtIntPropertyManager * manager, Q
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), parent)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -178,7 +146,7 @@ void QtSliderFactoryWrapper::disconnectPropertyManager(QtIntPropertyManager * ma
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTINTPROPERTYMANAGER_IDX]), manager)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -202,13 +170,12 @@ Sbk_QtSliderFactory_Init(PyObject* self, PyObject* args, PyObject* kwds)
     if (Shiboken::Object::isUserType(self) && !Shiboken::ObjectType::canCallConstructor(self->ob_type, Shiboken::SbkType< ::QtSliderFactory >()))
         return -1;
 
-    ::QtSliderFactoryWrapper* cptr{};
+    ::QtSliderFactoryWrapper* cptr = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp[] = { nullptr };
+    PythonToCppFunc pythonToCpp[] = { 0 };
     SBK_UNUSED(pythonToCpp)
     int numNamedArgs = (kwds ? PyDict_Size(kwds) : 0);
     int numArgs = PyTuple_GET_SIZE(args);
-    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -222,7 +189,7 @@ Sbk_QtSliderFactory_Init(PyObject* self, PyObject* args, PyObject* kwds)
 
 
     // Overloaded function decisor
-    // 0: QtSliderFactory::QtSliderFactory(QObject*)
+    // 0: QtSliderFactory(QObject*)
     if (numArgs == 0) {
         overloadId = 0; // QtSliderFactory(QObject*)
     } else if ((pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtCoreTypes[SBK_QOBJECT_IDX]), (pyArgs[0])))) {
@@ -276,23 +243,24 @@ Sbk_QtSliderFactory_Init(PyObject* self, PyObject* args, PyObject* kwds)
     return 1;
 
     Sbk_QtSliderFactory_Init_TypeError:
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtSliderFactory");
+        const char* overloads[] = {"PySide2.QtCore.QObject = nullptr", 0};
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtSliderFactory", overloads);
         return -1;
 }
 
 static PyObject* Sbk_QtSliderFactoryFunc_connectPropertyManager(PyObject* self, PyObject* pyArg)
 {
-    QtSliderFactoryWrapper* cppSelf = nullptr;
+    QtSliderFactoryWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtSliderFactoryWrapper *>(reinterpret_cast< ::QtSliderFactory *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSLIDERFACTORY_IDX], reinterpret_cast<SbkObject *>(self))));
+        return 0;
+    cppSelf = (QtSliderFactoryWrapper*)reinterpret_cast< ::QtSliderFactory *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSLIDERFACTORY_IDX], reinterpret_cast<SbkObject *>(self)));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtSliderFactory::connectPropertyManager(QtIntPropertyManager*)
+    // 0: connectPropertyManager(QtIntPropertyManager*)
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTINTPROPERTYMANAGER_IDX]), (pyArg)))) {
         overloadId = 0; // connectPropertyManager(QtIntPropertyManager*)
     }
@@ -303,52 +271,52 @@ static PyObject* Sbk_QtSliderFactoryFunc_connectPropertyManager(PyObject* self, 
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtIntPropertyManager* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
             // connectPropertyManager(QtIntPropertyManager*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            static_cast<::QtSliderFactoryWrapper*>(cppSelf)->QtSliderFactoryWrapper::connectPropertyManager_protected(cppArg0);
+            ((::QtSliderFactoryWrapper*) cppSelf)->QtSliderFactoryWrapper::connectPropertyManager_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
 
     if (PyErr_Occurred()) {
-        return {};
+        return 0;
     }
     Py_RETURN_NONE;
 
     Sbk_QtSliderFactoryFunc_connectPropertyManager_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtSliderFactory.connectPropertyManager");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtIntPropertyManager", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtSliderFactory.connectPropertyManager", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtSliderFactoryFunc_createAttributeEditor(PyObject* self, PyObject* args)
 {
-    QtSliderFactoryWrapper* cppSelf = nullptr;
+    QtSliderFactoryWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtSliderFactoryWrapper *>(reinterpret_cast< ::QtSliderFactory *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSLIDERFACTORY_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtSliderFactoryWrapper*)reinterpret_cast< ::QtSliderFactory *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSLIDERFACTORY_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp[] = { nullptr, nullptr, nullptr, nullptr };
+    PythonToCppFunc pythonToCpp[] = { 0, 0, 0, 0 };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
-    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0, 0, 0};
 
     // invalid argument lengths
 
 
     if (!PyArg_UnpackTuple(args, "createAttributeEditor", 4, 4, &(pyArgs[0]), &(pyArgs[1]), &(pyArgs[2]), &(pyArgs[3])))
-        return {};
+        return 0;
 
 
     // Overloaded function decisor
-    // 0: QtSliderFactory::createAttributeEditor(QtIntPropertyManager*,QtProperty*,QWidget*,BrowserCol)
+    // 0: createAttributeEditor(QtIntPropertyManager*,QtProperty*,QWidget*,BrowserCol)
     if (numArgs == 4
         && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTINTPROPERTYMANAGER_IDX]), (pyArgs[0])))
         && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[1])))
@@ -363,15 +331,15 @@ static PyObject* Sbk_QtSliderFactoryFunc_createAttributeEditor(PyObject* self, P
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArgs[0]))
-            return {};
+            return 0;
         ::QtIntPropertyManager* cppArg0;
         pythonToCpp[0](pyArgs[0], &cppArg0);
         if (!Shiboken::Object::isValid(pyArgs[1]))
-            return {};
+            return 0;
         ::QtProperty* cppArg1;
         pythonToCpp[1](pyArgs[1], &cppArg1);
         if (!Shiboken::Object::isValid(pyArgs[2]))
-            return {};
+            return 0;
         ::QWidget* cppArg2;
         pythonToCpp[2](pyArgs[2], &cppArg2);
         ::BrowserCol cppArg3{NONE};
@@ -380,7 +348,7 @@ static PyObject* Sbk_QtSliderFactoryFunc_createAttributeEditor(PyObject* self, P
         if (!PyErr_Occurred()) {
             // createAttributeEditor(QtIntPropertyManager*,QtProperty*,QWidget*,BrowserCol)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QWidget * cppResult = static_cast<::QtSliderFactoryWrapper*>(cppSelf)->QtSliderFactoryWrapper::createAttributeEditor_protected(cppArg0, cppArg1, cppArg2, cppArg3);
+            QWidget * cppResult = ((::QtSliderFactoryWrapper*) cppSelf)->QtSliderFactoryWrapper::createAttributeEditor_protected(cppArg0, cppArg1, cppArg2, cppArg3);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), cppResult);
             Shiboken::Object::setParent(self, pyResult);
@@ -389,39 +357,39 @@ static PyObject* Sbk_QtSliderFactoryFunc_createAttributeEditor(PyObject* self, P
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtSliderFactoryFunc_createAttributeEditor_TypeError:
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtSliderFactory.createAttributeEditor");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtIntPropertyManager, qtpropertybrowser.QtProperty, PySide2.QtWidgets.QWidget, qtpropertybrowser.BrowserCol", 0};
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtSliderFactory.createAttributeEditor", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtSliderFactoryFunc_createEditor(PyObject* self, PyObject* args)
 {
-    QtSliderFactoryWrapper* cppSelf = nullptr;
+    QtSliderFactoryWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtSliderFactoryWrapper *>(reinterpret_cast< ::QtSliderFactory *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSLIDERFACTORY_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtSliderFactoryWrapper*)reinterpret_cast< ::QtSliderFactory *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSLIDERFACTORY_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp[] = { nullptr, nullptr, nullptr };
+    PythonToCppFunc pythonToCpp[] = { 0, 0, 0 };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
-    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0, 0};
 
     // invalid argument lengths
 
 
     if (!PyArg_UnpackTuple(args, "createEditor", 3, 3, &(pyArgs[0]), &(pyArgs[1]), &(pyArgs[2])))
-        return {};
+        return 0;
 
 
     // Overloaded function decisor
-    // 0: QtSliderFactory::createEditor(QtIntPropertyManager*,QtProperty*,QWidget*)
+    // 0: createEditor(QtIntPropertyManager*,QtProperty*,QWidget*)
     if (numArgs == 3
         && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTINTPROPERTYMANAGER_IDX]), (pyArgs[0])))
         && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[1])))
@@ -435,22 +403,22 @@ static PyObject* Sbk_QtSliderFactoryFunc_createEditor(PyObject* self, PyObject* 
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArgs[0]))
-            return {};
+            return 0;
         ::QtIntPropertyManager* cppArg0;
         pythonToCpp[0](pyArgs[0], &cppArg0);
         if (!Shiboken::Object::isValid(pyArgs[1]))
-            return {};
+            return 0;
         ::QtProperty* cppArg1;
         pythonToCpp[1](pyArgs[1], &cppArg1);
         if (!Shiboken::Object::isValid(pyArgs[2]))
-            return {};
+            return 0;
         ::QWidget* cppArg2;
         pythonToCpp[2](pyArgs[2], &cppArg2);
 
         if (!PyErr_Occurred()) {
             // createEditor(QtIntPropertyManager*,QtProperty*,QWidget*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QWidget * cppResult = static_cast<::QtSliderFactoryWrapper*>(cppSelf)->QtSliderFactoryWrapper::createEditor_protected(cppArg0, cppArg1, cppArg2);
+            QWidget * cppResult = ((::QtSliderFactoryWrapper*) cppSelf)->QtSliderFactoryWrapper::createEditor_protected(cppArg0, cppArg1, cppArg2);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), cppResult);
             Shiboken::Object::setParent(self, pyResult);
@@ -459,28 +427,29 @@ static PyObject* Sbk_QtSliderFactoryFunc_createEditor(PyObject* self, PyObject* 
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtSliderFactoryFunc_createEditor_TypeError:
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtSliderFactory.createEditor");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtIntPropertyManager, qtpropertybrowser.QtProperty, PySide2.QtWidgets.QWidget", 0};
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtSliderFactory.createEditor", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtSliderFactoryFunc_disconnectPropertyManager(PyObject* self, PyObject* pyArg)
 {
-    QtSliderFactoryWrapper* cppSelf = nullptr;
+    QtSliderFactoryWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtSliderFactoryWrapper *>(reinterpret_cast< ::QtSliderFactory *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSLIDERFACTORY_IDX], reinterpret_cast<SbkObject *>(self))));
+        return 0;
+    cppSelf = (QtSliderFactoryWrapper*)reinterpret_cast< ::QtSliderFactory *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTSLIDERFACTORY_IDX], reinterpret_cast<SbkObject *>(self)));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtSliderFactory::disconnectPropertyManager(QtIntPropertyManager*)
+    // 0: disconnectPropertyManager(QtIntPropertyManager*)
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTINTPROPERTYMANAGER_IDX]), (pyArg)))) {
         overloadId = 0; // disconnectPropertyManager(QtIntPropertyManager*)
     }
@@ -491,35 +460,36 @@ static PyObject* Sbk_QtSliderFactoryFunc_disconnectPropertyManager(PyObject* sel
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtIntPropertyManager* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
             // disconnectPropertyManager(QtIntPropertyManager*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            static_cast<::QtSliderFactoryWrapper*>(cppSelf)->QtSliderFactoryWrapper::disconnectPropertyManager_protected(cppArg0);
+            ((::QtSliderFactoryWrapper*) cppSelf)->QtSliderFactoryWrapper::disconnectPropertyManager_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
 
     if (PyErr_Occurred()) {
-        return {};
+        return 0;
     }
     Py_RETURN_NONE;
 
     Sbk_QtSliderFactoryFunc_disconnectPropertyManager_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtSliderFactory.disconnectPropertyManager");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtIntPropertyManager", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtSliderFactory.disconnectPropertyManager", overloads);
+        return 0;
 }
 
 static PyMethodDef Sbk_QtSliderFactory_methods[] = {
-    {"connectPropertyManager", reinterpret_cast<PyCFunction>(Sbk_QtSliderFactoryFunc_connectPropertyManager), METH_O},
-    {"createAttributeEditor", reinterpret_cast<PyCFunction>(Sbk_QtSliderFactoryFunc_createAttributeEditor), METH_VARARGS},
-    {"createEditor", reinterpret_cast<PyCFunction>(Sbk_QtSliderFactoryFunc_createEditor), METH_VARARGS},
-    {"disconnectPropertyManager", reinterpret_cast<PyCFunction>(Sbk_QtSliderFactoryFunc_disconnectPropertyManager), METH_O},
+    {"connectPropertyManager", (PyCFunction)Sbk_QtSliderFactoryFunc_connectPropertyManager, METH_O},
+    {"createAttributeEditor", (PyCFunction)Sbk_QtSliderFactoryFunc_createAttributeEditor, METH_VARARGS},
+    {"createEditor", (PyCFunction)Sbk_QtSliderFactoryFunc_createEditor, METH_VARARGS},
+    {"disconnectPropertyManager", (PyCFunction)Sbk_QtSliderFactoryFunc_disconnectPropertyManager, METH_O},
 
-    {nullptr, nullptr} // Sentinel
+    {0} // Sentinel
 };
 
 } // extern "C"
@@ -541,24 +511,24 @@ static SbkObjectType *Sbk_QtSliderFactory_TypeF(void)
 }
 
 static PyType_Slot Sbk_QtSliderFactory_slots[] = {
-    {Py_tp_base,        nullptr}, // inserted by introduceWrapperType
-    {Py_tp_dealloc,     reinterpret_cast<void*>(&SbkDeallocWrapper)},
-    {Py_tp_repr,        nullptr},
-    {Py_tp_hash,        nullptr},
-    {Py_tp_call,        nullptr},
-    {Py_tp_str,         nullptr},
-    {Py_tp_getattro,    nullptr},
-    {Py_tp_setattro,    nullptr},
-    {Py_tp_traverse,    reinterpret_cast<void*>(Sbk_QtSliderFactory_traverse)},
-    {Py_tp_clear,       reinterpret_cast<void*>(Sbk_QtSliderFactory_clear)},
-    {Py_tp_richcompare, nullptr},
-    {Py_tp_iter,        nullptr},
-    {Py_tp_iternext,    nullptr},
-    {Py_tp_methods,     reinterpret_cast<void*>(Sbk_QtSliderFactory_methods)},
-    {Py_tp_getset,      nullptr},
-    {Py_tp_init,        reinterpret_cast<void*>(Sbk_QtSliderFactory_Init)},
-    {Py_tp_new,         reinterpret_cast<void*>(SbkObjectTpNew)},
-    {0, nullptr}
+    {Py_tp_base,        (void *)0}, // inserted by introduceWrapperType
+    {Py_tp_dealloc,     (void *)&SbkDeallocWrapper},
+    {Py_tp_repr,        (void *)0},
+    {Py_tp_hash,        (void *)0},
+    {Py_tp_call,        (void *)0},
+    {Py_tp_str,         (void *)0},
+    {Py_tp_getattro,    (void *)0},
+    {Py_tp_setattro,    (void *)0},
+    {Py_tp_traverse,    (void *)Sbk_QtSliderFactory_traverse},
+    {Py_tp_clear,       (void *)Sbk_QtSliderFactory_clear},
+    {Py_tp_richcompare, (void *)0},
+    {Py_tp_iter,        (void *)0},
+    {Py_tp_iternext,    (void *)0},
+    {Py_tp_methods,     (void *)Sbk_QtSliderFactory_methods},
+    {Py_tp_getset,      (void *)0},
+    {Py_tp_init,        (void *)Sbk_QtSliderFactory_Init},
+    {Py_tp_new,         (void *)SbkObjectTpNew},
+    {0, 0}
 };
 static PyType_Spec Sbk_QtSliderFactory_spec = {
     "qtpropertybrowser.QtSliderFactory",
@@ -580,41 +550,31 @@ static void QtSliderFactory_PythonToCpp_QtSliderFactory_PTR(PyObject* pyIn, void
 static PythonToCppFunc is_QtSliderFactory_PythonToCpp_QtSliderFactory_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtSliderFactory_TypeF())))
+    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtSliderFactory_TypeF()))
         return QtSliderFactory_PythonToCpp_QtSliderFactory_PTR;
-    return {};
+    return 0;
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtSliderFactory_PTR_CppToPython_QtSliderFactory(const void* cppIn) {
-    auto pyOut = reinterpret_cast<PyObject*>(Shiboken::BindingManager::instance().retrieveWrapper(cppIn));
+    PyObject* pyOut = (PyObject*)Shiboken::BindingManager::instance().retrieveWrapper(cppIn);
     if (pyOut) {
         Py_INCREF(pyOut);
         return pyOut;
     }
-    bool changedTypeName = false;
-    auto tCppIn = reinterpret_cast<const ::QtSliderFactory *>(cppIn);
-    const char *typeName = typeid(*tCppIn).name();
-    auto sbkType = Shiboken::ObjectType::typeForTypeName(typeName);
-    if (sbkType && Shiboken::ObjectType::hasSpecialCastFunction(sbkType)) {
-        typeName = typeNameOf(tCppIn);
-        changedTypeName = true;
-     }
-    PyObject *result = Shiboken::Object::newObject(Sbk_QtSliderFactory_TypeF(), const_cast<void*>(cppIn), false, /* exactType */ changedTypeName, typeName);
-    if (changedTypeName)
-        delete [] typeName;
-    return result;
+    const char* typeName = typeid(*((::QtSliderFactory*)cppIn)).name();
+    return Shiboken::Object::newObject(Sbk_QtSliderFactory_TypeF(), const_cast<void*>(cppIn), false, false, typeName);
 }
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-static const char *QtSliderFactory_SignatureStrings[] = {
-    "qtpropertybrowser.QtSliderFactory(parent:PySide2.QtCore.QObject=nullptr)",
-    "qtpropertybrowser.QtSliderFactory.connectPropertyManager(manager:qtpropertybrowser.QtIntPropertyManager)",
-    "qtpropertybrowser.QtSliderFactory.createAttributeEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget",
-    "qtpropertybrowser.QtSliderFactory.createEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget",
-    "qtpropertybrowser.QtSliderFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtIntPropertyManager)",
-    nullptr}; // Sentinel
+const char QtSliderFactory_SignaturesString[] = ""
+    "qtpropertybrowser.QtSliderFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
+    "qtpropertybrowser.QtSliderFactory.connectPropertyManager(manager:qtpropertybrowser.QtIntPropertyManager)\n"
+    "qtpropertybrowser.QtSliderFactory.createAttributeEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget\n"
+    "qtpropertybrowser.QtSliderFactory.createEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
+    "qtpropertybrowser.QtSliderFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtIntPropertyManager)\n"
+;
 
 void init_QtSliderFactory(PyObject* module)
 {
@@ -623,7 +583,7 @@ void init_QtSliderFactory(PyObject* module)
         "QtSliderFactory",
         "QtSliderFactory*",
         &Sbk_QtSliderFactory_spec,
-        QtSliderFactory_SignatureStrings,
+        QtSliderFactory_SignaturesString,
         &Shiboken::callCppDestructor< ::QtSliderFactory >,
         0,
         0,
