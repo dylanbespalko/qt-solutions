@@ -48,13 +48,45 @@
 #include <qwidget.h>
 
 
+#include <cctype>
+#include <cstring>
+
+QT_WARNING_DISABLE_DEPRECATED
+
+
+
+template <class T>
+static const char *typeNameOf(const T &t)
+{
+    const char *typeName =  typeid(t).name();
+    auto size = std::strlen(typeName);
+#if defined(Q_CC_MSVC) // MSVC: "class QPaintDevice * __ptr64"
+    if (auto lastStar = strchr(typeName, '*')) {
+        // MSVC: "class QPaintDevice * __ptr64"
+        while (*--lastStar == ' ') {
+        }
+        size = lastStar - typeName + 1;
+    }
+#else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
+        ++typeName;
+        --size;
+    }
+#endif
+    char *result = new char[size + 1];
+    result[size] = '\0';
+    memcpy(result, typeName, size);
+    return result;
+}
+
 // Native ---------------------------------------------------------
 
 void QtButtonPropertyBrowserWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtButtonPropertyBrowserWrapper::QtButtonPropertyBrowserWrapper(QWidget * parent) : QtButtonPropertyBrowser(parent) {
+QtButtonPropertyBrowserWrapper::QtButtonPropertyBrowserWrapper(QWidget * parent) : QtButtonPropertyBrowser(parent)
+{
     // ... middle
 }
 
@@ -75,7 +107,7 @@ void QtButtonPropertyBrowserWrapper::actionEvent(QActionEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -102,7 +134,7 @@ void QtButtonPropertyBrowserWrapper::changeEvent(QEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -129,7 +161,7 @@ void QtButtonPropertyBrowserWrapper::childEvent(QChildEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -156,7 +188,7 @@ void QtButtonPropertyBrowserWrapper::closeEvent(QCloseEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -182,7 +214,7 @@ void QtButtonPropertyBrowserWrapper::connectNotify(const QMetaMethod & signal)
         Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtCoreTypes[SBK_QMETAMETHOD_IDX]), &signal)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -207,7 +239,7 @@ void QtButtonPropertyBrowserWrapper::contextMenuEvent(QContextMenuEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -234,7 +266,7 @@ QWidget * QtButtonPropertyBrowserWrapper::createAttributeEditor(QtProperty * pro
         Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, &attribute)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -267,7 +299,7 @@ QWidget * QtButtonPropertyBrowserWrapper::createEditor(QtProperty * property, QW
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), parent)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -301,7 +333,7 @@ void QtButtonPropertyBrowserWrapper::customEvent(QEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -324,7 +356,7 @@ int QtButtonPropertyBrowserWrapper::devType() const
 
     Shiboken::AutoDecRef pyArgs(PyTuple_New(0));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -357,7 +389,7 @@ void QtButtonPropertyBrowserWrapper::disconnectNotify(const QMetaMethod & signal
         Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtCoreTypes[SBK_QMETAMETHOD_IDX]), &signal)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -382,7 +414,7 @@ void QtButtonPropertyBrowserWrapper::dragEnterEvent(QDragEnterEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -409,7 +441,7 @@ void QtButtonPropertyBrowserWrapper::dragLeaveEvent(QDragLeaveEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -436,7 +468,7 @@ void QtButtonPropertyBrowserWrapper::dragMoveEvent(QDragMoveEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -463,7 +495,7 @@ void QtButtonPropertyBrowserWrapper::dropEvent(QDropEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -490,7 +522,7 @@ void QtButtonPropertyBrowserWrapper::enterEvent(QEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -516,7 +548,7 @@ bool QtButtonPropertyBrowserWrapper::event(QEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -552,7 +584,7 @@ bool QtButtonPropertyBrowserWrapper::eventFilter(QObject * watched, QEvent * eve
     ));
     bool invalidateArg2 = PyTuple_GET_ITEM(pyArgs, 1)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -588,7 +620,7 @@ void QtButtonPropertyBrowserWrapper::focusInEvent(QFocusEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -613,7 +645,7 @@ bool QtButtonPropertyBrowserWrapper::focusNextPrevChild(bool next)
         Shiboken::Conversions::copyToPython(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), &next)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -647,7 +679,7 @@ void QtButtonPropertyBrowserWrapper::focusOutEvent(QFocusEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -670,7 +702,7 @@ bool QtButtonPropertyBrowserWrapper::hasHeightForWidth() const
 
     Shiboken::AutoDecRef pyArgs(PyTuple_New(0));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -702,7 +734,7 @@ int QtButtonPropertyBrowserWrapper::heightForWidth(int arg__1) const
         arg__1
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -736,7 +768,7 @@ void QtButtonPropertyBrowserWrapper::hideEvent(QHideEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -762,7 +794,7 @@ void QtButtonPropertyBrowserWrapper::initPainter(QPainter * painter) const
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtGuiTypes[SBK_QPAINTER_IDX]), painter)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -787,7 +819,7 @@ void QtButtonPropertyBrowserWrapper::inputMethodEvent(QInputMethodEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -812,7 +844,7 @@ QVariant QtButtonPropertyBrowserWrapper::inputMethodQuery(Qt::InputMethodQuery a
         Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkPySide2_QtCoreTypes[SBK_QT_INPUTMETHODQUERY_IDX])->converter, &arg__1)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -845,7 +877,7 @@ void QtButtonPropertyBrowserWrapper::itemChanged(QtBrowserItem * item)
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTBROWSERITEM_IDX]), item)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -870,7 +902,7 @@ void QtButtonPropertyBrowserWrapper::itemInserted(QtBrowserItem * item, QtBrowse
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTBROWSERITEM_IDX]), afterItem)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -894,7 +926,7 @@ void QtButtonPropertyBrowserWrapper::itemRemoved(QtBrowserItem * item)
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTBROWSERITEM_IDX]), item)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -919,7 +951,7 @@ void QtButtonPropertyBrowserWrapper::keyPressEvent(QKeyEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -946,7 +978,7 @@ void QtButtonPropertyBrowserWrapper::keyReleaseEvent(QKeyEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -973,7 +1005,7 @@ void QtButtonPropertyBrowserWrapper::leaveEvent(QEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -998,7 +1030,7 @@ int QtButtonPropertyBrowserWrapper::metric(QPaintDevice::PaintDeviceMetric arg__
         Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkPySide2_QtGuiTypes[SBK_QPAINTDEVICE_PAINTDEVICEMETRIC_IDX])->converter, &arg__1)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1028,7 +1060,7 @@ QSize QtButtonPropertyBrowserWrapper::minimumSizeHint() const
 
     Shiboken::AutoDecRef pyArgs(PyTuple_New(0));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1062,7 +1094,7 @@ void QtButtonPropertyBrowserWrapper::mouseDoubleClickEvent(QMouseEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1089,7 +1121,7 @@ void QtButtonPropertyBrowserWrapper::mouseMoveEvent(QMouseEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1116,7 +1148,7 @@ void QtButtonPropertyBrowserWrapper::mousePressEvent(QMouseEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1143,7 +1175,7 @@ void QtButtonPropertyBrowserWrapper::mouseReleaseEvent(QMouseEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1170,7 +1202,7 @@ void QtButtonPropertyBrowserWrapper::moveEvent(QMoveEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1199,7 +1231,7 @@ bool QtButtonPropertyBrowserWrapper::nativeEvent(const QByteArray & eventType, v
     ));
 
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1212,8 +1244,10 @@ bool QtButtonPropertyBrowserWrapper::nativeEvent(const QByteArray & eventType, v
     if (PySequence_Check(pyResult) && (PySequence_Size(pyResult) == 2)) {
     Shiboken::AutoDecRef pyItem(PySequence_GetItem(pyResult, 0));
     Shiboken::Conversions::pythonToCppCopy(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), pyItem, &(cppResult));
-    Shiboken::AutoDecRef pyResultItem(PySequence_GetItem(pyResult, 1));
-    Shiboken::Conversions::pythonToCppCopy(Shiboken::Conversions::PrimitiveTypeConverter<long>(), pyResultItem, (result));
+    if (result) {
+        Shiboken::AutoDecRef pyResultItem(PySequence_GetItem(pyResult, 1));
+        Shiboken::Conversions::pythonToCppCopy(Shiboken::Conversions::PrimitiveTypeConverter<long>(), pyResultItem, (result));
+    }
     }
     // TEMPLATE - return_native_eventfilter_conversion - END
 
@@ -1235,7 +1269,7 @@ QPaintEngine * QtButtonPropertyBrowserWrapper::paintEngine() const
 
     Shiboken::AutoDecRef pyArgs(PyTuple_New(0));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1269,7 +1303,7 @@ void QtButtonPropertyBrowserWrapper::paintEvent(QPaintEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1294,7 +1328,7 @@ QPaintDevice * QtButtonPropertyBrowserWrapper::redirected(QPoint * offset) const
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtCoreTypes[SBK_QPOINT_IDX]), offset)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1328,7 +1362,7 @@ void QtButtonPropertyBrowserWrapper::resizeEvent(QResizeEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1354,7 +1388,7 @@ void QtButtonPropertyBrowserWrapper::setVisible(bool visible)
         Shiboken::Conversions::copyToPython(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), &visible)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1375,7 +1409,7 @@ QPainter * QtButtonPropertyBrowserWrapper::sharedPainter() const
 
     Shiboken::AutoDecRef pyArgs(PyTuple_New(0));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1409,7 +1443,7 @@ void QtButtonPropertyBrowserWrapper::showEvent(QShowEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1432,7 +1466,7 @@ QSize QtButtonPropertyBrowserWrapper::sizeHint() const
 
     Shiboken::AutoDecRef pyArgs(PyTuple_New(0));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1466,7 +1500,7 @@ void QtButtonPropertyBrowserWrapper::tabletEvent(QTabletEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1493,7 +1527,7 @@ void QtButtonPropertyBrowserWrapper::timerEvent(QTimerEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1520,7 +1554,7 @@ void QtButtonPropertyBrowserWrapper::wheelEvent(QWheelEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1535,7 +1569,7 @@ const QMetaObject* QtButtonPropertyBrowserWrapper::metaObject() const
     if (QObject::d_ptr->metaObject)
         return QObject::d_ptr->dynamicMetaObject();
     SbkObject* pySelf = Shiboken::BindingManager::instance().retrieveWrapper(this);
-    if (pySelf == NULL)
+    if (pySelf == nullptr)
         return QtButtonPropertyBrowser::metaObject();
     return PySide::SignalManager::retrieveMetaObject(reinterpret_cast<PyObject*>(pySelf));
 }
@@ -1548,7 +1582,7 @@ int QtButtonPropertyBrowserWrapper::qt_metacall(QMetaObject::Call call, int id, 
 
 void* QtButtonPropertyBrowserWrapper::qt_metacast(const char* _clname)
 {
-        if (!_clname) return 0;
+        if (!_clname) return {};
         SbkObject* pySelf = Shiboken::BindingManager::instance().retrieveWrapper(this);
         if (pySelf && PySide::inherits(Py_TYPE(pySelf), _clname))
                 return static_cast<void*>(const_cast< QtButtonPropertyBrowserWrapper* >(this));
@@ -1573,11 +1607,12 @@ Sbk_QtButtonPropertyBrowser_Init(PyObject* self, PyObject* args, PyObject* kwds)
     if (Shiboken::Object::isUserType(self) && !Shiboken::ObjectType::canCallConstructor(self->ob_type, Shiboken::SbkType< ::QtButtonPropertyBrowser >()))
         return -1;
 
-    ::QtButtonPropertyBrowserWrapper* cptr = 0;
+    ::QtButtonPropertyBrowserWrapper* cptr{};
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp[] = { 0 };
+    PythonToCppFunc pythonToCpp[] = { nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -1588,7 +1623,7 @@ Sbk_QtButtonPropertyBrowser_Init(PyObject* self, PyObject* args, PyObject* kwds)
 
 
     // Overloaded function decisor
-    // 0: QtButtonPropertyBrowser(QWidget*)
+    // 0: QtButtonPropertyBrowser::QtButtonPropertyBrowser(QWidget*)
     if (numArgs == 0) {
         overloadId = 0; // QtButtonPropertyBrowser(QWidget*)
     } else if ((pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), (pyArgs[0])))) {
@@ -1655,19 +1690,18 @@ Sbk_QtButtonPropertyBrowser_Init(PyObject* self, PyObject* args, PyObject* kwds)
     return 1;
 
     Sbk_QtButtonPropertyBrowser_Init_TypeError:
-        const char* overloads[] = {"PySide2.QtWidgets.QWidget = nullptr", 0};
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtButtonPropertyBrowser", overloads);
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtButtonPropertyBrowser");
         return -1;
 }
 
 static PyObject* Sbk_QtButtonPropertyBrowserFunc_attribute1(PyObject* self)
 {
-    QtButtonPropertyBrowserWrapper* cppSelf = 0;
+    QtButtonPropertyBrowserWrapper* cppSelf = nullptr;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return 0;
-    cppSelf = (QtButtonPropertyBrowserWrapper*)reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
-    PyObject* pyResult = 0;
+        return {};
+    cppSelf = static_cast<QtButtonPropertyBrowserWrapper *>(reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
+    PyObject* pyResult{};
 
     // Call function/method
     {
@@ -1681,19 +1715,19 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_attribute1(PyObject* self)
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return 0;
+        return {};
     }
     return pyResult;
 }
 
 static PyObject* Sbk_QtButtonPropertyBrowserFunc_attribute2(PyObject* self)
 {
-    QtButtonPropertyBrowserWrapper* cppSelf = 0;
+    QtButtonPropertyBrowserWrapper* cppSelf = nullptr;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return 0;
-    cppSelf = (QtButtonPropertyBrowserWrapper*)reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
-    PyObject* pyResult = 0;
+        return {};
+    cppSelf = static_cast<QtButtonPropertyBrowserWrapper *>(reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
+    PyObject* pyResult{};
 
     // Call function/method
     {
@@ -1707,19 +1741,19 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_attribute2(PyObject* self)
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return 0;
+        return {};
     }
     return pyResult;
 }
 
 static PyObject* Sbk_QtButtonPropertyBrowserFunc_attribute3(PyObject* self)
 {
-    QtButtonPropertyBrowserWrapper* cppSelf = 0;
+    QtButtonPropertyBrowserWrapper* cppSelf = nullptr;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return 0;
-    cppSelf = (QtButtonPropertyBrowserWrapper*)reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
-    PyObject* pyResult = 0;
+        return {};
+    cppSelf = static_cast<QtButtonPropertyBrowserWrapper *>(reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
+    PyObject* pyResult{};
 
     // Call function/method
     {
@@ -1733,19 +1767,19 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_attribute3(PyObject* self)
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return 0;
+        return {};
     }
     return pyResult;
 }
 
 static PyObject* Sbk_QtButtonPropertyBrowserFunc_attributes(PyObject* self)
 {
-    QtButtonPropertyBrowserWrapper* cppSelf = 0;
+    QtButtonPropertyBrowserWrapper* cppSelf = nullptr;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return 0;
-    cppSelf = (QtButtonPropertyBrowserWrapper*)reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
-    PyObject* pyResult = 0;
+        return {};
+    cppSelf = static_cast<QtButtonPropertyBrowserWrapper *>(reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
+    PyObject* pyResult{};
 
     // Call function/method
     {
@@ -1759,25 +1793,25 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_attributes(PyObject* self)
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return 0;
+        return {};
     }
     return pyResult;
 }
 
 static PyObject* Sbk_QtButtonPropertyBrowserFunc_isExpanded(PyObject* self, PyObject* pyArg)
 {
-    QtButtonPropertyBrowserWrapper* cppSelf = 0;
+    QtButtonPropertyBrowserWrapper* cppSelf = nullptr;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return 0;
-    cppSelf = (QtButtonPropertyBrowserWrapper*)reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
-    PyObject* pyResult = 0;
+        return {};
+    cppSelf = static_cast<QtButtonPropertyBrowserWrapper *>(reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
+    PyObject* pyResult{};
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp;
+    PythonToCppFunc pythonToCpp{};
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: isExpanded(QtBrowserItem*)const
+    // 0: QtButtonPropertyBrowser::isExpanded(QtBrowserItem*)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTBROWSERITEM_IDX]), (pyArg)))) {
         overloadId = 0; // isExpanded(QtBrowserItem*)const
     }
@@ -1788,7 +1822,7 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_isExpanded(PyObject* self, PyOb
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return 0;
+            return {};
         ::QtBrowserItem* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
@@ -1803,29 +1837,28 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_isExpanded(PyObject* self, PyOb
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return 0;
+        return {};
     }
     return pyResult;
 
     Sbk_QtButtonPropertyBrowserFunc_isExpanded_TypeError:
-        const char* overloads[] = {"qtpropertybrowser.QtBrowserItem", 0};
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtButtonPropertyBrowser.isExpanded", overloads);
-        return 0;
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtButtonPropertyBrowser.isExpanded");
+        return {};
 }
 
 static PyObject* Sbk_QtButtonPropertyBrowserFunc_itemChanged(PyObject* self, PyObject* pyArg)
 {
-    QtButtonPropertyBrowserWrapper* cppSelf = 0;
+    QtButtonPropertyBrowserWrapper* cppSelf = nullptr;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return 0;
-    cppSelf = (QtButtonPropertyBrowserWrapper*)reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
+        return {};
+    cppSelf = static_cast<QtButtonPropertyBrowserWrapper *>(reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp;
+    PythonToCppFunc pythonToCpp{};
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: itemChanged(QtBrowserItem*)
+    // 0: QtAbstractPropertyBrowser::itemChanged(QtBrowserItem*)
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTBROWSERITEM_IDX]), (pyArg)))) {
         overloadId = 0; // itemChanged(QtBrowserItem*)
     }
@@ -1836,51 +1869,51 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_itemChanged(PyObject* self, PyO
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return 0;
+            return {};
         ::QtBrowserItem* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
             // itemChanged(QtBrowserItem*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtButtonPropertyBrowserWrapper*) cppSelf)->QtButtonPropertyBrowserWrapper::itemChanged_protected(cppArg0);
+            static_cast<::QtButtonPropertyBrowserWrapper*>(cppSelf)->QtButtonPropertyBrowserWrapper::itemChanged_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
 
     if (PyErr_Occurred()) {
-        return 0;
+        return {};
     }
     Py_RETURN_NONE;
 
     Sbk_QtButtonPropertyBrowserFunc_itemChanged_TypeError:
-        const char* overloads[] = {"qtpropertybrowser.QtBrowserItem", 0};
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtButtonPropertyBrowser.itemChanged", overloads);
-        return 0;
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtButtonPropertyBrowser.itemChanged");
+        return {};
 }
 
 static PyObject* Sbk_QtButtonPropertyBrowserFunc_itemInserted(PyObject* self, PyObject* args)
 {
-    QtButtonPropertyBrowserWrapper* cppSelf = 0;
+    QtButtonPropertyBrowserWrapper* cppSelf = nullptr;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return 0;
-    cppSelf = (QtButtonPropertyBrowserWrapper*)reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
+        return {};
+    cppSelf = static_cast<QtButtonPropertyBrowserWrapper *>(reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp[] = { 0, 0 };
+    PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
 
 
     if (!PyArg_UnpackTuple(args, "itemInserted", 2, 2, &(pyArgs[0]), &(pyArgs[1])))
-        return 0;
+        return {};
 
 
     // Overloaded function decisor
-    // 0: itemInserted(QtBrowserItem*,QtBrowserItem*)
+    // 0: QtAbstractPropertyBrowser::itemInserted(QtBrowserItem*,QtBrowserItem*)
     if (numArgs == 2
         && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTBROWSERITEM_IDX]), (pyArgs[0])))
         && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTBROWSERITEM_IDX]), (pyArgs[1])))) {
@@ -1893,46 +1926,45 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_itemInserted(PyObject* self, Py
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArgs[0]))
-            return 0;
+            return {};
         ::QtBrowserItem* cppArg0;
         pythonToCpp[0](pyArgs[0], &cppArg0);
         if (!Shiboken::Object::isValid(pyArgs[1]))
-            return 0;
+            return {};
         ::QtBrowserItem* cppArg1;
         pythonToCpp[1](pyArgs[1], &cppArg1);
 
         if (!PyErr_Occurred()) {
             // itemInserted(QtBrowserItem*,QtBrowserItem*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtButtonPropertyBrowserWrapper*) cppSelf)->QtButtonPropertyBrowserWrapper::itemInserted_protected(cppArg0, cppArg1);
+            static_cast<::QtButtonPropertyBrowserWrapper*>(cppSelf)->QtButtonPropertyBrowserWrapper::itemInserted_protected(cppArg0, cppArg1);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
 
     if (PyErr_Occurred()) {
-        return 0;
+        return {};
     }
     Py_RETURN_NONE;
 
     Sbk_QtButtonPropertyBrowserFunc_itemInserted_TypeError:
-        const char* overloads[] = {"qtpropertybrowser.QtBrowserItem, qtpropertybrowser.QtBrowserItem", 0};
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtButtonPropertyBrowser.itemInserted", overloads);
-        return 0;
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtButtonPropertyBrowser.itemInserted");
+        return {};
 }
 
 static PyObject* Sbk_QtButtonPropertyBrowserFunc_itemRemoved(PyObject* self, PyObject* pyArg)
 {
-    QtButtonPropertyBrowserWrapper* cppSelf = 0;
+    QtButtonPropertyBrowserWrapper* cppSelf = nullptr;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return 0;
-    cppSelf = (QtButtonPropertyBrowserWrapper*)reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
+        return {};
+    cppSelf = static_cast<QtButtonPropertyBrowserWrapper *>(reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp;
+    PythonToCppFunc pythonToCpp{};
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: itemRemoved(QtBrowserItem*)
+    // 0: QtAbstractPropertyBrowser::itemRemoved(QtBrowserItem*)
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTBROWSERITEM_IDX]), (pyArg)))) {
         overloadId = 0; // itemRemoved(QtBrowserItem*)
     }
@@ -1943,42 +1975,41 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_itemRemoved(PyObject* self, PyO
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return 0;
+            return {};
         ::QtBrowserItem* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
         if (!PyErr_Occurred()) {
             // itemRemoved(QtBrowserItem*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            ((::QtButtonPropertyBrowserWrapper*) cppSelf)->QtButtonPropertyBrowserWrapper::itemRemoved_protected(cppArg0);
+            static_cast<::QtButtonPropertyBrowserWrapper*>(cppSelf)->QtButtonPropertyBrowserWrapper::itemRemoved_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
 
     if (PyErr_Occurred()) {
-        return 0;
+        return {};
     }
     Py_RETURN_NONE;
 
     Sbk_QtButtonPropertyBrowserFunc_itemRemoved_TypeError:
-        const char* overloads[] = {"qtpropertybrowser.QtBrowserItem", 0};
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtButtonPropertyBrowser.itemRemoved", overloads);
-        return 0;
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtButtonPropertyBrowser.itemRemoved");
+        return {};
 }
 
 static PyObject* Sbk_QtButtonPropertyBrowserFunc_setAttribute1(PyObject* self, PyObject* pyArg)
 {
-    QtButtonPropertyBrowserWrapper* cppSelf = 0;
+    QtButtonPropertyBrowserWrapper* cppSelf = nullptr;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return 0;
-    cppSelf = (QtButtonPropertyBrowserWrapper*)reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
+        return {};
+    cppSelf = static_cast<QtButtonPropertyBrowserWrapper *>(reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp;
+    PythonToCppFunc pythonToCpp{};
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: setAttribute1(BrowserCol)
+    // 0: QtButtonPropertyBrowser::setAttribute1(BrowserCol)
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, (pyArg)))) {
         overloadId = 0; // setAttribute1(BrowserCol)
     }
@@ -2000,29 +2031,28 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_setAttribute1(PyObject* self, P
     }
 
     if (PyErr_Occurred()) {
-        return 0;
+        return {};
     }
     Py_RETURN_NONE;
 
     Sbk_QtButtonPropertyBrowserFunc_setAttribute1_TypeError:
-        const char* overloads[] = {"qtpropertybrowser.BrowserCol", 0};
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute1", overloads);
-        return 0;
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute1");
+        return {};
 }
 
 static PyObject* Sbk_QtButtonPropertyBrowserFunc_setAttribute2(PyObject* self, PyObject* pyArg)
 {
-    QtButtonPropertyBrowserWrapper* cppSelf = 0;
+    QtButtonPropertyBrowserWrapper* cppSelf = nullptr;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return 0;
-    cppSelf = (QtButtonPropertyBrowserWrapper*)reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
+        return {};
+    cppSelf = static_cast<QtButtonPropertyBrowserWrapper *>(reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp;
+    PythonToCppFunc pythonToCpp{};
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: setAttribute2(BrowserCol)
+    // 0: QtButtonPropertyBrowser::setAttribute2(BrowserCol)
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, (pyArg)))) {
         overloadId = 0; // setAttribute2(BrowserCol)
     }
@@ -2044,29 +2074,28 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_setAttribute2(PyObject* self, P
     }
 
     if (PyErr_Occurred()) {
-        return 0;
+        return {};
     }
     Py_RETURN_NONE;
 
     Sbk_QtButtonPropertyBrowserFunc_setAttribute2_TypeError:
-        const char* overloads[] = {"qtpropertybrowser.BrowserCol", 0};
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute2", overloads);
-        return 0;
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute2");
+        return {};
 }
 
 static PyObject* Sbk_QtButtonPropertyBrowserFunc_setAttribute3(PyObject* self, PyObject* pyArg)
 {
-    QtButtonPropertyBrowserWrapper* cppSelf = 0;
+    QtButtonPropertyBrowserWrapper* cppSelf = nullptr;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return 0;
-    cppSelf = (QtButtonPropertyBrowserWrapper*)reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
+        return {};
+    cppSelf = static_cast<QtButtonPropertyBrowserWrapper *>(reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp;
+    PythonToCppFunc pythonToCpp{};
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: setAttribute3(BrowserCol)
+    // 0: QtButtonPropertyBrowser::setAttribute3(BrowserCol)
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, (pyArg)))) {
         overloadId = 0; // setAttribute3(BrowserCol)
     }
@@ -2088,29 +2117,28 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_setAttribute3(PyObject* self, P
     }
 
     if (PyErr_Occurred()) {
-        return 0;
+        return {};
     }
     Py_RETURN_NONE;
 
     Sbk_QtButtonPropertyBrowserFunc_setAttribute3_TypeError:
-        const char* overloads[] = {"qtpropertybrowser.BrowserCol", 0};
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute3", overloads);
-        return 0;
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute3");
+        return {};
 }
 
 static PyObject* Sbk_QtButtonPropertyBrowserFunc_setAttributes(PyObject* self, PyObject* pyArg)
 {
-    QtButtonPropertyBrowserWrapper* cppSelf = 0;
+    QtButtonPropertyBrowserWrapper* cppSelf = nullptr;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return 0;
-    cppSelf = (QtButtonPropertyBrowserWrapper*)reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
+        return {};
+    cppSelf = static_cast<QtButtonPropertyBrowserWrapper *>(reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp;
+    PythonToCppFunc pythonToCpp{};
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: setAttributes(QList<BrowserCol>)
+    // 0: QtButtonPropertyBrowser::setAttributes(QList<BrowserCol>)
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(SbkqtpropertybrowserTypeConverters[SBK_QTPROPERTYBROWSER_QLIST_BROWSERCOL_IDX], (pyArg)))) {
         overloadId = 0; // setAttributes(QList<BrowserCol>)
     }
@@ -2132,38 +2160,38 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_setAttributes(PyObject* self, P
     }
 
     if (PyErr_Occurred()) {
-        return 0;
+        return {};
     }
     Py_RETURN_NONE;
 
     Sbk_QtButtonPropertyBrowserFunc_setAttributes_TypeError:
-        const char* overloads[] = {"list", 0};
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtButtonPropertyBrowser.setAttributes", overloads);
-        return 0;
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtButtonPropertyBrowser.setAttributes");
+        return {};
 }
 
 static PyObject* Sbk_QtButtonPropertyBrowserFunc_setExpanded(PyObject* self, PyObject* args)
 {
-    QtButtonPropertyBrowserWrapper* cppSelf = 0;
+    QtButtonPropertyBrowserWrapper* cppSelf = nullptr;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return 0;
-    cppSelf = (QtButtonPropertyBrowserWrapper*)reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
+        return {};
+    cppSelf = static_cast<QtButtonPropertyBrowserWrapper *>(reinterpret_cast< ::QtButtonPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTBUTTONPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp[] = { 0, 0 };
+    PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
+    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
 
 
     if (!PyArg_UnpackTuple(args, "setExpanded", 2, 2, &(pyArgs[0]), &(pyArgs[1])))
-        return 0;
+        return {};
 
 
     // Overloaded function decisor
-    // 0: setExpanded(QtBrowserItem*,bool)
+    // 0: QtButtonPropertyBrowser::setExpanded(QtBrowserItem*,bool)
     if (numArgs == 2
         && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTBROWSERITEM_IDX]), (pyArgs[0])))
         && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppConvertible(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), (pyArgs[1])))) {
@@ -2176,7 +2204,7 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_setExpanded(PyObject* self, PyO
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArgs[0]))
-            return 0;
+            return {};
         ::QtBrowserItem* cppArg0;
         pythonToCpp[0](pyArgs[0], &cppArg0);
         bool cppArg1;
@@ -2191,32 +2219,31 @@ static PyObject* Sbk_QtButtonPropertyBrowserFunc_setExpanded(PyObject* self, PyO
     }
 
     if (PyErr_Occurred()) {
-        return 0;
+        return {};
     }
     Py_RETURN_NONE;
 
     Sbk_QtButtonPropertyBrowserFunc_setExpanded_TypeError:
-        const char* overloads[] = {"qtpropertybrowser.QtBrowserItem, bool", 0};
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtButtonPropertyBrowser.setExpanded", overloads);
-        return 0;
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtButtonPropertyBrowser.setExpanded");
+        return {};
 }
 
 static PyMethodDef Sbk_QtButtonPropertyBrowser_methods[] = {
-    {"attribute1", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_attribute1, METH_NOARGS},
-    {"attribute2", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_attribute2, METH_NOARGS},
-    {"attribute3", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_attribute3, METH_NOARGS},
-    {"attributes", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_attributes, METH_NOARGS},
-    {"isExpanded", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_isExpanded, METH_O},
-    {"itemChanged", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_itemChanged, METH_O},
-    {"itemInserted", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_itemInserted, METH_VARARGS},
-    {"itemRemoved", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_itemRemoved, METH_O},
-    {"setAttribute1", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_setAttribute1, METH_O},
-    {"setAttribute2", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_setAttribute2, METH_O},
-    {"setAttribute3", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_setAttribute3, METH_O},
-    {"setAttributes", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_setAttributes, METH_O},
-    {"setExpanded", (PyCFunction)Sbk_QtButtonPropertyBrowserFunc_setExpanded, METH_VARARGS},
+    {"attribute1", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_attribute1), METH_NOARGS},
+    {"attribute2", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_attribute2), METH_NOARGS},
+    {"attribute3", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_attribute3), METH_NOARGS},
+    {"attributes", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_attributes), METH_NOARGS},
+    {"isExpanded", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_isExpanded), METH_O},
+    {"itemChanged", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_itemChanged), METH_O},
+    {"itemInserted", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_itemInserted), METH_VARARGS},
+    {"itemRemoved", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_itemRemoved), METH_O},
+    {"setAttribute1", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_setAttribute1), METH_O},
+    {"setAttribute2", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_setAttribute2), METH_O},
+    {"setAttribute3", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_setAttribute3), METH_O},
+    {"setAttributes", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_setAttributes), METH_O},
+    {"setExpanded", reinterpret_cast<PyCFunction>(Sbk_QtButtonPropertyBrowserFunc_setExpanded), METH_VARARGS},
 
-    {0} // Sentinel
+    {nullptr, nullptr} // Sentinel
 };
 
 } // extern "C"
@@ -2253,24 +2280,24 @@ static SbkObjectType *Sbk_QtButtonPropertyBrowser_TypeF(void)
 }
 
 static PyType_Slot Sbk_QtButtonPropertyBrowser_slots[] = {
-    {Py_tp_base,        (void *)0}, // inserted by introduceWrapperType
-    {Py_tp_dealloc,     (void *)&SbkDeallocWrapper},
-    {Py_tp_repr,        (void *)0},
-    {Py_tp_hash,        (void *)0},
-    {Py_tp_call,        (void *)0},
-    {Py_tp_str,         (void *)0},
-    {Py_tp_getattro,    (void *)0},
-    {Py_tp_setattro,    (void *)0},
-    {Py_tp_traverse,    (void *)Sbk_QtButtonPropertyBrowser_traverse},
-    {Py_tp_clear,       (void *)Sbk_QtButtonPropertyBrowser_clear},
-    {Py_tp_richcompare, (void *)0},
-    {Py_tp_iter,        (void *)0},
-    {Py_tp_iternext,    (void *)0},
-    {Py_tp_methods,     (void *)Sbk_QtButtonPropertyBrowser_methods},
-    {Py_tp_getset,      (void *)0},
-    {Py_tp_init,        (void *)Sbk_QtButtonPropertyBrowser_Init},
-    {Py_tp_new,         (void *)SbkObjectTpNew},
-    {0, 0}
+    {Py_tp_base,        nullptr}, // inserted by introduceWrapperType
+    {Py_tp_dealloc,     reinterpret_cast<void*>(&SbkDeallocWrapper)},
+    {Py_tp_repr,        nullptr},
+    {Py_tp_hash,        nullptr},
+    {Py_tp_call,        nullptr},
+    {Py_tp_str,         nullptr},
+    {Py_tp_getattro,    nullptr},
+    {Py_tp_setattro,    nullptr},
+    {Py_tp_traverse,    reinterpret_cast<void*>(Sbk_QtButtonPropertyBrowser_traverse)},
+    {Py_tp_clear,       reinterpret_cast<void*>(Sbk_QtButtonPropertyBrowser_clear)},
+    {Py_tp_richcompare, nullptr},
+    {Py_tp_iter,        nullptr},
+    {Py_tp_iternext,    nullptr},
+    {Py_tp_methods,     reinterpret_cast<void*>(Sbk_QtButtonPropertyBrowser_methods)},
+    {Py_tp_getset,      nullptr},
+    {Py_tp_init,        reinterpret_cast<void*>(Sbk_QtButtonPropertyBrowser_Init)},
+    {Py_tp_new,         reinterpret_cast<void*>(SbkObjectTpNew)},
+    {0, nullptr}
 };
 static PyType_Spec Sbk_QtButtonPropertyBrowser_spec = {
     "qtpropertybrowser.QtButtonPropertyBrowser",
@@ -2288,7 +2315,7 @@ static void* Sbk_QtButtonPropertyBrowser_typeDiscovery(void* cptr, SbkObjectType
         return dynamic_cast< ::QtButtonPropertyBrowser*>(reinterpret_cast< ::QObject*>(cptr));
     if (instanceType == reinterpret_cast<SbkObjectType*>(Shiboken::SbkType< ::QPaintDevice >()))
         return dynamic_cast< ::QtButtonPropertyBrowser*>(reinterpret_cast< ::QPaintDevice*>(cptr));
-    return 0;
+    return {};
 }
 
 
@@ -2301,35 +2328,35 @@ static void QtButtonPropertyBrowser_PythonToCpp_QtButtonPropertyBrowser_PTR(PyOb
 static PythonToCppFunc is_QtButtonPropertyBrowser_PythonToCpp_QtButtonPropertyBrowser_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtButtonPropertyBrowser_TypeF()))
+    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtButtonPropertyBrowser_TypeF())))
         return QtButtonPropertyBrowser_PythonToCpp_QtButtonPropertyBrowser_PTR;
-    return 0;
+    return {};
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtButtonPropertyBrowser_PTR_CppToPython_QtButtonPropertyBrowser(const void* cppIn) {
-    return PySide::getWrapperForQObject((::QtButtonPropertyBrowser*)cppIn, Sbk_QtButtonPropertyBrowser_TypeF());
+    return PySide::getWrapperForQObject(reinterpret_cast<::QtButtonPropertyBrowser*>(const_cast<void*>(cppIn)), Sbk_QtButtonPropertyBrowser_TypeF());
 
 }
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-const char QtButtonPropertyBrowser_SignaturesString[] = ""
-    "qtpropertybrowser.QtButtonPropertyBrowser(parent:PySide2.QtWidgets.QWidget=nullptr)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.attribute1()->qtpropertybrowser.BrowserCol\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.attribute2()->qtpropertybrowser.BrowserCol\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.attribute3()->qtpropertybrowser.BrowserCol\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.attributes()->qtpropertybrowser.BrowserCol\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.isExpanded(item:qtpropertybrowser.QtBrowserItem)->bool\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.itemChanged(item:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.itemInserted(item:qtpropertybrowser.QtBrowserItem,afterItem:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.itemRemoved(item:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute1(attribute:qtpropertybrowser.BrowserCol)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute2(attribute:qtpropertybrowser.BrowserCol)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute3(attribute:qtpropertybrowser.BrowserCol)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.setAttributes(attributeList:QList)\n"
-    "qtpropertybrowser.QtButtonPropertyBrowser.setExpanded(item:qtpropertybrowser.QtBrowserItem,expanded:bool)\n"
-;
+static const char *QtButtonPropertyBrowser_SignatureStrings[] = {
+    "qtpropertybrowser.QtButtonPropertyBrowser(parent:PySide2.QtWidgets.QWidget=nullptr)",
+    "qtpropertybrowser.QtButtonPropertyBrowser.attribute1()->qtpropertybrowser.BrowserCol",
+    "qtpropertybrowser.QtButtonPropertyBrowser.attribute2()->qtpropertybrowser.BrowserCol",
+    "qtpropertybrowser.QtButtonPropertyBrowser.attribute3()->qtpropertybrowser.BrowserCol",
+    "qtpropertybrowser.QtButtonPropertyBrowser.attributes()->QList[qtpropertybrowser.BrowserCol]",
+    "qtpropertybrowser.QtButtonPropertyBrowser.isExpanded(item:qtpropertybrowser.QtBrowserItem)->bool",
+    "qtpropertybrowser.QtButtonPropertyBrowser.itemChanged(item:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtButtonPropertyBrowser.itemInserted(item:qtpropertybrowser.QtBrowserItem,afterItem:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtButtonPropertyBrowser.itemRemoved(item:qtpropertybrowser.QtBrowserItem)",
+    "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute1(attribute:qtpropertybrowser.BrowserCol)",
+    "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute2(attribute:qtpropertybrowser.BrowserCol)",
+    "qtpropertybrowser.QtButtonPropertyBrowser.setAttribute3(attribute:qtpropertybrowser.BrowserCol)",
+    "qtpropertybrowser.QtButtonPropertyBrowser.setAttributes(attributeList:QList[qtpropertybrowser.BrowserCol])",
+    "qtpropertybrowser.QtButtonPropertyBrowser.setExpanded(item:qtpropertybrowser.QtBrowserItem,expanded:bool)",
+    nullptr}; // Sentinel
 
 void init_QtButtonPropertyBrowser(PyObject* module)
 {
@@ -2338,7 +2365,7 @@ void init_QtButtonPropertyBrowser(PyObject* module)
         "QtButtonPropertyBrowser",
         "QtButtonPropertyBrowser*",
         &Sbk_QtButtonPropertyBrowser_spec,
-        QtButtonPropertyBrowser_SignaturesString,
+        QtButtonPropertyBrowser_SignatureStrings,
         &Shiboken::callCppDestructor< ::QtButtonPropertyBrowser >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX]),
         0,
