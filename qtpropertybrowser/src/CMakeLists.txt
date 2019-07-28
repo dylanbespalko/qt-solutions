@@ -9,8 +9,6 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(Qt5 COMPONENTS Core REQUIRED)
-find_package(Qt5 COMPONENTS Gui REQUIRED)
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 # Build
@@ -36,19 +34,9 @@ set(headers
 set_target_properties(qtpropertybrowser PROPERTIES PUBLIC_HEADER "${headers}")
 target_compile_definitions(qtpropertybrowser PRIVATE QT_QTPROPERTYBROWSER_EXPORT) # export WIN32 symbols in .lib file
 target_compile_definitions(qtpropertybrowser PRIVATE _USE_MATH_DEFINES)
-target_compile_definitions(qtpropertybrowser PRIVATE UNICODE)
-target_compile_definitions(qtpropertybrowser PRIVATE _UNICODE)
-target_compile_definitions(qtpropertybrowser PRIVATE _ENABLE_EXTENDED_ALIGNED_STORAGE)
-target_compile_definitions(qtpropertybrowser PRIVATE WIN64)
-target_compile_definitions(qtpropertybrowser PRIVATE QT_DISABLE_DEPRECATED_BEFORE=0)
-target_compile_definitions(qtpropertybrowser PRIVATE NDEBUG)
-target_compile_definitions(qtpropertybrowser PRIVATE _WINDLL)
-
 
 # Linking Flags
 target_link_libraries(qtpropertybrowser Qt5::Widgets)
-target_link_libraries(qtpropertybrowser Qt5::Gui)
-target_link_libraries(qtpropertybrowser Qt5::Core)
 
 # Install
 install (TARGETS qtpropertybrowser EXPORT qtpropertybrowser-targets

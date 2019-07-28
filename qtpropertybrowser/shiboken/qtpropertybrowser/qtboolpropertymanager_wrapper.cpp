@@ -53,14 +53,12 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
         ++typeName;
-        --size;
-    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    memcpy(result, typeName, size);
+    strncpy(result, typeName, size);
     return result;
 }
 
@@ -1580,20 +1578,20 @@ static PyObject* QtBoolPropertyManager_PTR_CppToPython_QtBoolPropertyManager(con
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-static const char *QtBoolPropertyManager_SignatureStrings[] = {
-    "qtpropertybrowser.QtBoolPropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
-    "qtpropertybrowser.QtBoolPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
-    "qtpropertybrowser.QtBoolPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
-    "qtpropertybrowser.QtBoolPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
-    "qtpropertybrowser.QtBoolPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
-    "qtpropertybrowser.QtBoolPropertyManager.setTextVisible(property:qtpropertybrowser.QtProperty,textVisible:bool)",
-    "qtpropertybrowser.QtBoolPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:bool)",
-    "qtpropertybrowser.QtBoolPropertyManager.textVisible(property:qtpropertybrowser.QtProperty)->bool",
-    "qtpropertybrowser.QtBoolPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
-    "qtpropertybrowser.QtBoolPropertyManager.value(property:qtpropertybrowser.QtProperty)->bool",
-    "qtpropertybrowser.QtBoolPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
-    "qtpropertybrowser.QtBoolPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
-    nullptr}; // Sentinel
+const char QtBoolPropertyManager_SignaturesString[] = ""
+    "qtpropertybrowser.QtBoolPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
+    "qtpropertybrowser.QtBoolPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
+    "qtpropertybrowser.QtBoolPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
+    "qtpropertybrowser.QtBoolPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtBoolPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
+    "qtpropertybrowser.QtBoolPropertyManager.setTextVisible(property:qtpropertybrowser.QtProperty,textVisible:bool)\n"
+    "qtpropertybrowser.QtBoolPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:bool)\n"
+    "qtpropertybrowser.QtBoolPropertyManager.textVisible(property:qtpropertybrowser.QtProperty)->bool\n"
+    "qtpropertybrowser.QtBoolPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtBoolPropertyManager.value(property:qtpropertybrowser.QtProperty)->bool\n"
+    "qtpropertybrowser.QtBoolPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
+    "qtpropertybrowser.QtBoolPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
+;
 
 void init_QtBoolPropertyManager(PyObject* module)
 {
@@ -1602,7 +1600,7 @@ void init_QtBoolPropertyManager(PyObject* module)
         "QtBoolPropertyManager",
         "QtBoolPropertyManager*",
         &Sbk_QtBoolPropertyManager_spec,
-        QtBoolPropertyManager_SignatureStrings,
+        QtBoolPropertyManager_SignaturesString,
         &Shiboken::callCppDestructor< ::QtBoolPropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

@@ -54,14 +54,12 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
         ++typeName;
-        --size;
-    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    memcpy(result, typeName, size);
+    strncpy(result, typeName, size);
     return result;
 }
 
@@ -1479,18 +1477,18 @@ static PyObject* QtCursorPropertyManager_PTR_CppToPython_QtCursorPropertyManager
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-static const char *QtCursorPropertyManager_SignatureStrings[] = {
-    "qtpropertybrowser.QtCursorPropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
-    "qtpropertybrowser.QtCursorPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
-    "qtpropertybrowser.QtCursorPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
-    "qtpropertybrowser.QtCursorPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
-    "qtpropertybrowser.QtCursorPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
-    "qtpropertybrowser.QtCursorPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtGui.QCursor)",
-    "qtpropertybrowser.QtCursorPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
-    "qtpropertybrowser.QtCursorPropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QCursor",
-    "qtpropertybrowser.QtCursorPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
-    "qtpropertybrowser.QtCursorPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
-    nullptr}; // Sentinel
+const char QtCursorPropertyManager_SignaturesString[] = ""
+    "qtpropertybrowser.QtCursorPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
+    "qtpropertybrowser.QtCursorPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
+    "qtpropertybrowser.QtCursorPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
+    "qtpropertybrowser.QtCursorPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtCursorPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
+    "qtpropertybrowser.QtCursorPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtGui.QCursor)\n"
+    "qtpropertybrowser.QtCursorPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtCursorPropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QCursor\n"
+    "qtpropertybrowser.QtCursorPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
+    "qtpropertybrowser.QtCursorPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
+;
 
 void init_QtCursorPropertyManager(PyObject* module)
 {
@@ -1499,7 +1497,7 @@ void init_QtCursorPropertyManager(PyObject* module)
         "QtCursorPropertyManager",
         "QtCursorPropertyManager*",
         &Sbk_QtCursorPropertyManager_spec,
-        QtCursorPropertyManager_SignatureStrings,
+        QtCursorPropertyManager_SignaturesString,
         &Shiboken::callCppDestructor< ::QtCursorPropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

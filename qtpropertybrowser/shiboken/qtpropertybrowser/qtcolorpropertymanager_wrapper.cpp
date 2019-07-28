@@ -55,14 +55,12 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
         ++typeName;
-        --size;
-    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    memcpy(result, typeName, size);
+    strncpy(result, typeName, size);
     return result;
 }
 
@@ -1508,19 +1506,19 @@ static PyObject* QtColorPropertyManager_PTR_CppToPython_QtColorPropertyManager(c
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-static const char *QtColorPropertyManager_SignatureStrings[] = {
-    "qtpropertybrowser.QtColorPropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
-    "qtpropertybrowser.QtColorPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
-    "qtpropertybrowser.QtColorPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
-    "qtpropertybrowser.QtColorPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
-    "qtpropertybrowser.QtColorPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
-    "qtpropertybrowser.QtColorPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtGui.QColor)",
-    "qtpropertybrowser.QtColorPropertyManager.subIntPropertyManager()->qtpropertybrowser.QtIntPropertyManager",
-    "qtpropertybrowser.QtColorPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
-    "qtpropertybrowser.QtColorPropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QColor",
-    "qtpropertybrowser.QtColorPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
-    "qtpropertybrowser.QtColorPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
-    nullptr}; // Sentinel
+const char QtColorPropertyManager_SignaturesString[] = ""
+    "qtpropertybrowser.QtColorPropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
+    "qtpropertybrowser.QtColorPropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
+    "qtpropertybrowser.QtColorPropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
+    "qtpropertybrowser.QtColorPropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtColorPropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
+    "qtpropertybrowser.QtColorPropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtGui.QColor)\n"
+    "qtpropertybrowser.QtColorPropertyManager.subIntPropertyManager()->qtpropertybrowser.QtIntPropertyManager\n"
+    "qtpropertybrowser.QtColorPropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtColorPropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QColor\n"
+    "qtpropertybrowser.QtColorPropertyManager.valueIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
+    "qtpropertybrowser.QtColorPropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
+;
 
 void init_QtColorPropertyManager(PyObject* module)
 {
@@ -1529,7 +1527,7 @@ void init_QtColorPropertyManager(PyObject* module)
         "QtColorPropertyManager",
         "QtColorPropertyManager*",
         &Sbk_QtColorPropertyManager_spec,
-        QtColorPropertyManager_SignatureStrings,
+        QtColorPropertyManager_SignaturesString,
         &Shiboken::callCppDestructor< ::QtColorPropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

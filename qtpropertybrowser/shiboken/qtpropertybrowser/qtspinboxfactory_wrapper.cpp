@@ -47,14 +47,12 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
         ++typeName;
-        --size;
-    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    memcpy(result, typeName, size);
+    strncpy(result, typeName, size);
     return result;
 }
 
@@ -608,13 +606,13 @@ static PyObject* QtSpinBoxFactory_PTR_CppToPython_QtSpinBoxFactory(const void* c
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-static const char *QtSpinBoxFactory_SignatureStrings[] = {
-    "qtpropertybrowser.QtSpinBoxFactory(parent:PySide2.QtCore.QObject=nullptr)",
-    "qtpropertybrowser.QtSpinBoxFactory.connectPropertyManager(manager:qtpropertybrowser.QtIntPropertyManager)",
-    "qtpropertybrowser.QtSpinBoxFactory.createAttributeEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget",
-    "qtpropertybrowser.QtSpinBoxFactory.createEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget",
-    "qtpropertybrowser.QtSpinBoxFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtIntPropertyManager)",
-    nullptr}; // Sentinel
+const char QtSpinBoxFactory_SignaturesString[] = ""
+    "qtpropertybrowser.QtSpinBoxFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
+    "qtpropertybrowser.QtSpinBoxFactory.connectPropertyManager(manager:qtpropertybrowser.QtIntPropertyManager)\n"
+    "qtpropertybrowser.QtSpinBoxFactory.createAttributeEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget\n"
+    "qtpropertybrowser.QtSpinBoxFactory.createEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
+    "qtpropertybrowser.QtSpinBoxFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtIntPropertyManager)\n"
+;
 
 void init_QtSpinBoxFactory(PyObject* module)
 {
@@ -623,7 +621,7 @@ void init_QtSpinBoxFactory(PyObject* module)
         "QtSpinBoxFactory",
         "QtSpinBoxFactory*",
         &Sbk_QtSpinBoxFactory_spec,
-        QtSpinBoxFactory_SignatureStrings,
+        QtSpinBoxFactory_SignaturesString,
         &Shiboken::callCppDestructor< ::QtSpinBoxFactory >,
         0,
         0,

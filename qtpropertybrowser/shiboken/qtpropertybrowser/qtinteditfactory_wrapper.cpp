@@ -47,14 +47,12 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
         ++typeName;
-        --size;
-    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    memcpy(result, typeName, size);
+    strncpy(result, typeName, size);
     return result;
 }
 
@@ -608,13 +606,13 @@ static PyObject* QtIntEditFactory_PTR_CppToPython_QtIntEditFactory(const void* c
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-static const char *QtIntEditFactory_SignatureStrings[] = {
-    "qtpropertybrowser.QtIntEditFactory(parent:PySide2.QtCore.QObject=nullptr)",
-    "qtpropertybrowser.QtIntEditFactory.connectPropertyManager(manager:qtpropertybrowser.QtIntPropertyManager)",
-    "qtpropertybrowser.QtIntEditFactory.createAttributeEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget",
-    "qtpropertybrowser.QtIntEditFactory.createEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget",
-    "qtpropertybrowser.QtIntEditFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtIntPropertyManager)",
-    nullptr}; // Sentinel
+const char QtIntEditFactory_SignaturesString[] = ""
+    "qtpropertybrowser.QtIntEditFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
+    "qtpropertybrowser.QtIntEditFactory.connectPropertyManager(manager:qtpropertybrowser.QtIntPropertyManager)\n"
+    "qtpropertybrowser.QtIntEditFactory.createAttributeEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget\n"
+    "qtpropertybrowser.QtIntEditFactory.createEditor(manager:qtpropertybrowser.QtIntPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
+    "qtpropertybrowser.QtIntEditFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtIntPropertyManager)\n"
+;
 
 void init_QtIntEditFactory(PyObject* module)
 {
@@ -623,7 +621,7 @@ void init_QtIntEditFactory(PyObject* module)
         "QtIntEditFactory",
         "QtIntEditFactory*",
         &Sbk_QtIntEditFactory_spec,
-        QtIntEditFactory_SignatureStrings,
+        QtIntEditFactory_SignaturesString,
         &Shiboken::callCppDestructor< ::QtIntEditFactory >,
         0,
         0,

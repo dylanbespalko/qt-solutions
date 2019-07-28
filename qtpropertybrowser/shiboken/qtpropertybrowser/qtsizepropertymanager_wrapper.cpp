@@ -55,14 +55,12 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
         ++typeName;
-        --size;
-    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    memcpy(result, typeName, size);
+    strncpy(result, typeName, size);
     return result;
 }
 
@@ -1877,25 +1875,25 @@ static PyObject* QtSizePropertyManager_PTR_CppToPython_QtSizePropertyManager(con
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-static const char *QtSizePropertyManager_SignatureStrings[] = {
-    "qtpropertybrowser.QtSizePropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
-    "qtpropertybrowser.QtSizePropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
-    "qtpropertybrowser.QtSizePropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
-    "qtpropertybrowser.QtSizePropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
-    "qtpropertybrowser.QtSizePropertyManager.isReadOnly(property:qtpropertybrowser.QtProperty)->bool",
-    "qtpropertybrowser.QtSizePropertyManager.maximum(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QSize",
-    "qtpropertybrowser.QtSizePropertyManager.minimum(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QSize",
-    "qtpropertybrowser.QtSizePropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
-    "qtpropertybrowser.QtSizePropertyManager.setMaximum(property:qtpropertybrowser.QtProperty,maxVal:PySide2.QtCore.QSize)",
-    "qtpropertybrowser.QtSizePropertyManager.setMinimum(property:qtpropertybrowser.QtProperty,minVal:PySide2.QtCore.QSize)",
-    "qtpropertybrowser.QtSizePropertyManager.setRange(property:qtpropertybrowser.QtProperty,minVal:PySide2.QtCore.QSize,maxVal:PySide2.QtCore.QSize)",
-    "qtpropertybrowser.QtSizePropertyManager.setReadOnly(property:qtpropertybrowser.QtProperty,readOnly:bool)",
-    "qtpropertybrowser.QtSizePropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtCore.QSize)",
-    "qtpropertybrowser.QtSizePropertyManager.subIntPropertyManager()->qtpropertybrowser.QtIntPropertyManager",
-    "qtpropertybrowser.QtSizePropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
-    "qtpropertybrowser.QtSizePropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QSize",
-    "qtpropertybrowser.QtSizePropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
-    nullptr}; // Sentinel
+const char QtSizePropertyManager_SignaturesString[] = ""
+    "qtpropertybrowser.QtSizePropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
+    "qtpropertybrowser.QtSizePropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
+    "qtpropertybrowser.QtSizePropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
+    "qtpropertybrowser.QtSizePropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtSizePropertyManager.isReadOnly(property:qtpropertybrowser.QtProperty)->bool\n"
+    "qtpropertybrowser.QtSizePropertyManager.maximum(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QSize\n"
+    "qtpropertybrowser.QtSizePropertyManager.minimum(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QSize\n"
+    "qtpropertybrowser.QtSizePropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
+    "qtpropertybrowser.QtSizePropertyManager.setMaximum(property:qtpropertybrowser.QtProperty,maxVal:PySide2.QtCore.QSize)\n"
+    "qtpropertybrowser.QtSizePropertyManager.setMinimum(property:qtpropertybrowser.QtProperty,minVal:PySide2.QtCore.QSize)\n"
+    "qtpropertybrowser.QtSizePropertyManager.setRange(property:qtpropertybrowser.QtProperty,minVal:PySide2.QtCore.QSize,maxVal:PySide2.QtCore.QSize)\n"
+    "qtpropertybrowser.QtSizePropertyManager.setReadOnly(property:qtpropertybrowser.QtProperty,readOnly:bool)\n"
+    "qtpropertybrowser.QtSizePropertyManager.setValue(property:qtpropertybrowser.QtProperty,val:PySide2.QtCore.QSize)\n"
+    "qtpropertybrowser.QtSizePropertyManager.subIntPropertyManager()->qtpropertybrowser.QtIntPropertyManager\n"
+    "qtpropertybrowser.QtSizePropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtSizePropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QSize\n"
+    "qtpropertybrowser.QtSizePropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
+;
 
 void init_QtSizePropertyManager(PyObject* module)
 {
@@ -1904,7 +1902,7 @@ void init_QtSizePropertyManager(PyObject* module)
         "QtSizePropertyManager",
         "QtSizePropertyManager*",
         &Sbk_QtSizePropertyManager_spec,
-        QtSizePropertyManager_SignatureStrings,
+        QtSizePropertyManager_SignaturesString,
         &Shiboken::callCppDestructor< ::QtSizePropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,

@@ -47,14 +47,12 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
         ++typeName;
-        --size;
-    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    memcpy(result, typeName, size);
+    strncpy(result, typeName, size);
     return result;
 }
 
@@ -608,13 +606,13 @@ static PyObject* QtGroupEditorFactory_PTR_CppToPython_QtGroupEditorFactory(const
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-static const char *QtGroupEditorFactory_SignatureStrings[] = {
-    "qtpropertybrowser.QtGroupEditorFactory(parent:PySide2.QtCore.QObject=nullptr)",
-    "qtpropertybrowser.QtGroupEditorFactory.connectPropertyManager(manager:qtpropertybrowser.QtGroupPropertyManager)",
-    "qtpropertybrowser.QtGroupEditorFactory.createAttributeEditor(manager:qtpropertybrowser.QtGroupPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget",
-    "qtpropertybrowser.QtGroupEditorFactory.createEditor(manager:qtpropertybrowser.QtGroupPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget",
-    "qtpropertybrowser.QtGroupEditorFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtGroupPropertyManager)",
-    nullptr}; // Sentinel
+const char QtGroupEditorFactory_SignaturesString[] = ""
+    "qtpropertybrowser.QtGroupEditorFactory(parent:PySide2.QtCore.QObject=nullptr)\n"
+    "qtpropertybrowser.QtGroupEditorFactory.connectPropertyManager(manager:qtpropertybrowser.QtGroupPropertyManager)\n"
+    "qtpropertybrowser.QtGroupEditorFactory.createAttributeEditor(manager:qtpropertybrowser.QtGroupPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget,attribute:qtpropertybrowser.BrowserCol)->PySide2.QtWidgets.QWidget\n"
+    "qtpropertybrowser.QtGroupEditorFactory.createEditor(manager:qtpropertybrowser.QtGroupPropertyManager,property:qtpropertybrowser.QtProperty,parent:PySide2.QtWidgets.QWidget)->PySide2.QtWidgets.QWidget\n"
+    "qtpropertybrowser.QtGroupEditorFactory.disconnectPropertyManager(manager:qtpropertybrowser.QtGroupPropertyManager)\n"
+;
 
 void init_QtGroupEditorFactory(PyObject* module)
 {
@@ -623,7 +621,7 @@ void init_QtGroupEditorFactory(PyObject* module)
         "QtGroupEditorFactory",
         "QtGroupEditorFactory*",
         &Sbk_QtGroupEditorFactory_spec,
-        QtGroupEditorFactory_SignatureStrings,
+        QtGroupEditorFactory_SignaturesString,
         &Shiboken::callCppDestructor< ::QtGroupEditorFactory >,
         0,
         0,

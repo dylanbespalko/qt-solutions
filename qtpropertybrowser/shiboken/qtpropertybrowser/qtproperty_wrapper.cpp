@@ -47,14 +47,12 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
         ++typeName;
-        --size;
-    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    memcpy(result, typeName, size);
+    strncpy(result, typeName, size);
     return result;
 }
 
@@ -1293,41 +1291,41 @@ static PyObject* QtProperty_PTR_CppToPython_QtProperty(const void* cppIn) {
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-static const char *QtProperty_SignatureStrings[] = {
-    "qtpropertybrowser.QtProperty(manager:qtpropertybrowser.QtAbstractPropertyManager)",
-    "qtpropertybrowser.QtProperty.addSubProperty(property:qtpropertybrowser.QtProperty)",
-    "qtpropertybrowser.QtProperty.check()->bool",
-    "qtpropertybrowser.QtProperty.checkIcon()->PySide2.QtGui.QIcon",
-    "qtpropertybrowser.QtProperty.displayText()->QString",
-    "qtpropertybrowser.QtProperty.foreground()->PySide2.QtGui.QBrush",
-    "qtpropertybrowser.QtProperty.formatText()->QString",
-    "qtpropertybrowser.QtProperty.hasValue()->bool",
-    "qtpropertybrowser.QtProperty.insertSubProperty(property:qtpropertybrowser.QtProperty,afterProperty:qtpropertybrowser.QtProperty)",
-    "qtpropertybrowser.QtProperty.isEnabled()->bool",
-    "qtpropertybrowser.QtProperty.isModified()->bool",
-    "qtpropertybrowser.QtProperty.label()->QString",
-    "qtpropertybrowser.QtProperty.maximumText()->QString",
-    "qtpropertybrowser.QtProperty.minimumText()->QString",
-    "qtpropertybrowser.QtProperty.pkAvgText()->QString",
-    "qtpropertybrowser.QtProperty.propertyChanged()",
-    "qtpropertybrowser.QtProperty.propertyManager()->qtpropertybrowser.QtAbstractPropertyManager",
-    "qtpropertybrowser.QtProperty.propertyName()->QString",
-    "qtpropertybrowser.QtProperty.removeSubProperty(property:qtpropertybrowser.QtProperty)",
-    "qtpropertybrowser.QtProperty.setEnabled(enable:bool)",
-    "qtpropertybrowser.QtProperty.setLabel(text:QString)",
-    "qtpropertybrowser.QtProperty.setModified(modified:bool)",
-    "qtpropertybrowser.QtProperty.setPropertyName(text:QString)",
-    "qtpropertybrowser.QtProperty.setStatusTip(text:QString)",
-    "qtpropertybrowser.QtProperty.setToolTip(text:QString)",
-    "qtpropertybrowser.QtProperty.setWhatsThis(text:QString)",
-    "qtpropertybrowser.QtProperty.statusTip()->QString",
-    "qtpropertybrowser.QtProperty.subProperties()->QList[qtpropertybrowser.QtProperty]",
-    "qtpropertybrowser.QtProperty.toolTip()->QString",
-    "qtpropertybrowser.QtProperty.unitText()->QString",
-    "qtpropertybrowser.QtProperty.valueIcon()->PySide2.QtGui.QIcon",
-    "qtpropertybrowser.QtProperty.valueText()->QString",
-    "qtpropertybrowser.QtProperty.whatsThis()->QString",
-    nullptr}; // Sentinel
+const char QtProperty_SignaturesString[] = ""
+    "qtpropertybrowser.QtProperty(manager:qtpropertybrowser.QtAbstractPropertyManager)\n"
+    "qtpropertybrowser.QtProperty.addSubProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtProperty.check()->bool\n"
+    "qtpropertybrowser.QtProperty.checkIcon()->PySide2.QtGui.QIcon\n"
+    "qtpropertybrowser.QtProperty.displayText()->QString\n"
+    "qtpropertybrowser.QtProperty.foreground()->PySide2.QtGui.QBrush\n"
+    "qtpropertybrowser.QtProperty.formatText()->QString\n"
+    "qtpropertybrowser.QtProperty.hasValue()->bool\n"
+    "qtpropertybrowser.QtProperty.insertSubProperty(property:qtpropertybrowser.QtProperty,afterProperty:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtProperty.isEnabled()->bool\n"
+    "qtpropertybrowser.QtProperty.isModified()->bool\n"
+    "qtpropertybrowser.QtProperty.label()->QString\n"
+    "qtpropertybrowser.QtProperty.maximumText()->QString\n"
+    "qtpropertybrowser.QtProperty.minimumText()->QString\n"
+    "qtpropertybrowser.QtProperty.pkAvgText()->QString\n"
+    "qtpropertybrowser.QtProperty.propertyChanged()\n"
+    "qtpropertybrowser.QtProperty.propertyManager()->qtpropertybrowser.QtAbstractPropertyManager\n"
+    "qtpropertybrowser.QtProperty.propertyName()->QString\n"
+    "qtpropertybrowser.QtProperty.removeSubProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtProperty.setEnabled(enable:bool)\n"
+    "qtpropertybrowser.QtProperty.setLabel(text:QString)\n"
+    "qtpropertybrowser.QtProperty.setModified(modified:bool)\n"
+    "qtpropertybrowser.QtProperty.setPropertyName(text:QString)\n"
+    "qtpropertybrowser.QtProperty.setStatusTip(text:QString)\n"
+    "qtpropertybrowser.QtProperty.setToolTip(text:QString)\n"
+    "qtpropertybrowser.QtProperty.setWhatsThis(text:QString)\n"
+    "qtpropertybrowser.QtProperty.statusTip()->QString\n"
+    "qtpropertybrowser.QtProperty.subProperties()->QList[qtpropertybrowser.QtProperty]\n"
+    "qtpropertybrowser.QtProperty.toolTip()->QString\n"
+    "qtpropertybrowser.QtProperty.unitText()->QString\n"
+    "qtpropertybrowser.QtProperty.valueIcon()->PySide2.QtGui.QIcon\n"
+    "qtpropertybrowser.QtProperty.valueText()->QString\n"
+    "qtpropertybrowser.QtProperty.whatsThis()->QString\n"
+;
 
 void init_QtProperty(PyObject* module)
 {
@@ -1336,7 +1334,7 @@ void init_QtProperty(PyObject* module)
         "QtProperty",
         "QtProperty*",
         &Sbk_QtProperty_spec,
-        QtProperty_SignatureStrings,
+        QtProperty_SignaturesString,
         &Shiboken::callCppDestructor< ::QtProperty >,
         0,
         0,

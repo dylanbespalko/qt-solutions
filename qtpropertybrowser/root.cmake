@@ -10,7 +10,6 @@ endif()
 set(CONDA_PREFIX $ENV{CONDA_PREFIX})
 set(QT_DIR $ENV{QT_DIR})
 set(CMAKE_PREFIX_PATH $ENV{CMAKE_PREFIX_PATH})
-message(${CMAKE_PREFIX_PATH})
 
 ## CMake
 if(WIN32)
@@ -35,10 +34,11 @@ if(WIN32)
     message("!!!SET_QT_CREATOR_DIR!!")
 elseif(APPLE)
     set(QT_CREATOR_DIR "${QT_DIR}/../../Qt Creator.app/Contents")
+    set(QT_PLUGIN_DIR ${QT_CREATOR_DIR}/PlugIns/designer)
 else()
-    message("!!!SET_QT_CREATOR_DIR!!")
+    set(QT_CREATOR_DIR "${QT_DIR}/../../Tools/QtCreator/lib/Qt")
+    set(QT_PLUGIN_DIR ${QT_CREATOR_DIR}/plugins/designer)
 endif()
-set(QT_PLUGIN_DIR ${QT_CREATOR_DIR}/PlugIns/designer)
 
 ## Python
 set(PYTHON_VERSION_MAJOR 3)

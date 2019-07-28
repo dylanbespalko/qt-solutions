@@ -48,14 +48,12 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
         ++typeName;
-        --size;
-    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    memcpy(result, typeName, size);
+    strncpy(result, typeName, size);
     return result;
 }
 
@@ -475,15 +473,15 @@ static PyObject* QtVariantProperty_PTR_CppToPython_QtVariantProperty(const void*
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-static const char *QtVariantProperty_SignatureStrings[] = {
-    "qtpropertybrowser.QtVariantProperty(manager:qtpropertybrowser.QtVariantPropertyManager)",
-    "qtpropertybrowser.QtVariantProperty.attributeValue(attribute:QString)->QVariant",
-    "qtpropertybrowser.QtVariantProperty.propertyType()->int",
-    "qtpropertybrowser.QtVariantProperty.setAttribute(attribute:QString,value:QVariant)",
-    "qtpropertybrowser.QtVariantProperty.setValue(value:QVariant)",
-    "qtpropertybrowser.QtVariantProperty.value()->QVariant",
-    "qtpropertybrowser.QtVariantProperty.valueType()->int",
-    nullptr}; // Sentinel
+const char QtVariantProperty_SignaturesString[] = ""
+    "qtpropertybrowser.QtVariantProperty(manager:qtpropertybrowser.QtVariantPropertyManager)\n"
+    "qtpropertybrowser.QtVariantProperty.attributeValue(attribute:QString)->QVariant\n"
+    "qtpropertybrowser.QtVariantProperty.propertyType()->int\n"
+    "qtpropertybrowser.QtVariantProperty.setAttribute(attribute:QString,value:QVariant)\n"
+    "qtpropertybrowser.QtVariantProperty.setValue(value:QVariant)\n"
+    "qtpropertybrowser.QtVariantProperty.value()->QVariant\n"
+    "qtpropertybrowser.QtVariantProperty.valueType()->int\n"
+;
 
 void init_QtVariantProperty(PyObject* module)
 {
@@ -492,7 +490,7 @@ void init_QtVariantProperty(PyObject* module)
         "QtVariantProperty",
         "QtVariantProperty*",
         &Sbk_QtVariantProperty_spec,
-        QtVariantProperty_SignatureStrings,
+        QtVariantProperty_SignaturesString,
         &Shiboken::callCppDestructor< ::QtVariantProperty >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]),
         0,

@@ -53,14 +53,12 @@ static const char *typeNameOf(const T &t)
         size = lastStar - typeName + 1;
     }
 #else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1])) {
+    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
         ++typeName;
-        --size;
-    }
 #endif
     char *result = new char[size + 1];
     result[size] = '\0';
-    memcpy(result, typeName, size);
+    strncpy(result, typeName, size);
     return result;
 }
 
@@ -1460,18 +1458,18 @@ static PyObject* QtDatePropertyManager_PTR_CppToPython_QtDatePropertyManager(con
 
 // The signatures string for the functions.
 // Multiple signatures have their index "n:" in front.
-static const char *QtDatePropertyManager_SignatureStrings[] = {
-    "qtpropertybrowser.QtDatePropertyManager(parent:PySide2.QtCore.QObject=nullptr)",
-    "qtpropertybrowser.QtDatePropertyManager.check(property:qtpropertybrowser.QtProperty)->bool",
-    "qtpropertybrowser.QtDatePropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon",
-    "qtpropertybrowser.QtDatePropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)",
-    "qtpropertybrowser.QtDatePropertyManager.maximum(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QDate",
-    "qtpropertybrowser.QtDatePropertyManager.minimum(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QDate",
-    "qtpropertybrowser.QtDatePropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)",
-    "qtpropertybrowser.QtDatePropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)",
-    "qtpropertybrowser.QtDatePropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QDate",
-    "qtpropertybrowser.QtDatePropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString",
-    nullptr}; // Sentinel
+const char QtDatePropertyManager_SignaturesString[] = ""
+    "qtpropertybrowser.QtDatePropertyManager(parent:PySide2.QtCore.QObject=nullptr)\n"
+    "qtpropertybrowser.QtDatePropertyManager.check(property:qtpropertybrowser.QtProperty)->bool\n"
+    "qtpropertybrowser.QtDatePropertyManager.checkIcon(property:qtpropertybrowser.QtProperty)->PySide2.QtGui.QIcon\n"
+    "qtpropertybrowser.QtDatePropertyManager.initializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtDatePropertyManager.maximum(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QDate\n"
+    "qtpropertybrowser.QtDatePropertyManager.minimum(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QDate\n"
+    "qtpropertybrowser.QtDatePropertyManager.setCheck(property:qtpropertybrowser.QtProperty,check:bool)\n"
+    "qtpropertybrowser.QtDatePropertyManager.uninitializeProperty(property:qtpropertybrowser.QtProperty)\n"
+    "qtpropertybrowser.QtDatePropertyManager.value(property:qtpropertybrowser.QtProperty)->PySide2.QtCore.QDate\n"
+    "qtpropertybrowser.QtDatePropertyManager.valueText(property:qtpropertybrowser.QtProperty)->QString\n"
+;
 
 void init_QtDatePropertyManager(PyObject* module)
 {
@@ -1480,7 +1478,7 @@ void init_QtDatePropertyManager(PyObject* module)
         "QtDatePropertyManager",
         "QtDatePropertyManager*",
         &Sbk_QtDatePropertyManager_spec,
-        QtDatePropertyManager_SignatureStrings,
+        QtDatePropertyManager_SignaturesString,
         &Shiboken::callCppDestructor< ::QtDatePropertyManager >,
         reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]),
         0,
