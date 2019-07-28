@@ -26,5 +26,4 @@ target_link_libraries(qttreepropertybrowserplugin qtpropertybrowser::qtpropertyb
 target_link_libraries(qttreepropertybrowserplugin Qt5::Widgets)
 
 # Install
-install (TARGETS qttreepropertybrowserplugin EXPORT qttreepropertybrowserplugin-targets
-    LIBRARY DESTINATION ${QT_PLUGIN_DIR})
+install (TARGETS qttreepropertybrowserplugin DESTINATION ${QT_PLUGIN_DIR})

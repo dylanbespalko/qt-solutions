@@ -28,43 +28,13 @@
 #include <qtvariantproperty.h>
 
 
-#include <cctype>
-#include <cstring>
-
-QT_WARNING_DISABLE_DEPRECATED
-
-
-
-template <class T>
-static const char *typeNameOf(const T &t)
-{
-    const char *typeName =  typeid(t).name();
-    auto size = std::strlen(typeName);
-#if defined(Q_CC_MSVC) // MSVC: "class QPaintDevice * __ptr64"
-    if (auto lastStar = strchr(typeName, '*')) {
-        // MSVC: "class QPaintDevice * __ptr64"
-        while (*--lastStar == ' ') {
-        }
-        size = lastStar - typeName + 1;
-    }
-#else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
-        ++typeName;
-#endif
-    char *result = new char[size + 1];
-    result[size] = '\0';
-    strncpy(result, typeName, size);
-    return result;
-}
-
 // Native ---------------------------------------------------------
 
 void QtVariantPropertyWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtVariantPropertyWrapper::QtVariantPropertyWrapper(QtVariantPropertyManager * manager) : QtVariantProperty(manager)
-{
+QtVariantPropertyWrapper::QtVariantPropertyWrapper(QtVariantPropertyManager * manager) : QtVariantProperty(manager) {
     // ... middle
 }
 
@@ -84,12 +54,11 @@ Sbk_QtVariantProperty_Init(PyObject* self, PyObject* args, PyObject* kwds)
     if (Shiboken::Object::isUserType(self) && !Shiboken::ObjectType::canCallConstructor(self->ob_type, Shiboken::SbkType< ::QtVariantProperty >()))
         return -1;
 
-    ::QtVariantPropertyWrapper* cptr{};
+    ::QtVariantPropertyWrapper* cptr = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp[] = { nullptr };
+    PythonToCppFunc pythonToCpp[] = { 0 };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
-    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -100,7 +69,7 @@ Sbk_QtVariantProperty_Init(PyObject* self, PyObject* args, PyObject* kwds)
 
 
     // Overloaded function decisor
-    // 0: QtVariantProperty::QtVariantProperty(QtVariantPropertyManager*)
+    // 0: QtVariantProperty(QtVariantPropertyManager*)
     if (numArgs == 1
         && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTVARIANTPROPERTYMANAGER_IDX]), (pyArgs[0])))) {
         overloadId = 0; // QtVariantProperty(QtVariantPropertyManager*)
@@ -141,24 +110,25 @@ Sbk_QtVariantProperty_Init(PyObject* self, PyObject* args, PyObject* kwds)
     return 1;
 
     Sbk_QtVariantProperty_Init_TypeError:
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtVariantProperty");
+        const char* overloads[] = {"qtpropertybrowser.QtVariantPropertyManager", 0};
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtVariantProperty", overloads);
         return -1;
 }
 
 static PyObject* Sbk_QtVariantPropertyFunc_attributeValue(PyObject* self, PyObject* pyArg)
 {
-    QtVariantPropertyWrapper* cppSelf = nullptr;
+    QtVariantPropertyWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtVariantPropertyWrapper *>(reinterpret_cast< ::QtVariantProperty *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTVARIANTPROPERTY_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtVariantPropertyWrapper*)reinterpret_cast< ::QtVariantProperty *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTVARIANTPROPERTY_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtVariantProperty::attributeValue(QString)const
+    // 0: attributeValue(QString)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], (pyArg)))) {
         overloadId = 0; // attributeValue(QString)const
     }
@@ -182,23 +152,24 @@ static PyObject* Sbk_QtVariantPropertyFunc_attributeValue(PyObject* self, PyObje
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtVariantPropertyFunc_attributeValue_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtVariantProperty.attributeValue");
-        return {};
+        const char* overloads[] = {"unicode", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtVariantProperty.attributeValue", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtVariantPropertyFunc_propertyType(PyObject* self)
 {
-    QtVariantPropertyWrapper* cppSelf = nullptr;
+    QtVariantPropertyWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtVariantPropertyWrapper *>(reinterpret_cast< ::QtVariantProperty *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTVARIANTPROPERTY_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtVariantPropertyWrapper*)reinterpret_cast< ::QtVariantProperty *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTVARIANTPROPERTY_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
 
     // Call function/method
     {
@@ -212,34 +183,33 @@ static PyObject* Sbk_QtVariantPropertyFunc_propertyType(PyObject* self)
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 }
 
 static PyObject* Sbk_QtVariantPropertyFunc_setAttribute(PyObject* self, PyObject* args)
 {
-    QtVariantPropertyWrapper* cppSelf = nullptr;
+    QtVariantPropertyWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtVariantPropertyWrapper *>(reinterpret_cast< ::QtVariantProperty *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTVARIANTPROPERTY_IDX], reinterpret_cast<SbkObject *>(self))));
+        return 0;
+    cppSelf = (QtVariantPropertyWrapper*)reinterpret_cast< ::QtVariantProperty *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTVARIANTPROPERTY_IDX], reinterpret_cast<SbkObject *>(self)));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
+    PythonToCppFunc pythonToCpp[] = { 0, 0 };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
-    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
 
 
     if (!PyArg_UnpackTuple(args, "setAttribute", 2, 2, &(pyArgs[0]), &(pyArgs[1])))
-        return {};
+        return 0;
 
 
     // Overloaded function decisor
-    // 0: QtVariantProperty::setAttribute(QString,QVariant)
+    // 0: setAttribute(QString,QVariant)
     if (numArgs == 2
         && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppConvertible(SbkPySide2_QtCoreTypeConverters[SBK_QSTRING_IDX], (pyArgs[0])))
         && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppConvertible(SbkPySide2_QtCoreTypeConverters[SBK_QVARIANT_IDX], (pyArgs[1])))) {
@@ -265,28 +235,29 @@ static PyObject* Sbk_QtVariantPropertyFunc_setAttribute(PyObject* self, PyObject
     }
 
     if (PyErr_Occurred()) {
-        return {};
+        return 0;
     }
     Py_RETURN_NONE;
 
     Sbk_QtVariantPropertyFunc_setAttribute_TypeError:
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtVariantProperty.setAttribute");
-        return {};
+        const char* overloads[] = {"unicode, QVariant", 0};
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtVariantProperty.setAttribute", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtVariantPropertyFunc_setValue(PyObject* self, PyObject* pyArg)
 {
-    QtVariantPropertyWrapper* cppSelf = nullptr;
+    QtVariantPropertyWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtVariantPropertyWrapper *>(reinterpret_cast< ::QtVariantProperty *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTVARIANTPROPERTY_IDX], reinterpret_cast<SbkObject *>(self))));
+        return 0;
+    cppSelf = (QtVariantPropertyWrapper*)reinterpret_cast< ::QtVariantProperty *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTVARIANTPROPERTY_IDX], reinterpret_cast<SbkObject *>(self)));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtVariantProperty::setValue(QVariant)
+    // 0: setValue(QVariant)
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppConvertible(SbkPySide2_QtCoreTypeConverters[SBK_QVARIANT_IDX], (pyArg)))) {
         overloadId = 0; // setValue(QVariant)
     }
@@ -308,23 +279,24 @@ static PyObject* Sbk_QtVariantPropertyFunc_setValue(PyObject* self, PyObject* py
     }
 
     if (PyErr_Occurred()) {
-        return {};
+        return 0;
     }
     Py_RETURN_NONE;
 
     Sbk_QtVariantPropertyFunc_setValue_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtVariantProperty.setValue");
-        return {};
+        const char* overloads[] = {"QVariant", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtVariantProperty.setValue", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtVariantPropertyFunc_value(PyObject* self)
 {
-    QtVariantPropertyWrapper* cppSelf = nullptr;
+    QtVariantPropertyWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtVariantPropertyWrapper *>(reinterpret_cast< ::QtVariantProperty *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTVARIANTPROPERTY_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtVariantPropertyWrapper*)reinterpret_cast< ::QtVariantProperty *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTVARIANTPROPERTY_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
 
     // Call function/method
     {
@@ -338,19 +310,19 @@ static PyObject* Sbk_QtVariantPropertyFunc_value(PyObject* self)
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 }
 
 static PyObject* Sbk_QtVariantPropertyFunc_valueType(PyObject* self)
 {
-    QtVariantPropertyWrapper* cppSelf = nullptr;
+    QtVariantPropertyWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtVariantPropertyWrapper *>(reinterpret_cast< ::QtVariantProperty *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTVARIANTPROPERTY_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtVariantPropertyWrapper*)reinterpret_cast< ::QtVariantProperty *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTVARIANTPROPERTY_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
 
     // Call function/method
     {
@@ -364,20 +336,20 @@ static PyObject* Sbk_QtVariantPropertyFunc_valueType(PyObject* self)
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 }
 
 static PyMethodDef Sbk_QtVariantProperty_methods[] = {
-    {"attributeValue", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyFunc_attributeValue), METH_O},
-    {"propertyType", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyFunc_propertyType), METH_NOARGS},
-    {"setAttribute", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyFunc_setAttribute), METH_VARARGS},
-    {"setValue", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyFunc_setValue), METH_O},
-    {"value", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyFunc_value), METH_NOARGS},
-    {"valueType", reinterpret_cast<PyCFunction>(Sbk_QtVariantPropertyFunc_valueType), METH_NOARGS},
+    {"attributeValue", (PyCFunction)Sbk_QtVariantPropertyFunc_attributeValue, METH_O},
+    {"propertyType", (PyCFunction)Sbk_QtVariantPropertyFunc_propertyType, METH_NOARGS},
+    {"setAttribute", (PyCFunction)Sbk_QtVariantPropertyFunc_setAttribute, METH_VARARGS},
+    {"setValue", (PyCFunction)Sbk_QtVariantPropertyFunc_setValue, METH_O},
+    {"value", (PyCFunction)Sbk_QtVariantPropertyFunc_value, METH_NOARGS},
+    {"valueType", (PyCFunction)Sbk_QtVariantPropertyFunc_valueType, METH_NOARGS},
 
-    {nullptr, nullptr} // Sentinel
+    {0} // Sentinel
 };
 
 } // extern "C"
@@ -399,24 +371,24 @@ static SbkObjectType *Sbk_QtVariantProperty_TypeF(void)
 }
 
 static PyType_Slot Sbk_QtVariantProperty_slots[] = {
-    {Py_tp_base,        nullptr}, // inserted by introduceWrapperType
-    {Py_tp_dealloc,     reinterpret_cast<void*>(&SbkDeallocWrapper)},
-    {Py_tp_repr,        nullptr},
-    {Py_tp_hash,        nullptr},
-    {Py_tp_call,        nullptr},
-    {Py_tp_str,         nullptr},
-    {Py_tp_getattro,    nullptr},
-    {Py_tp_setattro,    nullptr},
-    {Py_tp_traverse,    reinterpret_cast<void*>(Sbk_QtVariantProperty_traverse)},
-    {Py_tp_clear,       reinterpret_cast<void*>(Sbk_QtVariantProperty_clear)},
-    {Py_tp_richcompare, nullptr},
-    {Py_tp_iter,        nullptr},
-    {Py_tp_iternext,    nullptr},
-    {Py_tp_methods,     reinterpret_cast<void*>(Sbk_QtVariantProperty_methods)},
-    {Py_tp_getset,      nullptr},
-    {Py_tp_init,        reinterpret_cast<void*>(Sbk_QtVariantProperty_Init)},
-    {Py_tp_new,         reinterpret_cast<void*>(SbkObjectTpNew)},
-    {0, nullptr}
+    {Py_tp_base,        (void *)0}, // inserted by introduceWrapperType
+    {Py_tp_dealloc,     (void *)&SbkDeallocWrapper},
+    {Py_tp_repr,        (void *)0},
+    {Py_tp_hash,        (void *)0},
+    {Py_tp_call,        (void *)0},
+    {Py_tp_str,         (void *)0},
+    {Py_tp_getattro,    (void *)0},
+    {Py_tp_setattro,    (void *)0},
+    {Py_tp_traverse,    (void *)Sbk_QtVariantProperty_traverse},
+    {Py_tp_clear,       (void *)Sbk_QtVariantProperty_clear},
+    {Py_tp_richcompare, (void *)0},
+    {Py_tp_iter,        (void *)0},
+    {Py_tp_iternext,    (void *)0},
+    {Py_tp_methods,     (void *)Sbk_QtVariantProperty_methods},
+    {Py_tp_getset,      (void *)0},
+    {Py_tp_init,        (void *)Sbk_QtVariantProperty_Init},
+    {Py_tp_new,         (void *)SbkObjectTpNew},
+    {0, 0}
 };
 static PyType_Spec Sbk_QtVariantProperty_spec = {
     "qtpropertybrowser.QtVariantProperty",
@@ -432,7 +404,7 @@ static void* Sbk_QtVariantProperty_typeDiscovery(void* cptr, SbkObjectType* inst
 {
     if (instanceType == reinterpret_cast<SbkObjectType*>(Shiboken::SbkType< ::QtProperty >()))
         return dynamic_cast< ::QtVariantProperty*>(reinterpret_cast< ::QtProperty*>(cptr));
-    return {};
+    return 0;
 }
 
 
@@ -445,30 +417,20 @@ static void QtVariantProperty_PythonToCpp_QtVariantProperty_PTR(PyObject* pyIn, 
 static PythonToCppFunc is_QtVariantProperty_PythonToCpp_QtVariantProperty_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtVariantProperty_TypeF())))
+    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtVariantProperty_TypeF()))
         return QtVariantProperty_PythonToCpp_QtVariantProperty_PTR;
-    return {};
+    return 0;
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtVariantProperty_PTR_CppToPython_QtVariantProperty(const void* cppIn) {
-    auto pyOut = reinterpret_cast<PyObject*>(Shiboken::BindingManager::instance().retrieveWrapper(cppIn));
+    PyObject* pyOut = (PyObject*)Shiboken::BindingManager::instance().retrieveWrapper(cppIn);
     if (pyOut) {
         Py_INCREF(pyOut);
         return pyOut;
     }
-    bool changedTypeName = false;
-    auto tCppIn = reinterpret_cast<const ::QtVariantProperty *>(cppIn);
-    const char *typeName = typeid(*tCppIn).name();
-    auto sbkType = Shiboken::ObjectType::typeForTypeName(typeName);
-    if (sbkType && Shiboken::ObjectType::hasSpecialCastFunction(sbkType)) {
-        typeName = typeNameOf(tCppIn);
-        changedTypeName = true;
-     }
-    PyObject *result = Shiboken::Object::newObject(Sbk_QtVariantProperty_TypeF(), const_cast<void*>(cppIn), false, /* exactType */ changedTypeName, typeName);
-    if (changedTypeName)
-        delete [] typeName;
-    return result;
+    const char* typeName = typeid(*((::QtVariantProperty*)cppIn)).name();
+    return Shiboken::Object::newObject(Sbk_QtVariantProperty_TypeF(), const_cast<void*>(cppIn), false, false, typeName);
 }
 
 // The signatures string for the functions.

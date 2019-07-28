@@ -20,6 +20,7 @@
 #include <qteditorfactory.h>
 #include <qtpropertybrowser.h>
 // Conversion Includes - Primitive Types
+#include <wtypes.h>
 #include <complex>
 #include <qabstractitemmodel.h>
 #include <QString>

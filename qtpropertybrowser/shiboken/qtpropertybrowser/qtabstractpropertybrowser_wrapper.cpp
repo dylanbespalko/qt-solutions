@@ -48,35 +48,6 @@
 #include <qwidget.h>
 
 
-#include <cctype>
-#include <cstring>
-
-QT_WARNING_DISABLE_DEPRECATED
-
-
-
-template <class T>
-static const char *typeNameOf(const T &t)
-{
-    const char *typeName =  typeid(t).name();
-    auto size = std::strlen(typeName);
-#if defined(Q_CC_MSVC) // MSVC: "class QPaintDevice * __ptr64"
-    if (auto lastStar = strchr(typeName, '*')) {
-        // MSVC: "class QPaintDevice * __ptr64"
-        while (*--lastStar == ' ') {
-        }
-        size = lastStar - typeName + 1;
-    }
-#else // g++, Clang: "QPaintDevice *" -> "P12QPaintDevice"
-    if (size > 2 && typeName[0] == 'P' && std::isdigit(typeName[1]))
-        ++typeName;
-#endif
-    char *result = new char[size + 1];
-    result[size] = '\0';
-    strncpy(result, typeName, size);
-    return result;
-}
-
 // Begin code injection
 // ========================================================================
 // START of custom code block [file: ./glue/qtpropertybrowser.cpp (qtabstractpropertybrowser-setFactoryForManager)]
@@ -144,8 +115,7 @@ void QtAbstractPropertyBrowserWrapper::pysideInitQtMetaTypes()
 {
 }
 
-QtAbstractPropertyBrowserWrapper::QtAbstractPropertyBrowserWrapper(QWidget * parent) : QtAbstractPropertyBrowser(parent)
-{
+QtAbstractPropertyBrowserWrapper::QtAbstractPropertyBrowserWrapper(QWidget * parent) : QtAbstractPropertyBrowser(parent) {
     // ... middle
 }
 
@@ -166,7 +136,7 @@ void QtAbstractPropertyBrowserWrapper::actionEvent(QActionEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -193,7 +163,7 @@ void QtAbstractPropertyBrowserWrapper::changeEvent(QEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -220,7 +190,7 @@ void QtAbstractPropertyBrowserWrapper::childEvent(QChildEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -247,7 +217,7 @@ void QtAbstractPropertyBrowserWrapper::closeEvent(QCloseEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -273,7 +243,7 @@ void QtAbstractPropertyBrowserWrapper::connectNotify(const QMetaMethod & signal)
         Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtCoreTypes[SBK_QMETAMETHOD_IDX]), &signal)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -298,7 +268,7 @@ void QtAbstractPropertyBrowserWrapper::contextMenuEvent(QContextMenuEvent * even
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -325,7 +295,7 @@ QWidget * QtAbstractPropertyBrowserWrapper::createAttributeEditor(QtProperty * p
         Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkqtpropertybrowserTypes[SBK_BROWSERCOL_IDX])->converter, &attribute)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -358,7 +328,7 @@ QWidget * QtAbstractPropertyBrowserWrapper::createEditor(QtProperty * property, 
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), parent)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -392,7 +362,7 @@ void QtAbstractPropertyBrowserWrapper::customEvent(QEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -415,7 +385,7 @@ int QtAbstractPropertyBrowserWrapper::devType() const
 
     Shiboken::AutoDecRef pyArgs(PyTuple_New(0));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -448,7 +418,7 @@ void QtAbstractPropertyBrowserWrapper::disconnectNotify(const QMetaMethod & sign
         Shiboken::Conversions::copyToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtCoreTypes[SBK_QMETAMETHOD_IDX]), &signal)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -473,7 +443,7 @@ void QtAbstractPropertyBrowserWrapper::dragEnterEvent(QDragEnterEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -500,7 +470,7 @@ void QtAbstractPropertyBrowserWrapper::dragLeaveEvent(QDragLeaveEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -527,7 +497,7 @@ void QtAbstractPropertyBrowserWrapper::dragMoveEvent(QDragMoveEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -554,7 +524,7 @@ void QtAbstractPropertyBrowserWrapper::dropEvent(QDropEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -581,7 +551,7 @@ void QtAbstractPropertyBrowserWrapper::enterEvent(QEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -607,7 +577,7 @@ bool QtAbstractPropertyBrowserWrapper::event(QEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -643,7 +613,7 @@ bool QtAbstractPropertyBrowserWrapper::eventFilter(QObject * watched, QEvent * e
     ));
     bool invalidateArg2 = PyTuple_GET_ITEM(pyArgs, 1)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -679,7 +649,7 @@ void QtAbstractPropertyBrowserWrapper::focusInEvent(QFocusEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -704,7 +674,7 @@ bool QtAbstractPropertyBrowserWrapper::focusNextPrevChild(bool next)
         Shiboken::Conversions::copyToPython(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), &next)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -738,7 +708,7 @@ void QtAbstractPropertyBrowserWrapper::focusOutEvent(QFocusEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -761,7 +731,7 @@ bool QtAbstractPropertyBrowserWrapper::hasHeightForWidth() const
 
     Shiboken::AutoDecRef pyArgs(PyTuple_New(0));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -793,7 +763,7 @@ int QtAbstractPropertyBrowserWrapper::heightForWidth(int arg__1) const
         arg__1
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -827,7 +797,7 @@ void QtAbstractPropertyBrowserWrapper::hideEvent(QHideEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -853,7 +823,7 @@ void QtAbstractPropertyBrowserWrapper::initPainter(QPainter * painter) const
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtGuiTypes[SBK_QPAINTER_IDX]), painter)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -878,7 +848,7 @@ void QtAbstractPropertyBrowserWrapper::inputMethodEvent(QInputMethodEvent * even
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -903,7 +873,7 @@ QVariant QtAbstractPropertyBrowserWrapper::inputMethodQuery(Qt::InputMethodQuery
         Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkPySide2_QtCoreTypes[SBK_QT_INPUTMETHODQUERY_IDX])->converter, &arg__1)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -935,7 +905,7 @@ void QtAbstractPropertyBrowserWrapper::itemChanged(QtBrowserItem * item)
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTBROWSERITEM_IDX]), item)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -959,7 +929,7 @@ void QtAbstractPropertyBrowserWrapper::itemInserted(QtBrowserItem * item, QtBrow
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTBROWSERITEM_IDX]), afterItem)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -982,7 +952,7 @@ void QtAbstractPropertyBrowserWrapper::itemRemoved(QtBrowserItem * item)
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTBROWSERITEM_IDX]), item)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1007,7 +977,7 @@ void QtAbstractPropertyBrowserWrapper::keyPressEvent(QKeyEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1034,7 +1004,7 @@ void QtAbstractPropertyBrowserWrapper::keyReleaseEvent(QKeyEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1061,7 +1031,7 @@ void QtAbstractPropertyBrowserWrapper::leaveEvent(QEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1086,7 +1056,7 @@ int QtAbstractPropertyBrowserWrapper::metric(QPaintDevice::PaintDeviceMetric arg
         Shiboken::Conversions::copyToPython(*PepType_SGTP(SbkPySide2_QtGuiTypes[SBK_QPAINTDEVICE_PAINTDEVICEMETRIC_IDX])->converter, &arg__1)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1116,7 +1086,7 @@ QSize QtAbstractPropertyBrowserWrapper::minimumSizeHint() const
 
     Shiboken::AutoDecRef pyArgs(PyTuple_New(0));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1150,7 +1120,7 @@ void QtAbstractPropertyBrowserWrapper::mouseDoubleClickEvent(QMouseEvent * event
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1177,7 +1147,7 @@ void QtAbstractPropertyBrowserWrapper::mouseMoveEvent(QMouseEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1204,7 +1174,7 @@ void QtAbstractPropertyBrowserWrapper::mousePressEvent(QMouseEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1231,7 +1201,7 @@ void QtAbstractPropertyBrowserWrapper::mouseReleaseEvent(QMouseEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1258,7 +1228,7 @@ void QtAbstractPropertyBrowserWrapper::moveEvent(QMoveEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1287,7 +1257,7 @@ bool QtAbstractPropertyBrowserWrapper::nativeEvent(const QByteArray & eventType,
     ));
 
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1300,10 +1270,8 @@ bool QtAbstractPropertyBrowserWrapper::nativeEvent(const QByteArray & eventType,
     if (PySequence_Check(pyResult) && (PySequence_Size(pyResult) == 2)) {
     Shiboken::AutoDecRef pyItem(PySequence_GetItem(pyResult, 0));
     Shiboken::Conversions::pythonToCppCopy(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), pyItem, &(cppResult));
-    if (result) {
-        Shiboken::AutoDecRef pyResultItem(PySequence_GetItem(pyResult, 1));
-        Shiboken::Conversions::pythonToCppCopy(Shiboken::Conversions::PrimitiveTypeConverter<long>(), pyResultItem, (result));
-    }
+    Shiboken::AutoDecRef pyResultItem(PySequence_GetItem(pyResult, 1));
+    Shiboken::Conversions::pythonToCppCopy(Shiboken::Conversions::PrimitiveTypeConverter<long>(), pyResultItem, (result));
     }
     // TEMPLATE - return_native_eventfilter_conversion - END
 
@@ -1325,7 +1293,7 @@ QPaintEngine * QtAbstractPropertyBrowserWrapper::paintEngine() const
 
     Shiboken::AutoDecRef pyArgs(PyTuple_New(0));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1359,7 +1327,7 @@ void QtAbstractPropertyBrowserWrapper::paintEvent(QPaintEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1384,7 +1352,7 @@ QPaintDevice * QtAbstractPropertyBrowserWrapper::redirected(QPoint * offset) con
         Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtCoreTypes[SBK_QPOINT_IDX]), offset)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1418,7 +1386,7 @@ void QtAbstractPropertyBrowserWrapper::resizeEvent(QResizeEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1444,7 +1412,7 @@ void QtAbstractPropertyBrowserWrapper::setVisible(bool visible)
         Shiboken::Conversions::copyToPython(Shiboken::Conversions::PrimitiveTypeConverter<bool>(), &visible)
     ));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1465,7 +1433,7 @@ QPainter * QtAbstractPropertyBrowserWrapper::sharedPainter() const
 
     Shiboken::AutoDecRef pyArgs(PyTuple_New(0));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1499,7 +1467,7 @@ void QtAbstractPropertyBrowserWrapper::showEvent(QShowEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1522,7 +1490,7 @@ QSize QtAbstractPropertyBrowserWrapper::sizeHint() const
 
     Shiboken::AutoDecRef pyArgs(PyTuple_New(0));
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1556,7 +1524,7 @@ void QtAbstractPropertyBrowserWrapper::tabletEvent(QTabletEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1583,7 +1551,7 @@ void QtAbstractPropertyBrowserWrapper::timerEvent(QTimerEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1610,7 +1578,7 @@ void QtAbstractPropertyBrowserWrapper::wheelEvent(QWheelEvent * event)
     ));
     bool invalidateArg1 = PyTuple_GET_ITEM(pyArgs, 0)->ob_refcnt == 1;
 
-    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, nullptr));
+    Shiboken::AutoDecRef pyResult(PyObject_Call(pyOverride, pyArgs, NULL));
     // An error happened in python code!
     if (pyResult.isNull()) {
         PyErr_Print();
@@ -1625,7 +1593,7 @@ const QMetaObject* QtAbstractPropertyBrowserWrapper::metaObject() const
     if (QObject::d_ptr->metaObject)
         return QObject::d_ptr->dynamicMetaObject();
     SbkObject* pySelf = Shiboken::BindingManager::instance().retrieveWrapper(this);
-    if (pySelf == nullptr)
+    if (pySelf == NULL)
         return QtAbstractPropertyBrowser::metaObject();
     return PySide::SignalManager::retrieveMetaObject(reinterpret_cast<PyObject*>(pySelf));
 }
@@ -1638,7 +1606,7 @@ int QtAbstractPropertyBrowserWrapper::qt_metacall(QMetaObject::Call call, int id
 
 void* QtAbstractPropertyBrowserWrapper::qt_metacast(const char* _clname)
 {
-        if (!_clname) return {};
+        if (!_clname) return 0;
         SbkObject* pySelf = Shiboken::BindingManager::instance().retrieveWrapper(this);
         if (pySelf && PySide::inherits(Py_TYPE(pySelf), _clname))
                 return static_cast<void*>(const_cast< QtAbstractPropertyBrowserWrapper* >(this));
@@ -1671,12 +1639,11 @@ Sbk_QtAbstractPropertyBrowser_Init(PyObject* self, PyObject* args, PyObject* kwd
     if (Shiboken::Object::isUserType(self) && !Shiboken::ObjectType::canCallConstructor(self->ob_type, Shiboken::SbkType< ::QtAbstractPropertyBrowser >()))
         return -1;
 
-    ::QtAbstractPropertyBrowserWrapper* cptr{};
+    ::QtAbstractPropertyBrowserWrapper* cptr = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp[] = { nullptr };
+    PythonToCppFunc pythonToCpp[] = { 0 };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
-    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0};
 
     // invalid argument lengths
@@ -1687,7 +1654,7 @@ Sbk_QtAbstractPropertyBrowser_Init(PyObject* self, PyObject* args, PyObject* kwd
 
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyBrowser::QtAbstractPropertyBrowser(QWidget*)
+    // 0: QtAbstractPropertyBrowser(QWidget*)
     if (numArgs == 0) {
         overloadId = 0; // QtAbstractPropertyBrowser(QWidget*)
     } else if ((pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), (pyArgs[0])))) {
@@ -1754,24 +1721,25 @@ Sbk_QtAbstractPropertyBrowser_Init(PyObject* self, PyObject* args, PyObject* kwd
     return 1;
 
     Sbk_QtAbstractPropertyBrowser_Init_TypeError:
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtAbstractPropertyBrowser");
+        const char* overloads[] = {"PySide2.QtWidgets.QWidget = nullptr", 0};
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtAbstractPropertyBrowser", overloads);
         return -1;
 }
 
 static PyObject* Sbk_QtAbstractPropertyBrowserFunc_addProperty(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyBrowserWrapper* cppSelf = nullptr;
+    QtAbstractPropertyBrowserWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyBrowserWrapper *>(reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyBrowserWrapper*)reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyBrowser::addProperty(QtProperty*)
+    // 0: addProperty(QtProperty*)
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // addProperty(QtProperty*)
     }
@@ -1782,7 +1750,7 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_addProperty(PyObject* self, P
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
@@ -1798,22 +1766,23 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_addProperty(PyObject* self, P
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtAbstractPropertyBrowserFunc_addProperty_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyBrowser.addProperty");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyBrowser.addProperty", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyBrowserFunc_clear(PyObject* self)
 {
-    QtAbstractPropertyBrowserWrapper* cppSelf = nullptr;
+    QtAbstractPropertyBrowserWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyBrowserWrapper *>(reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
+        return 0;
+    cppSelf = (QtAbstractPropertyBrowserWrapper*)reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
 
     // Call function/method
     {
@@ -1827,35 +1796,34 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_clear(PyObject* self)
     }
 
     if (PyErr_Occurred()) {
-        return {};
+        return 0;
     }
     Py_RETURN_NONE;
 }
 
 static PyObject* Sbk_QtAbstractPropertyBrowserFunc_createAttributeEditor(PyObject* self, PyObject* args)
 {
-    QtAbstractPropertyBrowserWrapper* cppSelf = nullptr;
+    QtAbstractPropertyBrowserWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyBrowserWrapper *>(reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyBrowserWrapper*)reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp[] = { nullptr, nullptr, nullptr };
+    PythonToCppFunc pythonToCpp[] = { 0, 0, 0 };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
-    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0, 0};
 
     // invalid argument lengths
 
 
     if (!PyArg_UnpackTuple(args, "createAttributeEditor", 3, 3, &(pyArgs[0]), &(pyArgs[1]), &(pyArgs[2])))
-        return {};
+        return 0;
 
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyBrowser::createAttributeEditor(QtProperty*,QWidget*,BrowserCol)
+    // 0: createAttributeEditor(QtProperty*,QWidget*,BrowserCol)
     if (numArgs == 3
         && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[0])))
         && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), (pyArgs[1])))
@@ -1869,11 +1837,11 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_createAttributeEditor(PyObjec
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArgs[0]))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp[0](pyArgs[0], &cppArg0);
         if (!Shiboken::Object::isValid(pyArgs[1]))
-            return {};
+            return 0;
         ::QWidget* cppArg1;
         pythonToCpp[1](pyArgs[1], &cppArg1);
         ::BrowserCol cppArg2{NONE};
@@ -1882,7 +1850,7 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_createAttributeEditor(PyObjec
         if (!PyErr_Occurred()) {
             // createAttributeEditor(QtProperty*,QWidget*,BrowserCol)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QWidget * cppResult = static_cast<::QtAbstractPropertyBrowserWrapper*>(cppSelf)->QtAbstractPropertyBrowserWrapper::createAttributeEditor_protected(cppArg0, cppArg1, cppArg2);
+            QWidget * cppResult = ((::QtAbstractPropertyBrowserWrapper*) cppSelf)->QtAbstractPropertyBrowserWrapper::createAttributeEditor_protected(cppArg0, cppArg1, cppArg2);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), cppResult);
             Shiboken::Object::setParent(self, pyResult);
@@ -1891,39 +1859,39 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_createAttributeEditor(PyObjec
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtAbstractPropertyBrowserFunc_createAttributeEditor_TypeError:
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtAbstractPropertyBrowser.createAttributeEditor");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty, PySide2.QtWidgets.QWidget, qtpropertybrowser.BrowserCol", 0};
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtAbstractPropertyBrowser.createAttributeEditor", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyBrowserFunc_createEditor(PyObject* self, PyObject* args)
 {
-    QtAbstractPropertyBrowserWrapper* cppSelf = nullptr;
+    QtAbstractPropertyBrowserWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyBrowserWrapper *>(reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyBrowserWrapper*)reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
+    PythonToCppFunc pythonToCpp[] = { 0, 0 };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
-    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
 
 
     if (!PyArg_UnpackTuple(args, "createEditor", 2, 2, &(pyArgs[0]), &(pyArgs[1])))
-        return {};
+        return 0;
 
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyBrowser::createEditor(QtProperty*,QWidget*)
+    // 0: createEditor(QtProperty*,QWidget*)
     if (numArgs == 2
         && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[0])))
         && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), (pyArgs[1])))) {
@@ -1936,18 +1904,18 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_createEditor(PyObject* self, 
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArgs[0]))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp[0](pyArgs[0], &cppArg0);
         if (!Shiboken::Object::isValid(pyArgs[1]))
-            return {};
+            return 0;
         ::QWidget* cppArg1;
         pythonToCpp[1](pyArgs[1], &cppArg1);
 
         if (!PyErr_Occurred()) {
             // createEditor(QtProperty*,QWidget*)
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            QWidget * cppResult = static_cast<::QtAbstractPropertyBrowserWrapper*>(cppSelf)->QtAbstractPropertyBrowserWrapper::createEditor_protected(cppArg0, cppArg1);
+            QWidget * cppResult = ((::QtAbstractPropertyBrowserWrapper*) cppSelf)->QtAbstractPropertyBrowserWrapper::createEditor_protected(cppArg0, cppArg1);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
             pyResult = Shiboken::Conversions::pointerToPython(reinterpret_cast<SbkObjectType *>(SbkPySide2_QtWidgetsTypes[SBK_QWIDGET_IDX]), cppResult);
             Shiboken::Object::setParent(self, pyResult);
@@ -1956,23 +1924,24 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_createEditor(PyObject* self, 
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtAbstractPropertyBrowserFunc_createEditor_TypeError:
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtAbstractPropertyBrowser.createEditor");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty, PySide2.QtWidgets.QWidget", 0};
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtAbstractPropertyBrowser.createEditor", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyBrowserFunc_currentItem(PyObject* self)
 {
-    QtAbstractPropertyBrowserWrapper* cppSelf = nullptr;
+    QtAbstractPropertyBrowserWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyBrowserWrapper *>(reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyBrowserWrapper*)reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
 
     // Call function/method
     {
@@ -1987,35 +1956,34 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_currentItem(PyObject* self)
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 }
 
 static PyObject* Sbk_QtAbstractPropertyBrowserFunc_insertProperty(PyObject* self, PyObject* args)
 {
-    QtAbstractPropertyBrowserWrapper* cppSelf = nullptr;
+    QtAbstractPropertyBrowserWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyBrowserWrapper *>(reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyBrowserWrapper*)reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
+    PythonToCppFunc pythonToCpp[] = { 0, 0 };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
-    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
 
 
     if (!PyArg_UnpackTuple(args, "insertProperty", 2, 2, &(pyArgs[0]), &(pyArgs[1])))
-        return {};
+        return 0;
 
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyBrowser::insertProperty(QtProperty*,QtProperty*)
+    // 0: insertProperty(QtProperty*,QtProperty*)
     if (numArgs == 2
         && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[0])))
         && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArgs[1])))) {
@@ -2028,11 +1996,11 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_insertProperty(PyObject* self
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArgs[0]))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp[0](pyArgs[0], &cppArg0);
         if (!Shiboken::Object::isValid(pyArgs[1]))
-            return {};
+            return 0;
         ::QtProperty* cppArg1;
         pythonToCpp[1](pyArgs[1], &cppArg1);
 
@@ -2048,28 +2016,29 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_insertProperty(PyObject* self
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtAbstractPropertyBrowserFunc_insertProperty_TypeError:
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtAbstractPropertyBrowser.insertProperty");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty, qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtAbstractPropertyBrowser.insertProperty", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyBrowserFunc_itemChanged(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyBrowserWrapper* cppSelf = nullptr;
+    QtAbstractPropertyBrowserWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyBrowserWrapper *>(reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
+        return 0;
+    cppSelf = (QtAbstractPropertyBrowserWrapper*)reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyBrowser::itemChanged(QtBrowserItem*)
+    // 0: itemChanged(QtBrowserItem*)
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTBROWSERITEM_IDX]), (pyArg)))) {
         overloadId = 0; // itemChanged(QtBrowserItem*)
     }
@@ -2080,7 +2049,7 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_itemChanged(PyObject* self, P
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtBrowserItem* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
@@ -2088,47 +2057,47 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_itemChanged(PyObject* self, P
             // itemChanged(QtBrowserItem*)
             if (Shiboken::Object::hasCppWrapper(reinterpret_cast<SbkObject*>(self))) {
                 PyErr_SetString(PyExc_NotImplementedError, "pure virtual method 'QtAbstractPropertyBrowser.itemChanged()' not implemented.");
-                return {};
+                return 0;
             }
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            static_cast<::QtAbstractPropertyBrowserWrapper*>(cppSelf)->itemChanged_protected(cppArg0);
+            ((::QtAbstractPropertyBrowserWrapper*) cppSelf)->itemChanged_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
 
     if (PyErr_Occurred()) {
-        return {};
+        return 0;
     }
     Py_RETURN_NONE;
 
     Sbk_QtAbstractPropertyBrowserFunc_itemChanged_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyBrowser.itemChanged");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtBrowserItem", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyBrowser.itemChanged", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyBrowserFunc_itemInserted(PyObject* self, PyObject* args)
 {
-    QtAbstractPropertyBrowserWrapper* cppSelf = nullptr;
+    QtAbstractPropertyBrowserWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyBrowserWrapper *>(reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
+        return 0;
+    cppSelf = (QtAbstractPropertyBrowserWrapper*)reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
+    PythonToCppFunc pythonToCpp[] = { 0, 0 };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
-    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
 
 
     if (!PyArg_UnpackTuple(args, "itemInserted", 2, 2, &(pyArgs[0]), &(pyArgs[1])))
-        return {};
+        return 0;
 
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyBrowser::itemInserted(QtBrowserItem*,QtBrowserItem*)
+    // 0: itemInserted(QtBrowserItem*,QtBrowserItem*)
     if (numArgs == 2
         && (pythonToCpp[0] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTBROWSERITEM_IDX]), (pyArgs[0])))
         && (pythonToCpp[1] = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTBROWSERITEM_IDX]), (pyArgs[1])))) {
@@ -2141,11 +2110,11 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_itemInserted(PyObject* self, 
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArgs[0]))
-            return {};
+            return 0;
         ::QtBrowserItem* cppArg0;
         pythonToCpp[0](pyArgs[0], &cppArg0);
         if (!Shiboken::Object::isValid(pyArgs[1]))
-            return {};
+            return 0;
         ::QtBrowserItem* cppArg1;
         pythonToCpp[1](pyArgs[1], &cppArg1);
 
@@ -2153,37 +2122,38 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_itemInserted(PyObject* self, 
             // itemInserted(QtBrowserItem*,QtBrowserItem*)
             if (Shiboken::Object::hasCppWrapper(reinterpret_cast<SbkObject*>(self))) {
                 PyErr_SetString(PyExc_NotImplementedError, "pure virtual method 'QtAbstractPropertyBrowser.itemInserted()' not implemented.");
-                return {};
+                return 0;
             }
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            static_cast<::QtAbstractPropertyBrowserWrapper*>(cppSelf)->itemInserted_protected(cppArg0, cppArg1);
+            ((::QtAbstractPropertyBrowserWrapper*) cppSelf)->itemInserted_protected(cppArg0, cppArg1);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
 
     if (PyErr_Occurred()) {
-        return {};
+        return 0;
     }
     Py_RETURN_NONE;
 
     Sbk_QtAbstractPropertyBrowserFunc_itemInserted_TypeError:
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtAbstractPropertyBrowser.itemInserted");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtBrowserItem, qtpropertybrowser.QtBrowserItem", 0};
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtAbstractPropertyBrowser.itemInserted", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyBrowserFunc_itemRemoved(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyBrowserWrapper* cppSelf = nullptr;
+    QtAbstractPropertyBrowserWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyBrowserWrapper *>(reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
+        return 0;
+    cppSelf = (QtAbstractPropertyBrowserWrapper*)reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyBrowser::itemRemoved(QtBrowserItem*)
+    // 0: itemRemoved(QtBrowserItem*)
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTBROWSERITEM_IDX]), (pyArg)))) {
         overloadId = 0; // itemRemoved(QtBrowserItem*)
     }
@@ -2194,7 +2164,7 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_itemRemoved(PyObject* self, P
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtBrowserItem* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
@@ -2202,38 +2172,39 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_itemRemoved(PyObject* self, P
             // itemRemoved(QtBrowserItem*)
             if (Shiboken::Object::hasCppWrapper(reinterpret_cast<SbkObject*>(self))) {
                 PyErr_SetString(PyExc_NotImplementedError, "pure virtual method 'QtAbstractPropertyBrowser.itemRemoved()' not implemented.");
-                return {};
+                return 0;
             }
             PyThreadState* _save = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
-            static_cast<::QtAbstractPropertyBrowserWrapper*>(cppSelf)->itemRemoved_protected(cppArg0);
+            ((::QtAbstractPropertyBrowserWrapper*) cppSelf)->itemRemoved_protected(cppArg0);
             PyEval_RestoreThread(_save); // Py_END_ALLOW_THREADS
         }
     }
 
     if (PyErr_Occurred()) {
-        return {};
+        return 0;
     }
     Py_RETURN_NONE;
 
     Sbk_QtAbstractPropertyBrowserFunc_itemRemoved_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyBrowser.itemRemoved");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtBrowserItem", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyBrowser.itemRemoved", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyBrowserFunc_items(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyBrowserWrapper* cppSelf = nullptr;
+    QtAbstractPropertyBrowserWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyBrowserWrapper *>(reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyBrowserWrapper*)reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyBrowser::items(QtProperty*)const
+    // 0: items(QtProperty*)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // items(QtProperty*)const
     }
@@ -2244,7 +2215,7 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_items(PyObject* self, PyObjec
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
@@ -2259,23 +2230,24 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_items(PyObject* self, PyObjec
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtAbstractPropertyBrowserFunc_items_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyBrowser.items");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyBrowser.items", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyBrowserFunc_properties(PyObject* self)
 {
-    QtAbstractPropertyBrowserWrapper* cppSelf = nullptr;
+    QtAbstractPropertyBrowserWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyBrowserWrapper *>(reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyBrowserWrapper*)reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
 
     // Call function/method
     {
@@ -2289,24 +2261,24 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_properties(PyObject* self)
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 }
 
 static PyObject* Sbk_QtAbstractPropertyBrowserFunc_removeProperty(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyBrowserWrapper* cppSelf = nullptr;
+    QtAbstractPropertyBrowserWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyBrowserWrapper *>(reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
+        return 0;
+    cppSelf = (QtAbstractPropertyBrowserWrapper*)reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyBrowser::removeProperty(QtProperty*)
+    // 0: removeProperty(QtProperty*)
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // removeProperty(QtProperty*)
     }
@@ -2317,7 +2289,7 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_removeProperty(PyObject* self
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
@@ -2330,28 +2302,29 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_removeProperty(PyObject* self
     }
 
     if (PyErr_Occurred()) {
-        return {};
+        return 0;
     }
     Py_RETURN_NONE;
 
     Sbk_QtAbstractPropertyBrowserFunc_removeProperty_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyBrowser.removeProperty");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyBrowser.removeProperty", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyBrowserFunc_setCurrentItem(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyBrowserWrapper* cppSelf = nullptr;
+    QtAbstractPropertyBrowserWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyBrowserWrapper *>(reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
+        return 0;
+    cppSelf = (QtAbstractPropertyBrowserWrapper*)reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyBrowser::setCurrentItem(QtBrowserItem*)
+    // 0: setCurrentItem(QtBrowserItem*)
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTBROWSERITEM_IDX]), (pyArg)))) {
         overloadId = 0; // setCurrentItem(QtBrowserItem*)
     }
@@ -2362,7 +2335,7 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_setCurrentItem(PyObject* self
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtBrowserItem* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
@@ -2375,38 +2348,38 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_setCurrentItem(PyObject* self
     }
 
     if (PyErr_Occurred()) {
-        return {};
+        return 0;
     }
     Py_RETURN_NONE;
 
     Sbk_QtAbstractPropertyBrowserFunc_setCurrentItem_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyBrowser.setCurrentItem");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtBrowserItem", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyBrowser.setCurrentItem", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyBrowserFunc_setFactoryForManager(PyObject* self, PyObject* args)
 {
-    QtAbstractPropertyBrowserWrapper* cppSelf = nullptr;
+    QtAbstractPropertyBrowserWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyBrowserWrapper *>(reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
+        return 0;
+    cppSelf = (QtAbstractPropertyBrowserWrapper*)reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp[] = { nullptr, nullptr };
+    PythonToCppFunc pythonToCpp[] = { 0, 0 };
     SBK_UNUSED(pythonToCpp)
     int numArgs = PyTuple_GET_SIZE(args);
-    SBK_UNUSED(numArgs)
     PyObject* pyArgs[] = {0, 0};
 
     // invalid argument lengths
 
 
     if (!PyArg_UnpackTuple(args, "setFactoryForManager", 2, 2, &(pyArgs[0]), &(pyArgs[1])))
-        return {};
+        return 0;
 
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyBrowser::setFactoryForManager(PyObject*,PyObject*)
+    // 0: setFactoryForManager(PyObject*,PyObject*)
     if (numArgs == 2
         && PyObject_Check(pyArgs[0])
         && PyObject_Check(pyArgs[1])) {
@@ -2432,29 +2405,30 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_setFactoryForManager(PyObject
     }
 
     if (PyErr_Occurred()) {
-        return {};
+        return 0;
     }
     Py_RETURN_NONE;
 
     Sbk_QtAbstractPropertyBrowserFunc_setFactoryForManager_TypeError:
-        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtAbstractPropertyBrowser.setFactoryForManager");
-        return {};
+        const char* overloads[] = {"object, object", 0};
+        Shiboken::setErrorAboutWrongArguments(args, "qtpropertybrowser.QtAbstractPropertyBrowser.setFactoryForManager", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyBrowserFunc_topLevelItem(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyBrowserWrapper* cppSelf = nullptr;
+    QtAbstractPropertyBrowserWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyBrowserWrapper *>(reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyBrowserWrapper*)reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyBrowser::topLevelItem(QtProperty*)const
+    // 0: topLevelItem(QtProperty*)const
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTPROPERTY_IDX]), (pyArg)))) {
         overloadId = 0; // topLevelItem(QtProperty*)const
     }
@@ -2465,7 +2439,7 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_topLevelItem(PyObject* self, 
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtProperty* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
@@ -2481,23 +2455,24 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_topLevelItem(PyObject* self, 
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 
     Sbk_QtAbstractPropertyBrowserFunc_topLevelItem_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyBrowser.topLevelItem");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtProperty", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyBrowser.topLevelItem", overloads);
+        return 0;
 }
 
 static PyObject* Sbk_QtAbstractPropertyBrowserFunc_topLevelItems(PyObject* self)
 {
-    QtAbstractPropertyBrowserWrapper* cppSelf = nullptr;
+    QtAbstractPropertyBrowserWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyBrowserWrapper *>(reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
-    PyObject* pyResult{};
+        return 0;
+    cppSelf = (QtAbstractPropertyBrowserWrapper*)reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
+    PyObject* pyResult = 0;
 
     // Call function/method
     {
@@ -2511,24 +2486,24 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_topLevelItems(PyObject* self)
 
     if (PyErr_Occurred() || !pyResult) {
         Py_XDECREF(pyResult);
-        return {};
+        return 0;
     }
     return pyResult;
 }
 
 static PyObject* Sbk_QtAbstractPropertyBrowserFunc_unsetFactoryForManager(PyObject* self, PyObject* pyArg)
 {
-    QtAbstractPropertyBrowserWrapper* cppSelf = nullptr;
+    QtAbstractPropertyBrowserWrapper* cppSelf = 0;
     SBK_UNUSED(cppSelf)
     if (!Shiboken::Object::isValid(self))
-        return {};
-    cppSelf = static_cast<QtAbstractPropertyBrowserWrapper *>(reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self))));
+        return 0;
+    cppSelf = (QtAbstractPropertyBrowserWrapper*)reinterpret_cast< ::QtAbstractPropertyBrowser *>(Shiboken::Conversions::cppPointer(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYBROWSER_IDX], reinterpret_cast<SbkObject *>(self)));
     int overloadId = -1;
-    PythonToCppFunc pythonToCpp{};
+    PythonToCppFunc pythonToCpp;
     SBK_UNUSED(pythonToCpp)
 
     // Overloaded function decisor
-    // 0: QtAbstractPropertyBrowser::unsetFactoryForManager(QtAbstractPropertyManager*)
+    // 0: unsetFactoryForManager(QtAbstractPropertyManager*)
     if ((pythonToCpp = Shiboken::Conversions::isPythonToCppPointerConvertible(reinterpret_cast<SbkObjectType *>(SbkqtpropertybrowserTypes[SBK_QTABSTRACTPROPERTYMANAGER_IDX]), (pyArg)))) {
         overloadId = 0; // unsetFactoryForManager(QtAbstractPropertyManager*)
     }
@@ -2539,7 +2514,7 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_unsetFactoryForManager(PyObje
     // Call function/method
     {
         if (!Shiboken::Object::isValid(pyArg))
-            return {};
+            return 0;
         ::QtAbstractPropertyManager* cppArg0;
         pythonToCpp(pyArg, &cppArg0);
 
@@ -2552,35 +2527,36 @@ static PyObject* Sbk_QtAbstractPropertyBrowserFunc_unsetFactoryForManager(PyObje
     }
 
     if (PyErr_Occurred()) {
-        return {};
+        return 0;
     }
     Py_RETURN_NONE;
 
     Sbk_QtAbstractPropertyBrowserFunc_unsetFactoryForManager_TypeError:
-        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyBrowser.unsetFactoryForManager");
-        return {};
+        const char* overloads[] = {"qtpropertybrowser.QtAbstractPropertyManager", 0};
+        Shiboken::setErrorAboutWrongArguments(pyArg, "qtpropertybrowser.QtAbstractPropertyBrowser.unsetFactoryForManager", overloads);
+        return 0;
 }
 
 static PyMethodDef Sbk_QtAbstractPropertyBrowser_methods[] = {
-    {"addProperty", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_addProperty), METH_O},
-    {"clear", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_clear), METH_NOARGS},
-    {"createAttributeEditor", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_createAttributeEditor), METH_VARARGS},
-    {"createEditor", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_createEditor), METH_VARARGS},
-    {"currentItem", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_currentItem), METH_NOARGS},
-    {"insertProperty", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_insertProperty), METH_VARARGS},
-    {"itemChanged", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_itemChanged), METH_O},
-    {"itemInserted", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_itemInserted), METH_VARARGS},
-    {"itemRemoved", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_itemRemoved), METH_O},
-    {"items", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_items), METH_O},
-    {"properties", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_properties), METH_NOARGS},
-    {"removeProperty", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_removeProperty), METH_O},
-    {"setCurrentItem", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_setCurrentItem), METH_O},
-    {"setFactoryForManager", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_setFactoryForManager), METH_VARARGS},
-    {"topLevelItem", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_topLevelItem), METH_O},
-    {"topLevelItems", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_topLevelItems), METH_NOARGS},
-    {"unsetFactoryForManager", reinterpret_cast<PyCFunction>(Sbk_QtAbstractPropertyBrowserFunc_unsetFactoryForManager), METH_O},
+    {"addProperty", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_addProperty, METH_O},
+    {"clear", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_clear, METH_NOARGS},
+    {"createAttributeEditor", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_createAttributeEditor, METH_VARARGS},
+    {"createEditor", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_createEditor, METH_VARARGS},
+    {"currentItem", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_currentItem, METH_NOARGS},
+    {"insertProperty", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_insertProperty, METH_VARARGS},
+    {"itemChanged", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_itemChanged, METH_O},
+    {"itemInserted", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_itemInserted, METH_VARARGS},
+    {"itemRemoved", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_itemRemoved, METH_O},
+    {"items", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_items, METH_O},
+    {"properties", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_properties, METH_NOARGS},
+    {"removeProperty", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_removeProperty, METH_O},
+    {"setCurrentItem", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_setCurrentItem, METH_O},
+    {"setFactoryForManager", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_setFactoryForManager, METH_VARARGS},
+    {"topLevelItem", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_topLevelItem, METH_O},
+    {"topLevelItems", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_topLevelItems, METH_NOARGS},
+    {"unsetFactoryForManager", (PyCFunction)Sbk_QtAbstractPropertyBrowserFunc_unsetFactoryForManager, METH_O},
 
-    {nullptr, nullptr} // Sentinel
+    {0} // Sentinel
 };
 
 } // extern "C"
@@ -2615,24 +2591,24 @@ static SbkObjectType *Sbk_QtAbstractPropertyBrowser_TypeF(void)
 }
 
 static PyType_Slot Sbk_QtAbstractPropertyBrowser_slots[] = {
-    {Py_tp_base,        nullptr}, // inserted by introduceWrapperType
-    {Py_tp_dealloc,     reinterpret_cast<void*>(&SbkDeallocWrapper)},
-    {Py_tp_repr,        nullptr},
-    {Py_tp_hash,        nullptr},
-    {Py_tp_call,        nullptr},
-    {Py_tp_str,         nullptr},
-    {Py_tp_getattro,    nullptr},
-    {Py_tp_setattro,    nullptr},
-    {Py_tp_traverse,    reinterpret_cast<void*>(Sbk_QtAbstractPropertyBrowser_traverse)},
-    {Py_tp_clear,       reinterpret_cast<void*>(Sbk_QtAbstractPropertyBrowser_clear)},
-    {Py_tp_richcompare, nullptr},
-    {Py_tp_iter,        nullptr},
-    {Py_tp_iternext,    nullptr},
-    {Py_tp_methods,     reinterpret_cast<void*>(Sbk_QtAbstractPropertyBrowser_methods)},
-    {Py_tp_getset,      nullptr},
-    {Py_tp_init,        reinterpret_cast<void*>(Sbk_QtAbstractPropertyBrowser_Init)},
-    {Py_tp_new,         reinterpret_cast<void*>(SbkObjectTpNew)},
-    {0, nullptr}
+    {Py_tp_base,        (void *)0}, // inserted by introduceWrapperType
+    {Py_tp_dealloc,     (void *)&SbkDeallocWrapper},
+    {Py_tp_repr,        (void *)0},
+    {Py_tp_hash,        (void *)0},
+    {Py_tp_call,        (void *)0},
+    {Py_tp_str,         (void *)0},
+    {Py_tp_getattro,    (void *)0},
+    {Py_tp_setattro,    (void *)0},
+    {Py_tp_traverse,    (void *)Sbk_QtAbstractPropertyBrowser_traverse},
+    {Py_tp_clear,       (void *)Sbk_QtAbstractPropertyBrowser_clear},
+    {Py_tp_richcompare, (void *)0},
+    {Py_tp_iter,        (void *)0},
+    {Py_tp_iternext,    (void *)0},
+    {Py_tp_methods,     (void *)Sbk_QtAbstractPropertyBrowser_methods},
+    {Py_tp_getset,      (void *)0},
+    {Py_tp_init,        (void *)Sbk_QtAbstractPropertyBrowser_Init},
+    {Py_tp_new,         (void *)SbkObjectTpNew},
+    {0, 0}
 };
 static PyType_Spec Sbk_QtAbstractPropertyBrowser_spec = {
     "qtpropertybrowser.QtAbstractPropertyBrowser",
@@ -2650,7 +2626,7 @@ static void* Sbk_QtAbstractPropertyBrowser_typeDiscovery(void* cptr, SbkObjectTy
         return dynamic_cast< ::QtAbstractPropertyBrowser*>(reinterpret_cast< ::QObject*>(cptr));
     if (instanceType == reinterpret_cast<SbkObjectType*>(Shiboken::SbkType< ::QPaintDevice >()))
         return dynamic_cast< ::QtAbstractPropertyBrowser*>(reinterpret_cast< ::QPaintDevice*>(cptr));
-    return {};
+    return 0;
 }
 
 
@@ -2663,14 +2639,14 @@ static void QtAbstractPropertyBrowser_PythonToCpp_QtAbstractPropertyBrowser_PTR(
 static PythonToCppFunc is_QtAbstractPropertyBrowser_PythonToCpp_QtAbstractPropertyBrowser_PTR_Convertible(PyObject* pyIn) {
     if (pyIn == Py_None)
         return Shiboken::Conversions::nonePythonToCppNullPtr;
-    if (PyObject_TypeCheck(pyIn, reinterpret_cast<PyTypeObject*>(Sbk_QtAbstractPropertyBrowser_TypeF())))
+    if (PyObject_TypeCheck(pyIn, (PyTypeObject*)Sbk_QtAbstractPropertyBrowser_TypeF()))
         return QtAbstractPropertyBrowser_PythonToCpp_QtAbstractPropertyBrowser_PTR;
-    return {};
+    return 0;
 }
 
 // C++ to Python pointer conversion - tries to find the Python wrapper for the C++ object (keeps object identity).
 static PyObject* QtAbstractPropertyBrowser_PTR_CppToPython_QtAbstractPropertyBrowser(const void* cppIn) {
-    return PySide::getWrapperForQObject(reinterpret_cast<::QtAbstractPropertyBrowser*>(const_cast<void*>(cppIn)), Sbk_QtAbstractPropertyBrowser_TypeF());
+    return PySide::getWrapperForQObject((::QtAbstractPropertyBrowser*)cppIn, Sbk_QtAbstractPropertyBrowser_TypeF());
 
 }
 
@@ -2687,13 +2663,13 @@ const char QtAbstractPropertyBrowser_SignaturesString[] = ""
     "qtpropertybrowser.QtAbstractPropertyBrowser.itemChanged(item:qtpropertybrowser.QtBrowserItem)\n"
     "qtpropertybrowser.QtAbstractPropertyBrowser.itemInserted(item:qtpropertybrowser.QtBrowserItem,afterItem:qtpropertybrowser.QtBrowserItem)\n"
     "qtpropertybrowser.QtAbstractPropertyBrowser.itemRemoved(item:qtpropertybrowser.QtBrowserItem)\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.items(property:qtpropertybrowser.QtProperty)->QList[qtpropertybrowser.QtBrowserItem]\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.properties()->QList[qtpropertybrowser.QtProperty]\n"
+    "qtpropertybrowser.QtAbstractPropertyBrowser.items(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.QtBrowserItem\n"
+    "qtpropertybrowser.QtAbstractPropertyBrowser.properties()->qtpropertybrowser.QtProperty\n"
     "qtpropertybrowser.QtAbstractPropertyBrowser.removeProperty(property:qtpropertybrowser.QtProperty)\n"
     "qtpropertybrowser.QtAbstractPropertyBrowser.setCurrentItem(arg__1:qtpropertybrowser.QtBrowserItem)\n"
     "qtpropertybrowser.QtAbstractPropertyBrowser.setFactoryForManager(arg__1:PyObject,arg__2:PyObject)\n"
     "qtpropertybrowser.QtAbstractPropertyBrowser.topLevelItem(property:qtpropertybrowser.QtProperty)->qtpropertybrowser.QtBrowserItem\n"
-    "qtpropertybrowser.QtAbstractPropertyBrowser.topLevelItems()->QList[qtpropertybrowser.QtBrowserItem]\n"
+    "qtpropertybrowser.QtAbstractPropertyBrowser.topLevelItems()->qtpropertybrowser.QtBrowserItem\n"
     "qtpropertybrowser.QtAbstractPropertyBrowser.unsetFactoryForManager(manager:qtpropertybrowser.QtAbstractPropertyManager)\n"
 ;
 
